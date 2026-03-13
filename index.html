@@ -1,1 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --green-deep: #1a3a2a;
+      --green-mid: #2d5a3d;
+      --green-light: #4a8c5c;
+      --cream: #f5f0e8;
+      --gold: #c9a84c;
+      --text: #1a3a2a;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Jost', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Botanical background pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 20% 80%, rgba(74,140,92,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(45,90,61,0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Decorative corner leaves */
+    .leaf {
+      position: fixed;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .leaf svg { fill: var(--green-mid); }
+    .leaf-tl { top: -20px; left: -20px; transform: rotate(0deg); width: 280px; }
+    .leaf-br { bottom: -20px; right: -20px; transform: rotate(180deg); width: 280px; }
+    .leaf-tr { top: -20px; right: -20px; transform: rotate(90deg); width: 200px; opacity: 0.12; }
+    .leaf-bl { bottom: -20px; left: -20px; transform: rotate(270deg); width: 200px; opacity: 0.12; }
+
+    .card {
+      position: relative;
+      text-align: center;
+      padding: 72px 80px 64px;
+      max-width: 560px;
+      width: 90%;
+      animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Top ornament */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 36px;
+      animation: fadeUp 1s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .ornament-line {
+      height: 1px;
+      width: 60px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+    .ornament-line:last-child {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+    .ornament-icon {
+      color: var(--gold);
+      font-size: 22px;
+    }
+
+    .welcome-label {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--green-light);
+      margin-bottom: 18px;
+      animation: fadeUp 1s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 7vw, 62px);
+      font-weight: 700;
+      color: var(--green-deep);
+      line-height: 1.1;
+      margin-bottom: 8px;
+      animation: fadeUp 1s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    h1 em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--green-mid);
+    }
+
+    .divider {
+      width: 48px;
+      height: 2px;
+      background: var(--gold);
+      margin: 28px auto;
+      animation: expand 1s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: #3d5a47;
+      margin-bottom: 48px;
+      animation: fadeUp 1s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 36px;
+      background: var(--green-deep);
+      color: var(--cream);
+      text-decoration: none;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: 1px solid var(--green-deep);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 1s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .cta-link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 0;
+    }
+
+    .cta-link:hover::before { transform: translateX(0); }
+    .cta-link:hover { color: var(--green-deep); border-color: var(--gold); }
+
+    .cta-link span, .cta-link svg { position: relative; z-index: 1; }
+
+    .arrow {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s ease;
+    }
+    .cta-link:hover .arrow { transform: translateX(4px); }
+
+    /* Bottom ornament */
+    .bottom-ornament {
+      margin-top: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      animation: fadeUp 1s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--gold);
+      opacity: 0.6;
+    }
+    .dot.large { width: 6px; height: 6px; opacity: 0.9; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes expand {
+      from { width: 0; opacity: 0; }
+      to   { width: 48px; opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Corner botanical decorations -->
+  <div class="leaf leaf-tl">
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,10 Q80,40 60,120 Q40,200 150,180 Q100,100 180,60 Q260,20 290,10 Q200,80 160,140 Q140,80 10,10Z"/>
+      <path d="M10,10 Q50,80 30,160 Q10,240 100,260 Q60,180 120,120 Q80,180 10,10Z" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="leaf leaf-br">
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,10 Q80,40 60,120 Q40,200 150,180 Q100,100 180,60 Q260,20 290,10 Q200,80 160,140 Q140,80 10,10Z"/>
+    </svg>
+  </div>
+  <div class="leaf leaf-tr">
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,10 Q80,40 60,120 Q40,200 150,180 Q100,100 180,60 Q260,20 290,10 Q200,80 160,140 Q140,80 10,10Z"/>
+    </svg>
+  </div>
+  <div class="leaf leaf-bl">
+    <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,10 Q80,40 60,120 Q40,200 150,180 Q100,100 180,60 Q260,20 290,10 Q200,80 160,140 Q140,80 10,10Z"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <span class="ornament-icon">✦</span>
+      <div class="ornament-line"></div>
+    </div>
+
+    <div class="welcome-label">Welcome to my space</div>
+
+    <h1>Hello &amp; <em>Welcome</em></h1>
+
+    <div class="divider"></div>
+
+    <p>Glad you stopped by. Explore what I've been growing — from seeds of ideas to something you can actually use.</p>
+
+    <a href="https://vyhlent.github.io/swagvyh9.github.io/garden-planner.html" class="cta-link">
+      <span>Open Garden Planner</span>
+      <svg class="arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+    <div class="bottom-ornament">
+      <div class="dot"></div>
+      <div class="dot large"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+
+</body>
+</html>
