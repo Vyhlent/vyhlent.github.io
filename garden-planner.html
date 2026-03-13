@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garden Planner — USDA Zone 6–7</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #3d2b1f;
+    --bark: #6b4226;
+    --sage: #7a9e7e;
+    --leaf: #4a7c59;
+    --sprout: #a8c5a0;
+    --sun: #e8b84b;
+    --tomato: #c0392b;
+    --berry: #6b3d8a;
+    --sky: #a8c8e8;
+    --cream: #f5f0e8;
+    --parchment: #ede6d6;
+    --ink: #2c1f14;
+    --mist: #d4e8d4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(122,158,126,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(168,197,160,0.10) 0%, transparent 50%);
+  }
+
+  header {
+    background: var(--soil);
+    color: var(--cream);
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      radial-gradient(circle at 80% 50%, rgba(122,158,126,0.18) 0%, transparent 60%),
+      radial-gradient(circle at 10% 80%, rgba(232,184,75,0.10) 0%, transparent 40%);
+  }
+
+  header .inner {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sprout);
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--sun);
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: rgba(245,240,232,0.65);
+    letter-spacing: 0.3px;
+    max-width: 480px;
+    line-height: 1.6;
+  }
+
+  .zone-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232,184,75,0.15);
+    border: 1px solid rgba(232,184,75,0.35);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--sun);
+    margin-top: 20px;
+  }
+
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  /* Filter tabs */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  .filter-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(74,124,89,0.35);
+    background: transparent;
+    color: var(--leaf);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--leaf);
+    color: var(--cream);
+    border-color: var(--leaf);
+  }
+
+  /* Section headers */
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--bark);
+    margin-bottom: 20px;
+    margin-top: 44px;
+    padding-bottom: 10px;
+    border-bottom: 1.5px solid rgba(107,66,38,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label .icon { font-size: 20px; }
+
+  /* Plant cards grid */
+  .plant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .plant-card {
+    background: white;
+    border-radius: 12px;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .plant-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .card-header {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .plant-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .plant-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(44,31,20,0.4);
+    margin-top: 3px;
+  }
+
+  .plant-emoji {
+    font-size: 28px;
+    flex-shrink: 0;
+  }
+
+  .card-body {
+    padding: 16px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(44,31,20,0.4);
+  }
+
+  .stat-value {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .stat-value strong {
+    font-weight: 700;
+    color: var(--leaf);
+  }
+
+  .card-footer {
+    padding: 12px 20px 16px;
+    background: var(--parchment);
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .tip-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(44,31,20,0.4);
+    margin-bottom: 4px;
+  }
+
+  .tip-text {
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: rgba(44,31,20,0.75);
+  }
+
+  /* Companion planting section */
+  .companion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .companion-card {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+
+  .companion-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .comp-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  .comp-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    height: fit-content;
+  }
+
+  .comp-label.friend { background: rgba(74,124,89,0.15); color: var(--leaf); }
+  .comp-label.foe { background: rgba(192,57,43,0.12); color: var(--tomato); }
+
+  /* Planting calendar */
+  .calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1.5px solid rgba(0,0,0,0.07);
+    margin-top: 20px;
+  }
+
+  .calendar-table th {
+    background: var(--soil);
+    color: var(--cream);
+    padding: 12px 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .calendar-table th:first-child { text-align: left; padding-left: 18px; }
+
+  .calendar-table td {
+    padding: 10px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .calendar-table td:first-child {
+    text-align: left;
+    padding-left: 18px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+  }
+
+  .calendar-table tr:last-child td { border-bottom: none; }
+  .calendar-table tr:nth-child(even) { background: rgba(0,0,0,0.018); }
+
+  .cal-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    margin: auto;
+  }
+
+  .cal-dot.indoor { background: rgba(168,200,232,0.5); color: #2a6496; font-size: 9px; font-family: 'DM Mono', monospace; }
+  .cal-dot.direct { background: rgba(74,124,89,0.2); color: var(--leaf); font-size: 9px; font-family: 'DM Mono', monospace; }
+  .cal-dot.harvest { background: rgba(232,184,75,0.3); color: #a07b00; font-size: 9px; font-family: 'DM Mono', monospace; }
+
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: rgba(44,31,20,0.65);
+  }
+
+  /* pH strip visual */
+  .ph-visual {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .ph-bar {
+    height: 6px;
+    width: 50px;
+    border-radius: 3px;
+    background: linear-gradient(to right, #e74c3c, #e67e22, #f1c40f, #2ecc71, #1abc9c, #3498db, #9b59b6);
+    position: relative;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    header { padding: 32px 20px; }
+    main { padding: 32px 16px; }
+    .card-body { grid-template-columns: 1fr; }
+    .calendar-table { font-size: 11px; }
+    .cal-dot { width: 16px; height: 16px; font-size: 8px; }
+  }
+
+  /* hidden by filter */
+  .plant-card.hidden { display: none; }
+
+  .water-bar-wrap {
+    display: flex; align-items: center; gap: 6px; margin-top: 2px;
+  }
+  .water-bar {
+    height: 4px; border-radius: 2px; background: rgba(168,200,232,0.4);
+    flex: 1;
+    position: relative;
+  }
+  .water-fill {
+    height: 100%; border-radius: 2px; background: #4a9fd4;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <p class="eyebrow">🌿 Vegetable & Herb Garden Guide</p>
+    <h1>Your <em>Kitchen Garden</em><br>Planner</h1>
+    <p class="subtitle">Complete planting guide for 13 crops — spacing, soil, water, and timing all in one place.</p>
+    <div class="zone-badge">🌍 USDA Hardiness Zone 6–7 &nbsp;·&nbsp; Last frost: Mid-April &nbsp;·&nbsp; First frost: Mid-October</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- Filters -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All Plants</button>
+    <button class="filter-btn" data-filter="vegetable">Vegetables</button>
+    <button class="filter-btn" data-filter="herb">Herbs</button>
+    <button class="filter-btn" data-filter="fruit">Fruits</button>
+    <button class="filter-btn" data-filter="cool">Cool Season</button>
+    <button class="filter-btn" data-filter="warm">Warm Season</button>
+  </div>
+
+  <!-- Plant Cards -->
+  <div class="section-label"><span class="icon">🌱</span> Plant Details</div>
+  <div class="plant-grid" id="plantGrid"></div>
+
+  <!-- Planting Calendar -->
+  <div class="section-label" style="margin-top:56px"><span class="icon">📅</span> Planting Calendar</div>
+  <div style="overflow-x:auto;">
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th>Plant</th>
+          <th>Feb</th><th>Mar</th><th>Apr</th><th>May</th><th>Jun</th>
+          <th>Jul</th><th>Aug</th><th>Sep</th><th>Oct</th>
+        </tr>
+      </thead>
+      <tbody id="calendarBody"></tbody>
+    </table>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="cal-dot indoor">▲</div> Start Indoors</div>
+    <div class="legend-item"><div class="cal-dot direct">●</div> Direct Sow / Transplant Out</div>
+    <div class="legend-item"><div class="cal-dot harvest">✦</div> Harvest Window</div>
+  </div>
+
+  <!-- Companion Planting -->
+  <div class="section-label" style="margin-top:56px"><span class="icon">🤝</span> Companion Planting</div>
+  <div class="companion-grid" id="companionGrid"></div>
+
+</main>
+
+<script>
+const plants = [
+  {
+    name: "Tomatoes",
+    emoji: "🍅",
+    type: "vegetable",
+    season: "warm",
+    plantDate: "Start indoors 6–8 wks before last frost (late Feb–Mar); transplant out after last frost (mid-May)",
+    spacing: "18–24 in. apart, rows 3–4 ft",
+    ph: "6.0–6.8",
+    water: "1–2 in.",
+    waterLevel: 0.75,
+    tip: "Plant deeply — bury 2/3 of the stem to grow extra roots. Use cages or stakes. Remove suckers for larger fruit. Mulch heavily to retain moisture and prevent blight splash."
+  },
+  {
+    name: "Potatoes",
+    emoji: "🥔",
+    type: "vegetable",
+    season: "cool",
+    plantDate: "Plant seed potatoes 2–4 wks before last frost (late March–early April)",
+    spacing: "12 in. apart in rows 2–3 ft wide; plant 4 in. deep",
+    ph: "5.0–6.0",
+    water: "1–2 in.",
+    waterLevel: 0.75,
+    tip: "Hill soil up around stems as they grow (3–4 times). Stop watering once foliage yellows. Do not plant where tomatoes, peppers, or eggplant grew last year — shared disease risk."
+  },
+  {
+    name: "Cucumbers",
+    emoji: "🥒",
+    type: "vegetable",
+    season: "warm",
+    plantDate: "Direct sow or transplant after last frost, soil ≥60°F (mid-May–June)",
+    spacing: "12 in. apart; if trellised, rows 5 ft wide",
+    ph: "6.0–7.0",
+    water: "1–2 in.",
+    waterLevel: 0.8,
+    tip: "Trellising saves space and reduces disease. Harvest frequently to keep plants producing. Bitter cucumbers = inconsistent watering — keep moisture steady."
+  },
+  {
+    name: "Corn",
+    emoji: "🌽",
+    type: "vegetable",
+    season: "warm",
+    plantDate: "Direct sow after last frost, soil ≥60°F (mid-May–early June)",
+    spacing: "9–12 in. apart in rows 2–3 ft; plant in blocks of 4+ rows for pollination",
+    ph: "6.0–6.8",
+    water: "1–1.5 in.",
+    waterLevel: 0.65,
+    tip: "Corn is wind-pollinated — never plant in single rows. Plant in a square block pattern. Watch for corn earworm. Harvest when silks are brown and kernels squirt milky juice."
+  },
+  {
+    name: "Green Beans",
+    emoji: "🫘",
+    type: "vegetable",
+    season: "warm",
+    plantDate: "Direct sow after last frost (mid-May through July for succession planting)",
+    spacing: "Bush: 4–6 in. apart, rows 18 in. / Pole: 6 in. apart on trellis",
+    ph: "6.0–7.0",
+    water: "1 in.",
+    waterLevel: 0.5,
+    tip: "Sow every 2–3 weeks for continuous harvest. Don't over-fertilize with nitrogen — it grows leaves, not beans. Beans fix their own nitrogen; no extra needed."
+  },
+  {
+    name: "Peppers",
+    emoji: "🫑",
+    type: "vegetable",
+    season: "warm",
+    plantDate: "Start indoors 8–10 wks before last frost (early Feb–Mar); transplant out mid-May",
+    spacing: "18 in. apart, rows 2–3 ft",
+    ph: "6.0–6.8",
+    water: "1–2 in.",
+    waterLevel: 0.7,
+    tip: "Peppers love heat — don't rush transplanting. A layer of black plastic mulch warms soil and speeds growth. Banana peppers are more forgiving than many sweet varieties."
+  },
+  {
+    name: "Spinach",
+    emoji: "🥬",
+    type: "vegetable",
+    season: "cool",
+    plantDate: "Direct sow 4–6 wks before last frost (early–mid March) and again in Sept for fall crop",
+    spacing: "3–6 in. apart, rows 12 in.",
+    ph: "6.5–7.0",
+    water: "1–1.5 in.",
+    waterLevel: 0.6,
+    tip: "Spinach bolts in heat — it's strictly a spring/fall crop in Zone 6–7. Harvest outer leaves to extend the season. Shade cloth can add 2–3 extra weeks in warm weather."
+  },
+  {
+    name: "Lettuce",
+    emoji: "🥗",
+    type: "vegetable",
+    season: "cool",
+    plantDate: "Direct sow 3–4 wks before last frost (late March) and again in late August for fall",
+    spacing: "6–8 in. for heads; 4 in. for leaf types; rows 12–18 in.",
+    ph: "6.0–7.0",
+    water: "1–1.5 in.",
+    waterLevel: 0.6,
+    tip: "Succession plant every 2 weeks for a continuous supply. Harvest in the morning for crispest leaves. Bolts fast in summer heat — use a bolt-resistant variety for June."
+  },
+  {
+    name: "Kale",
+    emoji: "🥦",
+    type: "vegetable",
+    season: "cool",
+    plantDate: "Direct sow 4–6 wks before last frost (early March) or transplant; also sow late July for fall",
+    spacing: "12–18 in. apart, rows 18–24 in.",
+    ph: "6.0–7.0",
+    water: "1–1.5 in.",
+    waterLevel: 0.6,
+    tip: "Frost improves flavor! Leave fall kale in the ground well past first frost. Harvest outer leaves. Very pest-hardy but watch for cabbage worms — use row covers if needed."
+  },
+  {
+    name: "Blackberries",
+    emoji: "🫐",
+    type: "fruit",
+    season: "warm",
+    plantDate: "Plant bare-root canes in early spring (March–April) once soil is workable",
+    spacing: "3–4 ft apart in rows 8–10 ft; needs a trellis or fence",
+    ph: "5.5–6.5",
+    water: "1–2 in.",
+    waterLevel: 0.75,
+    tip: "Erect varieties need less support; trailing types need a trellis. Canes fruit in year 2; remove spent (floricanes) after harvest. Mulch roots heavily. Very productive once established."
+  },
+  {
+    name: "Rosemary",
+    emoji: "🌿",
+    type: "herb",
+    season: "warm",
+    plantDate: "Transplant after last frost (mid-May); or start indoors 10–12 wks before",
+    spacing: "18–24 in. apart",
+    ph: "6.0–7.0",
+    water: "~0.5 in. (drought tolerant)",
+    waterLevel: 0.2,
+    tip: "Prefers dry, well-drained soil — never let it sit in wet ground. In Zone 6, mulch roots heavily for winter or bring a container indoors. Excellent pollinator attractor."
+  },
+  {
+    name: "Thyme",
+    emoji: "🌱",
+    type: "herb",
+    season: "cool",
+    plantDate: "Transplant after last frost or direct sow in spring; perennial — plant once and enjoy for years",
+    spacing: "9–12 in. apart",
+    ph: "6.0–8.0",
+    water: "~0.5 in. (drought tolerant)",
+    waterLevel: 0.2,
+    tip: "Hardy perennial in Zone 6–7 — cut back in early spring to encourage bushy growth. Thrives in poor, dry soils. Excellent between pavers or garden edges."
+  },
+  {
+    name: "Basil",
+    emoji: "🌿",
+    type: "herb",
+    season: "warm",
+    plantDate: "Start indoors 4–6 wks before last frost (mid-March); transplant after last frost, soil warm",
+    spacing: "12–18 in. apart",
+    ph: "6.0–7.0",
+    water: "1 in.",
+    waterLevel: 0.5,
+    tip: "Pinch off flower buds immediately to keep leaves coming. Very frost-sensitive — bring in at first frost warning. Plant near tomatoes to improve flavor (and confuse pests)."
+  }
+];
+
+const calendar = [
+  { name: "Spinach",     row: ["▲","●","●","","","","","●","●"] },
+  { name: "Lettuce",     row: ["▲","●","●","","","","","●","●"] },
+  { name: "Kale",        row: ["▲","●","●","","","","●","●","●"] },
+  { name: "Potatoes",    row: ["","●","●","","","","","",""] },
+  { name: "Tomatoes",    row: ["▲","▲","●","●","✦","✦","✦","",""] },
+  { name: "Peppers",     row: ["▲","▲","●","●","✦","✦","✦","",""] },
+  { name: "Cucumbers",   row: ["","","●","●","✦","✦","✦","",""] },
+  { name: "Corn",        row: ["","","●","●","","✦","✦","",""] },
+  { name: "Green Beans", row: ["","","●","●","●","✦","✦","",""] },
+  { name: "Basil",       row: ["","▲","▲","●","✦","✦","✦","",""] },
+  { name: "Rosemary",    row: ["","▲","▲","●","✦","✦","✦","✦",""] },
+  { name: "Thyme",       row: ["","●","●","●","✦","✦","✦","✦",""] },
+  { name: "Blackberries",row: ["","●","●","","✦","✦","✦","",""] },
+];
+
+const calType = { "▲": "indoor", "●": "direct", "✦": "harvest" };
+
+const companions = [
+  { plant: "🍅 Tomatoes", friends: "Basil (repels aphids & hornworm), carrots, marigolds, parsley", foes: "Potatoes, fennel, brassicas (kale, cabbage)" },
+  { plant: "🥔 Potatoes", friends: "Beans, corn, marigolds, horseradish", foes: "Tomatoes, cucumbers, squash, sunflowers" },
+  { plant: "🌽 Corn", friends: "Beans (fix nitrogen), squash (ground cover) — the 'Three Sisters'", foes: "Tomatoes (shared pests)" },
+  { plant: "🫘 Green Beans", friends: "Corn, squash, cucumber, strawberries, rosemary", foes: "Onions, garlic, fennel" },
+  { plant: "🥒 Cucumbers", friends: "Beans, corn, radish, sunflowers, dill", foes: "Potatoes, strong-scented herbs like sage" },
+  { plant: "🫑 Peppers", friends: "Basil, tomatoes, spinach, carrots", foes: "Fennel, kohlrabi" },
+  { plant: "🥬 Spinach & Lettuce", friends: "Strawberries, radish, carrots, cucumbers, peas", foes: "Fennel" },
+  { plant: "🥦 Kale", friends: "Beets, celery, herbs, onions, marigolds", foes: "Tomatoes, strawberries, peppers" },
+  { plant: "🌿 Basil", friends: "Tomatoes, peppers, asparagus; repels aphids, spider mites", foes: "Sage, common rue" },
+];
+
+// Build cards
+const grid = document.getElementById('plantGrid');
+plants.forEach(p => {
+  const card = document.createElement('div');
+  card.className = `plant-card`;
+  card.dataset.type = p.type;
+  card.dataset.season = p.season;
+
+  const waterPct = (p.waterLevel * 100) + '%';
+
+  card.innerHTML = `
+    <div class="card-header">
+      <div>
+        <div class="plant-name">${p.name}</div>
+        <div class="plant-type">${p.type} · ${p.season} season</div>
+      </div>
+      <div class="plant-emoji">${p.emoji}</div>
+    </div>
+    <div class="card-body">
+      <div class="stat" style="grid-column:1/-1">
+        <div class="stat-label">🗓 When to Plant</div>
+        <div class="stat-value">${p.plantDate}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">📐 Spacing</div>
+        <div class="stat-value">${p.spacing}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">⚗️ Soil pH</div>
+        <div class="stat-value"><strong>${p.ph}</strong></div>
+      </div>
+      <div class="stat" style="grid-column:1/-1">
+        <div class="stat-label">💧 Water / Week</div>
+        <div class="water-bar-wrap">
+          <div class="stat-value"><strong>${p.water}</strong></div>
+          <div class="water-bar" style="flex:1"><div class="water-fill" style="width:${waterPct}"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="tip-label">💡 Special Notes</div>
+      <div class="tip-text">${p.tip}</div>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+// Build calendar
+const tbody = document.getElementById('calendarBody');
+calendar.forEach(c => {
+  const tr = document.createElement('tr');
+  let html = `<td>${c.name}</td>`;
+  c.row.forEach(cell => {
+    if (cell) {
+      html += `<td><div class="cal-dot ${calType[cell]}">${cell}</div></td>`;
+    } else {
+      html += `<td></td>`;
+    }
+  });
+  tr.innerHTML = html;
+  tbody.appendChild(tr);
+});
+
+// Build companion cards
+const compGrid = document.getElementById('companionGrid');
+companions.forEach(c => {
+  const card = document.createElement('div');
+  card.className = 'companion-card';
+  card.innerHTML = `
+    <div class="companion-title">${c.plant}</div>
+    <div class="comp-row"><span class="comp-label friend">Friend</span><span>${c.friends}</span></div>
+    <div class="comp-row"><span class="comp-label foe">Avoid</span><span>${c.foes}</span></div>
+  `;
+  compGrid.appendChild(card);
+});
+
+// Filter logic
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.plant-card').forEach(card => {
+      if (filter === 'all' || card.dataset.type === filter || card.dataset.season === filter) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
