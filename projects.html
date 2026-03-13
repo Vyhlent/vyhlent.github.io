@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-deep: #1a3a2a;
+      --green-mid: #2d5a3d;
+      --green-light: #4a8c5c;
+      --cream: #f5f0e8;
+      --cream-dark: #ede8df;
+      --gold: #c9a84c;
+      --gold-light: #e8d49a;
+      --text: #1a3a2a;
+      --text-soft: #3d5a47;
+      --danger: #a83232;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      color: var(--text);
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 15% 85%, rgba(74,140,92,0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 15%, rgba(45,90,61,0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--green-deep);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 60px;
+      box-shadow: 0 2px 20px rgba(26,58,42,0.3);
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--cream);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-brand em { color: var(--gold); font-style: italic; }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 1; }
+    .nav-back svg { width: 14px; height: 14px; }
+
+    /* ── LAYOUT ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 40px;
+      animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .page-label {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 10px;
+    }
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 700;
+      color: var(--green-deep);
+      line-height: 1.1;
+    }
+    .page-title em { font-style: italic; font-weight: 400; color: var(--green-mid); }
+
+    .title-divider {
+      width: 40px; height: 2px;
+      background: var(--gold);
+      margin-top: 18px;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .search-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      color: var(--green-light);
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border: 1.5px solid var(--cream-dark);
+      background: white;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .search-input::placeholder { color: #9aac9f; }
+    .search-input:focus { border-color: var(--green-light); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+    .btn svg { width: 15px; height: 15px; }
+
+    .btn-primary {
+      background: var(--green-deep);
+      color: var(--cream);
+    }
+    .btn-primary:hover { background: var(--green-mid); }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--green-deep);
+    }
+    .btn-gold:hover { background: #b8962e; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green-deep);
+      border: 1.5px solid var(--green-deep);
+    }
+    .btn-outline:hover { background: var(--green-deep); color: var(--cream); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--danger);
+      border: 1.5px solid var(--danger);
+      padding: 8px 16px;
+      font-size: 11px;
+    }
+    .btn-danger:hover { background: var(--danger); color: white; }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 11px;
+    }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+      animation: fadeUp 0.7s 0.2s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .project-card {
+      background: white;
+      border: 1.5px solid var(--cream-dark);
+      transition: box-shadow 0.25s, transform 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green-mid), var(--gold));
+    }
+    .project-card:hover {
+      box-shadow: 0 8px 32px rgba(26,58,42,0.12);
+      transform: translateY(-2px);
+    }
+
+    .card-header {
+      padding: 22px 24px 16px;
+      border-bottom: 1px solid var(--cream-dark);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green-deep);
+      line-height: 1.3;
+    }
+    .card-date {
+      font-size: 11px;
+      font-weight: 300;
+      color: #9aac9f;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    .card-body {
+      padding: 16px 24px;
+    }
+    .card-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-soft);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      min-height: 40px;
+    }
+
+    /* Files list */
+    .files-list { margin-bottom: 16px; }
+    .files-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 8px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--cream);
+      margin-bottom: 6px;
+      border: 1px solid var(--cream-dark);
+      gap: 10px;
+    }
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .file-info svg { width: 14px; height: 14px; color: var(--green-light); flex-shrink: 0; }
+    .file-name {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+    .file-size {
+      font-size: 10px;
+      color: #9aac9f;
+      flex-shrink: 0;
+    }
+    .file-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .file-btn {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: 1px solid var(--cream-dark);
+      cursor: pointer;
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+    .file-btn svg { width: 13px; height: 13px; }
+    .file-btn:hover { background: var(--green-deep); color: var(--cream); border-color: var(--green-deep); }
+    .file-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
+
+    .no-files {
+      font-size: 12px;
+      color: #9aac9f;
+      font-style: italic;
+      padding: 8px 0;
+    }
+
+    .card-footer {
+      padding: 14px 24px;
+      border-top: 1px solid var(--cream-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Upload area */
+    .upload-area {
+      border: 2px dashed var(--cream-dark);
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin: 12px 0;
+      background: var(--cream);
+    }
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--green-light);
+      background: rgba(74,140,92,0.05);
+    }
+    .upload-area p {
+      font-size: 12px;
+      color: #9aac9f;
+      margin-bottom: 0;
+    }
+    .upload-area svg { width: 24px; height: 24px; color: var(--green-light); margin-bottom: 6px; }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 40px;
+      color: #9aac9f;
+    }
+    .empty-state svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.4; }
+    .empty-state p { font-size: 15px; font-weight: 300; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,58,42,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--cream);
+      width: 100%;
+      max-width: 480px;
+      padding: 36px;
+      position: relative;
+      animation: modalIn 0.3s cubic-bezier(0.22,1,0.36,1) both;
+      border-top: 3px solid var(--gold);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green-deep);
+      margin-bottom: 24px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 32px; height: 32px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-soft);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--green-deep); }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 8px;
+    }
+    .form-input, .form-textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--cream-dark);
+      background: white;
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--green-light); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--green-deep);
+      color: var(--cream);
+      padding: 14px 24px;
+      font-size: 13px;
+      font-weight: 400;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.22,1,0.36,1);
+      border-left: 3px solid var(--gold);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast svg { width: 16px; height: 16px; color: var(--gold); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 20px; }
+      .page { padding: 32px 16px 60px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-brand">My <em>Space</em></a>
+    <a href="index.html" class="nav-back">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to Home
+    </a>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="page">
+
+    <div class="page-header">
+      <div class="page-label">Manage your work</div>
+      <h1 class="page-title">My <em>Projects</em></h1>
+      <div class="title-divider"></div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input class="search-input" type="text" id="searchInput" placeholder="Search projects…" oninput="filterProjects()"/>
+      </div>
+      <button class="btn btn-primary" onclick="openCreateModal()">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        New Project
+      </button>
+    </div>
+
+    <!-- GRID -->
+    <div class="projects-grid" id="projectsGrid"></div>
+
+  </div>
+
+  <!-- CREATE/EDIT MODAL -->
+  <div class="modal-overlay" id="projectModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('projectModal')">×</button>
+      <div class="modal-title" id="modalTitle">New Project</div>
+      <div class="form-group">
+        <label class="form-label">Project Name</label>
+        <input class="form-input" type="text" id="projectName" placeholder="Enter project name…"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="projectDesc" placeholder="Brief description…"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('projectModal')">Cancel</button>
+        <button class="btn btn-primary" id="modalSaveBtn" onclick="saveProject()">Create Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPDATE FILE MODAL -->
+  <div class="modal-overlay" id="updateModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('updateModal')">×</button>
+      <div class="modal-title">Update File</div>
+      <p style="font-size:13px;color:var(--text-soft);margin-bottom:20px;">Replacing: <strong id="updateFileName"></strong></p>
+      <div class="form-group">
+        <label class="form-label">Select Replacement File</label>
+        <input type="file" id="updateFileInput" style="font-family:'Jost',sans-serif;font-size:13px;width:100%;"/>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('updateModal')">Cancel</button>
+        <button class="btn btn-gold" onclick="confirmUpdate()">Update File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 8l3 3 7-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span id="toastMsg">Done!</span>
+  </div>
+
+  <script>
+    // ── STATE ──
+    let projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    let editingId = null;
+    let updatingFile = null; // { projectId, fileIndex }
+
+    function save() {
+      localStorage.setItem('projects', JSON.stringify(projects));
+    }
+
+    function uid() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+
+    function formatDate(ts) {
+      return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // ── MODAL ──
+    function openCreateModal() {
+      editingId = null;
+      document.getElementById('modalTitle').textContent = 'New Project';
+      document.getElementById('modalSaveBtn').textContent = 'Create Project';
+      document.getElementById('projectName').value = '';
+      document.getElementById('projectDesc').value = '';
+      document.getElementById('projectModal').classList.add('open');
+      setTimeout(() => document.getElementById('projectName').focus(), 100);
+    }
+
+    function openEditModal(id) {
+      const p = projects.find(x => x.id === id);
+      if (!p) return;
+      editingId = id;
+      document.getElementById('modalTitle').textContent = 'Edit Project';
+      document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+      document.getElementById('projectName').value = p.name;
+      document.getElementById('projectDesc').value = p.desc;
+      document.getElementById('projectModal').classList.add('open');
+      setTimeout(() => document.getElementById('projectName').focus(), 100);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function saveProject() {
+      const name = document.getElementById('projectName').value.trim();
+      if (!name) { document.getElementById('projectName').focus(); return; }
+      const desc = document.getElementById('projectDesc').value.trim();
+
+      if (editingId) {
+        const p = projects.find(x => x.id === editingId);
+        p.name = name;
+        p.desc = desc;
+        showToast('Project updated');
+      } else {
+        projects.unshift({ id: uid(), name, desc, files: [], created: Date.now() });
+        showToast('Project created');
+      }
+      save();
+      closeModal('projectModal');
+      render();
+    }
+
+    function deleteProject(id) {
+      if (!confirm('Delete this project and all its files?')) return;
+      projects = projects.filter(x => x.id !== id);
+      save();
+      render();
+      showToast('Project deleted');
+    }
+
+    // ── FILES ──
+    function triggerUpload(projectId) {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.multiple = true;
+      input.onchange = (e) => handleFiles(projectId, e.target.files);
+      input.click();
+    }
+
+    function handleFiles(projectId, fileList) {
+      const p = projects.find(x => x.id === projectId);
+      if (!p) return;
+      let count = 0;
+      Array.from(fileList).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          p.files.push({
+            id: uid(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            data: e.target.result,
+            added: Date.now()
+          });
+          count++;
+          if (count === fileList.length) {
+            save();
+            render();
+            showToast(`${count} file${count > 1 ? 's' : ''} uploaded`);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function downloadFile(projectId, fileId) {
+      const p = projects.find(x => x.id === projectId);
+      const f = p?.files.find(x => x.id === fileId);
+      if (!f) return;
+      const a = document.createElement('a');
+      a.href = f.data;
+      a.download = f.name;
+      a.click();
+      showToast(`Downloading ${f.name}`);
+    }
+
+    function openUpdateModal(projectId, fileId) {
+      updatingFile = { projectId, fileId };
+      const p = projects.find(x => x.id === projectId);
+      const f = p?.files.find(x => x.id === fileId);
+      document.getElementById('updateFileName').textContent = f?.name || '';
+      document.getElementById('updateFileInput').value = '';
+      document.getElementById('updateModal').classList.add('open');
+    }
+
+    function confirmUpdate() {
+      const input = document.getElementById('updateFileInput');
+      if (!input.files.length) { showToast('Please select a file'); return; }
+      const file = input.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const p = projects.find(x => x.id === updatingFile.projectId);
+        const idx = p?.files.findIndex(x => x.id === updatingFile.fileId);
+        if (idx === -1 || idx === undefined) return;
+        p.files[idx] = {
+          ...p.files[idx],
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          data: e.target.result,
+          updated: Date.now()
+        };
+        save();
+        render();
+        closeModal('updateModal');
+        showToast('File updated');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteFile(projectId, fileId) {
+      const p = projects.find(x => x.id === projectId);
+      if (!p) return;
+      p.files = p.files.filter(x => x.id !== fileId);
+      save();
+      render();
+      showToast('File removed');
+    }
+
+    // ── RENDER ──
+    function fileIcon() {
+      return `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 2h7l3 3v9H3V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        <path d="M10 2v3h3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+      </svg>`;
+    }
+
+    function renderCard(p) {
+      const filesHtml = p.files.length === 0
+        ? `<div class="no-files">No files yet — upload some below</div>`
+        : p.files.map(f => `
+          <div class="file-item">
+            <div class="file-info">
+              ${fileIcon()}
+              <span class="file-name" title="${f.name}">${f.name}</span>
+            </div>
+            <span class="file-size">${formatSize(f.size)}</span>
+            <div class="file-actions">
+              <button class="file-btn" title="Download" onclick="downloadFile('${p.id}','${f.id}')">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 3v7M5 7l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M3 13h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </button>
+              <button class="file-btn" title="Update / Replace" onclick="openUpdateModal('${p.id}','${f.id}')">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 8a6 6 0 1 0 1.5-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                  <path d="M2 4v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="file-btn danger" title="Remove" onclick="deleteFile('${p.id}','${f.id}')">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>`).join('');
+
+      return `
+        <div class="project-card" data-name="${p.name.toLowerCase()} ${p.desc.toLowerCase()}">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${p.name}</div>
+              <div class="card-date">Created ${formatDate(p.created)}</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="openEditModal('${p.id}')">Edit</button>
+          </div>
+          <div class="card-body">
+            <div class="card-desc">${p.desc || '<em style="color:#9aac9f">No description</em>'}</div>
+            <div class="files-list">
+              <div class="files-label">${p.files.length} File${p.files.length !== 1 ? 's' : ''}</div>
+              ${filesHtml}
+            </div>
+            <div class="upload-area" onclick="triggerUpload('${p.id}')"
+              ondragover="event.preventDefault();this.classList.add('dragover')"
+              ondragleave="this.classList.remove('dragover')"
+              ondrop="event.preventDefault();this.classList.remove('dragover');handleFiles('${p.id}',event.dataTransfer.files)">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16V8M9 11l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M20 16.5A4 4 0 0 0 18 9h-1A7 7 0 1 0 5 15.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <p>Click to upload or drag &amp; drop files here</p>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-danger" onclick="deleteProject('${p.id}')">Delete Project</button>
+          </div>
+        </div>`;
+    }
+
+    function render(list) {
+      const grid = document.getElementById('projectsGrid');
+      const data = list || projects;
+      if (data.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="6" width="36" height="36" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M24 18v12M18 24h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <p>No projects yet — click <strong>New Project</strong> to get started</p>
+          </div>`;
+      } else {
+        grid.innerHTML = data.map(renderCard).join('');
+      }
+    }
+
+    function filterProjects() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!q) { render(); return; }
+      const filtered = projects.filter(p =>
+        p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q)
+      );
+      render(filtered);
+    }
+
+    // close modal on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (e.target === el) el.classList.remove('open');
+      });
+    });
+
+    // enter key in modal
+    document.getElementById('projectName').addEventListener('keydown', e => {
+      if (e.key === 'Enter') saveProject();
+    });
+
+    // init
+    render();
+  </script>
+</body>
+</html>
