@@ -1,0 +1,455 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:14px}
+.wrap{padding:1rem 0}
+.topbar{display:flex;gap:8px;margin-bottom:1rem;align-items:center;flex-wrap:wrap}
+.topbar input{flex:1;min-width:140px}
+.cat-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.cbtn{padding:4px 11px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer}
+.cbtn.on{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;margin-bottom:1.5rem}
+.pcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.85rem;cursor:pointer;position:relative}
+.pcard:hover{border-color:var(--color-border-primary)}
+.pcard-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.pcard-cat{font-size:11px;color:var(--color-text-tertiary);margin-bottom:8px}
+.pcard-tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:10px;padding:2px 7px;border-radius:10px}
+.ts{background:#FAEEDA;color:#633806}
+.tw{background:#E6F1FB;color:#042C53}
+.pcard-actions{display:flex;gap:5px;margin-top:10px}
+.pcard-actions button{flex:1;padding:4px 0;font-size:11px;cursor:pointer;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary)}
+.pcard-actions button:hover{background:var(--color-background-secondary)}
+.del-btn{color:var(--color-text-danger) !important;border-color:var(--color-border-danger) !important}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.panel-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ph-icon{width:44px;height:44px;border-radius:var(--border-radius-md);background:#EAF3DE;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#3B6D11;flex-shrink:0}
+.ph-title{font-size:18px;font-weight:500}
+.ph-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.stabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem;overflow-x:auto}
+.stab{padding:7px 13px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);margin-bottom:-1px;white-space:nowrap}
+.stab.on{color:#3B6D11;border-bottom-color:#3B6D11}
+.tc{display:none}.tc.on{display:block}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1rem}
+.icard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px}
+.ilabel{font-size:11px;color:var(--color-text-tertiary);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.ival{font-size:12px;font-weight:500;line-height:1.4}
+.sh{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
+.cpill{font-size:11px;padding:3px 9px;border-radius:10px;display:inline-block;margin:2px}
+.gpill{background:#EAF3DE;color:#27500A}
+.rpill{background:#FCEBEB;color:#791F1F}
+.ditem{padding:9px 11px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:7px}
+.dname{font-size:12px;font-weight:500;margin-bottom:3px}
+.ddesc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.stagelist{list-style:none}
+.sitem{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sitem:last-child{border-bottom:none}
+.sdot{width:28px;height:28px;border-radius:50%;background:#EAF3DE;color:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;margin-top:1px}
+.stitle{font-size:12px;font-weight:500}
+.sdesc{font-size:11px;color:var(--color-text-secondary);margin-top:2px;line-height:1.5}
+.abox{padding:9px 11px;border-radius:var(--border-radius-md);margin-bottom:7px;font-size:12px;line-height:1.5;border:0.5px solid}
+.atip{background:#EAF3DE;border-color:#639922;color:#27500A}
+.awarn{background:#FAEEDA;border-color:#BA7517;color:#633806}
+.rotbox{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem;margin-bottom:.75rem}
+.rtitle{font-size:12px;font-weight:500;margin-bottom:.3rem}
+.rdesc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.backbtn{background:none;border:0.5px solid var(--color-border-secondary);padding:5px 13px;border-radius:var(--border-radius-md);cursor:pointer;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem}
+.editmode .icard{border:0.5px solid var(--color-border-secondary);cursor:pointer}
+.editmode .icard:hover{border-color:var(--color-border-primary);background:var(--color-background-primary)}
+.modal-bg{background:rgba(0,0,0,0.35);border-radius:var(--border-radius-lg);padding:2rem;margin-bottom:1.5rem}
+.modal{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;max-width:600px;margin:0 auto}
+.modal h3{font-size:16px;font-weight:500;margin-bottom:1rem}
+.frow{margin-bottom:.85rem}
+.frow label{display:block;font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.frow input,.frow textarea,.frow select{width:100%;font-size:13px}
+.frow textarea{resize:vertical;min-height:60px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.factions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)}
+.factions button{padding:6px 16px;font-size:13px;cursor:pointer;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary)}
+.save-btn{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11 !important}
+.save-btn:hover{background:#27500A}
+.cancel-btn{background:var(--color-background-primary);color:var(--color-text-secondary)}
+.ph-bar-vis{height:16px;border-radius:3px;background:linear-gradient(to right,#d32f2f,#f57c00,#fbc02d,#689f38,#2e7d32,#1565c0);position:relative;margin:6px 0 3px}
+.ph-marker-vis{position:absolute;top:-3px;width:10px;height:22px;background:var(--color-text-primary);border-radius:2px;transform:translateX(-50%);opacity:.75}
+.ph-labels-vis{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-tertiary)}
+.wdrop{width:14px;height:14px;border-radius:50% 50% 50% 0;background:#B5D4F4;transform:rotate(-45deg);display:inline-block;margin:1px}
+.wdrop.f{background:#185FA5}
+.count-badge{position:absolute;top:8px;right:8px;background:var(--color-background-secondary);border-radius:10px;font-size:10px;padding:1px 6px;color:var(--color-text-tertiary)}
+.tab-edit-hint{font-size:11px;color:var(--color-text-tertiary);margin-bottom:.75rem;display:flex;align-items:center;gap:5px}
+.pencil-icon{width:12px;height:12px;display:inline-block;vertical-align:middle}
+.stage-edit-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.stage-edit-row input{flex:1}
+.stage-edit-row textarea{flex:2;min-height:44px;resize:vertical;font-size:12px}
+.rm-btn{padding:4px 8px;font-size:11px;color:var(--color-text-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);cursor:pointer;background:none;flex-shrink:0}
+.add-row-btn{font-size:11px;padding:5px 12px;cursor:pointer;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);background:none;color:var(--color-text-secondary);width:100%;margin-top:4px}
+.add-row-btn:hover{background:var(--color-background-secondary)}
+.section-divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1rem 0}
+.no-res{text-align:center;padding:2.5rem;color:var(--color-text-secondary);font-size:13px}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Zone 6 Garden Planner — 19 editable crops with add, edit, and delete support.</h2>
+<div id="list-view">
+  <div class="topbar">
+    <input type="text" id="search" placeholder="Search plants..." oninput="renderGrid()">
+    <button onclick="openAdd()" style="white-space:nowrap;padding:0 14px;height:36px;border:0.5px solid #3B6D11;border-radius:var(--border-radius-md);background:#3B6D11;color:#EAF3DE;cursor:pointer;font-size:13px">+ Add crop</button>
+  </div>
+  <div class="cat-row" id="cat-row"></div>
+  <div class="grid" id="plant-grid"></div>
+</div>
+<div id="detail-view" style="display:none">
+  <button class="backbtn" onclick="showList()">← all plants</button>
+  <div id="detail-content"></div>
+</div>
+<div id="edit-modal" style="display:none">
+  <div class="modal-bg"><div class="modal" id="modal-inner"></div></div>
+</div>
+</div>
+
+<script>
+const DEFAULT_PLANT = ()=>({id:'plant_'+Date.now(),name:'',cat:'',emoji:'🌱',
+  planting:{zone6:'',depth:'',spacing:'',ph:'6.0–7.0',sun:'Full sun'},
+  water:{in:'1',note:''},
+  fertilizer:{type:'',amount:'',freq:''},
+  companions:{good:[],bad:[]},companionDist:'',
+  diseases:[{name:'',desc:''}],
+  pests:'',animals:'',
+  rotation:{family:'',cycle:''},
+  stages:[{label:'',title:'',desc:''}],
+  special:''
+});
+
+let PLANTS=[
+  {id:"spinach",name:"Spinach",cat:"Leafy Green",emoji:"🌿",planting:{zone6:"Direct sow Mar 15–Apr 30 (spring) or Aug 15–Sep 30 (fall); tolerates light frost",depth:'0.5"',spacing:'3–6" apart, rows 12" apart',ph:"6.0–7.0",sun:"Full sun to partial shade"},water:{in:"1–1.5",note:"Keep soil consistently moist; mulch to retain moisture"},fertilizer:{type:"Balanced nitrogen-rich (10-10-10)",amount:"1 lb per 100 sq ft",freq:"At planting; side-dress nitrogen 3 weeks after germination"},companions:{good:["Strawberries","Garlic","Radishes","Peas"],bad:["Fennel"]},companionDist:'Keep at least 12" from fennel.',diseases:[{name:"Downy Mildew",desc:"Yellow spots on upper leaf, gray-purple fuzz beneath. Use resistant varieties, avoid overhead watering."},{name:"Cercospora Leaf Spot",desc:"Circular brown spots with white centers. Remove infected leaves; copper fungicide."}],pests:"Row covers for aphids and leaf miners; neem oil spray.",animals:"Ladybugs eat aphids; ground beetles prey on soil pests.",rotation:{family:"Chenopodiaceae",cycle:"3–4 year rotation; follow with legumes or grains, not beets or chard"},stages:[{label:"Germ",title:"Germination",desc:"Seeds sprout in 7–14 days at 50–70°F."},{label:"Seed",title:"Seedling",desc:"Thin to 3–6 inches at 2 weeks."},{label:"Grow",title:"Vegetative",desc:"Harvest outer leaves to extend production."},{label:"Bolt",title:"Bolting",desc:"Hot temps trigger bolting. Harvest immediately."}],special:"Plant in succession every 2–3 weeks. Best flavor after a light frost."},
+  {id:"blackberries",name:"Blackberries",cat:"Berry",emoji:"🫐",planting:{zone6:"Plant bare-root canes Mar–Apr; fruit in year 2",depth:'Crown at soil level, roots 2–3" deep',spacing:'3–4 ft apart, rows 8 ft apart',ph:"5.5–7.0",sun:"Full sun"},water:{in:"1–2",note:"Critical during fruit swell; drip irrigation preferred"},fertilizer:{type:"10-10-10 balanced",amount:"¼ lb per plant at planting; ½ lb established",freq:"Early spring; second application after harvest"},companions:{good:["Tansy","Chives","Marigolds"],bad:["Tomatoes","Peppers","Eggplant"]},companionDist:"Keep 20–30 ft from tomatoes/peppers (Verticillium wilt).",diseases:[{name:"Cane Blight",desc:"Dark brown lesions on canes. Prune to healthy wood; sterilize tools."},{name:"Anthracnose",desc:"Sunken purple spots on young canes. Liquid copper fungicide in early spring."}],pests:"Use netting for birds; hand-pick Japanese beetles; neem oil for stink bugs.",animals:"Bees pollinate; birds eat pests but net when fruiting.",rotation:{family:"Rosaceae (perennial)",cycle:"Perennial — site carefully; replace after 8–12 years"},stages:[{label:"Dorm",title:"Dormancy",desc:"First winter. Roots establish underground."},{label:"Veg",title:"Primocane growth",desc:"Year 1: vigorous canes grow but don't fruit."},{label:"Flwr",title:"Floricane flowering",desc:"Year 2 canes flower and fruit."},{label:"Harv",title:"Harvest",desc:"Berries ripen Jun–Aug. Pick when fully black."}],special:"Tie canes to trellis. Cut floricanes to ground after harvest. Thornless varieties available."},
+  {id:"raspberries",name:"Raspberries",cat:"Berry",emoji:"🍓",planting:{zone6:"Plant Mar–Apr (summer-bearing); Apr–May (fall-bearing)",depth:'Crown at soil level, roots 2–4" deep',spacing:'2–3 ft apart, rows 6–8 ft apart',ph:"5.5–6.5",sun:"Full sun"},water:{in:"1–1.5",note:"Consistent moisture critical during cane development and fruiting"},fertilizer:{type:"10-10-10 or ammonium nitrate",amount:"¼ lb per plant at planting",freq:"Spring before growth; avoid late-season nitrogen"},companions:{good:["Garlic","Chives","Marigolds"],bad:["Tomatoes","Potatoes","Eggplant"]},companionDist:"20 ft minimum from tomatoes/potatoes.",diseases:[{name:"Raspberry Mosaic Virus",desc:"Mottled, distorted leaves. Spread by aphids. Remove infected plants."},{name:"Root Rot",desc:"Wilting, orange discoloration in crown. Improve drainage; use resistant varieties."}],pests:"Aphids — neem oil; cane borers — prune wilted tips; fruitworm — hand pick.",animals:"Ground beetles eat larvae; parasitic wasps; bees essential.",rotation:{family:"Rosaceae (perennial)",cycle:"Perennial; renovate every 8–10 years in new location"},stages:[{label:"Dorm",title:"Dormancy",desc:"Winter. Canes dormant, roots active."},{label:"Prim",title:"Primocane",desc:"Spring–summer: new canes grow. No fruit yet."},{label:"Flor",title:"Floricane",desc:"Year 2 canes flower and fruit Jun–Oct."},{label:"Harv",title:"Harvest",desc:"Pick when fully colored and slides off the core."}],special:"Summer-bearing: prune floricanes after harvest. Everbearing: mow all canes in early spring."},
+  {id:"cantaloupe",name:"Cantaloupe",cat:"Vine Fruit",emoji:"🍈",planting:{zone6:"Start indoors Apr 15–May 1; transplant May 15–30; or direct sow May 15",depth:'Direct sow 1" deep; transplant at pot depth',spacing:'2–3 ft per hill, hills 4–6 ft apart',ph:"6.0–6.5",sun:"Full sun (8+ hours)"},water:{in:"1–2",note:"Taper off as fruits approach ripeness to concentrate sugar"},fertilizer:{type:"5-10-10 at transplant; switch to 0-0-60 as vines run",amount:"2 lbs per 100 sq ft",freq:"At transplant; vine run; first fruit set"},companions:{good:["Corn","Marigolds","Nasturtiums"],bad:["Potatoes","Cucumbers"]},companionDist:"Keep 3 ft from cucumbers; 4+ ft from potatoes.",diseases:[{name:"Powdery Mildew",desc:"White powdery coating on leaves. Neem oil or potassium bicarbonate."},{name:"Gummy Stem Blight",desc:"Water-soaked lesions with gummy exudate. Chlorothalonil fungicide; rotate crops."}],pests:"Cucumber beetles — row covers until flowering; aphids — neem oil.",animals:"Bees essential for pollination. Ground beetles eat larvae.",rotation:{family:"Cucurbitaceae",cycle:"3–4 year rotation away from all cucurbits"},stages:[{label:"Germ",title:"Germination",desc:"5–10 days at 70–90°F. Needs warm soil."},{label:"Vine",title:"Vine development",desc:"Rapid vine growth. Pinch early for branching."},{label:"Flwr",title:"Flowering",desc:"Male flowers appear first, then females."},{label:"Ripe",title:"Maturation",desc:"Slip test at stem end when netting forms on rind."}],special:"Use black plastic mulch. Place board under developing fruits."},
+  {id:"garlic",name:"Garlic",cat:"Allium",emoji:"🧄",planting:{zone6:"Plant Oct 1–Nov 15 for summer harvest",depth:'2" deep, pointed end up',spacing:'6" apart, rows 12" apart',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Stop watering 2–4 weeks before harvest when leaves yellow"},fertilizer:{type:"High-nitrogen (blood meal 12-0-0 or fish emulsion)",amount:"1 cup blood meal per 10 sq ft",freq:"Fall at planting; early spring when shoots emerge; stop May"},companions:{good:["Tomatoes","Carrots","Beets","Spinach"],bad:["Peas","Beans","Asparagus"]},companionDist:'Keep 18"+ from peas and beans; 12" from asparagus.',diseases:[{name:"White Rot",desc:"White mold on base of bulb. Remove plants; avoid area for 20 years."},{name:"Botrytis Neck Rot",desc:"Gray mold on neck after harvest. Cure 3–4 weeks in dry, airy space."}],pests:"Thrips — insecticidal soap; onion maggot — row covers.",animals:"Garlic deters many pests. Lacewings help with thrips.",rotation:{family:"Alliaceae",cycle:"3–4 year rotation; do not follow other alliums"},stages:[{label:"Root",title:"Root establishment",desc:"Fall: roots grow, small shoot emerges. Mulch with 4–6\" straw."},{label:"Grn",title:"Spring green",desc:"Shoots emerge early spring. Green garlic can be harvested."},{label:"Scape",title:"Scape formation",desc:"Hardneck: remove curling scapes to redirect energy."},{label:"Harv",title:"Harvest",desc:"When lower 1/3 of leaves are brown (Jun–Jul). Cure 3–4 weeks."}],special:"Plant hardneck varieties for best Zone 6 flavor. Plant Oct for Jun–Jul harvest."},
+  {id:"red_onions",name:"Red Onions",cat:"Allium",emoji:"🧅",planting:{zone6:"Start seeds indoors Jan 15–Feb 28; transplant Apr 15–May 1; or sets Apr 1–30",depth:'Sets 1" deep; transplants at pot depth',spacing:'4–6" apart, rows 12" apart',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Reduce when tops fall; stop 1 week before harvest"},fertilizer:{type:"10-10-10, then nitrogen boost (21-0-0)",amount:"½ lb per 10 sq ft pre-planting",freq:"At planting; nitrogen when pencil-thick; stop at bulb formation"},companions:{good:["Carrots","Tomatoes","Beets","Marigolds"],bad:["Peas","Beans","Sage"]},companionDist:'Keep 12" from sage; 18" from peas/beans.',diseases:[{name:"Botrytis Leaf Blight",desc:"White mold on leaves. Remove infected tissue; copper fungicide."},{name:"Fusarium Basal Rot",desc:"Pink-red rot at base. Rotate crops; certified seed."}],pests:"Thrips — insecticidal soap; onion maggot — row covers.",animals:"Predatory midges eat thrips larvae.",rotation:{family:"Alliaceae",cycle:"3–4 year rotation away from all alliums"},stages:[{label:"Seed",title:"Seedling",desc:"6–10 weeks indoor start."},{label:"Bulb",title:"Bulb initiation",desc:"Triggered by day length. Zone 6: long-day varieties."},{label:"Size",title:"Bulb sizing",desc:"Bulb swells rapidly."},{label:"Cure",title:"Harvest & cure",desc:"Cure 3–4 weeks at 80–90°F."}],special:"Zone 6: use long-day varieties (Redwing, Mars, Burgundy)."},
+  {id:"asparagus",name:"Asparagus",cat:"Perennial Veg",emoji:"🌱",planting:{zone6:"Plant crowns Apr 1–30 as soon as soil is workable (40°F+)",depth:'6–8" deep in trench; fill in as shoots grow',spacing:'12–18" apart, rows 4–5 ft apart',ph:"6.5–7.5",sun:"Full sun"},water:{in:"1–2",note:"Consistent moisture first 2 years; critical during fern stage"},fertilizer:{type:"Balanced 10-10-10",amount:"2 lbs per 100 sq ft",freq:"Early spring before spears; again after harvest ends"},companions:{good:["Tomatoes","Basil","Marigolds"],bad:["Garlic","Onions","Potatoes"]},companionDist:'Keep 24" from garlic/onions; 3 ft from potatoes.',diseases:[{name:"Asparagus Rust",desc:"Orange-red pustules on ferns. Copper fungicide; plant Jersey series."},{name:"Crown Rot",desc:"Brown-orange crown, plant collapse. Improve drainage."}],pests:"Asparagus beetle — hand pick; pyrethrin if severe.",animals:"Ladybugs eat beetle eggs; toads eat many pests.",rotation:{family:"Asparagaceae (perennial)",cycle:"Permanent bed — productive for 15–30 years"},stages:[{label:"Yr1",title:"Year 1 — no harvest",desc:"Do not harvest. Let ferns grow to build root reserves."},{label:"Yr2",title:"Year 2 — 2 weeks",desc:"Harvest for 2 weeks only."},{label:"Yr3",title:"Year 3 — full",desc:"Harvest 4–6 weeks. Stop when spears thin to pencil-width."},{label:"Fern",title:"Fern phase",desc:"Let ferns grow all season after harvest."}],special:"First harvest year 3. Jersey Giant, Knight, Supreme are great Zone 6 varieties. Beds last 20+ years."},
+  {id:"carrots",name:"Carrots",cat:"Root Vegetable",emoji:"🥕",planting:{zone6:"Direct sow Apr 1–May 15 (spring) or Jul 15–Aug 15 (fall)",depth:'0.25" deep (surface sow, then thin)',spacing:'2–3" apart, rows 12" apart',ph:"6.0–6.8",sun:"Full sun to partial shade"},water:{in:"1",note:"Consistent moisture prevents forking; deep watering encourages deep roots"},fertilizer:{type:"Low-nitrogen (5-15-15 or 0-10-10)",amount:"2 lbs per 100 sq ft",freq:"At planting; potassium side-dress at 4 weeks; avoid high N"},companions:{good:["Rosemary","Onions","Leeks","Tomatoes"],bad:["Dill","Anise"]},companionDist:'Keep 12"+ from dill and anise.',diseases:[{name:"Alternaria Leaf Blight",desc:"Dark spots with yellow halos. Remove infected tops."},{name:"Cavity Spot",desc:"Elliptical pits — calcium deficiency. Improve drainage; add lime."}],pests:"Carrot rust fly — row covers; wireworms — beneficial nematodes.",animals:"Parasitic wasps; hover flies attracted by umbellifers.",rotation:{family:"Apiaceae",cycle:"3-year rotation; avoid parsnips, parsley, celery in sequence"},stages:[{label:"Germ",title:"Germination",desc:"14–21 days. Keep moist — lay burlap until sprouts appear."},{label:"Thin",title:"Thinning",desc:"Thin to 2–3\" when seedlings are 2\" tall."},{label:"Root",title:"Root development",desc:"Cover exposed shoulders to prevent greening."},{label:"Harv",title:"Harvest",desc:"60–80 days. Flavor improves after light frost."}],special:"Prepare soil 12\" deep. Fall carrots are sweeter."},
+  {id:"marigolds",name:"Marigolds",cat:"Flower",emoji:"🌼",planting:{zone6:"Start indoors Apr 1–15; transplant May 15; or direct sow May 15",depth:'0.25"',spacing:'French: 6–8" apart; African: 10–12" apart',ph:"5.8–7.0",sun:"Full sun"},water:{in:"1",note:"Allow to dry slightly between waterings; overwatering reduces pest-repelling volatiles"},fertilizer:{type:"Balanced 5-10-5 or low-nitrogen",amount:"Light application",freq:"Once at planting; deadhead to encourage bloom"},companions:{good:["Tomatoes","Peppers","Cucumbers","Most vegetables"],bad:["Fennel"]},companionDist:'Marigolds benefit most of the garden. Keep 12" from fennel.',diseases:[{name:"Botrytis (Gray Mold)",desc:"Gray fuzzy mold on flowers. Remove spent flowers; improve air circulation."},{name:"Powdery Mildew",desc:"White coating in dry heat. Improve air flow."}],pests:"Marigolds repel many pests! Spider mites in heat — neem oil. Slugs — diatomaceous earth.",animals:"Excellent attractor of hoverflies, parasitic wasps, ladybugs, and pollinators.",rotation:{family:"Asteraceae (annual)",cycle:"Annual; replant each year; benefits soil by suppressing nematodes"},stages:[{label:"Germ",title:"Germination",desc:"5–7 days indoors."},{label:"Seedl",title:"Seedling",desc:"Harden off before transplant."},{label:"Bud",title:"Budding",desc:"Buds form 6–8 weeks. Pinch for branching."},{label:"Bloom",title:"Bloom",desc:"Deadhead to extend bloom until frost."}],special:"French marigolds most effective for nematode suppression. Plant throughout the entire garden."},
+  {id:"tomatoes",name:"Tomatoes",cat:"Fruiting Veg",emoji:"🍅",planting:{zone6:"Start indoors Mar 15–Apr 15; transplant May 15–Jun 1",depth:'Bury stem deep — up to 2/3 of plant',spacing:'Determinate: 2 ft; indeterminate: 3 ft; rows 4 ft',ph:"6.0–6.8",sun:"Full sun (8+ hours)"},water:{in:"1–2",note:"Deep, consistent watering prevents blossom end rot; water at base"},fertilizer:{type:"Tomato-specific 8-32-16 at transplant; balanced once fruiting",amount:"2 lbs per 100 sq ft; ½ cup per plant at transplant",freq:"Pre-plant; 6 weeks after transplant; at first fruit set"},companions:{good:["Basil","Marigolds","Carrots","Parsley"],bad:["Fennel","Potatoes","Corn","Blackberries"]},companionDist:'Keep 3–4 ft from potatoes; 20 ft from blackberries; 2 ft from corn.',diseases:[{name:"Early Blight",desc:"Concentric-ring spots on lower leaves. Copper fungicide; mulch."},{name:"Late Blight",desc:"Gray-green patches, white mold. Destroy plants; chlorothalonil."},{name:"Septoria Leaf Spot",desc:"Small circular spots. Same prevention as early blight."}],pests:"Hornworm — hand pick; aphids — neem oil; cutworms — stem collar.",animals:"Braconid wasps parasitize hornworms; lacewings eat aphids.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after potatoes, peppers, eggplant"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"6–8 weeks before transplant. 14–16 hours light."},{label:"Trans",title:"Transplant",desc:"After last frost. Bury deeply. Harden off 7–10 days."},{label:"Flwr",title:"Flowering",desc:"First flowers 6–8 weeks after transplant."},{label:"Harv",title:"Harvest",desc:"~70–80 days after transplant."}],special:"Choose <80 day maturity varieties for Zone 6. Sucker indeterminate varieties."},
+  {id:"potatoes",name:"Potatoes",cat:"Root Vegetable",emoji:"🥔",planting:{zone6:"Plant seed potatoes Apr 15–May 15 (soil 45°F+)",depth:'3–4" deep; hill up as plants grow',spacing:'12" apart, rows 30–36" apart',ph:"4.8–5.5",sun:"Full sun"},water:{in:"1–2",note:"Critical during tuber set (when plants flower); reduce after tops die back"},fertilizer:{type:"Low-nitrogen 5-10-10 or 8-24-24",amount:"3 lbs per 100 sq ft",freq:"Pre-plant; side-dress low-N when hilling; avoid N after flowering"},companions:{good:["Beans","Marigolds","Nasturtiums","Corn"],bad:["Tomatoes","Peppers","Cucumbers","Raspberries"]},companionDist:'Keep 3+ ft from tomatoes/peppers/eggplant; 3 ft from cucumbers.',diseases:[{name:"Late Blight",desc:"Dark water-soaked patches. Destroy all infected tissue; copper fungicide."},{name:"Common Scab",desc:"Rough corky patches. Raise soil acidity (pH 4.8–5.2); use certified seed."}],pests:"Colorado potato beetle — hand pick eggs/adults; spinosad spray.",animals:"Ground beetles eat grubs; row covers exclude flies.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after tomatoes, peppers, eggplant"},stages:[{label:"Sprt",title:"Sprouting",desc:"Pre-sprout (chit) 2–4 weeks before planting."},{label:"Veg",title:"Vegetative",desc:"Hill soil around stems every 2–3 weeks."},{label:"Tuber",title:"Tuber set",desc:"At flowering. Consistent water critical."},{label:"Harv",title:"Harvest",desc:"Mature: 2–3 weeks after tops die. Cure 2 weeks."}],special:"Never plant where Solanaceae grew in 3 years. Use certified seed potatoes. Green flesh is toxic."},
+  {id:"cucumbers",name:"Cucumbers",cat:"Vine Vegetable",emoji:"🥒",planting:{zone6:"Start May 1–10; transplant or direct sow May 25–Jun 10 (soil 65°F+)",depth:'Direct sow 0.5–1"; transplant at pot depth',spacing:'Vining: 12" on trellis; bush: 18–24"',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1–2",note:"Never let soil dry completely — causes bitter fruit"},fertilizer:{type:"Balanced 10-10-10",amount:"1 lb per 100 sq ft",freq:"At planting; every 3–4 weeks; reduce N after fruiting"},companions:{good:["Corn","Beans","Marigolds","Sunflowers"],bad:["Potatoes","Sage","Rosemary","Melons"]},companionDist:'Keep 3 ft from potatoes; 3 ft from melons; 12" from aromatic herbs.',diseases:[{name:"Cucumber Mosaic Virus",desc:"Mottled leaves, stunted plants. Spread by aphids. Remove infected plants."},{name:"Angular Leaf Spot",desc:"Angular spots along leaf veins. Copper bactericide; avoid overhead watering."}],pests:"Cucumber beetle — row covers until flowering; pickle worm — Bt.",animals:"Bees critical; ground beetles eat larvae.",rotation:{family:"Cucurbitaceae",cycle:"3–4 year rotation away from squash, pumpkins, melons"},stages:[{label:"Germ",title:"Germination",desc:"5–10 days at 70°F+."},{label:"Vine",title:"Vine growth",desc:"Train up trellis early."},{label:"Flwr",title:"Flowering",desc:"Bees essential. Male flowers appear before female."},{label:"Harv",title:"Harvest",desc:"Pick every 1–2 days! Overripe = plant stops producing."}],special:"Trellis strongly recommended. Bitter cucumbers from irregular watering or temps below 55°F."},
+  {id:"corn",name:"Corn",cat:"Grain",emoji:"🌽",planting:{zone6:"Direct sow May 15–Jun 15 (soil 60°F+)",depth:'1–1.5" deep',spacing:'9–12" apart, rows 30–36"; plant in blocks not rows',ph:"5.8–6.8",sun:"Full sun"},water:{in:"1–2",note:"Critical during tasseling and silking; drip or furrow irrigate"},fertilizer:{type:"High nitrogen 46-0-0 (urea) or 34-0-0",amount:"1.5 lbs per 100 sq ft pre-plant",freq:"At planting; knee-high side-dress; again at tassel"},companions:{good:["Beans","Squash (Three Sisters)","Cucumbers","Potatoes"],bad:["Tomatoes","Celery"]},companionDist:'Three Sisters companion planting ideal. Keep 3 ft from tomatoes.',diseases:[{name:"Stewart's Wilt",desc:"Yellow streaks, stunted plants. Spread by flea beetle. Plant resistant varieties."},{name:"Common Rust",desc:"Reddish-brown pustules. Usually cosmetic; resistant varieties preferred."}],pests:"Earworm — Bt or oil dropper on silks; corn borer — Bt spray.",animals:"Trichogramma wasps parasitize earworm eggs; birds eat worms.",rotation:{family:"Poaceae",cycle:"2–3 year rotation; follow with legumes to replenish nitrogen"},stages:[{label:"Germ",title:"Germination",desc:"Needs warm soil. Cold soil causes poor emergence."},{label:"V-stg",title:"Vegetative",desc:"Side-dress nitrogen at V6 (knee-high)."},{label:"Silk",title:"Tasseling & silking",desc:"Plant in blocks for wind pollination."},{label:"Harv",title:"Harvest",desc:"Milk stage: 18–24 days after silking. 1–2 day window!"}],special:"Plant in blocks for pollination. Succession plant every 2 weeks for extended harvest."},
+  {id:"kale",name:"Kale",cat:"Leafy Green",emoji:"🥬",planting:{zone6:"Direct sow Mar 15–May 1 (spring) or Jul 15–Aug 15 (fall)",depth:'0.5"',spacing:'12–18" apart, rows 18–24"',ph:"6.0–7.5",sun:"Full sun to partial shade"},water:{in:"1–1.5",note:"Consistent moisture; slight drought-stress in fall intensifies flavor"},fertilizer:{type:"High-nitrogen 10-10-10 or fish emulsion",amount:"2 lbs per 100 sq ft",freq:"At planting; side-dress nitrogen monthly"},companions:{good:["Beets","Potatoes","Marigolds","Nasturtiums"],bad:["Tomatoes","Beans","Strawberries"]},companionDist:'Keep 18" from beans; 12" from tomatoes/strawberries.',diseases:[{name:"Black Rot",desc:"Yellow V-shaped lesions, black veins. Copper bactericide; rotate."},{name:"Downy Mildew",desc:"Yellow spots above, gray fuzz below. Copper spray; air flow."}],pests:"Cabbage worms — Bt; aphids — neem oil; flea beetles — row covers.",animals:"Parasitic wasps; ground beetles; spiders.",rotation:{family:"Brassicaceae",cycle:"3–4 year rotation; not after broccoli, cabbage, cauliflower"},stages:[{label:"Germ",title:"Germination",desc:"5–8 days. Germinates in cool soil."},{label:"Juv",title:"Juvenile",desc:"Thin to 12–18\" when 3–4\" tall. Thinnings are edible."},{label:"Harv",title:"Harvest",desc:"Harvest outer leaves; central tip keeps producing."},{label:"Winter",title:"Overwintering",desc:"Fall kale sweetens with frost. Can overwinter in Zone 6."}],special:"Lacinato, Red Russian, Winterbor are excellent Zone 6 varieties."},
+  {id:"green_beans",name:"Green Beans",cat:"Legume",emoji:"🫘",planting:{zone6:"Direct sow May 15–Jul 1; succession sow every 2–3 weeks",depth:'1–1.5" deep',spacing:'Bush: 4–6" rows 18"; Pole: 4–6" at trellis',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Critical at flowering and pod development; water at base, not overhead"},fertilizer:{type:"Low-nitrogen 5-10-10",amount:"½ lb per 100 sq ft",freq:"At planting only; beans fix their own nitrogen"},companions:{good:["Carrots","Corn","Cucumbers","Marigolds"],bad:["Garlic","Onions","Beets","Fennel"]},companionDist:'Keep 18"+ from all alliums; 12" from beets.',diseases:[{name:"Bean Mosaic Virus",desc:"Mottled leaves, stunted. Spread by aphids. Remove plants."},{name:"Root Rot",desc:"Sunken lesions at soil line. Improve drainage; cold/wet soil avoidance."}],pests:"Mexican bean beetle — hand pick; bean leaf roller — Bt; aphids — soap.",animals:"Ground beetles; parasitic wasps; bees pollinate.",rotation:{family:"Fabaceae",cycle:"2–3 year rotation; follow with heavy feeders like corn/brassicas"},stages:[{label:"Germ",title:"Germination",desc:"7–14 days. Do not plant in cold soil (below 60°F)."},{label:"Grow",title:"Vegetative",desc:"Rapid growth. Install trellis for pole beans before planting."},{label:"Flwr",title:"Flowering",desc:"Self-pollinating."},{label:"Harv",title:"Harvest",desc:"Every 2–3 days when pods snap cleanly."}],special:"Inoculate with rhizobium bacteria for better nitrogen fixation."},
+  {id:"peppers",name:"Peppers (Green/Banana)",cat:"Fruiting Veg",emoji:"🫑",planting:{zone6:"Start indoors Feb 15–Mar 15; transplant Jun 1–10 (soil 65°F+)",depth:'Same as pot; slightly deeper OK',spacing:'18" apart, rows 24"',ph:"6.0–6.8",sun:"Full sun (8+ hours)"},water:{in:"1–2",note:"Blossom drop in extreme heat or cold; mulch to stabilize soil temp"},fertilizer:{type:"High-P starter (5-10-10); balanced 8-8-8 once fruiting",amount:"1 lb per 100 sq ft",freq:"At transplant; every 3–4 weeks balanced; avoid excess N"},companions:{good:["Basil","Carrots","Tomatoes","Marigolds"],bad:["Fennel","Blackberries","Kohlrabi"]},companionDist:'Keep 20+ ft from blackberries; 12" from fennel.',diseases:[{name:"Anthracnose",desc:"Sunken spots on ripe fruit. Copper fungicide; rotate crops."},{name:"Phytophthora Blight",desc:"Wilting, brown lesions. Improve drainage; destroy infected plants."}],pests:"Aphids — soap; pepper maggot — sticky traps; corn borer — Bt.",animals:"Braconid wasps; lacewings eat aphids; bees pollinate.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after tomatoes, potatoes, eggplant"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"8–12 weeks indoors. Earliest indoor start of all Zone 6 veg."},{label:"Trans",title:"Transplant",desc:"Harden 10–14 days. Night temps above 55°F consistently."},{label:"Flwr",title:"Flowering",desc:"Self-pollinating. Shake gently in morning."},{label:"Harv",title:"Harvest",desc:"Green at any firm size. Leaving on plant allows color change."}],special:"Zone 6: use black plastic mulch for heat. Banana peppers are very productive."},
+  {id:"rosemary",name:"Rosemary",cat:"Herb",emoji:"🌿",planting:{zone6:"Transplant May 15–Jun 1; annual in Zone 6 or container overwinter",depth:'Same depth as pot',spacing:'18–24" apart',ph:"6.0–7.0",sun:"Full sun"},water:{in:"0.5–1",note:"Excellent drainage essential; allow to dry between waterings"},fertilizer:{type:"Low-N (5-10-10) or dilute fish emulsion",amount:"Light application only",freq:"Once spring; once midsummer"},companions:{good:["Beans","Carrots","Sage","Marigolds"],bad:["Cucumbers","Pumpkins"]},companionDist:'Keep 12" from cucumbers and pumpkins.',diseases:[{name:"Root Rot",desc:"Yellowing, wilting. Almost always overwatering. Improve drainage immediately."}],pests:"Generally pest-resistant. Spittlebugs — water spray; aphids — neem oil.",animals:"Excellent pollinator attractor; repels vegetable pests.",rotation:{family:"Lamiaceae (perennial/annual in Z6)",cycle:"Annual in Zone 6 unless protected. Rotate position each year."},stages:[{label:"Est",title:"Establishment",desc:"Water regularly until established (4–6 weeks)."},{label:"Grow",title:"Growth",desc:"Pinch tips for bushing."},{label:"Harv",title:"Harvest",desc:"Harvest tips continuously — more harvesting = more productive."},{label:"Frost",title:"Pre-frost",desc:"Bring inside or mulch heavily before first frost."}],special:"Zone 6: Arp or Hill Hardy varieties survive outdoors with heavy mulch. Otherwise grow in container."},
+  {id:"thyme",name:"Thyme",cat:"Herb",emoji:"🌿",planting:{zone6:"Transplant Apr 15–May 15; hardy perennial in Zone 6",depth:'Same depth as pot; seeds surface-sow (needs light)',spacing:'9–12" apart',ph:"6.0–8.0",sun:"Full sun"},water:{in:"0.5–1",note:"Excellent drainage; Mediterranean herb; root rot common in wet soil"},fertilizer:{type:"Dilute balanced or compost",amount:"Minimal; prefers lean soil",freq:"Once spring with compost; additional usually not needed"},companions:{good:["Tomatoes","Eggplant","Potatoes","Strawberries"],bad:["Mint","Fennel"]},companionDist:'Keep 12" from fennel; space from mint (competitive).',diseases:[{name:"Root Rot",desc:"Overwatering or clay soil. Ensure excellent drainage."}],pests:"Very pest-resistant. Occasional aphids/spider mites — neem oil.",animals:"Major bee and butterfly attractor when blooming.",rotation:{family:"Lamiaceae (perennial)",cycle:"Hardy perennial Zone 6. Divide every 2–3 years."},stages:[{label:"Germ",title:"Germination",desc:"14–28 days from seed. Start from transplants recommended."},{label:"Est",title:"Establishment",desc:"Slow first year. Hardy by end of season."},{label:"Harv",title:"Harvest",desc:"Harvest tips before flowering. Cut back 1/3 max."},{label:"Renew",title:"Renewal",desc:"Divide or cut back in early spring every 2–3 years."}],special:"English thyme is classic culinary. Hardy in Zone 6 — returns each year."},
+  {id:"basil",name:"Basil",cat:"Herb",emoji:"🌿",planting:{zone6:"Start indoors Apr 15–May 1; transplant Jun 1+ (very frost sensitive)",depth:'0.25" indoors; transplant at pot depth',spacing:'12–18" apart',ph:"6.0–7.0",sun:"Full sun (6+ hours minimum)"},water:{in:"1–1.5",note:"Keep moist; cold water below 50°F causes black spots; water in morning"},fertilizer:{type:"Balanced 10-10-10 or dilute fish emulsion",amount:"Light application",freq:"Every 3–4 weeks; heavy feeding reduces flavor"},companions:{good:["Tomatoes","Peppers","Marigolds","Oregano"],bad:["Sage","Rosemary","Fennel"]},companionDist:'Keep 18" from sage/rosemary; 12" from fennel.',diseases:[{name:"Fusarium Wilt",desc:"One-sided wilting, brown stem streaks. Destroy plants; use resistant varieties."},{name:"Downy Mildew",desc:"Yellow patches on leaves. Choose resistant varieties; improve air circulation."}],pests:"Japanese beetles — hand pick; aphids — neem oil; slugs — diatomaceous earth.",animals:"Bees love basil flowers; allow some to bolt for pollinators.",rotation:{family:"Lamiaceae (annual)",cycle:"Annual; rotate each year"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"5–7 days indoors. Very cold-sensitive."},{label:"Est",title:"Establishment",desc:"Rapid in warm weather. Pinch flower buds."},{label:"Pinch",title:"Pinching phase",desc:"Continuously pinch flower stalks for longest productive phase."},{label:"Bolt",title:"Flowering",desc:"Allow some to flower and set seed for next year."}],special:"Plant one basil per tomato. Below 50°F permanently damages basil. Genovese, Nufar excellent in Zone 6."}
+];
+
+let activeFilter="All", currentPlantId=null, editingPlant=null, isNew=false;
+
+function getCategories(){return["All",...new Set(PLANTS.map(p=>p.cat))]}
+
+function renderCatRow(){
+  const cats=getCategories();
+  document.getElementById("cat-row").innerHTML=cats.map(c=>`<button class="cbtn${c===activeFilter?' on':''}" onclick="setFilter('${c}')">${c}</button>`).join("");
+}
+
+function setFilter(cat){activeFilter=cat;renderCatRow();renderGrid();}
+
+function renderGrid(){
+  const q=(document.getElementById("search")||{}).value?.toLowerCase()||"";
+  const filtered=PLANTS.filter(p=>{
+    const mc=activeFilter==="All"||p.cat===activeFilter;
+    const ms=!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q);
+    return mc&&ms;
+  });
+  const grid=document.getElementById("plant-grid");
+  if(!filtered.length){grid.innerHTML='<div class="no-res">No plants found</div>';return;}
+  grid.innerHTML=filtered.map(p=>`
+    <div class="pcard">
+      <span class="count-badge">${p.cat}</span>
+      <div class="pcard-name" style="margin-top:4px">${p.emoji} ${p.name}</div>
+      <div class="pcard-tags" style="margin-top:6px">
+        <span class="tag ts">${p.planting.sun.split(" ").slice(0,2).join(" ")}</span>
+        <span class="tag tw">${p.water.in} in/wk</span>
+      </div>
+      <div class="pcard-actions">
+        <button onclick="showDetail('${p.id}')">View</button>
+        <button onclick="openEdit('${p.id}')">Edit</button>
+        <button class="del-btn" onclick="deletePlant('${p.id}')">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function phBar(ph){
+  const parts=ph.split("–").map(Number);
+  const mid=(parts[0]+parts[1])/2;
+  const pct=Math.round(((mid-4)/(9-4))*100);
+  return `<div class="ph-bar-vis"><div class="ph-marker-vis" style="left:${pct}%"></div></div>
+<div class="ph-labels-vis"><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+<div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">Ideal: ${ph}</div>`;
+}
+
+function waterVis(w){
+  const n=parseFloat(w)||1;
+  const full=Math.floor(n);
+  const half=(n-full)>=0.25;
+  let h='<div style="display:flex;gap:3px;margin:5px 0;flex-wrap:wrap">';
+  for(let i=0;i<full;i++)h+='<div class="wdrop f"></div>';
+  if(half)h+='<div class="wdrop" style="opacity:.45"></div>';
+  return h+'</div>';
+}
+
+function showDetail(id){
+  const p=PLANTS.find(x=>x.id===id);if(!p)return;
+  currentPlantId=id;
+  document.getElementById("list-view").style.display="none";
+  document.getElementById("detail-view").style.display="block";
+  document.getElementById("detail-content").innerHTML=buildDetail(p);
+  showTab("planting");
+}
+
+function showList(){
+  document.getElementById("list-view").style.display="block";
+  document.getElementById("detail-view").style.display="none";
+  document.getElementById("edit-modal").style.display="none";
+}
+
+function showTab(tab){
+  document.querySelectorAll(".stab").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  document.querySelectorAll(".tc").forEach(c=>c.classList.toggle("on",c.id==="tc-"+tab));
+}
+
+function buildDetail(p){
+  return `
+<div class="panel">
+  <div class="panel-header">
+    <div class="ph-icon">${p.emoji}</div>
+    <div>
+      <div class="ph-title">${p.name}</div>
+      <div class="ph-sub">${p.cat} · Zone 6 · <button style="background:none;border:none;color:#3B6D11;cursor:pointer;font-size:12px;padding:0" onclick="openEdit('${p.id}')">Edit this plant</button></div>
+    </div>
+  </div>
+  <div class="stabs">
+    <div class="stab on" data-tab="planting" onclick="showTab('planting')">Planting</div>
+    <div class="stab" data-tab="care" onclick="showTab('care')">Care</div>
+    <div class="stab" data-tab="companions" onclick="showTab('companions')">Companions</div>
+    <div class="stab" data-tab="problems" onclick="showTab('problems')">Diseases & Pests</div>
+    <div class="stab" data-tab="growth" onclick="showTab('growth')">Growth stages</div>
+    <div class="stab" data-tab="rotation" onclick="showTab('rotation')">Rotation</div>
+  </div>
+
+  <div id="tc-planting" class="tc on">
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">Zone 6 timing</div><div class="ival">${p.planting.zone6}</div></div>
+      <div class="icard"><div class="ilabel">Depth</div><div class="ival">${p.planting.depth}</div></div>
+      <div class="icard"><div class="ilabel">Spacing</div><div class="ival">${p.planting.spacing}</div></div>
+      <div class="icard"><div class="ilabel">Sunlight</div><div class="ival">${p.planting.sun}</div></div>
+    </div>
+    <div class="sh">Soil pH</div>
+    ${phBar(p.planting.ph)}
+    ${p.special?`<div class="sh">Special instructions</div><div class="abox atip">${p.special}</div>`:""}
+  </div>
+
+  <div id="tc-care" class="tc">
+    <div class="sh">Water per week</div>
+    ${waterVis(p.water.in)}
+    <div style="font-size:12px;font-weight:500">${p.water.in} inches/week</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:3px;margin-bottom:1rem">${p.water.note}</div>
+    <div class="sh">Fertilizer</div>
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">Type</div><div class="ival">${p.fertilizer.type}</div></div>
+      <div class="icard"><div class="ilabel">Amount</div><div class="ival">${p.fertilizer.amount}</div></div>
+    </div>
+    <div class="abox atip"><strong>Frequency:</strong> ${p.fertilizer.freq}</div>
+  </div>
+
+  <div id="tc-companions" class="tc">
+    <div class="sh">Plant with</div>
+    <div>${p.companions.good.map(g=>`<span class="cpill gpill">${g}</span>`).join("")}</div>
+    <div class="sh" style="margin-top:.85rem">Keep away from</div>
+    <div>${p.companions.bad.map(b=>`<span class="cpill rpill">${b}</span>`).join("")}</div>
+    <div class="abox awarn" style="margin-top:.85rem"><strong>Distance note:</strong> ${p.companionDist}</div>
+    <div class="sh">Beneficial animals</div>
+    <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.5">${p.animals}</div>
+  </div>
+
+  <div id="tc-problems" class="tc">
+    <div class="sh">Common diseases</div>
+    ${p.diseases.map(d=>`<div class="ditem"><div class="dname">${d.name}</div><div class="ddesc">${d.desc}</div></div>`).join("")}
+    <div class="sh">Pest control</div>
+    <div class="abox atip">${p.pests}</div>
+  </div>
+
+  <div id="tc-growth" class="tc">
+    <ul class="stagelist">
+      ${p.stages.map((s,i)=>`<li class="sitem"><div class="sdot">${i+1}</div><div><div class="stitle">${s.title}</div><div class="sdesc">${s.desc}</div></div></li>`).join("")}
+    </ul>
+  </div>
+
+  <div id="tc-rotation" class="tc">
+    <div class="rotbox"><div class="rtitle">Plant family</div><div class="rdesc">${p.rotation.family}</div></div>
+    <div class="rotbox"><div class="rtitle">Rotation cycle</div><div class="rdesc">${p.rotation.cycle}</div></div>
+  </div>
+</div>`;
+}
+
+function deletePlant(id){
+  const p=PLANTS.find(x=>x.id===id);
+  if(!p)return;
+  if(!confirm(`Delete "${p.name}"? This cannot be undone.`))return;
+  PLANTS=PLANTS.filter(x=>x.id!==id);
+  renderCatRow();renderGrid();
+  if(currentPlantId===id)showList();
+}
+
+function openEdit(id){
+  const p=PLANTS.find(x=>x.id===id);if(!p)return;
+  editingPlant=JSON.parse(JSON.stringify(p));
+  isNew=false;
+  renderModal();
+  document.getElementById("list-view").style.display="none";
+  document.getElementById("detail-view").style.display="none";
+  document.getElementById("edit-modal").style.display="block";
+}
+
+function openAdd(){
+  editingPlant=DEFAULT_PLANT();
+  isNew=true;
+  renderModal();
+  document.getElementById("list-view").style.display="none";
+  document.getElementById("detail-view").style.display="none";
+  document.getElementById("edit-modal").style.display="block";
+}
+
+function renderModal(){
+  const p=editingPlant;
+  const title=isNew?"Add new crop":`Edit: ${p.name}`;
+  document.getElementById("modal-inner").innerHTML=`
+<h3>${title}</h3>
+
+<div class="frow">
+  <label>Crop name</label>
+  <input id="f-name" value="${esc(p.name)}" placeholder="e.g. Broccoli" oninput="editingPlant.name=this.value">
+</div>
+<div class="fgrid">
+  <div class="frow">
+    <label>Category</label>
+    <input id="f-cat" value="${esc(p.cat)}" placeholder="e.g. Brassica" oninput="editingPlant.cat=this.value">
+  </div>
+  <div class="frow">
+    <label>Emoji icon</label>
+    <input id="f-emoji" value="${esc(p.emoji)}" placeholder="🥦" oninput="editingPlant.emoji=this.value">
+  </div>
+</div>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Planting</div>
+<div class="frow"><label>Zone 6 timing</label><textarea oninput="editingPlant.planting.zone6=this.value">${esc(p.planting.zone6)}</textarea></div>
+<div class="fgrid">
+  <div class="frow"><label>Depth</label><input value="${esc(p.planting.depth)}" oninput="editingPlant.planting.depth=this.value"></div>
+  <div class="frow"><label>Spacing</label><input value="${esc(p.planting.spacing)}" oninput="editingPlant.planting.spacing=this.value"></div>
+  <div class="frow"><label>Soil pH range</label><input value="${esc(p.planting.ph)}" placeholder="6.0–7.0" oninput="editingPlant.planting.ph=this.value"></div>
+  <div class="frow"><label>Sunlight</label><input value="${esc(p.planting.sun)}" oninput="editingPlant.planting.sun=this.value"></div>
+</div>
+<div class="frow"><label>Special instructions</label><textarea oninput="editingPlant.special=this.value">${esc(p.special||"")}</textarea></div>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Water & fertilizer</div>
+<div class="fgrid">
+  <div class="frow"><label>Water (inches/week)</label><input value="${esc(p.water.in)}" placeholder="1–1.5" oninput="editingPlant.water.in=this.value"></div>
+  <div class="frow"><label>Fertilizer type</label><input value="${esc(p.fertilizer.type)}" oninput="editingPlant.fertilizer.type=this.value"></div>
+  <div class="frow"><label>Fertilizer amount</label><input value="${esc(p.fertilizer.amount)}" oninput="editingPlant.fertilizer.amount=this.value"></div>
+</div>
+<div class="frow"><label>Water notes</label><textarea oninput="editingPlant.water.note=this.value">${esc(p.water.note)}</textarea></div>
+<div class="frow"><label>Fertilizer frequency</label><textarea oninput="editingPlant.fertilizer.freq=this.value">${esc(p.fertilizer.freq)}</textarea></div>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Companions</div>
+<div class="frow"><label>Good companions (comma-separated)</label><input id="f-good" value="${esc(p.companions.good.join(", "))}" oninput="editingPlant.companions.good=this.value.split(',').map(s=>s.trim()).filter(Boolean)"></div>
+<div class="frow"><label>Bad companions (comma-separated)</label><input id="f-bad" value="${esc(p.companions.bad.join(", "))}" oninput="editingPlant.companions.bad=this.value.split(',').map(s=>s.trim()).filter(Boolean)"></div>
+<div class="frow"><label>Distance note</label><textarea oninput="editingPlant.companionDist=this.value">${esc(p.companionDist)}</textarea></div>
+<div class="frow"><label>Beneficial animals</label><textarea oninput="editingPlant.animals=this.value">${esc(p.animals)}</textarea></div>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Diseases</div>
+<div id="diseases-list">${p.diseases.map((d,i)=>diseaseRow(d,i)).join("")}</div>
+<button class="add-row-btn" onclick="addDisease()">+ add disease</button>
+
+<hr class="section-divider">
+<div class="frow"><label>Pest control</label><textarea oninput="editingPlant.pests=this.value">${esc(p.pests)}</textarea></div>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Growth stages</div>
+<div id="stages-list">${p.stages.map((s,i)=>stageRow(s,i)).join("")}</div>
+<button class="add-row-btn" onclick="addStage()">+ add stage</button>
+
+<hr class="section-divider">
+<div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Crop rotation</div>
+<div class="fgrid">
+  <div class="frow"><label>Plant family</label><input value="${esc(p.rotation.family)}" oninput="editingPlant.rotation.family=this.value"></div>
+  <div class="frow"><label>Rotation cycle</label><input value="${esc(p.rotation.cycle)}" oninput="editingPlant.rotation.cycle=this.value"></div>
+</div>
+
+<div class="factions">
+  <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+  <button class="save-btn" onclick="saveEdit()">${isNew?"Add crop":"Save changes"}</button>
+</div>
+`;
+}
+
+function diseaseRow(d,i){
+  return `<div class="stage-edit-row" id="drow-${i}">
+    <input style="flex:1" placeholder="Disease name" value="${esc(d.name)}" oninput="editingPlant.diseases[${i}].name=this.value">
+    <textarea style="flex:2;min-height:44px;resize:vertical;font-size:12px" placeholder="Description & treatment" oninput="editingPlant.diseases[${i}].desc=this.value">${esc(d.desc)}</textarea>
+    <button class="rm-btn" onclick="removeDisease(${i})">Remove</button>
+  </div>`;
+}
+
+function stageRow(s,i){
+  return `<div class="stage-edit-row" id="srow-${i}">
+    <input style="width:70px;flex:none" placeholder="Label" value="${esc(s.label)}" oninput="editingPlant.stages[${i}].label=this.value">
+    <input style="flex:1" placeholder="Stage title" value="${esc(s.title)}" oninput="editingPlant.stages[${i}].title=this.value">
+    <textarea style="flex:2;min-height:44px;resize:vertical;font-size:12px" placeholder="Description" oninput="editingPlant.stages[${i}].desc=this.value">${esc(s.desc)}</textarea>
+    <button class="rm-btn" onclick="removeStage(${i})">Remove</button>
+  </div>`;
+}
+
+function addDisease(){editingPlant.diseases.push({name:"",desc:""});document.getElementById("diseases-list").innerHTML=editingPlant.diseases.map(diseaseRow).join("");}
+function removeDisease(i){editingPlant.diseases.splice(i,1);document.getElementById("diseases-list").innerHTML=editingPlant.diseases.map(diseaseRow).join("");}
+function addStage(){editingPlant.stages.push({label:"",title:"",desc:""});document.getElementById("stages-list").innerHTML=editingPlant.stages.map(stageRow).join("");}
+function removeStage(i){editingPlant.stages.splice(i,1);document.getElementById("stages-list").innerHTML=editingPlant.stages.map(stageRow).join("");}
+
+function saveEdit(){
+  if(!editingPlant.name.trim()){alert("Please enter a crop name.");return;}
+  if(isNew){
+    PLANTS.push(editingPlant);
+  } else {
+    const idx=PLANTS.findIndex(x=>x.id===editingPlant.id);
+    if(idx>=0)PLANTS[idx]=editingPlant;
+  }
+  renderCatRow();renderGrid();
+  document.getElementById("edit-modal").style.display="none";
+  if(!isNew&&currentPlantId===editingPlant.id){
+    document.getElementById("detail-view").style.display="block";
+    document.getElementById("detail-content").innerHTML=buildDetail(editingPlant);
+    showTab("planting");
+  } else {
+    showList();
+  }
+  editingPlant=null;
+}
+
+function cancelEdit(){
+  editingPlant=null;
+  document.getElementById("edit-modal").style.display="none";
+  if(currentPlantId){
+    document.getElementById("detail-view").style.display="block";
+  } else {
+    showList();
+  }
+}
+
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+renderCatRow();
+renderGrid();
+</script>
