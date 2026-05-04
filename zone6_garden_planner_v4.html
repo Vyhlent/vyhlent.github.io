@@ -1,0 +1,650 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:14px}
+.wrap{padding:1rem 0}
+.nav{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem;overflow-x:auto}
+.navbtn{padding:8px 15px;font-size:13px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+.navbtn.on{color:#3B6D11;border-bottom-color:#3B6D11;font-weight:500}
+.page{display:none}.page.on{display:block}
+.topbar{display:flex;gap:8px;margin-bottom:1rem;align-items:center;flex-wrap:wrap}
+.topbar input{flex:1;min-width:140px}
+.cat-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem}
+.cbtn{padding:4px 11px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:11px;cursor:pointer}
+.cbtn.on{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;margin-bottom:1.5rem}
+.pcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.85rem;position:relative}
+.pcard-name{font-size:13px;font-weight:500;margin-bottom:2px;margin-top:4px}
+.pcard-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:10px;padding:2px 7px;border-radius:10px}
+.ts{background:#FAEEDA;color:#633806}.tw{background:#E6F1FB;color:#042C53}
+.pcard-actions{display:flex;gap:5px;margin-top:10px}
+.pcard-actions button{flex:1;padding:4px 0;font-size:11px;cursor:pointer;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-secondary)}
+.pcard-actions button:hover{background:var(--color-background-secondary)}
+.del-btn{color:var(--color-text-danger)!important;border-color:var(--color-border-danger)!important}
+.panel{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.5rem}
+.panel-header{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ph-icon{width:44px;height:44px;border-radius:var(--border-radius-md);background:#EAF3DE;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#3B6D11;flex-shrink:0}
+.ph-title{font-size:18px;font-weight:500}
+.ph-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.stabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.25rem;overflow-x:auto}
+.stab{padding:7px 12px;font-size:12px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);margin-bottom:-1px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.stab.on{color:#3B6D11;border-bottom-color:#3B6D11}
+.tc{display:none}.tc.on{display:block}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1rem}
+.icard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px}
+.ilabel{font-size:11px;color:var(--color-text-tertiary);margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+.ival{font-size:12px;font-weight:500;line-height:1.4}
+.sh{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .4rem}
+.cpill{font-size:11px;padding:3px 9px;border-radius:10px;display:inline-block;margin:2px}
+.gpill{background:#EAF3DE;color:#27500A}.rpill{background:#FCEBEB;color:#791F1F}
+.ditem{padding:9px 11px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:7px}
+.dname{font-size:12px;font-weight:500;margin-bottom:3px}
+.ddesc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.stagelist{list-style:none}
+.sitem{display:flex;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.sitem:last-child{border-bottom:none}
+.sdot{width:28px;height:28px;border-radius:50%;background:#EAF3DE;color:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;margin-top:1px}
+.stitle2{font-size:12px;font-weight:500}
+.sdesc{font-size:11px;color:var(--color-text-secondary);margin-top:2px;line-height:1.5}
+.abox{padding:9px 11px;border-radius:var(--border-radius-md);margin-bottom:7px;font-size:12px;line-height:1.5;border:0.5px solid}
+.atip{background:#EAF3DE;border-color:#639922;color:#27500A}
+.awarn{background:#FAEEDA;border-color:#BA7517;color:#633806}
+.ainfo{background:#E6F1FB;border-color:#378ADD;color:#0C447C}
+.rotbox{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem;margin-bottom:.75rem}
+.rtitle{font-size:12px;font-weight:500;margin-bottom:.3rem}
+.rdesc{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.backbtn{background:none;border:0.5px solid var(--color-border-secondary);padding:5px 13px;border-radius:var(--border-radius-md);cursor:pointer;font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem}
+.modal-bg{background:rgba(0,0,0,0.35);border-radius:var(--border-radius-lg);padding:2rem;margin-bottom:1.5rem}
+.modal{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;max-width:620px;margin:0 auto}
+.modal h3{font-size:16px;font-weight:500;margin-bottom:1rem}
+.frow{margin-bottom:.85rem}
+.frow label{display:block;font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.frow input,.frow textarea{width:100%;font-size:13px}
+.frow textarea{resize:vertical;min-height:56px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.factions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)}
+.factions button{padding:6px 16px;font-size:13px;cursor:pointer;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary)}
+.save-btn{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11!important}
+.save-btn:hover{background:#27500A}
+.cancel-btn{background:var(--color-background-primary);color:var(--color-text-secondary)}
+.ph-bar-vis{height:14px;border-radius:3px;background:linear-gradient(to right,#d32f2f,#f57c00,#fbc02d,#689f38,#2e7d32,#1565c0);position:relative;margin:6px 0 3px}
+.ph-marker-vis{position:absolute;top:-3px;width:10px;height:20px;background:var(--color-text-primary);border-radius:2px;transform:translateX(-50%);opacity:.75}
+.ph-labels-vis{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-tertiary)}
+.wdrop{width:14px;height:14px;border-radius:50% 50% 50% 0;background:#B5D4F4;transform:rotate(-45deg);display:inline-block;margin:1px}
+.wdrop.f{background:#185FA5}
+.count-badge{position:absolute;top:8px;right:8px;background:var(--color-background-secondary);border-radius:10px;font-size:10px;padding:1px 6px;color:var(--color-text-tertiary)}
+.stage-edit-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.rm-btn{padding:4px 8px;font-size:11px;color:var(--color-text-danger);border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);cursor:pointer;background:none;flex-shrink:0}
+.add-row-btn{font-size:11px;padding:5px 12px;cursor:pointer;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);background:none;color:var(--color-text-secondary);width:100%;margin-top:4px}
+.add-row-btn:hover{background:var(--color-background-secondary)}
+.sdiv{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:1rem 0}
+.no-res{text-align:center;padding:2.5rem;color:var(--color-text-secondary);font-size:13px}
+.save-status{font-size:11px;padding:3px 10px;border-radius:10px;display:inline-block;margin-left:8px;transition:opacity .4s}
+.save-ok{background:#EAF3DE;color:#27500A}.save-err{background:#FCEBEB;color:#791F1F}
+.nut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:1rem}
+.nut-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;text-align:center}
+.nut-val{font-size:15px;font-weight:500}
+.nut-label{font-size:10px;color:var(--color-text-tertiary);margin-top:2px;text-transform:uppercase;letter-spacing:.03em}
+.nut-bar-track{height:6px;border-radius:3px;background:var(--color-border-tertiary);overflow:hidden;margin-top:3px}
+.nut-bar-fill{height:100%;border-radius:3px}
+.companion-why{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-top:4px;padding:4px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
+.matrix-wrap{overflow-x:auto;margin-bottom:1.5rem}
+.matrix-table{border-collapse:collapse;font-size:11px}
+.matrix-table th{padding:4px 6px;font-weight:500;color:var(--color-text-secondary);white-space:nowrap;font-size:10px}
+.matrix-table td{width:24px;height:24px;text-align:center;border:0.5px solid var(--color-border-tertiary);font-size:11px}
+.cell-good{background:#EAF3DE}
+.cell-bad{background:#FCEBEB}
+.cell-self{background:var(--color-background-secondary)}
+.cell-neut{background:var(--color-background-primary)}
+.legend-row{display:flex;gap:16px;margin-bottom:1rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.legend-dot{width:12px;height:12px;border-radius:2px;flex-shrink:0}
+.family-group{margin-bottom:1rem;padding:1rem;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg)}
+.family-title{font-size:13px;font-weight:500;margin-bottom:.5rem}
+.family-crops{display:flex;flex-wrap:wrap;gap:5px}
+.page-title{font-size:16px;font-weight:500;margin-bottom:.2rem}
+.page-sub{font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem;line-height:1.5}
+.fsec{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .6rem}
+.rot-step{margin-bottom:10px;padding:12px 14px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary)}
+.rot-step-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.rot-badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:10px;flex-shrink:0}
+.rot-why{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">Zone 6 Garden Planner — five pages: Plants, Companions, Rotation, Nutrition, with persistent storage.</h2>
+<div class="nav">
+  <button class="navbtn on" onclick="gotoPage('plants')">Plants</button>
+  <button class="navbtn" onclick="gotoPage('companions')">Companion chart</button>
+  <button class="navbtn" onclick="gotoPage('rotation')">Crop rotation</button>
+  <button class="navbtn" onclick="gotoPage('nutrition')">Nutrition</button>
+</div>
+
+<div id="page-plants" class="page on">
+  <div id="plants-list">
+    <div class="topbar">
+      <input type="text" id="search" placeholder="Search plants..." oninput="renderGrid()">
+      <button onclick="openAdd()" style="white-space:nowrap;padding:0 14px;height:36px;border:0.5px solid #3B6D11;border-radius:var(--border-radius-md);background:#3B6D11;color:#EAF3DE;cursor:pointer;font-size:13px">+ Add crop</button>
+      <span id="save-status" class="save-status" style="opacity:0"></span>
+    </div>
+    <div class="cat-row" id="cat-row"></div>
+    <div class="pgrid" id="plant-grid"><div style="padding:2rem;text-align:center;color:var(--color-text-secondary)">Loading...</div></div>
+  </div>
+  <div id="plants-detail" style="display:none">
+    <button class="backbtn" onclick="showList()">← all plants</button>
+    <div id="detail-content"></div>
+  </div>
+  <div id="plants-edit" style="display:none">
+    <div class="modal-bg"><div class="modal" id="modal-inner"></div></div>
+  </div>
+</div>
+
+<div id="page-companions" class="page">
+  <div class="page-title">Companion planting chart</div>
+  <div class="page-sub">Cross-reference any two plants to see if they help (green ✓), hurt (red ✗), or are neutral when grown together.</div>
+  <div class="legend-row">
+    <span class="legend-item"><span class="legend-dot" style="background:#EAF3DE;border:0.5px solid #639922"></span>Compatible</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#FCEBEB;border:0.5px solid #E24B4A"></span>Incompatible</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary)"></span>Same plant</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary)"></span>Neutral / unknown</span>
+  </div>
+  <div id="companion-matrix"></div>
+  <div class="fsec" style="margin-top:1.5rem">Plant families — never plant same family in same bed consecutively</div>
+  <div id="family-groups"></div>
+</div>
+
+<div id="page-rotation" class="page">
+  <div class="page-title">Crop rotation guide</div>
+  <div class="page-sub">Rotating crops through beds each year prevents disease and pest buildup, balances soil nutrients, and improves long-term yields. Move each group to the next bed each year.</div>
+  <div id="rotation-content"></div>
+</div>
+
+<div id="page-nutrition" class="page">
+  <div class="page-title">Nutrition comparison</div>
+  <div class="page-sub">Nutritional values per 100g fresh weight. Ornamental and herb crops shown separately.</div>
+  <div id="nutrition-content"></div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const STORAGE_KEY="garden-planner-v4";
+const SEED_DATA=[
+{id:"spinach",name:"Spinach",cat:"Leafy Green",emoji:"🌿",planting:{zone6:"Direct sow Mar 15–Apr 30 or Aug 15–Sep 30; tolerates light frost",depth:'0.5"',spacing:'3–6" apart, rows 12"',ph:"6.0–7.0",sun:"Full sun / part shade"},water:{in:"1–1.5",note:"Keep consistently moist; mulch helps"},fertilizer:{type:"10-10-10 balanced",amount:"1 lb per 100 sq ft",freq:"At planting; side-dress nitrogen at 3 weeks"},companions:{good:[{name:"Garlic",why:"Garlic's sulfur compounds repel aphids and spider mites that commonly infest spinach leaves."},{name:"Radishes",why:"Fast-growing radishes act as trap crops for leaf miners, drawing them away from spinach."},{name:"Peas",why:"Peas fix atmospheric nitrogen, enriching the soil that spinach feeds on."},{name:"Strawberries",why:"Strawberries and spinach occupy different soil layers and have compatible moisture needs."}],bad:[{name:"Fennel",why:"Fennel releases allelopathic chemicals that inhibit the germination and growth of most vegetables including spinach."}]},companionDist:'Keep 12"+ from fennel.',diseases:[{name:"Downy Mildew",desc:"Yellow spots on upper leaf, gray-purple fuzz beneath. Use resistant varieties, avoid overhead watering."},{name:"Cercospora Leaf Spot",desc:"Circular brown spots with white centers. Remove infected leaves; copper fungicide."}],pests:"Row covers for aphids and leaf miners; neem oil spray.",animals:"Ladybugs eat aphids; ground beetles prey on soil pests.",rotation:{family:"Chenopodiaceae",cycle:"3–4 year rotation; follow with legumes or grains, not beets or chard"},stages:[{label:"Germ",title:"Germination",desc:"7–14 days at 50–70°F."},{label:"Seedl",title:"Seedling",desc:"Thin to 3–6 inches at 2 weeks."},{label:"Grow",title:"Vegetative",desc:"Harvest outer leaves to extend production."},{label:"Bolt",title:"Bolting",desc:"Hot temps trigger bolting. Harvest immediately."}],special:"Plant in succession every 2–3 weeks. Best flavor after a light frost.",nutrition:{calories:23,protein:2.9,carbs:3.6,fat:0.4,fiber:2.2,vitC:28,notes:"Exceptionally high in vitamin K, folate, and iron."},size:{weight:"150–250g per bunch",dimensions:'Leaves 3–6" long',notes:"Harvest at 3–4 inches for baby spinach, 6+ for mature."}},
+{id:"blackberries",name:"Blackberries",cat:"Berry",emoji:"🫐",planting:{zone6:"Plant bare-root canes Mar–Apr; fruit in year 2",depth:'Crown at soil level, roots 2–3" deep',spacing:'3–4 ft apart, rows 8 ft',ph:"5.5–7.0",sun:"Full sun"},water:{in:"1–2",note:"Critical during fruit swell; drip preferred"},fertilizer:{type:"10-10-10 balanced",amount:"¼ lb per plant; ½ lb established",freq:"Early spring; again after harvest"},companions:{good:[{name:"Marigolds",why:"Marigold root exudates suppress nematodes and deter aphids that attack blackberry canes."},{name:"Tansy",why:"Tansy repels Japanese beetles, one of the most damaging pests of blackberry fruit."},{name:"Chives",why:"Chives deter aphids and Japanese beetles with their pungent volatile oils."}],bad:[{name:"Tomatoes",why:"Tomatoes and blackberries share Verticillium wilt fungus, dramatically increasing disease risk when grown nearby."},{name:"Peppers",why:"Peppers are also susceptible to Verticillium wilt which persists in soil and devastates blackberry roots."},{name:"Eggplant",why:"All nightshades share the Verticillium wilt pathogen that devastates cane fruits."}]},companionDist:"Keep 20–30 ft from tomatoes, peppers, eggplant.",diseases:[{name:"Cane Blight",desc:"Dark brown lesions on canes; prune to healthy wood."},{name:"Anthracnose",desc:"Sunken purple spots on young canes; copper fungicide in early spring."}],pests:"Netting for birds; hand-pick Japanese beetles; neem for stink bugs.",animals:"Bees and butterflies pollinate; net when fruiting.",rotation:{family:"Rosaceae (perennial)",cycle:"Perennial — site carefully; replace after 8–12 years"},stages:[{label:"Dorm",title:"Dormancy",desc:"First winter. Roots establish."},{label:"Prim",title:"Primocane",desc:"Year 1: vigorous canes grow, no fruit."},{label:"Flor",title:"Floricane",desc:"Year 2 canes flower and fruit."},{label:"Harv",title:"Harvest",desc:"Jun–Aug. Pick when fully black."}],special:"Tie canes to trellis. Cut floricanes to ground after harvest.",nutrition:{calories:43,protein:1.4,carbs:9.6,fat:0.5,fiber:5.3,vitC:21,notes:"High in anthocyanins (antioxidants), vitamin C, manganese, and fiber."},size:{weight:"3–5g per berry",dimensions:'0.5–1" diameter per berry',notes:"Full clusters weigh 20–40g."}},
+{id:"raspberries",name:"Raspberries",cat:"Berry",emoji:"🍓",planting:{zone6:"Plant Mar–Apr (summer) or Apr–May (fall-bearing)",depth:'Crown at soil level, roots 2–4" deep',spacing:'2–3 ft apart, rows 6–8 ft',ph:"5.5–6.5",sun:"Full sun"},water:{in:"1–1.5",note:"Consistent moisture critical during cane and fruit development"},fertilizer:{type:"10-10-10 or ammonium nitrate",amount:"¼ lb per plant",freq:"Spring before growth; avoid late-season N"},companions:{good:[{name:"Garlic",why:"Garlic repels raspberry beetle and aphids that spread mosaic virus between canes."},{name:"Marigolds",why:"Marigolds attract beneficial insects that prey on raspberry fruitworm larvae."},{name:"Chives",why:"Chives deter aphids, the primary vector of raspberry mosaic virus."}],bad:[{name:"Tomatoes",why:"Tomatoes share late blight and Verticillium wilt with raspberries, creating a disease reservoir when planted nearby."},{name:"Potatoes",why:"Potatoes carry late blight and share fungal diseases that overwinter and attack raspberry roots."},{name:"Eggplant",why:"Eggplant is a Solanaceae host for Verticillium wilt which is lethal to raspberry crowns."}]},companionDist:"20 ft minimum from tomatoes/potatoes.",diseases:[{name:"Raspberry Mosaic Virus",desc:"Mottled distorted leaves; spread by aphids. Remove infected plants."},{name:"Root Rot",desc:"Wilting, orange crown; improve drainage; resistant varieties."}],pests:"Aphids — neem oil; cane borers — prune wilted tips; fruitworm — hand pick.",animals:"Ground beetles eat larvae; parasitic wasps; bees essential.",rotation:{family:"Rosaceae (perennial)",cycle:"Perennial; renovate every 8–10 years in new location"},stages:[{label:"Dorm",title:"Dormancy",desc:"Winter. Roots active underground."},{label:"Prim",title:"Primocane",desc:"New canes grow; no fruit."},{label:"Flor",title:"Floricane",desc:"Year 2 canes flower and fruit."},{label:"Harv",title:"Harvest",desc:"Jun–Jul (summer) or Aug–Oct (fall)."}],special:"Summer-bearing: prune floricanes after harvest. Everbearing: mow all canes in early spring.",nutrition:{calories:52,protein:1.2,carbs:11.9,fat:0.7,fiber:6.5,vitC:26,notes:"High in ellagic acid, fiber, manganese, and vitamin C."},size:{weight:"2–4g per berry",dimensions:'0.5–0.75" diameter',notes:"Hollow when picked; releases cleanly from core when ripe."}},
+{id:"cantaloupe",name:"Cantaloupe",cat:"Vine Fruit",emoji:"🍈",planting:{zone6:"Start indoors Apr 15–May 1; transplant May 15–30",depth:'1" direct sow; transplant at pot depth',spacing:'2–3 ft per hill, hills 4–6 ft apart',ph:"6.0–6.5",sun:"Full sun (8+ hrs)"},water:{in:"1–2",note:"Taper off near ripeness to concentrate sugar"},fertilizer:{type:"5-10-10; switch to 0-0-60 at vine run",amount:"2 lbs per 100 sq ft",freq:"At transplant; vine run; first fruit set"},companions:{good:[{name:"Corn",why:"Tall corn acts as a windbreak for sprawling cantaloupe vines, reducing stress and moisture loss."},{name:"Marigolds",why:"Marigolds deter cucumber beetles, the chief pest and virus vector for cantaloupe."},{name:"Nasturtiums",why:"Nasturtiums act as trap crops for aphids, keeping them off the melon vines."}],bad:[{name:"Potatoes",why:"Potatoes compete heavily for potassium and share fungal diseases that affect cantaloupe."},{name:"Cucumbers",why:"Cucumbers share powdery mildew and cucumber beetle infestations, amplifying pressure on both crops."}]},companionDist:"Keep 3 ft from cucumbers; 4+ ft from potatoes.",diseases:[{name:"Powdery Mildew",desc:"White coating on leaves; neem oil or potassium bicarbonate."},{name:"Gummy Stem Blight",desc:"Water-soaked lesions with gummy exudate; chlorothalonil; rotate crops."}],pests:"Cucumber beetles — row covers until flowering; aphids — neem.",animals:"Bees essential for pollination; ground beetles eat larvae.",rotation:{family:"Cucurbitaceae",cycle:"3–4 year rotation away from all cucurbits"},stages:[{label:"Germ",title:"Germination",desc:"5–10 days at 70–90°F."},{label:"Vine",title:"Vine development",desc:"Rapid growth; train or let sprawl."},{label:"Flwr",title:"Flowering",desc:"Male then female flowers; bees critical."},{label:"Ripe",title:"Maturation",desc:"Slip test: slight pressure detaches at stem."}],special:"Use black plastic mulch. Place board under fruits.",nutrition:{calories:34,protein:0.8,carbs:8.2,fat:0.2,fiber:0.9,vitC:36,notes:"Excellent source of beta-carotene (vitamin A) and potassium."},size:{weight:"1–3 kg per fruit",dimensions:'5–7" diameter',notes:"Full-slip harvest: netting on rind, sweet aroma, slight give at blossom end."}},
+{id:"garlic",name:"Garlic",cat:"Allium",emoji:"🧄",planting:{zone6:"Plant Oct 1–Nov 15 for summer harvest",depth:'2" deep, pointed end up',spacing:'6" apart, rows 12"',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Stop 2–4 weeks before harvest"},fertilizer:{type:"Blood meal 12-0-0 or fish emulsion",amount:"1 cup blood meal per 10 sq ft",freq:"Fall at planting; early spring; stop May"},companions:{good:[{name:"Tomatoes",why:"Garlic's sulfur compounds deter spider mites and aphids which heavily infest tomato plants."},{name:"Carrots",why:"Garlic repels carrot fly and other root pests that damage carrot crops."},{name:"Spinach",why:"Garlic deters aphids and leaf miners that feed on spinach leaves."}],bad:[{name:"Peas",why:"Garlic's allelopathic compounds inhibit the germination and root development of peas and other legumes."},{name:"Beans",why:"Like peas, beans are significantly stunted by the chemical compounds garlic releases into the soil."},{name:"Asparagus",why:"Garlic stunts asparagus growth and competes for the same deep soil nutrients the perennial needs."}]},companionDist:'18"+ from peas and beans; 12" from asparagus.',diseases:[{name:"White Rot",desc:"White mold at bulb base; no cure — remove plants; avoid area 20 years."},{name:"Botrytis Neck Rot",desc:"Gray mold on neck post-harvest; cure 3–4 weeks in dry airy space."}],pests:"Thrips — insecticidal soap; onion maggot — row covers.",animals:"Garlic naturally deters many pests throughout the garden.",rotation:{family:"Alliaceae",cycle:"3–4 year rotation; do not follow other alliums"},stages:[{label:"Root",title:"Root establishment",desc:"Fall: roots grow, shoot emerges. Mulch after ground freezes."},{label:"Grn",title:"Spring green",desc:"Shoots emerge; green garlic harvestable."},{label:"Scape",title:"Scape formation",desc:"Remove curling scapes to push energy to bulb."},{label:"Harv",title:"Harvest",desc:"Lower 1/3 of leaves brown (Jun–Jul). Cure 3–4 weeks."}],special:"Plant hardneck varieties for best Zone 6 flavor. Plant Oct for Jun–Jul harvest.",nutrition:{calories:149,protein:6.4,carbs:33,fat:0.5,fiber:2.1,vitC:31,notes:"Rich in allicin, manganese, and vitamin B6. Powerful antimicrobial and cardiovascular benefits."},size:{weight:"30–60g per bulb",dimensions:'1.5–2.5" diameter bulb',notes:"Each clove weighs 4–8g. Hardneck varieties have larger, easier-to-peel cloves."}},
+{id:"red_onions",name:"Red Onions",cat:"Allium",emoji:"🧅",planting:{zone6:"Start seeds indoors Jan 15–Feb 28; transplant Apr 15–May 1; or sets Apr 1–30",depth:'Sets 1" deep; transplants at pot depth',spacing:'4–6" apart, rows 12"',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Reduce when tops fall; stop 1 week before harvest"},fertilizer:{type:"10-10-10, then 21-0-0",amount:"½ lb per 10 sq ft",freq:"At planting; nitrogen when pencil-thick; stop at bulb formation"},companions:{good:[{name:"Carrots",why:"Onions repel carrot fly while carrots repel onion fly — a classic mutual defense partnership."},{name:"Tomatoes",why:"Onion compounds deter thrips and spider mites that damage tomato foliage."},{name:"Marigolds",why:"Marigolds reinforce onion's pest-deterrent effect and attract beneficial predatory insects."}],bad:[{name:"Peas",why:"Onion allelopathic compounds reduce pea germination and inhibit nitrogen-fixing bacteria in pea roots."},{name:"Beans",why:"Beans are strongly inhibited by allium root exudates, resulting in reduced yields when planted close."},{name:"Sage",why:"Sage and onions compete for the same soil micronutrients and sage can inhibit onion bulb development."}]},companionDist:'Keep 12" from sage; 18" from peas/beans.',diseases:[{name:"Botrytis Leaf Blight",desc:"White mold on leaves; copper fungicide."},{name:"Fusarium Basal Rot",desc:"Pink-red rot at base; certified seed, rotation."}],pests:"Thrips — insecticidal soap; onion maggot — row covers.",animals:"Predatory midges eat thrips larvae.",rotation:{family:"Alliaceae",cycle:"3–4 year rotation away from all alliums"},stages:[{label:"Seed",title:"Seedling",desc:"6–10 weeks indoor start."},{label:"Bulb",title:"Bulb initiation",desc:"Triggered by day length; Zone 6 uses long-day varieties."},{label:"Size",title:"Bulb sizing",desc:"Bulb swells rapidly as leaves gather energy."},{label:"Cure",title:"Harvest & cure",desc:"Cure 3–4 weeks at 80–90°F."}],special:"Zone 6: use long-day varieties (Redwing, Mars, Burgundy).",nutrition:{calories:40,protein:1.1,carbs:9.3,fat:0.1,fiber:1.7,vitC:7,notes:"Red pigment is quercetin, a powerful antioxidant."},size:{weight:"100–200g per bulb",dimensions:'2–3.5" diameter',notes:"Cure thoroughly for storage up to 6 months."}},
+{id:"asparagus",name:"Asparagus",cat:"Perennial Veg",emoji:"🌱",planting:{zone6:"Plant crowns Apr 1–30 (soil 40°F+)",depth:'6–8" deep in trench; fill in as shoots grow',spacing:'12–18" apart, rows 4–5 ft',ph:"6.5–7.5",sun:"Full sun"},water:{in:"1–2",note:"Consistent moisture first 2 years; critical during fern phase"},fertilizer:{type:"Balanced 10-10-10",amount:"2 lbs per 100 sq ft",freq:"Early spring; again after harvest ends"},companions:{good:[{name:"Tomatoes",why:"Tomatoes repel asparagus beetle while asparagus deters root nematodes that attack tomatoes."},{name:"Basil",why:"Basil repels asparagus beetle and its oils confuse insects seeking to lay eggs in asparagus crowns."},{name:"Marigolds",why:"Marigolds suppress nematodes in the deep soil layers where asparagus crowns grow."}],bad:[{name:"Garlic",why:"Garlic stunts asparagus growth and competes directly for deep soil nutrients needed by the perennial crown."},{name:"Onions",why:"Onions release allelopathic compounds that stunt the slow-developing asparagus crown."},{name:"Potatoes",why:"Potato harvest physically disrupts asparagus root systems, and both share fungal diseases."}]},companionDist:'Keep 24" from garlic/onions; 3 ft from potatoes.',diseases:[{name:"Asparagus Rust",desc:"Orange-red pustules on ferns; copper fungicide; Jersey series varieties."},{name:"Crown Rot",desc:"Brown-orange crown, plant collapse; improve drainage."}],pests:"Asparagus beetle — hand pick; pyrethrin if severe.",animals:"Ladybugs eat beetle eggs; toads eat many pests.",rotation:{family:"Asparagaceae (perennial)",cycle:"Permanent bed — productive 15–30 years"},stages:[{label:"Yr1",title:"Year 1 — no harvest",desc:"Do not harvest at all; build root reserves."},{label:"Yr2",title:"Year 2 — 2 weeks",desc:"Harvest 2 weeks only."},{label:"Yr3",title:"Year 3+ — full",desc:"Harvest 4–6 weeks; stop when spears thin."},{label:"Fern",title:"Fern phase",desc:"Let ferns grow all season after harvest."}],special:"First harvest year 3. Jersey Giant and Jersey Knight are excellent Zone 6 varieties.",nutrition:{calories:20,protein:2.2,carbs:3.9,fat:0.1,fiber:2.1,vitC:5,notes:"Outstanding source of folate, vitamin K, and prebiotic inulin fiber."},size:{weight:"15–25g per spear",dimensions:'7–9" long spear, 0.5–0.75" diameter',notes:"Harvest at 6–8 inches. Pencil-thin spears signal the bed needs rest."}},
+{id:"carrots",name:"Carrots",cat:"Root Vegetable",emoji:"🥕",planting:{zone6:"Direct sow Apr 1–May 15 (spring) or Jul 15–Aug 15 (fall)",depth:'0.25" deep; thin after sprouting',spacing:'2–3" apart, rows 12"',ph:"6.0–6.8",sun:"Full sun / part shade"},water:{in:"1",note:"Consistent moisture prevents forking; deep watering = deep roots"},fertilizer:{type:"Low-nitrogen 5-15-15",amount:"2 lbs per 100 sq ft",freq:"At planting; potassium side-dress at 4 weeks"},companions:{good:[{name:"Rosemary",why:"Rosemary's aromatic oils repel carrot fly, the primary pest that burrows into carrot roots."},{name:"Onions",why:"Onions repel carrot fly while carrots repel onion fly — a classic mutual benefit relationship."},{name:"Tomatoes",why:"Tomato foliage shades carrot beds and reduces moisture loss; both coexist well."}],bad:[{name:"Dill",why:"Dill cross-pollinates with carrot flowers when allowed to bolt, and also inhibits carrot growth."},{name:"Anise",why:"Anise inhibits carrot germination and growth through root exudate competition."}]},companionDist:'Keep 12"+ from dill and anise.',diseases:[{name:"Alternaria Leaf Blight",desc:"Dark spots with yellow halos; remove infected tops."},{name:"Cavity Spot",desc:"Elliptical pits — calcium deficiency; improve drainage, add lime."}],pests:"Carrot rust fly — row covers; wireworms — beneficial nematodes.",animals:"Parasitic wasps; hover flies attracted by umbellifer flowers.",rotation:{family:"Apiaceae",cycle:"3-year rotation; avoid parsnips, parsley, celery in sequence"},stages:[{label:"Germ",title:"Germination",desc:"14–21 days. Keep moist; burlap over bed helps."},{label:"Thin",title:"Thinning",desc:"Thin to 2–3\" when 2\" tall. Critical for root development."},{label:"Root",title:"Root development",desc:"Cover exposed shoulders to prevent greening."},{label:"Harv",title:"Harvest",desc:"60–80 days. Sweeter after light frost."}],special:"Prepare soil 12\" deep. Fall carrots are sweeter.",nutrition:{calories:41,protein:0.9,carbs:9.6,fat:0.2,fiber:2.8,vitC:6,notes:"One medium carrot provides over 200% of daily vitamin A as beta-carotene."},size:{weight:"60–120g per carrot",dimensions:'6–8" long, 1" diameter',notes:"Baby carrots at 3–4 inches; mature at 6–8."}},
+{id:"marigolds",name:"Marigolds",cat:"Flower",emoji:"🌼",planting:{zone6:"Start indoors Apr 1–15; transplant May 15; direct sow May 15",depth:'0.25"',spacing:'French: 6–8"; African: 10–12"',ph:"5.8–7.0",sun:"Full sun"},water:{in:"1",note:"Allow to dry slightly; overwatering reduces pest-repelling oils"},fertilizer:{type:"Low-nitrogen 5-10-5",amount:"Light application",freq:"Once at planting; deadhead to encourage bloom"},companions:{good:[{name:"Tomatoes",why:"Marigold root exudates suppress root-knot nematodes and volatiles deter whiteflies and aphids from tomatoes."},{name:"Peppers",why:"Marigolds repel pepper weevils and thrips, and attract predatory beneficial insects to the pepper patch."},{name:"Cucumbers",why:"Marigolds deter cucumber beetles, the primary vector of bacterial wilt in cucumbers."}],bad:[{name:"Fennel",why:"Fennel releases allelopathic chemicals that inhibit most plants, including marigolds, stunting their growth."}]},companionDist:'Plant marigolds throughout the garden. Keep 12" from fennel.',diseases:[{name:"Botrytis",desc:"Gray fuzzy mold on flowers; remove spent blooms."},{name:"Powdery Mildew",desc:"White coating in dry heat; improve air flow."}],pests:"Marigolds repel many pests. Spider mites — neem. Slugs — diatomaceous earth.",animals:"Attracts hoverflies, parasitic wasps, ladybugs, and pollinators.",rotation:{family:"Asteraceae (annual)",cycle:"Annual; replant each year; suppresses nematodes in soil"},stages:[{label:"Germ",title:"Germination",desc:"5–7 days indoors."},{label:"Seedl",title:"Seedling",desc:"Harden off before transplant."},{label:"Bud",title:"Budding",desc:"Pinch early buds for branching."},{label:"Bloom",title:"Continuous bloom",desc:"Deadhead to extend bloom until frost."}],special:"French marigolds most effective for nematode suppression. Plant throughout entire garden.",nutrition:{calories:0,protein:0,carbs:0,fat:0,fiber:0,vitC:0,notes:"Ornamental companion plant — not a food crop. Edible flowers are mildly bitter and peppery."},size:{weight:"N/A — ornamental",dimensions:'French: 6–12" tall; African: 18–36" tall',notes:"Plant densely between vegetables for maximum pest suppression."}},
+{id:"tomatoes",name:"Tomatoes",cat:"Fruiting Veg",emoji:"🍅",planting:{zone6:"Start indoors Mar 15–Apr 15; transplant May 15–Jun 1",depth:'Bury stem deep — up to 2/3 of plant',spacing:'Determinate: 2 ft; indeterminate: 3 ft; rows 4 ft',ph:"6.0–6.8",sun:"Full sun (8+ hrs)"},water:{in:"1–2",note:"Deep consistent watering prevents blossom end rot; water at base"},fertilizer:{type:"8-32-16 at transplant; balanced once fruiting",amount:"2 lbs per 100 sq ft; ½ cup per plant",freq:"Pre-plant; 6 weeks after transplant; at first fruit set"},companions:{good:[{name:"Basil",why:"Basil repels thrips, aphids, and whiteflies from tomatoes and may improve fruit flavor through volatile compound interaction."},{name:"Marigolds",why:"Marigolds suppress root nematodes and deter whiteflies and aphids that damage tomato foliage."},{name:"Carrots",why:"Carrots loosen soil around tomato roots and attract parasitic wasps that control tomato pests."}],bad:[{name:"Potatoes",why:"Tomatoes and potatoes share late blight (Phytophthora infestans) which spreads rapidly between them."},{name:"Fennel",why:"Fennel releases allelopathic chemicals that stunt tomato growth and cause premature wilting."},{name:"Corn",why:"Corn earworm attacks both corn silk and tomato fruit, so planting together concentrates this pest."}]},companionDist:'Keep 3–4 ft from potatoes; 20 ft from blackberries/raspberries; 2 ft from corn.',diseases:[{name:"Early Blight",desc:"Concentric-ring spots on lower leaves; copper fungicide; mulch."},{name:"Late Blight",desc:"Gray-green patches, white mold; destroy plants; chlorothalonil."},{name:"Septoria Leaf Spot",desc:"Small circular spots; same prevention as early blight."}],pests:"Hornworm — hand pick; aphids — neem; cutworms — stem collar.",animals:"Braconid wasps parasitize hornworms; lacewings eat aphids.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after potatoes, peppers, eggplant"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"6–8 weeks before transplant; 14–16 hours light."},{label:"Trans",title:"Transplant",desc:"After last frost; bury deeply; harden off 7–10 days."},{label:"Flwr",title:"Flowering",desc:"First flowers 6–8 weeks after transplant."},{label:"Harv",title:"Harvest",desc:"~70–80 days after transplant."}],special:"Choose <80 day maturity varieties for Zone 6. Sucker indeterminate varieties.",nutrition:{calories:18,protein:0.9,carbs:3.9,fat:0.2,fiber:1.2,vitC:14,notes:"Rich in lycopene — cooking increases lycopene bioavailability significantly."},size:{weight:"100–250g (slicing); 10–30g (cherry)",dimensions:'2–4" diameter (slicing); 1–1.5" (cherry)',notes:"Determinate varieties produce all at once; indeterminate produce until frost."}},
+{id:"potatoes",name:"Potatoes",cat:"Root Vegetable",emoji:"🥔",planting:{zone6:"Plant seed potatoes Apr 15–May 15 (soil 45°F+)",depth:'3–4" deep; hill up as plants grow',spacing:'12" apart, rows 30–36"',ph:"4.8–5.5",sun:"Full sun"},water:{in:"1–2",note:"Critical during tuber set; reduce after tops die back"},fertilizer:{type:"Low-nitrogen 5-10-10",amount:"3 lbs per 100 sq ft",freq:"Pre-plant; low-N when hilling; avoid N after flowering"},companions:{good:[{name:"Beans",why:"Beans fix nitrogen and the dense bean canopy repels Colorado potato beetle, the most damaging potato pest."},{name:"Marigolds",why:"Marigolds repel nematodes and Colorado potato beetle with their root exudates and volatile oils."},{name:"Corn",why:"Corn and potatoes occupy different root zones and coexist well with minimal resource competition."}],bad:[{name:"Tomatoes",why:"Tomatoes and potatoes share late blight (Phytophthora infestans) which spreads rapidly between closely related Solanaceae."},{name:"Cucumbers",why:"Cucumbers share Phytophthora fungal diseases and compete for potassium that both crops need in high quantities."},{name:"Raspberries",why:"Raspberry roots harbor Verticillium wilt which devastates potatoes, and both share other fungal root diseases."}]},companionDist:'Keep 3+ ft from tomatoes/peppers/eggplant; 3 ft from cucumbers.',diseases:[{name:"Late Blight",desc:"Dark water-soaked patches; destroy all infected tissue; copper fungicide."},{name:"Common Scab",desc:"Rough corky patches; lower soil pH to 4.8–5.2; certified seed."}],pests:"Colorado potato beetle — hand pick eggs/adults; spinosad spray.",animals:"Ground beetles eat grubs; row covers exclude flies.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after tomatoes, peppers, eggplant"},stages:[{label:"Sprt",title:"Sprouting",desc:"Pre-sprout (chit) 2–4 weeks before planting."},{label:"Veg",title:"Vegetative",desc:"Hill soil around stems every 2–3 weeks."},{label:"Tuber",title:"Tuber set",desc:"At flowering; consistent water critical."},{label:"Harv",title:"Harvest",desc:"Mature: 2–3 weeks after tops die; cure 2 weeks."}],special:"Never plant where Solanaceae grew in 3 years. Use certified seed potatoes. Green flesh is toxic.",nutrition:{calories:77,protein:2,carbs:17,fat:0.1,fiber:2.2,vitC:20,notes:"Good source of potassium, vitamin B6, and vitamin C. Most nutrients are just beneath the skin."},size:{weight:"100–300g per tuber",dimensions:'2–4" diameter',notes:"New potatoes: golf ball size. Mature: after tops die back."}},
+{id:"cucumbers",name:"Cucumbers",cat:"Vine Vegetable",emoji:"🥒",planting:{zone6:"Start May 1–10; transplant or sow May 25–Jun 10 (soil 65°F+)",depth:'Direct sow 0.5–1"; transplant at pot depth',spacing:'Vining: 12" on trellis; bush: 18–24"',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1–2",note:"Never let soil dry — causes bitter fruit"},fertilizer:{type:"Balanced 10-10-10",amount:"1 lb per 100 sq ft",freq:"At planting; every 3–4 weeks; reduce N after fruiting"},companions:{good:[{name:"Corn",why:"Corn provides physical support for vining cucumbers and creates a microclimate reducing moisture stress."},{name:"Beans",why:"Beans fix nitrogen that cucumber vines consume heavily during fruit production."},{name:"Marigolds",why:"Marigolds deter cucumber beetles, the primary vector of bacterial wilt that devastates cucumbers."}],bad:[{name:"Potatoes",why:"Potatoes and cucumbers share Phytophthora blight, and growing them together amplifies fungal disease pressure."},{name:"Sage",why:"Sage releases volatile compounds that inhibit cucumber vine development and reduce fruit set."},{name:"Melons",why:"Melons share powdery mildew and cucumber beetle infestations, concentrating problems when planted together."}]},companionDist:'Keep 3 ft from potatoes; 3 ft from melons; 12" from aromatic herbs.',diseases:[{name:"Cucumber Mosaic Virus",desc:"Mottled leaves, stunted plants; spread by aphids; remove infected plants."},{name:"Angular Leaf Spot",desc:"Angular spots along veins; copper bactericide; avoid overhead watering."}],pests:"Cucumber beetle — row covers until flowering; pickle worm — Bt.",animals:"Bees critical for pollination; ground beetles eat larvae.",rotation:{family:"Cucurbitaceae",cycle:"3–4 year rotation away from squash, pumpkins, melons"},stages:[{label:"Germ",title:"Germination",desc:"5–10 days at 70°F+."},{label:"Vine",title:"Vine growth",desc:"Train up trellis early."},{label:"Flwr",title:"Flowering",desc:"Bees essential; male flowers precede female."},{label:"Harv",title:"Harvest",desc:"Every 1–2 days — overripe stops production."}],special:"Trellis strongly recommended. Bitter cucumbers from irregular water or temps below 55°F.",nutrition:{calories:15,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5,vitC:3,notes:"96% water — good source of vitamin K and silica for skin and connective tissue."},size:{weight:"200–400g per cucumber",dimensions:'Slicing: 6–8" long; pickling: 3–4"',notes:"Harvest before yellowing for peak flavor."}},
+{id:"corn",name:"Corn",cat:"Grain",emoji:"🌽",planting:{zone6:"Direct sow May 15–Jun 15 (soil 60°F+)",depth:'1–1.5" deep',spacing:'9–12" apart, rows 30–36"; plant in blocks',ph:"5.8–6.8",sun:"Full sun"},water:{in:"1–2",note:"Critical during tasseling and silking"},fertilizer:{type:"High nitrogen 46-0-0 (urea)",amount:"1.5 lbs per 100 sq ft",freq:"At planting; knee-high side-dress; again at tasseling"},companions:{good:[{name:"Beans",why:"Beans fix nitrogen which corn exhausts from soil — the Three Sisters system uses beans to continuously feed corn."},{name:"Squash",why:"Squash's large leaves shade soil between corn rows, reducing weeds and retaining moisture."},{name:"Cucumbers",why:"Cucumbers can use corn stalks as natural trellises, saving space while corn benefits from reduced competition."}],bad:[{name:"Tomatoes",why:"Corn earworm attacks both crops; growing them together creates a massive pest reservoir increasing damage to both."},{name:"Celery",why:"Celery releases compounds that stunt corn root development — they are allelopathically incompatible."}]},companionDist:'Plant in blocks for pollination. Keep 3 ft from tomatoes.',diseases:[{name:"Stewart's Wilt",desc:"Yellow streaks, stunted plants; spread by flea beetles; resistant varieties."},{name:"Common Rust",desc:"Reddish-brown pustules; cosmetic in most cases; resistant varieties."}],pests:"Earworm — Bt or oil dropper on silks; corn borer — Bt spray.",animals:"Trichogramma wasps parasitize earworm eggs; birds eat worms.",rotation:{family:"Poaceae",cycle:"2–3 year rotation; follow with legumes to replenish nitrogen"},stages:[{label:"Germ",title:"Germination",desc:"Needs warm soil — cold causes poor emergence."},{label:"V-stg",title:"Vegetative",desc:"Side-dress nitrogen at V6 (knee-high)."},{label:"Silk",title:"Tasseling & silking",desc:"Plant in blocks for wind pollination."},{label:"Harv",title:"Harvest",desc:"Milk stage: 18–24 days after silking. 1–2 day window!"}],special:"Plant in blocks of 4+ rows for wind pollination. Succession plant every 2 weeks.",nutrition:{calories:86,protein:3.2,carbs:19,fat:1.2,fiber:2.7,vitC:7,notes:"Provides B vitamins, magnesium, and phosphorus. Best eaten within hours of harvest."},size:{weight:"200–300g per ear",dimensions:'7–9" long ear, 1.5–2" diameter',notes:"Pierce a kernel — milky white sap = perfect. 1–2 day harvest window at peak."}},
+{id:"kale",name:"Kale",cat:"Leafy Green",emoji:"🥬",planting:{zone6:"Direct sow Mar 15–May 1 (spring) or Jul 15–Aug 15 (fall)",depth:'0.5"',spacing:'12–18" apart, rows 18–24"',ph:"6.0–7.5",sun:"Full sun / part shade"},water:{in:"1–1.5",note:"Consistent moisture; slight drought-stress in fall intensifies flavor"},fertilizer:{type:"High-nitrogen 10-10-10 or fish emulsion",amount:"2 lbs per 100 sq ft",freq:"At planting; side-dress nitrogen monthly"},companions:{good:[{name:"Beets",why:"Beets and kale are compatible root/leaf crop partners that don't compete for resources."},{name:"Marigolds",why:"Marigolds deter cabbage moths and whiteflies that devastate kale leaves."},{name:"Nasturtiums",why:"Nasturtiums act as trap crops for aphids, drawing them away from kale foliage."}],bad:[{name:"Tomatoes",why:"Tomatoes and brassicas like kale compete for calcium and magnesium, causing deficiencies in both crops."},{name:"Beans",why:"Beans are inhibited by kale's glucosinolate root exudates, reducing bean yield when grown close."},{name:"Strawberries",why:"Strawberries are stunted near brassicas; they share fungal diseases and compete for the same nutrients."}]},companionDist:'Keep 18" from beans; 12" from tomatoes/strawberries.',diseases:[{name:"Black Rot",desc:"Yellow V-shaped lesions, black veins; copper bactericide; rotate."},{name:"Downy Mildew",desc:"Yellow spots above, gray fuzz below; copper spray; improve air flow."}],pests:"Cabbage worms — Bt; aphids — neem; flea beetles — row covers.",animals:"Parasitic wasps; ground beetles; spiders eat insects.",rotation:{family:"Brassicaceae",cycle:"3–4 year rotation; not after broccoli, cabbage, cauliflower"},stages:[{label:"Germ",title:"Germination",desc:"5–8 days in cool soil."},{label:"Juv",title:"Juvenile",desc:"Thin to 12–18\"; thinnings are edible microgreens."},{label:"Harv",title:"Harvest",desc:"Harvest outer leaves; central tip keeps producing."},{label:"Winter",title:"Overwintering",desc:"Fall kale sweetens with frost; overwinters in Zone 6."}],special:"Lacinato, Red Russian, Winterbor are excellent Zone 6 varieties. Sweeter after frost.",nutrition:{calories:35,protein:2.9,carbs:4.4,fat:1.5,fiber:4.1,vitC:93,notes:"One of the most nutrient-dense foods. Exceptional vitamin K, A, C, and calcium. Anti-cancer glucosinolates."},size:{weight:"200–400g per bunch",dimensions:'Leaves 8–16" long',notes:"Harvest at 8–10 inches for best flavor. Lacinato kale is more tender and sweeter than curly types."}},
+{id:"green_beans",name:"Green Beans",cat:"Legume",emoji:"🫘",planting:{zone6:"Direct sow May 15–Jul 1; succession sow every 2–3 weeks",depth:'1–1.5" deep',spacing:'Bush: 4–6" rows 18"; Pole: 4–6" at trellis',ph:"6.0–7.0",sun:"Full sun"},water:{in:"1",note:"Critical at flowering and pod development; water at base"},fertilizer:{type:"Low-nitrogen 5-10-10",amount:"½ lb per 100 sq ft",freq:"At planting only; beans fix their own nitrogen"},companions:{good:[{name:"Carrots",why:"Beans fix nitrogen that feeds heavy-feeding carrots; carrots loosen soil that aids bean root development."},{name:"Corn",why:"The Three Sisters system: beans fix nitrogen for corn, while corn stalks provide a natural trellis for pole beans."},{name:"Marigolds",why:"Marigolds repel Mexican bean beetles and bean leaf rollers with their aromatic volatile compounds."}],bad:[{name:"Garlic",why:"Garlic's allelopathic sulfur compounds significantly inhibit bean growth and reduce nitrogen-fixation activity."},{name:"Onions",why:"Onion root exudates stunt bean germination and suppress Rhizobium bacteria that beans need to fix nitrogen."},{name:"Fennel",why:"Fennel's allelopathic chemicals inhibit almost all vegetables including beans, stunting growth and reducing yield."}]},companionDist:'Keep 18"+ from all alliums; 12" from beets.',diseases:[{name:"Bean Mosaic Virus",desc:"Mottled leaves, stunted; spread by aphids; remove plants."},{name:"Root Rot",desc:"Sunken lesions at soil line; improve drainage; avoid cold/wet soil."}],pests:"Mexican bean beetle — hand pick; bean leaf roller — Bt; aphids — soap.",animals:"Ground beetles; parasitic wasps; bees pollinate.",rotation:{family:"Fabaceae",cycle:"2–3 year rotation; follow with heavy feeders like corn/brassicas"},stages:[{label:"Germ",title:"Germination",desc:"7–14 days; do not plant in cold soil below 60°F."},{label:"Grow",title:"Vegetative",desc:"Rapid growth; install pole trellis before planting."},{label:"Flwr",title:"Flowering",desc:"Self-pollinating."},{label:"Harv",title:"Harvest",desc:"Every 2–3 days when pods snap cleanly."}],special:"Inoculate seeds with rhizobium bacteria for better nitrogen fixation in new beds.",nutrition:{calories:31,protein:1.8,carbs:7,fat:0.1,fiber:2.7,vitC:12,notes:"Good source of folate, vitamin K, and silicon. Very low calorie with excellent digestive fiber."},size:{weight:"10–15g per pod",dimensions:'4–6" long pod',notes:"Harvest at 4–6 inches before seeds bulge. Bush beans all at once; pole beans continuous."}},
+{id:"peppers",name:"Peppers (Green/Banana)",cat:"Fruiting Veg",emoji:"🫑",planting:{zone6:"Start indoors Feb 15–Mar 15; transplant Jun 1–10 (soil 65°F+)",depth:'Same as pot; slightly deeper OK',spacing:'18" apart, rows 24"',ph:"6.0–6.8",sun:"Full sun (8+ hrs)"},water:{in:"1–2",note:"Blossom drop in extreme heat or cold; mulch to stabilize soil temp"},fertilizer:{type:"5-10-10 starter; 8-8-8 once fruiting",amount:"1 lb per 100 sq ft",freq:"At transplant; every 3–4 weeks balanced; avoid excess N"},companions:{good:[{name:"Basil",why:"Basil repels thrips and aphids from peppers and may improve flavor; both love the same warm, sunny conditions."},{name:"Tomatoes",why:"Tomatoes and peppers have compatible pest profiles and can share beneficial insect populations in the garden."},{name:"Marigolds",why:"Marigolds repel pepper weevil and thrips while attracting predatory beneficial insects to the pepper patch."}],bad:[{name:"Fennel",why:"Fennel's allelopathic chemicals inhibit pepper root development and reduce fruit set."},{name:"Blackberries",why:"Blackberries and peppers share Verticillium wilt fungus which persists in soil and is lethal to both crops."},{name:"Kohlrabi",why:"Kohlrabi is allelopathically incompatible with peppers, competing for the same minerals and stunting both."}]},companionDist:'Keep 20+ ft from blackberries; 12" from fennel.',diseases:[{name:"Anthracnose",desc:"Sunken spots on ripe fruit; copper fungicide; rotate."},{name:"Phytophthora Blight",desc:"Wilting, brown lesions; improve drainage; destroy infected plants."}],pests:"Aphids — soap; pepper maggot — sticky traps; corn borer — Bt.",animals:"Braconid wasps; lacewings eat aphids; bees pollinate.",rotation:{family:"Solanaceae",cycle:"3–4 year rotation; not after tomatoes, potatoes, eggplant"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"8–12 weeks indoors; earliest Zone 6 indoor start."},{label:"Trans",title:"Transplant",desc:"Harden 10–14 days; nights above 55°F consistently."},{label:"Flwr",title:"Flowering",desc:"Self-pollinating; shake gently in morning."},{label:"Harv",title:"Harvest",desc:"Green at any firm size; leave for color change."}],special:"Zone 6: use black plastic mulch for heat. Banana peppers are very productive.",nutrition:{calories:20,protein:0.9,carbs:4.6,fat:0.2,fiber:1.7,vitC:80,notes:"Green peppers have 3x the vitamin C of oranges by weight. Red (fully ripened) have even more, plus lycopene."},size:{weight:"100–200g per pepper",dimensions:'Bell: 3–4" wide; banana: 4–6" long',notes:"Banana peppers at 4–6 inches pale yellow-green. Leaving on plant = sweeter, more nutritious."}},
+{id:"rosemary",name:"Rosemary",cat:"Herb",emoji:"🌿",planting:{zone6:"Transplant May 15–Jun 1; annual in Zone 6 or overwinter in container",depth:'Same depth as pot',spacing:'18–24" apart',ph:"6.0–7.0",sun:"Full sun"},water:{in:"0.5–1",note:"Excellent drainage essential; allow to dry between waterings"},fertilizer:{type:"Low-N 5-10-10 or fish emulsion",amount:"Light application only",freq:"Once spring; once midsummer"},companions:{good:[{name:"Beans",why:"Rosemary repels Mexican bean beetles and bean weevils with its aromatic camphor and borneol compounds."},{name:"Carrots",why:"Rosemary's strong aroma masks the carrot scent that attracts carrot fly, significantly reducing pest damage."},{name:"Marigolds",why:"Rosemary and marigolds together create a multi-sensory pest deterrent zone protecting neighboring vegetables."}],bad:[{name:"Cucumbers",why:"Rosemary's volatile aromatic oils inhibit cucumber vine growth and reduce fruit set when planted close."},{name:"Pumpkins",why:"Like cucumbers, pumpkins are inhibited by rosemary's allelopathic compounds near shared soil."}]},companionDist:'Keep 12" from cucumbers and pumpkins.',diseases:[{name:"Root Rot",desc:"Yellowing, wilting; almost always overwatering; improve drainage immediately."}],pests:"Generally pest-resistant. Spittlebugs — water spray; aphids — neem.",animals:"Excellent pollinator attractor; volatile oils repel many vegetable pests.",rotation:{family:"Lamiaceae (perennial/annual in Z6)",cycle:"Annual in Zone 6 unless protected; rotate position each year"},stages:[{label:"Est",title:"Establishment",desc:"Water regularly until established (4–6 weeks)."},{label:"Grow",title:"Growth",desc:"Pinch tips for bushing."},{label:"Harv",title:"Harvest",desc:"Harvest tips continuously."},{label:"Frost",title:"Pre-frost",desc:"Bring inside or mulch heavily before first frost."}],special:"Zone 6: Arp or Hill Hardy varieties survive outdoors with heavy mulch. Otherwise grow in container.",nutrition:{calories:131,protein:3.3,carbs:21,fat:5.9,fiber:14,vitC:22,notes:"Used in small culinary amounts. High in rosmarinic acid and carnosic acid. Per 100g figures are for dried herb."},size:{weight:"N/A — culinary herb",dimensions:'Plant: 18–36" tall and wide',notes:"Harvest 2–3 inch stem tips. One plant provides ample harvest for a household."}},
+{id:"thyme",name:"Thyme",cat:"Herb",emoji:"🌿",planting:{zone6:"Transplant Apr 15–May 15; hardy perennial in Zone 6",depth:'Same depth as pot; seeds surface-sow',spacing:'9–12" apart',ph:"6.0–8.0",sun:"Full sun"},water:{in:"0.5–1",note:"Excellent drainage; root rot common in wet soil"},fertilizer:{type:"Dilute balanced or compost",amount:"Minimal; prefers lean soil",freq:"Once spring with compost; rarely needs more"},companions:{good:[{name:"Tomatoes",why:"Thyme repels tomato hornworm moths from laying eggs on tomato plants with its aromatic thymol compounds."},{name:"Potatoes",why:"Thyme deters potato beetles and the whitefly that spreads viral diseases to potato foliage."},{name:"Strawberries",why:"Thyme repels worms and slugs that damage strawberry fruit and deters gray mold with its antifungal volatiles."}],bad:[{name:"Mint",why:"Mint aggressively spreads by underground runners and overwhelms thyme, competing for all water and nutrients."},{name:"Fennel",why:"Fennel's allelopathic chemicals inhibit thyme and most other herbs planted nearby."}]},companionDist:'Keep 12" from fennel; contain mint in pots to prevent takeover.',diseases:[{name:"Root Rot",desc:"Overwatering or clay soil; ensure excellent drainage."}],pests:"Very pest-resistant. Occasional aphids/spider mites — neem oil.",animals:"Major bee and butterfly attractor when in bloom.",rotation:{family:"Lamiaceae (perennial)",cycle:"Hardy perennial Zone 6; divide every 2–3 years"},stages:[{label:"Germ",title:"Germination",desc:"14–28 days from seed; transplants recommended."},{label:"Est",title:"Establishment",desc:"Slow first year; hardy by end of season."},{label:"Harv",title:"Harvest",desc:"Tips before flowering; cut back 1/3 max."},{label:"Renew",title:"Renewal",desc:"Divide or cut back hard every 2–3 years."}],special:"English thyme is classic culinary. Hardy in Zone 6 — returns each year. Allow to bloom for bees.",nutrition:{calories:101,protein:5.6,carbs:24,fat:1.7,fiber:14,vitC:160,notes:"Rich in thymol and carvacrol — powerful antimicrobial compounds. Excellent iron and manganese source. Used in small culinary amounts."},size:{weight:"N/A — culinary herb",dimensions:'Plant: 6–12" tall, spreading',notes:"Harvest stem tips 2–3 inches long. Leaves are most flavorful just before flowering."}},
+{id:"basil",name:"Basil",cat:"Herb",emoji:"🌿",planting:{zone6:"Start indoors Apr 15–May 1; transplant Jun 1+ (very frost sensitive)",depth:'0.25" indoors; transplant at pot depth',spacing:'12–18" apart',ph:"6.0–7.0",sun:"Full sun (6+ hrs minimum)"},water:{in:"1–1.5",note:"Keep moist; cold water below 50°F causes black spots; water in morning"},fertilizer:{type:"Balanced 10-10-10 or fish emulsion",amount:"Light application",freq:"Every 3–4 weeks; heavy feeding reduces flavor"},companions:{good:[{name:"Tomatoes",why:"Basil repels thrips, aphids, and whiteflies from tomatoes and is widely reported to improve tomato flavor through aromatic volatile exchange."},{name:"Peppers",why:"Basil and peppers have compatible moisture and nutrient needs; basil deters thrips that attack pepper flowers."},{name:"Marigolds",why:"Marigolds and basil together create a powerful pest-deterrent zone; both attract predatory beneficial insects."}],bad:[{name:"Sage",why:"Sage releases allelopathic compounds that inhibit basil's growth — direct competition causes stunted growth."},{name:"Rosemary",why:"Rosemary and basil have conflicting water needs (dry vs moist), causing one to suffer in shared conditions."},{name:"Fennel",why:"Fennel's allelopathic chemicals stunt basil and inhibit germination and essential oil production."}]},companionDist:'Keep 18" from sage/rosemary; 12" from fennel.',diseases:[{name:"Fusarium Wilt",desc:"One-sided wilting, brown stem streaks; destroy plants; use resistant varieties."},{name:"Downy Mildew",desc:"Yellow patches on leaves; resistant varieties; improve air circulation."}],pests:"Japanese beetles — hand pick; aphids — neem; slugs — diatomaceous earth.",animals:"Bees love basil flowers; allow some to bolt for pollinators.",rotation:{family:"Lamiaceae (annual)",cycle:"Annual; rotate each year"},stages:[{label:"Seed",title:"Seedling (indoors)",desc:"5–7 days; very cold-sensitive."},{label:"Est",title:"Establishment",desc:"Rapid in warm weather; pinch flower buds."},{label:"Pinch",title:"Pinching phase",desc:"Continuously pinch flower stalks; longest productive phase."},{label:"Bolt",title:"Flowering",desc:"Allow some to flower and set seed."}],special:"Plant one basil per tomato. Below 50°F permanently damages basil. Genovese, Nufar excellent in Zone 6.",nutrition:{calories:23,protein:3.2,carbs:2.7,fat:0.6,fiber:1.6,vitC:18,notes:"Rich in eugenol (anti-inflammatory), vitamin K, and beta-carotene. Fresh has significantly higher nutrients than dried."},size:{weight:"N/A — culinary herb",dimensions:'Plant: 12–24" tall',notes:"Harvest by pinching stems above a leaf node."}}
+];
+
+let PLANTS=[], activeFilter="All", currentPlantId=null, editingPlant=null, isNew=false;
+let companionsRendered=false, rotationRendered=false, nutritionRendered=false;
+let nutCharts=[];
+
+function dp(o){return JSON.parse(JSON.stringify(o));}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+async function loadData(){
+  try{const r=await window.storage.get(STORAGE_KEY);if(r&&r.value){const p=JSON.parse(r.value);if(Array.isArray(p)&&p.length>0){PLANTS=p;return;}}}catch(e){}
+  PLANTS=dp(SEED_DATA);await saveData();
+}
+async function saveData(show){
+  try{await window.storage.set(STORAGE_KEY,JSON.stringify(PLANTS));if(show)showSS(true);}catch(e){if(show)showSS(false);}
+}
+function showSS(ok){
+  const el=document.getElementById("save-status");if(!el)return;
+  el.textContent=ok?"Saved":"Save failed";el.className="save-status "+(ok?"save-ok":"save-err");
+  el.style.opacity="1";setTimeout(()=>{el.style.opacity="0";},2200);
+}
+
+function gotoPage(p){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".navbtn").forEach(x=>x.classList.remove("on"));
+  document.getElementById("page-"+p).classList.add("on");
+  document.querySelector(`.navbtn[onclick="gotoPage('${p}')"]`).classList.add("on");
+  if(p==="companions"&&!companionsRendered){renderCompanions();companionsRendered=true;}
+  if(p==="rotation"&&!rotationRendered){renderRotation();rotationRendered=true;}
+  if(p==="nutrition"&&!nutritionRendered){renderNutritionPage();nutritionRendered=true;}
+}
+
+function getCats(){return["All",...new Set(PLANTS.map(p=>p.cat))];}
+function renderCatRow(){
+  const el=document.getElementById("cat-row");if(!el)return;
+  el.innerHTML=getCats().map(c=>`<button class="cbtn${c===activeFilter?" on":""}" onclick="setFilter('${c.replace(/'/g,"\\'")}')">${esc(c)}</button>`).join("");
+}
+function setFilter(cat){activeFilter=cat;renderCatRow();renderGrid();}
+function renderGrid(){
+  const q=(document.getElementById("search")||{}).value?.toLowerCase()||"";
+  const filtered=PLANTS.filter(p=>(activeFilter==="All"||p.cat===activeFilter)&&(!q||p.name.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)));
+  const grid=document.getElementById("plant-grid");if(!grid)return;
+  if(!filtered.length){grid.innerHTML='<div class="no-res">No plants found</div>';return;}
+  grid.innerHTML=filtered.map(p=>`
+    <div class="pcard">
+      <span class="count-badge">${esc(p.cat)}</span>
+      <div class="pcard-name" style="font-size:16px">${esc(p.emoji)}</div>
+      <div class="pcard-name">${esc(p.name)}</div>
+      <div class="pcard-tags">
+        <span class="tag ts">${esc((p.planting.sun||"").split(" ").slice(0,2).join(" "))}</span>
+        <span class="tag tw">${esc(p.water.in)} in/wk</span>
+      </div>
+      <div class="pcard-actions">
+        <button onclick="showDetail('${p.id}')">View</button>
+        <button onclick="openEdit('${p.id}')">Edit</button>
+        <button class="del-btn" onclick="deletePlant('${p.id}')">Delete</button>
+      </div>
+    </div>`).join("");
+}
+
+function phBar(ph){
+  const pts=ph.split("–").map(Number);const mid=(pts[0]+pts[1])/2;
+  const pct=Math.round(((mid-4)/(9-4))*100);
+  return `<div class="ph-bar-vis"><div class="ph-marker-vis" style="left:${pct}%"></div></div>
+<div class="ph-labels-vis"><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+<div style="font-size:11px;color:var(--color-text-secondary);margin-top:4px">Ideal: ${esc(ph)}</div>`;
+}
+function waterVis(w){
+  const n=parseFloat(w)||1;const full=Math.floor(n);const half=(n-full)>=0.25;
+  let h='<div style="display:flex;gap:3px;margin:5px 0;flex-wrap:wrap">';
+  for(let i=0;i<full;i++)h+='<div class="wdrop f"></div>';
+  if(half)h+='<div class="wdrop" style="opacity:.45"></div>';
+  return h+'</div>';
+}
+function nutBar(val,max,color){
+  const pct=Math.min(100,Math.round(((val||0)/max)*100));
+  return `<div class="nut-bar-track"><div class="nut-bar-fill" style="width:${pct}%;background:${color}"></div></div>`;
+}
+function buildNutrition(p){
+  if(!p.nutrition)return'<div class="abox ainfo">No nutrition data yet. Edit this plant to add.</div>';
+  const n=p.nutrition;
+  if(n.calories===0&&n.protein===0&&n.carbs===0)return`<div class="abox ainfo">${esc(n.notes||"Non-food crop.")}</div>`;
+  return `<div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:.5rem">Per 100g fresh weight</div>
+<div class="nut-grid">
+  <div class="nut-card"><div class="nut-val">${n.calories}</div><div class="nut-label">calories</div>${nutBar(n.calories,400,"#639922")}</div>
+  <div class="nut-card"><div class="nut-val">${n.protein}g</div><div class="nut-label">protein</div>${nutBar(n.protein,10,"#378ADD")}</div>
+  <div class="nut-card"><div class="nut-val">${n.carbs}g</div><div class="nut-label">carbs</div>${nutBar(n.carbs,40,"#BA7517")}</div>
+  <div class="nut-card"><div class="nut-val">${n.fat}g</div><div class="nut-label">fat</div>${nutBar(n.fat,10,"#D4537E")}</div>
+  <div class="nut-card"><div class="nut-val">${n.fiber}g</div><div class="nut-label">fiber</div>${nutBar(n.fiber,15,"#1D9E75")}</div>
+  <div class="nut-card"><div class="nut-val">${n.vitC}mg</div><div class="nut-label">vitamin C</div>${nutBar(n.vitC,100,"#EF9F27")}</div>
+</div>
+${n.notes?`<div class="abox ainfo" style="margin-top:.5rem">${esc(n.notes)}</div>`:""}`;
+}
+function buildSizeInfo(p){
+  if(!p.size)return'<div class="abox ainfo">No size data yet. Edit this plant to add.</div>';
+  const s=p.size;
+  return `<div class="igrid">
+    <div class="icard"><div class="ilabel">Average weight</div><div class="ival">${esc(s.weight)}</div></div>
+    <div class="icard"><div class="ilabel">Dimensions</div><div class="ival">${esc(s.dimensions)}</div></div>
+  </div>${s.notes?`<div class="abox ainfo">${esc(s.notes)}</div>`:""}`;
+}
+function buildCompanionSection(p){
+  const good=p.companions.good||[];
+  const bad=p.companions.bad||[];
+  const goodHtml=good.map(g=>{const name=typeof g==="string"?g:g.name;const why=typeof g==="object"?g.why:"";return`<div style="margin-bottom:8px"><span class="cpill gpill">${esc(name)}</span>${why?`<div class="companion-why">${esc(why)}</div>`:""}</div>`;}).join("");
+  const badHtml=bad.map(b=>{const name=typeof b==="string"?b:b.name;const why=typeof b==="object"?b.why:"";return`<div style="margin-bottom:8px"><span class="cpill rpill">${esc(name)}</span>${why?`<div class="companion-why">${esc(why)}</div>`:""}</div>`;}).join("");
+  return `<div class="sh">Plant with</div>${goodHtml||"<div style='font-size:12px;color:var(--color-text-tertiary)'>None recorded</div>"}
+<div class="sh" style="margin-top:.85rem">Keep away from</div>${badHtml||"<div style='font-size:12px;color:var(--color-text-tertiary)'>None recorded</div>"}
+<div class="abox awarn" style="margin-top:.85rem"><strong>Distance note:</strong> ${esc(p.companionDist||"")}</div>
+<div class="sh">Beneficial animals</div><div style="font-size:12px;color:var(--color-text-secondary);line-height:1.5">${esc(p.animals||"")}</div>`;
+}
+function showDetail(id){
+  const p=PLANTS.find(x=>x.id===id);if(!p)return;
+  currentPlantId=id;
+  document.getElementById("plants-list").style.display="none";
+  document.getElementById("plants-detail").style.display="block";
+  document.getElementById("plants-edit").style.display="none";
+  document.getElementById("detail-content").innerHTML=buildDetail(p);
+  showTab("planting");
+}
+function showList(){
+  renderCatRow();renderGrid();
+  document.getElementById("plants-list").style.display="block";
+  document.getElementById("plants-detail").style.display="none";
+  document.getElementById("plants-edit").style.display="none";
+}
+function showTab(tab){
+  document.querySelectorAll(".stab").forEach(t=>t.classList.toggle("on",t.dataset.tab===tab));
+  document.querySelectorAll(".tc").forEach(c=>c.classList.toggle("on",c.id==="tc-"+tab));
+}
+function buildDetail(p){
+  return `<div class="panel">
+  <div class="panel-header">
+    <div class="ph-icon">${esc(p.emoji)}</div>
+    <div><div class="ph-title">${esc(p.name)}</div>
+    <div class="ph-sub">${esc(p.cat)} · Zone 6 · <button style="background:none;border:none;color:#3B6D11;cursor:pointer;font-size:12px;padding:0" onclick="openEdit('${p.id}')">Edit this plant</button></div></div>
+  </div>
+  <div class="stabs">
+    <button class="stab on" data-tab="planting" onclick="showTab('planting')">Planting</button>
+    <button class="stab" data-tab="care" onclick="showTab('care')">Care</button>
+    <button class="stab" data-tab="nutrition" onclick="showTab('nutrition')">Nutrition & size</button>
+    <button class="stab" data-tab="companions" onclick="showTab('companions')">Companions</button>
+    <button class="stab" data-tab="problems" onclick="showTab('problems')">Diseases & pests</button>
+    <button class="stab" data-tab="growth" onclick="showTab('growth')">Growth stages</button>
+    <button class="stab" data-tab="rotation" onclick="showTab('rotation')">Rotation</button>
+  </div>
+  <div id="tc-planting" class="tc on">
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">Zone 6 timing</div><div class="ival">${esc(p.planting.zone6)}</div></div>
+      <div class="icard"><div class="ilabel">Depth</div><div class="ival">${esc(p.planting.depth)}</div></div>
+      <div class="icard"><div class="ilabel">Spacing</div><div class="ival">${esc(p.planting.spacing)}</div></div>
+      <div class="icard"><div class="ilabel">Sunlight</div><div class="ival">${esc(p.planting.sun)}</div></div>
+    </div>
+    <div class="sh">Soil pH</div>${phBar(p.planting.ph)}
+    ${p.special?`<div class="sh">Special instructions</div><div class="abox atip">${esc(p.special)}</div>`:""}
+  </div>
+  <div id="tc-care" class="tc">
+    <div class="sh">Water per week</div>${waterVis(p.water.in)}
+    <div style="font-size:12px;font-weight:500">${esc(p.water.in)} inches/week</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);margin-top:3px;margin-bottom:1rem">${esc(p.water.note)}</div>
+    <div class="sh">Fertilizer</div>
+    <div class="igrid">
+      <div class="icard"><div class="ilabel">Type</div><div class="ival">${esc(p.fertilizer.type)}</div></div>
+      <div class="icard"><div class="ilabel">Amount</div><div class="ival">${esc(p.fertilizer.amount)}</div></div>
+    </div>
+    <div class="abox atip"><strong>Frequency:</strong> ${esc(p.fertilizer.freq)}</div>
+  </div>
+  <div id="tc-nutrition" class="tc">
+    <div class="sh" style="margin-top:0">Nutritional profile</div>${buildNutrition(p)}
+    <div class="sh">Average size at harvest</div>${buildSizeInfo(p)}
+  </div>
+  <div id="tc-companions" class="tc">${buildCompanionSection(p)}</div>
+  <div id="tc-problems" class="tc">
+    <div class="sh">Common diseases</div>
+    ${(p.diseases||[]).map(d=>`<div class="ditem"><div class="dname">${esc(d.name)}</div><div class="ddesc">${esc(d.desc)}</div></div>`).join("")}
+    <div class="sh">Pest control</div><div class="abox atip">${esc(p.pests)}</div>
+  </div>
+  <div id="tc-growth" class="tc">
+    <ul class="stagelist">${(p.stages||[]).map((s,i)=>`<li class="sitem"><div class="sdot">${i+1}</div><div><div class="stitle2">${esc(s.title)}</div><div class="sdesc">${esc(s.desc)}</div></div></li>`).join("")}</ul>
+  </div>
+  <div id="tc-rotation" class="tc">
+    <div class="rotbox"><div class="rtitle">Plant family</div><div class="rdesc">${esc(p.rotation.family)}</div></div>
+    <div class="rotbox"><div class="rtitle">Rotation cycle</div><div class="rdesc">${esc(p.rotation.cycle)}</div></div>
+  </div>
+</div>`;
+}
+
+async function deletePlant(id){
+  const p=PLANTS.find(x=>x.id===id);if(!p)return;
+  if(!confirm(`Delete "${p.name}"?`))return;
+  PLANTS=PLANTS.filter(x=>x.id!==id);
+  await saveData(true);renderCatRow();renderGrid();
+  if(currentPlantId===id){currentPlantId=null;showList();}
+}
+function openEdit(id){
+  const p=PLANTS.find(x=>x.id===id);if(!p)return;
+  editingPlant=dp(p);isNew=false;renderModal();
+  document.getElementById("plants-list").style.display="none";
+  document.getElementById("plants-detail").style.display="none";
+  document.getElementById("plants-edit").style.display="block";
+}
+function openAdd(){
+  editingPlant={id:'plant_'+Date.now(),name:'',cat:'',emoji:'🌱',
+    planting:{zone6:'',depth:'',spacing:'',ph:'6.0–7.0',sun:'Full sun'},
+    water:{in:'1',note:''},fertilizer:{type:'',amount:'',freq:''},
+    companions:{good:[],bad:[]},companionDist:'',
+    diseases:[{name:'',desc:''}],pests:'',animals:'',
+    rotation:{family:'',cycle:''},stages:[{label:'',title:'',desc:''}],special:'',
+    nutrition:{calories:'',protein:'',carbs:'',fat:'',fiber:'',vitC:'',notes:''},
+    size:{weight:'',dimensions:'',notes:''}};
+  isNew=true;renderModal();
+  document.getElementById("plants-list").style.display="none";
+  document.getElementById("plants-detail").style.display="none";
+  document.getElementById("plants-edit").style.display="block";
+}
+function getGoodStr(p){return(p.companions.good||[]).map(g=>typeof g==="string"?g:g.name).join(", ");}
+function getBadStr(p){return(p.companions.bad||[]).map(b=>typeof b==="string"?b:b.name).join(", ");}
+function getGoodWhyStr(p){return(p.companions.good||[]).map(g=>typeof g==="object"?g.why:"").join("\n");}
+function getBadWhyStr(p){return(p.companions.bad||[]).map(b=>typeof b==="object"?b.why:"").join("\n");}
+
+function renderModal(){
+  const p=editingPlant;const n=p.nutrition||{};const s=p.size||{};
+  document.getElementById("modal-inner").innerHTML=`
+<h3>${isNew?"Add new crop":"Edit: "+esc(p.name)}</h3>
+<div class="frow"><label>Crop name</label><input value="${esc(p.name)}" oninput="editingPlant.name=this.value"></div>
+<div class="fgrid">
+  <div class="frow"><label>Category</label><input value="${esc(p.cat)}" oninput="editingPlant.cat=this.value"></div>
+  <div class="frow"><label>Emoji</label><input value="${esc(p.emoji)}" oninput="editingPlant.emoji=this.value"></div>
+</div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Planting</div>
+<div class="frow"><label>Zone 6 timing</label><textarea oninput="editingPlant.planting.zone6=this.value">${esc(p.planting.zone6)}</textarea></div>
+<div class="fgrid">
+  <div class="frow"><label>Depth</label><input value="${esc(p.planting.depth)}" oninput="editingPlant.planting.depth=this.value"></div>
+  <div class="frow"><label>Spacing</label><input value="${esc(p.planting.spacing)}" oninput="editingPlant.planting.spacing=this.value"></div>
+  <div class="frow"><label>Soil pH</label><input value="${esc(p.planting.ph)}" placeholder="6.0–7.0" oninput="editingPlant.planting.ph=this.value"></div>
+  <div class="frow"><label>Sunlight</label><input value="${esc(p.planting.sun)}" oninput="editingPlant.planting.sun=this.value"></div>
+</div>
+<div class="frow"><label>Special instructions</label><textarea oninput="editingPlant.special=this.value">${esc(p.special||"")}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Nutrition (per 100g fresh weight)</div>
+<div class="fgrid3">
+  <div class="frow"><label>Calories</label><input type="number" value="${esc(n.calories||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.calories=parseFloat(this.value)||0"></div>
+  <div class="frow"><label>Protein (g)</label><input type="number" step="0.1" value="${esc(n.protein||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.protein=parseFloat(this.value)||0"></div>
+  <div class="frow"><label>Carbs (g)</label><input type="number" step="0.1" value="${esc(n.carbs||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.carbs=parseFloat(this.value)||0"></div>
+  <div class="frow"><label>Fat (g)</label><input type="number" step="0.1" value="${esc(n.fat||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.fat=parseFloat(this.value)||0"></div>
+  <div class="frow"><label>Fiber (g)</label><input type="number" step="0.1" value="${esc(n.fiber||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.fiber=parseFloat(this.value)||0"></div>
+  <div class="frow"><label>Vitamin C (mg)</label><input type="number" step="0.1" value="${esc(n.vitC||"")}" oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.vitC=parseFloat(this.value)||0"></div>
+</div>
+<div class="frow"><label>Nutrition notes</label><textarea oninput="if(!editingPlant.nutrition)editingPlant.nutrition={};editingPlant.nutrition.notes=this.value">${esc(n.notes||"")}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Size at harvest</div>
+<div class="fgrid">
+  <div class="frow"><label>Average weight</label><input value="${esc(s.weight||"")}" placeholder="e.g. 100–200g" oninput="if(!editingPlant.size)editingPlant.size={};editingPlant.size.weight=this.value"></div>
+  <div class="frow"><label>Dimensions</label><input value="${esc(s.dimensions||"")}" oninput="if(!editingPlant.size)editingPlant.size={};editingPlant.size.dimensions=this.value"></div>
+</div>
+<div class="frow"><label>Size notes</label><textarea oninput="if(!editingPlant.size)editingPlant.size={};editingPlant.size.notes=this.value">${esc(s.notes||"")}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Water & fertilizer</div>
+<div class="fgrid">
+  <div class="frow"><label>Water (in/week)</label><input value="${esc(p.water.in)}" oninput="editingPlant.water.in=this.value"></div>
+  <div class="frow"><label>Fertilizer type</label><input value="${esc(p.fertilizer.type)}" oninput="editingPlant.fertilizer.type=this.value"></div>
+  <div class="frow"><label>Fertilizer amount</label><input value="${esc(p.fertilizer.amount)}" oninput="editingPlant.fertilizer.amount=this.value"></div>
+</div>
+<div class="frow"><label>Water notes</label><textarea oninput="editingPlant.water.note=this.value">${esc(p.water.note)}</textarea></div>
+<div class="frow"><label>Fertilizer frequency</label><textarea oninput="editingPlant.fertilizer.freq=this.value">${esc(p.fertilizer.freq)}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Companions</div>
+<div class="frow"><label>Good companions (comma-separated names)</label><input id="f-good-names" value="${esc(getGoodStr(p))}" placeholder="Tomatoes, Basil, Marigolds"></div>
+<div class="frow"><label>Why each is beneficial (one per line, same order)</label><textarea id="f-good-why" rows="3" placeholder="Repels aphids&#10;Improves flavor&#10;Attracts beneficials">${esc(getGoodWhyStr(p))}</textarea></div>
+<div class="frow"><label>Bad companions (comma-separated names)</label><input id="f-bad-names" value="${esc(getBadStr(p))}" placeholder="Fennel, Potatoes"></div>
+<div class="frow"><label>Why each is harmful (one per line, same order)</label><textarea id="f-bad-why" rows="2" placeholder="Allelopathic chemicals&#10;Shares disease">${esc(getBadWhyStr(p))}</textarea></div>
+<div class="frow"><label>Distance note</label><textarea oninput="editingPlant.companionDist=this.value">${esc(p.companionDist)}</textarea></div>
+<div class="frow"><label>Beneficial animals</label><textarea oninput="editingPlant.animals=this.value">${esc(p.animals)}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Diseases</div>
+<div id="diseases-list">${(p.diseases||[]).map(diseaseRow).join("")}</div>
+<button class="add-row-btn" onclick="addDisease()">+ add disease</button>
+<hr class="sdiv">
+<div class="frow"><label>Pest control</label><textarea oninput="editingPlant.pests=this.value">${esc(p.pests)}</textarea></div>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Growth stages</div>
+<div id="stages-list">${(p.stages||[]).map(stageRow).join("")}</div>
+<button class="add-row-btn" onclick="addStage()">+ add stage</button>
+<hr class="sdiv"><div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.75rem">Crop rotation</div>
+<div class="fgrid">
+  <div class="frow"><label>Plant family</label><input value="${esc(p.rotation.family)}" oninput="editingPlant.rotation.family=this.value"></div>
+  <div class="frow"><label>Rotation cycle</label><input value="${esc(p.rotation.cycle)}" oninput="editingPlant.rotation.cycle=this.value"></div>
+</div>
+<div class="factions">
+  <button class="cancel-btn" onclick="cancelEdit()">Cancel</button>
+  <button class="save-btn" onclick="saveEdit()">${isNew?"Add crop":"Save changes"}</button>
+</div>`;
+}
+
+function diseaseRow(d,i){return`<div class="stage-edit-row"><input style="flex:1" placeholder="Disease name" value="${esc(d.name)}" oninput="editingPlant.diseases[${i}].name=this.value"><textarea style="flex:2;min-height:44px;resize:vertical;font-size:12px" oninput="editingPlant.diseases[${i}].desc=this.value">${esc(d.desc)}</textarea><button class="rm-btn" onclick="removeDisease(${i})">Remove</button></div>`;}
+function stageRow(s,i){return`<div class="stage-edit-row"><input style="width:60px;flex:none" placeholder="Label" value="${esc(s.label)}" oninput="editingPlant.stages[${i}].label=this.value"><input style="flex:1" placeholder="Stage title" value="${esc(s.title)}" oninput="editingPlant.stages[${i}].title=this.value"><textarea style="flex:2;min-height:44px;resize:vertical;font-size:12px" oninput="editingPlant.stages[${i}].desc=this.value">${esc(s.desc)}</textarea><button class="rm-btn" onclick="removeStage(${i})">Remove</button></div>`;}
+function addDisease(){editingPlant.diseases.push({name:"",desc:""});document.getElementById("diseases-list").innerHTML=editingPlant.diseases.map(diseaseRow).join("");}
+function removeDisease(i){editingPlant.diseases.splice(i,1);document.getElementById("diseases-list").innerHTML=editingPlant.diseases.map(diseaseRow).join("");}
+function addStage(){editingPlant.stages.push({label:"",title:"",desc:""});document.getElementById("stages-list").innerHTML=editingPlant.stages.map(stageRow).join("");}
+function removeStage(i){editingPlant.stages.splice(i,1);document.getElementById("stages-list").innerHTML=editingPlant.stages.map(stageRow).join("");}
+
+async function saveEdit(){
+  if(!editingPlant.name.trim()){alert("Please enter a crop name.");return;}
+  const gn=(document.getElementById("f-good-names")||{}).value||"";
+  const gw=((document.getElementById("f-good-why")||{}).value||"").split("\n");
+  const bn=(document.getElementById("f-bad-names")||{}).value||"";
+  const bw=((document.getElementById("f-bad-why")||{}).value||"").split("\n");
+  editingPlant.companions.good=gn.split(",").map((n,i)=>({name:n.trim(),why:gw[i]||""})).filter(x=>x.name);
+  editingPlant.companions.bad=bn.split(",").map((n,i)=>({name:n.trim(),why:bw[i]||""})).filter(x=>x.name);
+  const btn=document.querySelector(".save-btn");if(btn){btn.textContent="Saving...";btn.disabled=true;}
+  if(isNew){PLANTS.push(editingPlant);}else{const idx=PLANTS.findIndex(x=>x.id===editingPlant.id);if(idx>=0)PLANTS[idx]=editingPlant;}
+  await saveData(false);
+  const savedId=editingPlant.id;const wasNew=isNew;editingPlant=null;
+  companionsRendered=false;rotationRendered=false;nutritionRendered=false;
+  document.getElementById("plants-edit").style.display="none";
+  if(!wasNew&&currentPlantId===savedId){showDetail(savedId);}else{showList();}
+  showSS(true);
+}
+function cancelEdit(){
+  editingPlant=null;document.getElementById("plants-edit").style.display="none";
+  if(currentPlantId){document.getElementById("plants-detail").style.display="block";}else{showList();}
+}
+
+function renderCompanions(){
+  const names=PLANTS.map(p=>p.name);
+  const n=names.length;
+  const good=Array.from({length:n},()=>Array(n).fill(0));
+  const bad=Array.from({length:n},()=>Array(n).fill(0));
+  PLANTS.forEach((p,i)=>{
+    (p.companions.good||[]).forEach(g=>{
+      const gn=typeof g==="string"?g:g.name;
+      const j=PLANTS.findIndex(x=>x.name===gn||gn.toLowerCase().includes(x.name.toLowerCase()));
+      if(j>=0)good[i][j]=1;
+    });
+    (p.companions.bad||[]).forEach(b=>{
+      const bn=typeof b==="string"?b:b.name;
+      const j=PLANTS.findIndex(x=>x.name===bn||bn.toLowerCase().includes(x.name.toLowerCase()));
+      if(j>=0)bad[i][j]=1;
+    });
+  });
+  const matrix=`<div class="matrix-wrap"><table class="matrix-table" aria-label="Companion planting compatibility matrix">
+<tr><th></th>${PLANTS.map(p=>`<th style="writing-mode:vertical-rl;text-orientation:mixed;height:80px;vertical-align:bottom;padding-bottom:4px" title="${esc(p.name)}">${esc(p.emoji)}</th>`).join("")}</tr>
+${PLANTS.map((p,i)=>`<tr><th style="text-align:right;padding-right:6px;white-space:nowrap;font-size:10px">${esc(p.emoji)} ${esc(p.name.split(" ")[0])}</th>${PLANTS.map((_,j)=>{
+  if(i===j)return`<td class="cell-self" title="Same plant">·</td>`;
+  if(good[i][j]||good[j][i])return`<td class="cell-good" title="${esc(p.name)} + ${esc(PLANTS[j].name)}">✓</td>`;
+  if(bad[i][j]||bad[j][i])return`<td class="cell-bad" title="${esc(p.name)} + ${esc(PLANTS[j].name)}">✗</td>`;
+  return`<td class="cell-neut"></td>`;
+}).join("")}</tr>`).join("")}
+</table></div>`;
+  document.getElementById("companion-matrix").innerHTML=matrix;
+
+  const families={};
+  const famColors=["#EAF3DE","#E6F1FB","#FAEEDA","#FCEBEB","#E1F5EE","#EEEDFE","#FBEAF0","#F1EFE8"];
+  const famText=["#27500A","#0C447C","#633806","#791F1F","#085041","#3C3489","#72243E","#444441"];
+  PLANTS.forEach(p=>{const f=(p.rotation.family||"Unknown").split("(")[0].trim();if(!families[f])families[f]=[];families[f].push(p);});
+  document.getElementById("family-groups").innerHTML=Object.entries(families).map(([fam,crops],fi)=>`
+    <div class="family-group">
+      <div class="family-title">${esc(fam)}</div>
+      <div class="family-crops">${crops.map(p=>`<span style="background:${famColors[fi%famColors.length]};color:${famText[fi%famText.length]};padding:3px 10px;border-radius:10px;font-size:11px">${esc(p.emoji)} ${esc(p.name)}</span>`).join("")}</div>
+    </div>`).join("");
+}
+
+function renderRotation(){
+  const rotSteps=[
+    {year:"Year 1",badge:"#EAF3DE",badgeTxt:"#27500A",crops:"Legumes",plants:["Green Beans"],why:"Legumes fix atmospheric nitrogen into soil through root nodule bacteria, building fertility for the next crop with zero synthetic fertilizer required.",detail:"After harvest, chop and till bean plant residue into soil to release the fixed nitrogen directly."},
+    {year:"Year 2",badge:"#E6F1FB",badgeTxt:"#0C447C",crops:"Brassicas & leafy greens",plants:["Kale","Spinach"],why:"These heavy nitrogen consumers use what the legumes built up, dramatically reducing fertilizer needs. Their roots also release glucosinolates that suppress soil-borne pathogens.",detail:"Add compost before planting to supplement nitrogen. Apply copper fungicide preventively if black rot was present in previous years."},
+    {year:"Year 3",badge:"#FAEEDA",badgeTxt:"#633806",crops:"Fruiting crops",plants:["Tomatoes","Peppers","Cucumbers","Corn","Cantaloupe"],why:"Heavy-feeding fruiting crops benefit from the residual organic matter and soil biology built over the previous two years. Rotating Solanaceae and Cucurbitaceae here breaks their specific disease cycles.",detail:"This is the most fertilizer-intensive year. Side-dress nitrogen and potassium at flowering. Solanaceae (tomatoes, peppers) must not follow each other."},
+    {year:"Year 4",badge:"#FCEBEB",badgeTxt:"#791F1F",crops:"Root crops & alliums",plants:["Carrots","Potatoes","Red Onions","Garlic"],why:"Root crops and alliums break the pest and pathogen cycles left by the previous fruiting crops. Their deep or bulbous roots access different soil nutrient layers, and alliums' sulfur compounds cleanse the soil of many pathogens.",detail:"Low nitrogen needed — excess causes forked carrots and soft potato tubers. After year 4, cycle back to year 1 with legumes."},
+    {year:"Perennials — fixed beds",badge:"#E1F5EE",badgeTxt:"#085041",crops:"Asparagus, berries, herbs",plants:["Asparagus","Blackberries","Raspberries","Rosemary","Thyme","Basil"],why:"Perennial crops cannot be rotated and must be sited at garden edges or dedicated beds where they will not interfere with annual rotation cycles. Their permanent presence means disease management focuses on variety selection and sanitation rather than rotation.",detail:"Plant perennials along a north or east edge so they do not shade annual beds as the season progresses."},
+  ];
+
+  const famWhy=[
+    {fam:"Solanaceae",crops:"Tomatoes, Potatoes, Peppers",rule:"Never follow one another — they share late blight, Verticillium wilt, and Colorado potato beetle egg overwintering. Minimum 3 years between."},
+    {fam:"Cucurbitaceae",crops:"Cucumbers, Cantaloupe",rule:"Do not follow each other. Share powdery mildew, downy mildew, and cucumber beetle pressure. 3–4 year gap required."},
+    {fam:"Alliaceae",crops:"Garlic, Red Onions",rule:"Do not follow each other or any allium. Share white rot, which can persist in soil for 20+ years."},
+    {fam:"Brassicaceae",crops:"Kale",rule:"3–4 year rotation away from any brassica. Clubroot and black rot build up rapidly in consecutive plantings."},
+    {fam:"Fabaceae",crops:"Green Beans",rule:"Short 2–3 year rotation as they improve soil; the main risk is mosaic virus and root rots in waterlogged soil."},
+    {fam:"Poaceae",crops:"Corn",rule:"2–3 year rotation. Heavy nitrogen depletion requires following with legumes. Corn rootworm pressure increases with consecutive planting."},
+    {fam:"Chenopodiaceae",crops:"Spinach",rule:"3–4 year rotation away from beets and chard (same family). Downy mildew races are family-specific."},
+  ];
+
+  document.getElementById("rotation-content").innerHTML=`
+<div style="font-size:13px;font-weight:500;margin-bottom:.5rem">Recommended 4-year cycle</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem">Move each crop group to the next bed each year, cycling through all four positions. Each group benefits from what the previous left behind.</div>
+${rotSteps.map((r,i)=>`
+<div class="rot-step">
+  <div class="rot-step-head">
+    <span class="rot-badge" style="background:${r.badge};color:${r.badgeTxt}">${esc(r.year)}</span>
+    <span style="font-size:13px;font-weight:500">${esc(r.crops)}</span>
+    ${i<4?`<span style="color:var(--color-text-tertiary);margin-left:auto;font-size:12px">→ next: ${esc(rotSteps[Math.min(i+1,3)].crops)}</span>`:""}
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px">
+    ${r.plants.map(name=>{const pl=PLANTS.find(x=>x.name===name||x.name.includes(name)||name.includes(x.name.split(" ")[0]));return`<span style="background:var(--color-background-secondary);font-size:11px;padding:2px 8px;border-radius:8px">${pl?esc(pl.emoji):""} ${esc(name)}</span>`;}).join("")}
+  </div>
+  <div class="rot-why">${esc(r.why)}</div>
+  <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:6px;line-height:1.5">${esc(r.detail)}</div>
+</div>`).join("")}
+
+<div style="font-size:13px;font-weight:500;margin:1.75rem 0 .5rem">Why each plant family must rotate</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem">Planting the same family in the same bed consecutively allows plant-specific pathogens and pests to build to devastating levels in the soil.</div>
+${famWhy.map(f=>`
+<div style="margin-bottom:10px;padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md)">
+  <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:4px">
+    <span style="font-size:12px;font-weight:500">${esc(f.fam)}</span>
+    <span style="font-size:11px;color:var(--color-text-tertiary)">${esc(f.crops)}</span>
+  </div>
+  <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">${esc(f.rule)}</div>
+</div>`).join("")}`;
+}
+
+function renderNutritionPage(){
+  const food=PLANTS.filter(p=>p.nutrition&&p.nutrition.calories>0);
+  const herb=PLANTS.filter(p=>p.nutrition&&p.nutrition.calories===0&&p.nutrition.notes);
+
+  const sorted=(arr,key)=>[...arr].sort((a,b)=>(b.nutrition[key]||0)-(a.nutrition[key]||0));
+  const mkChart=(id,arr,key,unit,color,label)=>{
+    const s=sorted(arr,key);
+    return`<div style="position:relative;width:100%;height:${Math.max(260,s.length*30+80)}px;margin-bottom:2rem">
+      <canvas id="${id}" role="img" aria-label="Horizontal bar chart of ${label} per 100g">${s.map(p=>`${p.name}: ${p.nutrition[key]}${unit}`).join(", ")}</canvas>
+    </div>`;
+  };
+
+  document.getElementById("nutrition-content").innerHTML=`
+<div style="font-size:13px;font-weight:500;margin-bottom:.25rem">Food crops — per 100g fresh weight</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem">Sorted highest to lowest for each nutrient. Click a plant name in the Plants tab for full nutritional notes.</div>
+${mkChart("cal-chart",food,"calories","kcal","#97C459","calories")}
+${mkChart("vitc-chart",food,"vitC","mg","#FAC775","vitamin C")}
+${mkChart("fiber-chart",food,"fiber","g","#9FE1CB","fiber")}
+${mkChart("protein-chart",food,"protein","g","#85B7EB","protein")}
+${mkChart("carbs-chart",food,"carbs","g","#EF9F27","carbohydrates")}
+
+<div style="font-size:13px;font-weight:500;margin:1.5rem 0 .25rem">Herbs & ornamentals</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1rem">Used in small culinary amounts — not directly comparable by weight to food crops.</div>
+${herb.map(p=>`<div style="padding:10px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);margin-bottom:8px;display:flex;gap:10px;align-items:flex-start">
+  <span style="font-size:16px;flex-shrink:0">${esc(p.emoji)}</span>
+  <div><div style="font-size:12px;font-weight:500;margin-bottom:3px">${esc(p.name)}</div>
+  <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.5">${esc(p.nutrition.notes)}</div></div>
+</div>`).join("")}`;
+
+  setTimeout(()=>{
+    const isDark=matchMedia("(prefers-color-scheme:dark)").matches;
+    const tc=isDark?"#B4B2A9":"#5F5E5A";
+    const gc=isDark?"rgba(255,255,255,0.07)":"rgba(0,0,0,0.07)";
+    const makeChart=(id,arr,key,unit,bg,border,axisLabel)=>{
+      const s=sorted(arr,key);
+      const el=document.getElementById(id);if(!el)return;
+      new Chart(el,{type:"bar",data:{labels:s.map(p=>p.name),datasets:[{data:s.map(p=>p.nutrition[key]||0),backgroundColor:bg,borderColor:border,borderWidth:0.5}]},
+        options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,
+          plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>`${v.formattedValue}${unit}`}}},
+          scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}},title:{display:true,text:axisLabel,color:tc,font:{size:11}}},
+                  y:{grid:{display:false},ticks:{color:tc,font:{size:10}}}}}});
+    };
+    makeChart("cal-chart",food,"calories","kcal","#97C459","#3B6D11","calories per 100g");
+    makeChart("vitc-chart",food,"vitC","mg","#FAC775","#BA7517","vitamin C (mg per 100g)");
+    makeChart("fiber-chart",food,"fiber","g","#9FE1CB","#1D9E75","fiber (g per 100g)");
+    makeChart("protein-chart",food,"protein","g","#85B7EB","#185FA5","protein (g per 100g)");
+    makeChart("carbs-chart",food,"carbs","g","#EF9F27","#BA7517","carbohydrates (g per 100g)");
+  },80);
+}
+
+loadData().then(()=>{renderCatRow();renderGrid();});
+</script>
