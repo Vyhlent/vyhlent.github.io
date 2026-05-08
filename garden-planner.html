@@ -1,19 +1,37 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+  --bg-pri:#ffffff;--bg-sec:#f5f5f2;
+  --txt-pri:#1a1a18;--txt-sec:#5f5e5a;--txt-ter:#888780;
+  --bdr:#e0ddd6;--bdr2:#c8c5be;
+  --grn:#3B6D11;--grn-bg:#EAF3DE;--grn-txt:#27500A;
+  --amb-bg:#FAEEDA;--amb-txt:#633806;--amb-bdr:#BA7517;
+  --blu-bg:#E6F1FB;--blu-txt:#0C447C;--blu-bdr:#378ADD;
+  --red-bg:#FCEBEB;--red-txt:#791F1F;--red-bdr:#E24B4A;
+}
+.dark{
+  --bg-pri:#1e1e1b;--bg-sec:#2a2a27;
+  --txt-pri:#e8e6df;--txt-sec:#b4b2a9;--txt-ter:#888780;
+  --bdr:#3a3a36;--bdr2:#525250;
+  --grn:#7abd3e;--grn-bg:#1c3008;--grn-txt:#c0dd97;
+  --amb-bg:#2e1f06;--amb-txt:#FAC775;--amb-bdr:#854F0B;
+  --blu-bg:#06192e;--blu-txt:#85B7EB;--blu-bdr:#185FA5;
+  --red-bg:#2a0a0a;--red-txt:#F09595;--red-bdr:#A32D2D;
+}
 h2.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px}
 .wrap{padding:1.5rem 0}
 .nav{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.75rem;overflow-x:auto}
 .navbtn{padding:14px 22px;font-size:16px;cursor:pointer;border-bottom:3px solid transparent;color:var(--color-text-secondary);margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
-.navbtn.on{color:#3B6D11;border-bottom-color:#3B6D11;font-weight:500}
+.navbtn.on{color:var(--grn);border-bottom-color:var(--grn);font-weight:500}
 .page{display:none}.page.on{display:block}
 .topbar{display:flex;gap:12px;margin-bottom:1.25rem;align-items:center;flex-wrap:wrap}
 .topbar input{flex:1;min-width:180px;font-size:16px;height:46px;padding:0 16px}
 .addcrop-btn{white-space:nowrap;padding:0 22px;height:46px;border:0.5px solid #3B6D11;border-radius:var(--border-radius-md);background:#3B6D11;color:#EAF3DE;cursor:pointer;font-size:16px}
 .cat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
 .cbtn{padding:7px 16px;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:var(--color-background-primary);color:var(--color-text-secondary);font-size:14px;cursor:pointer}
-.cbtn.on{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11}
+.cbtn.on{background:#3B6D11;color:#EAF3DE;border-color:var(--grn)}
 .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:2rem}
 .pcard{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;position:relative}
 .pcard-emoji{font-size:22px;margin-bottom:6px}
@@ -33,7 +51,7 @@ body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px
 .ph-sub{font-size:14px;color:var(--color-text-secondary);margin-top:3px}
 .stabs{display:flex;gap:0;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:1.75rem;overflow-x:auto}
 .stab{padding:10px 16px;font-size:14px;cursor:pointer;border-bottom:2px solid transparent;color:var(--color-text-secondary);margin-bottom:-1px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
-.stab.on{color:#3B6D11;border-bottom-color:#3B6D11}
+.stab.on{color:var(--grn);border-bottom-color:var(--grn)}
 .tc{display:none}.tc.on{display:block}
 .igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:1.25rem}
 .icard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px}
@@ -48,7 +66,7 @@ body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px
 .stagelist{list-style:none}
 .sitem{display:flex;gap:14px;padding:12px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
 .sitem:last-child{border-bottom:none}
-.sdot{width:34px;height:34px;border-radius:50%;background:#EAF3DE;color:#3B6D11;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;margin-top:2px}
+.sdot{width:34px;height:34px;border-radius:50%;background:#EAF3DE;color:var(--grn);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;margin-top:2px}
 .stitle2{font-size:14px;font-weight:500}
 .sdesc{font-size:13px;color:var(--color-text-secondary);margin-top:3px;line-height:1.55}
 .abox{padding:12px 14px;border-radius:var(--border-radius-md);margin-bottom:10px;font-size:14px;line-height:1.55;border:0.5px solid}
@@ -70,7 +88,7 @@ body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px
 .fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .factions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:0.5px solid var(--color-border-tertiary)}
 .factions button{padding:9px 22px;font-size:15px;cursor:pointer;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary)}
-.save-btn{background:#3B6D11;color:#EAF3DE;border-color:#3B6D11!important}
+.save-btn{background:#3B6D11;color:#EAF3DE;border-color:var(--grn)!important}
 .cancel-btn{background:var(--color-background-primary);color:var(--color-text-secondary)}
 .ph-bar-vis{height:16px;border-radius:3px;background:linear-gradient(to right,#d32f2f,#f57c00,#fbc02d,#689f38,#2e7d32,#1565c0);position:relative;margin:8px 0 4px}
 .ph-marker-vis{position:absolute;top:-3px;width:12px;height:22px;background:var(--color-text-primary);border-radius:2px;transform:translateX(-50%);opacity:.75}
@@ -127,6 +145,13 @@ body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px
     <div class="topbar">
       <input type="text" id="search" placeholder="Search plants..." oninput="renderGrid()">
       <button class="addcrop-btn" onclick="openAdd()">+ Add crop</button>
+      <button id="dark-toggle" onclick="toggleDark()" 
+        style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+               border:0.5px solid var(--bdr2);border-radius:8px;cursor:pointer;
+               background:var(--bg-pri);color:var(--txt-sec);font-size:20px;flex-shrink:0"
+        aria-label="Toggle dark mode">
+        <i class="ti ti-moon" id="dark-icon" aria-hidden="true"></i>
+      </button>
       <span id="save-status" class="save-status" style="opacity:0"></span>
     </div>
     <div class="cat-row" id="cat-row"></div>
@@ -170,6 +195,23 @@ body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:18px
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+  let isDark = false;
+
+function toggleDark() {
+  isDark = !isDark;
+  document.querySelector('.wrap').classList.toggle('dark', isDark);
+  document.getElementById('dark-icon').className = isDark ? 'ti ti-sun' : 'ti ti-moon';
+  try { localStorage.setItem('gp-dark', isDark ? '1' : '0'); } catch(e) {}
+}
+
+// Restore preference on load
+try {
+  if (localStorage.getItem('gp-dark') === '1') {
+    isDark = true;
+    document.querySelector('.wrap').classList.add('dark');
+    document.getElementById('dark-icon').className = 'ti ti-sun';
+  }
+} catch(e) {}
 const STORAGE_KEY="garden-planner-v5";
 const SEED_DATA=[
 {id:"spinach",name:"Spinach",cat:"Leafy Green",emoji:"🌿",planting:{zone6:"Direct sow Mar 15–Apr 30 or Aug 15–Sep 30; tolerates light frost",depth:'0.5"',spacing:'3–6" apart, rows 12"',ph:"6.0–7.0",sun:"Full sun / part shade"},water:{in:"1–1.5",note:"Keep consistently moist; mulch helps"},fertilizer:{type:"10-10-10 balanced",amount:"1 lb per 100 sq ft",freq:"At planting; side-dress nitrogen at 3 weeks"},companions:{good:[{name:"Garlic",why:"Garlic's sulfur compounds repel aphids and spider mites that commonly infest spinach leaves."},{name:"Radishes",why:"Fast-growing radishes act as trap crops for leaf miners, drawing them away from spinach."},{name:"Peas",why:"Peas fix atmospheric nitrogen, enriching the soil that spinach feeds on."}],bad:[{name:"Fennel",why:"Fennel releases allelopathic chemicals that inhibit the germination and growth of most vegetables including spinach."}]},companionDist:'Keep 12"+ from fennel.',diseases:[{name:"Downy Mildew",desc:"Yellow spots on upper leaf, gray-purple fuzz beneath. Use resistant varieties, avoid overhead watering."},{name:"Cercospora Leaf Spot",desc:"Circular brown spots with white centers. Remove infected leaves; copper fungicide."}],pests:"Row covers for aphids and leaf miners; neem oil spray.",animals:"Ladybugs eat aphids; ground beetles prey on soil pests.",rotation:{family:"Chenopodiaceae",cycle:"3–4 year rotation; follow with legumes or grains, not beets or chard"},stages:[{label:"Germ",title:"Germination",desc:"7–14 days at 50–70°F."},{label:"Seedl",title:"Seedling",desc:"Thin to 3–6 inches at 2 weeks."},{label:"Grow",title:"Vegetative",desc:"Harvest outer leaves to extend production."},{label:"Bolt",title:"Bolting",desc:"Hot temps trigger bolting. Harvest immediately."}],special:"Plant in succession every 2–3 weeks. Best flavor after a light frost.",nutrition:{calories:23,protein:2.9,carbs:3.6,fat:0.4,fiber:2.2,vitC:28,notes:"Exceptionally high in vitamin K, folate, and iron."},size:{weight:"150–250g per bunch",dimensions:'Leaves 3–6" long',notes:"Harvest at 3–4 inches for baby spinach, 6+ for mature."}},
@@ -322,7 +364,7 @@ function buildDetail(p){
   <div class="panel-header">
     <div class="ph-icon">${esc(p.emoji)}</div>
     <div><div class="ph-title">${esc(p.name)}</div>
-    <div class="ph-sub">${esc(p.cat)} · Zone 6 · <button style="background:none;border:none;color:#3B6D11;cursor:pointer;font-size:14px;padding:0" onclick="openEdit('${p.id}')">Edit this plant</button></div></div>
+    <div class="ph-sub">${esc(p.cat)} · Zone 6 · <button style="background:none;border:none;color:var(--grn);cursor:pointer;font-size:14px;padding:0" onclick="openEdit('${p.id}')">Edit this plant</button></div></div>
   </div>
   <div class="stabs">
     <button class="stab on" data-tab="planting" onclick="showTab('planting')">Planting</button>
