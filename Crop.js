@@ -1,234 +1,201 @@
 /**
  * Crop.js
- * -------
- * Defines the Crop class. Each crop is one JSON file in the /crops folder.
- * This class loads that JSON, validates it, and exposes clean accessors.
+ * Base class for all garden crops.
+ * Each crop file in /crops/ creates a new Crop instance and exports it.
  *
- * Usage (browser):
- *   const spinach = await Crop.load('crops/spinach.json');
- *   console.log(spinach.name);
- *   console.log(spinach.goodCompanions);
- *
- * Usage (Node.js / build tool):
- *   const spinach = Crop.fromObject(require('./crops/spinach.json'));
+ * Usage:
+ *   import Crop from '../Crop.js';
+ *   export default new Crop({ id: 'tomatoes', name: 'Tomatoes', ... });
  */
 
-export class Crop {
-  // ─────────────────────────────────────────────
-  // Static factory methods
-  // ─────────────────────────────────────────────
-
+export default class Crop {
   /**
-   * Load a crop from a JSON file URL (browser fetch).
-   * @param {string} url  Path to the crop JSON file, e.g. 'crops/spinach.json'
-   * @returns {Promise<Crop>}
+   * @param {Object} data - All crop data fields.
+   *
+   * Required fields:
+   *   id          {string}  - Unique slug, e.g. "tomatoes"
+   *   name        {string}  - Display name, e.g. "Tomatoes"
+   *   cat         {string}  - Category, e.g. "Fruiting Veg"
+   *   emoji       {string}  - Single emoji, e.g. "🍅"
+   *
+   * Planting:
+   *   planting.zone6      {string}  - Zone 6 timing
+   *   planting.depth      {string}  - Planting depth, e.g. '0.5"'
+   *   planting.spacing    {string}  - Spacing info
+   *   planting.ph         {string}  - Soil pH range, e.g. "6.0–7.0"
+   *   planting.sun        {string}  - Sunlight requirement
+   *   special             {string}  - Any special instructions
+   *
+   * Water:
+   *   water.in    {string}  - Inches per week, e.g. "1–1.5"
+   *   water.note  {string}  - Watering notes
+   *
+   * Fertilizer:
+   *   fertilizer.type     {string}
+   *   fertilizer.amount   {string}
+   *   fertilizer.freq     {string}
+   *
+   * Companions:
+   *   companions.good  {Array<{name:string, why:string}>}
+   *   companions.bad   {Array<{name:string, why:string}>}
+   *   companionDist    {string}  - Distance note
+   *   animals          {string}  - Beneficial animals
+   *
+   * Problems:
+   *   diseases  {Array<{name:string, desc:string}>}
+   *   pests     {string}
+   *
+   * Rotation:
+   *   rotation.family  {string}  - Plant family
+   *   rotation.cycle   {string}  - Rotation cycle description
+   *
+   * Growth:
+   *   stages  {Array<{label:string, title:string, desc:string}>}
+   *
+   * Nutrition (per 100g fresh weight):
+   *   nutrition.calories  {number}
+   *   nutrition.protein   {number}
+   *   nutrition.carbs     {number}
+   *   nutrition.fat       {number}
+   *   nutrition.fiber     {number}
+   *   nutrition.vitC      {number}
+   *   nutrition.notes     {string}
+   *
+   * Size:
+   *   size.weight      {string}  - e.g. "100–250g per fruit"
+   *   size.dimensions  {string}  - e.g. '2–4" diameter'
+   *   size.notes       {string}
    */
-  static async load(url) {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to load crop from ${url}: ${res.status}`);
-    const data = await res.json();
-    return Crop.fromObject(data);
-  }
-
-  /**
-   * Construct a Crop directly from a plain JS object (already-parsed JSON).
-   * @param {object} data
-   * @returns {Crop}
-   */
-  static fromObject(data) {
-    Crop._validate(data);
-    return new Crop(data);
-  }
-
-  /**
-   * Load every *.json file listed in a manifest array of URLs.
-   * @param {string[]} urls
-   * @returns {Promise<Crop[]>}
-   */
-  static async loadAll(urls) {
-    return Promise.all(urls.map(url => Crop.load(url)));
-  }
-
-  // ─────────────────────────────────────────────
-  // Constructor (private — use factory methods)
-  // ─────────────────────────────────────────────
-
   constructor(data) {
-    /** @type {object} Raw underlying data — use accessors instead */
-    this._data = structuredClone(data);
+    // ── Identity ────────────────────────────────────────────────────────────
+    this.id    = data.id    ?? '';
+    this.name  = data.name  ?? '';
+    this.cat   = data.cat   ?? '';
+    this.emoji = data.emoji ?? '🌱';
+
+    // ── Planting ─────────────────────────────────────────────────────────────
+    this.planting = {
+      zone6:   data.planting?.zone6   ?? '',
+      depth:   data.planting?.depth   ?? '',
+      spacing: data.planting?.spacing ?? '',
+      ph:      data.planting?.ph      ?? '6.0–7.0',
+      sun:     data.planting?.sun     ?? 'Full sun',
+    };
+    this.special = data.special ?? '';
+
+    // ── Water ─────────────────────────────────────────────────────────────────
+    this.water = {
+      in:   data.water?.in   ?? '1',
+      note: data.water?.note ?? '',
+    };
+
+    // ── Fertilizer ────────────────────────────────────────────────────────────
+    this.fertilizer = {
+      type:   data.fertilizer?.type   ?? '',
+      amount: data.fertilizer?.amount ?? '',
+      freq:   data.fertilizer?.freq   ?? '',
+    };
+
+    // ── Companions ────────────────────────────────────────────────────────────
+    this.companions = {
+      good: (data.companions?.good ?? []).map(g =>
+        typeof g === 'string' ? { name: g, why: '' } : { name: g.name ?? '', why: g.why ?? '' }
+      ),
+      bad: (data.companions?.bad ?? []).map(b =>
+        typeof b === 'string' ? { name: b, why: '' } : { name: b.name ?? '', why: b.why ?? '' }
+      ),
+    };
+    this.companionDist = data.companionDist ?? '';
+    this.animals       = data.animals       ?? '';
+
+    // ── Diseases & pests ──────────────────────────────────────────────────────
+    this.diseases = (data.diseases ?? []).map(d => ({
+      name: d.name ?? '',
+      desc: d.desc ?? '',
+    }));
+    this.pests = data.pests ?? '';
+
+    // ── Rotation ──────────────────────────────────────────────────────────────
+    this.rotation = {
+      family: data.rotation?.family ?? '',
+      cycle:  data.rotation?.cycle  ?? '',
+    };
+
+    // ── Growth stages ─────────────────────────────────────────────────────────
+    this.stages = (data.stages ?? []).map(s => ({
+      label: s.label ?? '',
+      title: s.title ?? '',
+      desc:  s.desc  ?? '',
+    }));
+
+    // ── Nutrition ─────────────────────────────────────────────────────────────
+    this.nutrition = {
+      calories: data.nutrition?.calories ?? 0,
+      protein:  data.nutrition?.protein  ?? 0,
+      carbs:    data.nutrition?.carbs    ?? 0,
+      fat:      data.nutrition?.fat      ?? 0,
+      fiber:    data.nutrition?.fiber    ?? 0,
+      vitC:     data.nutrition?.vitC     ?? 0,
+      notes:    data.nutrition?.notes    ?? '',
+    };
+
+    // ── Size ──────────────────────────────────────────────────────────────────
+    this.size = {
+      weight:     data.size?.weight     ?? '',
+      dimensions: data.size?.dimensions ?? '',
+      notes:      data.size?.notes      ?? '',
+    };
   }
 
-  // ─────────────────────────────────────────────
-  // Core identity
-  // ─────────────────────────────────────────────
+  // ── Serialization ───────────────────────────────────────────────────────────
 
-  /** Stable unique identifier string, e.g. "spinach" */
-  get id()    { return this._data.id; }
-
-  /** Display name, e.g. "Spinach" */
-  get name()  { return this._data.name; }
-
-  /** Category label, e.g. "Leafy Green" */
-  get cat()   { return this._data.category; }
-
-  /** Emoji icon, e.g. "🌿" */
-  get emoji() { return this._data.emoji; }
-
-  // ─────────────────────────────────────────────
-  // Planting
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ zone6: string, depth: string, spacing: string, ph: string, sun: string }}
-   */
-  get planting() { return this._data.planting; }
-
-  get zone6Timing()  { return this._data.planting.zone6; }
-  get plantingDepth(){ return this._data.planting.depth; }
-  get spacing()      { return this._data.planting.spacing; }
-  get soilPh()       { return this._data.planting.ph; }
-  get sunlight()     { return this._data.planting.sun; }
-  get specialNotes() { return this._data.special ?? ''; }
-
-  // ─────────────────────────────────────────────
-  // Water & fertilizer
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ in: string, note: string }}
-   */
-  get water() { return this._data.water; }
-
-  /** Weekly water amount, e.g. "1–1.5" (inches) */
-  get weeklyWater()  { return this._data.water.in; }
-  get waterNote()    { return this._data.water.note; }
-
-  /**
-   * @returns {{ type: string, amount: string, freq: string }}
-   */
-  get fertilizer()        { return this._data.fertilizer; }
-  get fertilizerType()    { return this._data.fertilizer.type; }
-  get fertilizerAmount()  { return this._data.fertilizer.amount; }
-  get fertilizerFreq()    { return this._data.fertilizer.freq; }
-
-  // ─────────────────────────────────────────────
-  // Companions
-  // ─────────────────────────────────────────────
-
-  /**
-   * List of good companion objects.
-   * @returns {{ name: string, why: string }[]}
-   */
-  get goodCompanions() { return this._data.companions.good ?? []; }
-
-  /**
-   * List of bad companion objects.
-   * @returns {{ name: string, why: string }[]}
-   */
-  get badCompanions() { return this._data.companions.bad ?? []; }
-
-  /** Plain distance/spacing note for companion planting */
-  get companionDistNote() { return this._data.companionDist ?? ''; }
-
-  /** Animals that benefit this crop */
-  get beneficialAnimals() { return this._data.animals ?? ''; }
-
-  // ─────────────────────────────────────────────
-  // Diseases & pests
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ name: string, desc: string }[]}
-   */
-  get diseases() { return this._data.diseases ?? []; }
-
-  /** Free-text pest control advice */
-  get pestControl() { return this._data.pests ?? ''; }
-
-  // ─────────────────────────────────────────────
-  // Growth stages
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ label: string, title: string, desc: string }[]}
-   */
-  get stages() { return this._data.stages ?? []; }
-
-  // ─────────────────────────────────────────────
-  // Crop rotation
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ family: string, cycle: string }}
-   */
-  get rotation()       { return this._data.rotation; }
-  get plantFamily()    { return this._data.rotation.family; }
-  get rotationCycle()  { return this._data.rotation.cycle; }
-
-  // ─────────────────────────────────────────────
-  // Nutrition
-  // ─────────────────────────────────────────────
-
-  /**
-   * Nutritional values per 100g fresh weight.
-   * @returns {{ calories: number, protein: number, carbs: number, fat: number, fiber: number, vitC: number, notes: string }}
-   */
-  get nutrition() { return this._data.nutrition ?? {}; }
-
-  get calories() { return this._data.nutrition?.calories ?? 0; }
-  get protein()  { return this._data.nutrition?.protein  ?? 0; }
-  get carbs()    { return this._data.nutrition?.carbs    ?? 0; }
-  get fat()      { return this._data.nutrition?.fat      ?? 0; }
-  get fiber()    { return this._data.nutrition?.fiber    ?? 0; }
-  get vitC()     { return this._data.nutrition?.vitC     ?? 0; }
-  get nutritionNotes() { return this._data.nutrition?.notes ?? ''; }
-
-  /** True if this is a food crop with calorie data */
-  get isFoodCrop() { return this.calories > 0; }
-
-  // ─────────────────────────────────────────────
-  // Size at harvest
-  // ─────────────────────────────────────────────
-
-  /**
-   * @returns {{ weight: string, dimensions: string, notes: string }}
-   */
-  get size() { return this._data.size ?? {}; }
-
-  get harvestWeight()     { return this._data.size?.weight     ?? ''; }
-  get harvestDimensions() { return this._data.size?.dimensions ?? ''; }
-  get harvestNotes()      { return this._data.size?.notes      ?? ''; }
-
-  // ─────────────────────────────────────────────
-  // Serialisation
-  // ─────────────────────────────────────────────
-
-  /** Return a plain object copy (safe to JSON.stringify and store) */
+  /** Returns a plain object safe for JSON.stringify / storage. */
   toJSON() {
-    return structuredClone(this._data);
+    return {
+      id: this.id, name: this.name, cat: this.cat, emoji: this.emoji,
+      planting: { ...this.planting },
+      special: this.special,
+      water: { ...this.water },
+      fertilizer: { ...this.fertilizer },
+      companions: {
+        good: this.companions.good.map(g => ({ ...g })),
+        bad:  this.companions.bad.map(b => ({ ...b })),
+      },
+      companionDist: this.companionDist,
+      animals: this.animals,
+      diseases: this.diseases.map(d => ({ ...d })),
+      pests: this.pests,
+      rotation: { ...this.rotation },
+      stages: this.stages.map(s => ({ ...s })),
+      nutrition: { ...this.nutrition },
+      size: { ...this.size },
+    };
   }
 
-  /**
-   * Apply an update object to this crop's data in-place.
-   * @param {Partial<object>} updates  Plain object of fields to merge
-   */
-  update(updates) {
-    Object.assign(this._data, updates);
+  /** Reconstruct a Crop instance from a plain object (e.g. from storage). */
+  static fromJSON(obj) {
+    return new Crop(obj);
   }
 
-  // ─────────────────────────────────────────────
-  // Validation (private)
-  // ─────────────────────────────────────────────
+  // ── Convenience getters ─────────────────────────────────────────────────────
 
-  static _validate(data) {
-    const required = ['id', 'name', 'category', 'emoji', 'planting', 'water', 'fertilizer', 'companions', 'diseases', 'stages', 'rotation'];
-    for (const key of required) {
-      if (data[key] === undefined || data[key] === null) {
-        throw new Error(`Crop JSON missing required field: "${key}" (id: ${data.id ?? 'unknown'})`);
-      }
-    }
-    if (!data.planting.zone6)  throw new Error(`Crop "${data.id}" missing planting.zone6`);
-    if (!data.planting.ph)     throw new Error(`Crop "${data.id}" missing planting.ph`);
-    if (!data.rotation.family) throw new Error(`Crop "${data.id}" missing rotation.family`);
+  /** True if this crop has real nutritional data entered. */
+  get hasNutrition() {
+    return this.nutrition.calories > 0 || this.nutrition.protein > 0;
+  }
+
+  /** True if this crop is ornamental / non-food. */
+  get isOrnamental() {
+    return this.nutrition.calories === 0 && this.nutrition.protein === 0 && this.nutrition.carbs === 0;
+  }
+
+  /** Returns the good-companion names as a comma-separated string. */
+  get goodCompanionNames() {
+    return this.companions.good.map(g => g.name).join(', ');
+  }
+
+  /** Returns the bad-companion names as a comma-separated string. */
+  get badCompanionNames() {
+    return this.companions.bad.map(b => b.name).join(', ');
   }
 }
