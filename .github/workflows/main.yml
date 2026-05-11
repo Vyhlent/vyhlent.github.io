@@ -1,4 +1,4 @@
-on: workflow_run
+on: workflow_dispatch
 jobs:
     run-script:
       runs-on: ubuntu-latest
