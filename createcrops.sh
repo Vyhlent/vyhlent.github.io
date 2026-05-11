@@ -1,4 +1,4 @@
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/raspberries.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/raspberries.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'raspberries',name:'Raspberries',cat:'Berry',emoji:'🍓',
@@ -20,7 +20,7 @@ export default new Crop({
   size:{weight:'2–4g per berry',dimensions:'0.5–0.75" diameter',notes:'Hollow when picked; releases cleanly from core when ripe.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/cantaloupe.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/cantaloupe.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'cantaloupe',name:'Cantaloupe',cat:'Vine Fruit',emoji:'🍈',
@@ -42,7 +42,7 @@ export default new Crop({
   size:{weight:'1–3 kg per fruit',dimensions:'5–7" diameter',notes:'Full-slip harvest: netting on rind, sweet aroma.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/garlic.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/garlic.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'garlic',name:'Garlic',cat:'Allium',emoji:'🧄',
@@ -64,7 +64,7 @@ export default new Crop({
   size:{weight:'30–60g per bulb',dimensions:'1.5–2.5" diameter bulb',notes:'Each clove weighs 4–8g.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/red_onions.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/red_onions.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'red_onions',name:'Red Onions',cat:'Allium',emoji:'🧅',
@@ -86,7 +86,7 @@ export default new Crop({
   size:{weight:'100–200g per bulb',dimensions:'2–3.5" diameter',notes:'Cure thoroughly for storage up to 6 months.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/asparagus.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/asparagus.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'asparagus',name:'Asparagus',cat:'Perennial Veg',emoji:'🌱',
@@ -108,7 +108,7 @@ export default new Crop({
   size:{weight:'15–25g per spear',dimensions:'7–9" long spear, 0.5–0.75" diameter',notes:'Harvest at 6–8 inches. Pencil-thin spears signal the bed needs rest.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/carrots.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/carrots.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'carrots',name:'Carrots',cat:'Root Vegetable',emoji:'🥕',
@@ -130,7 +130,7 @@ export default new Crop({
   size:{weight:'60–120g per carrot',dimensions:'6–8" long, 1" diameter',notes:'Baby carrots at 3–4 inches; mature at 6–8.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/marigolds.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/marigolds.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'marigolds',name:'Marigolds',cat:'Flower',emoji:'🌼',
@@ -152,7 +152,7 @@ export default new Crop({
   size:{weight:'N/A — ornamental',dimensions:'French: 6–12" tall; African: 18–36" tall',notes:'Plant densely between vegetables for maximum pest suppression.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/tomatoes.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/tomatoes.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'tomatoes',name:'Tomatoes',cat:'Fruiting Veg',emoji:'🍅',
@@ -174,7 +174,7 @@ export default new Crop({
   size:{weight:'100–250g (slicing); 10–30g (cherry)',dimensions:'2–4" diameter (slicing); 1–1.5" (cherry)',notes:'Determinate varieties produce all at once; indeterminate produce until frost.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/potatoes.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/potatoes.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'potatoes',name:'Potatoes',cat:'Root Vegetable',emoji:'🥔',
@@ -196,7 +196,7 @@ export default new Crop({
   size:{weight:'100–300g per tuber',dimensions:'2–4" diameter',notes:'New potatoes: golf ball size. Mature: after tops die back.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/cucumbers.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/cucumbers.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'cucumbers',name:'Cucumbers',cat:'Vine Vegetable',emoji:'🥒',
@@ -218,7 +218,7 @@ export default new Crop({
   size:{weight:'200–400g per cucumber',dimensions:'Slicing: 6–8" long; pickling: 3–4"',notes:'Harvest before yellowing for peak flavor.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/corn.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/corn.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'corn',name:'Corn',cat:'Grain',emoji:'🌽',
@@ -240,7 +240,7 @@ export default new Crop({
   size:{weight:'200–300g per ear',dimensions:'7–9" long ear, 1.5–2" diameter',notes:'Pierce a kernel — milky white sap = perfect. 1–2 day harvest window at peak.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/kale.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/kale.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'kale',name:'Kale',cat:'Leafy Green',emoji:'🥬',
@@ -262,7 +262,7 @@ export default new Crop({
   size:{weight:'200–400g per bunch',dimensions:'Leaves 8–16" long',notes:'Harvest at 8–10 inches for best flavor.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/green_beans.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/green_beans.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'green_beans',name:'Green Beans',cat:'Legume',emoji:'🫘',
@@ -284,7 +284,7 @@ export default new Crop({
   size:{weight:'10–15g per pod',dimensions:'4–6" long pod',notes:'Harvest at 4–6 inches before seeds bulge.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/peppers.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/peppers.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'peppers',name:'Peppers (Green/Banana)',cat:'Fruiting Veg',emoji:'🫑',
@@ -306,7 +306,7 @@ export default new Crop({
   size:{weight:'100–200g per pepper',dimensions:'Bell: 3–4" wide; banana: 4–6" long',notes:'Leaving on plant longer = sweeter and more nutritious.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/rosemary.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/rosemary.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'rosemary',name:'Rosemary',cat:'Herb',emoji:'🌿',
@@ -328,7 +328,7 @@ export default new Crop({
   size:{weight:'N/A — culinary herb',dimensions:'Plant: 18–36" tall and wide',notes:'Harvest 2–3 inch stem tips.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/thyme.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/thyme.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'thyme',name:'Thyme',cat:'Herb',emoji:'🌿',
@@ -350,7 +350,7 @@ export default new Crop({
   size:{weight:'N/A — culinary herb',dimensions:'Plant: 6–12" tall, spreading',notes:'Harvest stem tips 2–3 inches long.'},
 });
 ENDOFFILE
-cat > /home/runner/work/vyhlent.github.io/vyhlent.github.io/crops/basil.js << 'ENDOFFILE'
+cat > ${GITHUB_WORKSPACE}/crops/basil.js << 'ENDOFFILE'
 import Crop from '../Crop.js';
 export default new Crop({
   id:'basil',name:'Basil',cat:'Herb',emoji:'🌿',
