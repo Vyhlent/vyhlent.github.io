@@ -1,7 +1,8 @@
+on: workflow_run
 jobs:
-  run-script:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run External Script
-        run: bash ${GITHUB_WORKSPACE}/createcrops.sh
+    run-script:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Run External Script
+          run: bash ${GITHUB_WORKSPACE}/createcrops.sh
