@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Garden</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script type="module">
+import { initializeApp }                     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
+  authDomain:        "garden-planner-ddbce.firebaseapp.com",
+  projectId:         "garden-planner-ddbce",
+  storageBucket:     "garden-planner-ddbce.firebasestorage.app",
+  messagingSenderId: "293487006691",
+  appId:             "1:293487006691:web:3136660dd705d7b10946d6"
+});
+const db = getFirestore(app);
+window._fbDoc    = code => doc(db, "gardens", code);
+window._fbGetDoc = getDoc;
+window._fbSetDoc = setDoc;
+window._fbReady  = true;
+window.dispatchEvent(new Event("fb-ready"));
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#fff;--s:#f5f4f0;--t:#eceae3;
+  --tp:#1a1a18;--ts:#5f5e5a;--tt:#888780;
+  --b1:rgba(0,0,0,0.12);--b2:rgba(0,0,0,0.25);
+  --gn:#3B6D11;--gnb:#EAF3DE;--gnt:#27500A;
+  --ab:#FAEEDA;--at:#633806;--abr:#BA7517;
+  --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
+  --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
+}
+.dark{
+  --p:#1e1e1b;--s:#272724;--t:#141412;
+  --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
+  --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
+  --gn:#7abd3e;--gnb:#1a2e08;--gnt:#c0dd97;
+  --ab:#2a1d06;--at:#FAC775;--abr:#854F0B;
+  --lb:#06192e;--lt:#85B7EB;--lbr:#185FA5;
+  --rb:#250909;--rt:#F09595;--rbr:#A32D2D;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:16px;background:var(--t);color:var(--tp)}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+
+.topbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 16px;background:var(--p);border-bottom:1px solid var(--b1);
+  position:sticky;top:0;z-index:50;flex-shrink:0;
+}
+.garden-title{font-size:17px;font-weight:600;color:var(--gn);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibtn{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);
+  font-size:17px;flex-shrink:0;text-decoration:none;
+}
+.ibtn:hover{background:var(--s)}
+.tbtn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:14px;
+}
+.tbtn.active{background:var(--gn);color:#EAF3DE;border-color:var(--gn)}
+.tbtn.erase.active{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.save-btn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 18px;
+  border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;
+}
+.save-btn:disabled{opacity:.5;cursor:not-allowed}
+.size-wrap{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ts)}
+.size-wrap input[type=number]{
+  width:54px;height:36px;text-align:center;border:1px solid var(--b2);border-radius:8px;
+  background:var(--p);color:var(--tp);font-size:14px;outline:none;padding:0 4px;
+}
+.size-wrap input[type=number]:focus{border-color:var(--gn)}
+
+.layout{display:flex;height:calc(100vh - 62px);overflow:hidden}
+
+.sidebar{
+  width:196px;min-width:150px;background:var(--p);
+  border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
+}
+.sidebar-head{
+  padding:10px 12px 6px;font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--tt);border-bottom:1px solid var(--b1);flex-shrink:0;
+}
+.sidebar-search{padding:7px 10px;border-bottom:1px solid var(--b1);flex-shrink:0}
+.sidebar-search input{
+  width:100%;height:30px;border:1px solid var(--b2);border-radius:6px;
+  background:var(--s);color:var(--tp);font-size:13px;padding:0 10px;outline:none;
+}
+.sidebar-search input:focus{border-color:var(--gn)}
+.crop-list{overflow-y:auto;flex:1;padding:5px}
+.crop-item{
+  display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;
+  cursor:pointer;font-size:13px;color:var(--tp);border:2px solid transparent;
+}
+.crop-item:hover{background:var(--s)}
+.crop-item.selected{background:var(--gnb);border-color:var(--gn);color:var(--gnt)}
+.crop-emoji{font-size:19px;flex-shrink:0;width:24px;text-align:center}
+.crop-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.selected-info{
+  padding:9px 12px;border-top:1px solid var(--b1);
+  font-size:12px;color:var(--gnt);background:var(--gnb);flex-shrink:0;display:none;
+}
+
+.grid-area{flex:1;overflow:auto;padding:20px;display:flex;align-items:flex-start}
+.garden-grid{display:grid;border:1px solid var(--b2);border-radius:4px;overflow:hidden;flex-shrink:0}
+.gcell{
+  width:70px;height:70px;border:1px solid var(--b1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:26px;cursor:crosshair;background:var(--p);position:relative;user-select:none;
+}
+.gcell:hover{background:var(--gnb)}
+.gcell.eh:hover{background:var(--rb)}
+.gcell-label{
+  font-size:9px;color:var(--tt);text-align:center;margin-top:2px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  width:100%;padding:0 3px;pointer-events:none;
+}
+
+.legend{
+  padding:7px 14px;background:var(--s);border-top:1px solid var(--b1);
+  font-size:12px;color:var(--tt);display:flex;gap:18px;flex-wrap:wrap;align-items:center;flex-shrink:0;
+}
+
+#statusbar{position:fixed;bottom:1.25rem;right:1.25rem;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid}
+.toast.show{opacity:1}
+.toast-ok{background:var(--gnb);color:var(--gnt);border-color:var(--gn)}
+.toast-err{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.toast-info{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#loading-overlay{
+  position:fixed;inset:0;background:var(--t);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+}
+#loading-overlay.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay">
+  <span class="spin" style="color:var(--gn);width:28px;height:28px;border-width:3px"></span>
+  <div style="font-size:15px;color:var(--ts)" id="loading-msg">Connecting…</div>
+</div>
+
+<div id="statusbar"></div>
+
+<div id="app" style="display:none;height:100vh;flex-direction:column">
+
+  <div class="topbar">
+    <div class="garden-title" id="garden-title">My Garden</div>
+
+    <button class="tbtn active" id="tool-draw" onclick="setTool('draw')">
+      <i class="fa-solid fa-pen"></i> Draw
+    </button>
+    <button class="tbtn erase" id="tool-erase" onclick="setTool('erase')">
+      <i class="fa-solid fa-eraser"></i> Erase
+    </button>
+
+    <div class="size-wrap">
+      <i class="fa-solid fa-table-cells" style="font-size:13px"></i>
+      <input type="number" id="grid-cols" min="1" max="30" value="5" onchange="resizeGrid()">
+      <span style="color:var(--tt)">x</span>
+      <input type="number" id="grid-rows" min="1" max="30" value="5" onchange="resizeGrid()">
+    </div>
+
+    <button class="save-btn" id="save-btn" onclick="saveGarden()">
+      <i class="fa-solid fa-floppy-disk"></i> Save
+    </button>
+
+    <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
+      <i class="fa-solid fa-moon" id="dticon"></i>
+    </button>
+
+    <a href="index.html" class="ibtn" title="Back to planner">
+      <i class="fa-solid fa-house"></i>
+    </a>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="sidebar-head">Crops</div>
+      <div class="sidebar-search">
+        <input type="text" id="crop-search" placeholder="Search..." oninput="renderSidebar()">
+      </div>
+      <div class="crop-list" id="crop-list">
+        <div style="padding:2rem 1rem;text-align:center;color:var(--tt);font-size:13px">
+          <span class="spin"></span> Loading...
+        </div>
+      </div>
+      <div class="selected-info" id="selected-info">
+        <span id="selected-label"></span>
+      </div>
+    </div>
+
+    <div class="grid-area">
+      <div class="garden-grid" id="garden-grid"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>Draw: pick a crop then click or drag cells</span>
+    <span>Erase: click or drag to clear</span>
+    <span>Resize with the number inputs above</span>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+const GH_REPO    = 'vyhlent/vyhlent.github.io';
+const GH_BRANCH  = 'main';
+const CROPS_PATH = 'crops';
+
+const GARDEN_CODE = (new URLSearchParams(window.location.search).get('code') || 'default')
+  .replace(/[^a-zA-Z0-9\-_]/g, '').toLowerCase();
+
+let PLANTS       = [];
+let gridData     = {};
+let gridCols     = 5;
+let gridRows     = 5;
+let selectedCrop = null;
+let tool         = 'draw';
+let isDark       = false;
+let painting     = false;
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function toast(type, msg, ms=3500) {
+  const bar = document.getElementById('statusbar');
+  bar.querySelectorAll('.toast').forEach(t=>{t.classList.remove('show');setTimeout(()=>t.remove(),350);});
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`; el.innerHTML = msg;
+  bar.appendChild(el);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
+  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),350);}, ms);
+}
+
+function applyDark() {
+  document.getElementById('app').classList.toggle('dark', isDark);
+  document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+function toggleDark() {
+  isDark = !isDark; applyDark();
+  try { localStorage.setItem('gp-dark', isDark?'1':'0'); } catch(e) {}
+}
+
+// Load crops from GitHub (public read, no auth)
+function parseCropData(src) {
+  const m = src.match(/new\s+Crop\s*\(\s*(\{[\s\S]*?\})\s*\)\s*;?\s*$/);
+  if (!m) return null;
+  try { return Function('"use strict";return('+m[1]+')')(); } catch(e) { return null; }
+}
+async function loadCrops() {
+  const r = await fetch(
+    `https://api.github.com/repos/${GH_REPO}/contents/${CROPS_PATH}?ref=${GH_BRANCH}`,
+    { headers: { Accept: 'application/vnd.github.v3+json' } }
+  );
+  if (!r.ok) throw new Error(`Cannot list crops (${r.status})`);
+  const files = (await r.json()).filter(f => f.name.endsWith('.js') && f.type==='file');
+  PLANTS = [];
+  await Promise.all(files.map(async f => {
+    try {
+      const src = await fetch(f.download_url).then(x=>x.text());
+      const data = parseCropData(src);
+      if (data) PLANTS.push({ data });
+    } catch(e) {}
+  }));
+  PLANTS.sort((a,b) => (a.data.name||'').localeCompare(b.data.name||''));
+}
+
+// Load garden from Firestore (no auth needed)
+async function loadGarden() {
+  const snap = await window._fbGetDoc(window._fbDoc(GARDEN_CODE));
+  if (!snap.exists()) return;
+  const saved = snap.data();
+  gridData = saved.cells || {};
+  if (saved.cols) { gridCols = saved.cols; document.getElementById('grid-cols').value = gridCols; }
+  if (saved.rows) { gridRows = saved.rows; document.getElementById('grid-rows').value = gridRows; }
+}
+
+// Save garden to Firestore (no auth needed)
+async function saveGarden() {
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Saving...';
+  try {
+    await window._fbSetDoc(window._fbDoc(GARDEN_CODE), {
+      code:    GARDEN_CODE,
+      cols:    gridCols,
+      rows:    gridRows,
+      cells:   gridData,
+      savedAt: new Date().toISOString()
+    });
+    toast('ok', 'Garden "' + GARDEN_CODE + '" saved');
+  } catch(e) {
+    toast('err', 'Save failed: ' + e.message, 8000);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
+  }
+}
+
+function renderSidebar() {
+  const q = (document.getElementById('crop-search')?.value||'').toLowerCase();
+  const fl = PLANTS.filter(p => !q || (p.data.name||'').toLowerCase().includes(q) || (p.data.cat||'').toLowerCase().includes(q));
+  const list = document.getElementById('crop-list');
+  if (!fl.length) { list.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--tt);font-size:13px">No crops found</div>'; return; }
+  list.innerHTML = fl.map(p => {
+    const sel = selectedCrop && selectedCrop.name === p.data.name;
+    return `<div class="crop-item${sel?' selected':''}" onclick="selectCrop('${esc(p.data.emoji)}','${esc(p.data.name)}')">
+      <span class="crop-emoji">${esc(p.data.emoji)}</span>
+      <span class="crop-name">${esc(p.data.name)}</span>
+    </div>`;
+  }).join('');
+}
+function selectCrop(emoji, name) {
+  selectedCrop = { emoji, name };
+  setTool('draw');
+  document.getElementById('selected-label').textContent = emoji + ' ' + name;
+  document.getElementById('selected-info').style.display = 'block';
+  renderSidebar();
+}
+
+function setTool(t) {
+  tool = t;
+  document.getElementById('tool-draw').classList.toggle('active', t==='draw');
+  document.getElementById('tool-erase').classList.toggle('active', t==='erase');
+  // Update hover class on all cells
+  document.querySelectorAll('.gcell').forEach(c => c.classList.toggle('eh', t==='erase'));
+}
+
+function renderGrid() {
+  const grid = document.getElementById('garden-grid');
+  grid.style.gridTemplateColumns = `repeat(${gridCols},70px)`;
+  grid.innerHTML = '';
+  for (let r=0; r<gridRows; r++) {
+    for (let c=0; c<gridCols; c++) {
+      const key = `${r},${c}`;
+      const cell = gridData[key];
+      const div = document.createElement('div');
+      div.className = 'gcell' + (tool==='erase' ? ' eh' : '');
+      div.dataset.key = key;
+      if (cell) div.innerHTML = `<span>${esc(cell.emoji)}</span><div class="gcell-label">${esc(cell.name)}</div>`;
+      div.addEventListener('mousedown', e => { e.preventDefault(); painting=true; applyTool(key, div); });
+      div.addEventListener('mouseenter', () => { if(painting) applyTool(key, div); });
+      grid.appendChild(div);
+    }
+  }
+}
+document.addEventListener('mouseup', () => { painting=false; });
+
+function applyTool(key, div) {
+  if (tool==='erase') {
+    delete gridData[key];
+    div.innerHTML = '';
+  } else if (tool==='draw' && selectedCrop) {
+    gridData[key] = { emoji: selectedCrop.emoji, name: selectedCrop.name };
+    div.innerHTML = `<span>${esc(selectedCrop.emoji)}</span><div class="gcell-label">${esc(selectedCrop.name)}</div>`;
+  } else if (tool==='draw' && !selectedCrop) {
+    toast('info', 'Select a crop from the sidebar first');
+  }
+}
+
+function resizeGrid() {
+  gridCols = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-cols').value)||5));
+  gridRows = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-rows').value)||5));
+  document.getElementById('grid-cols').value = gridCols;
+  document.getElementById('grid-rows').value = gridRows;
+  Object.keys(gridData).forEach(k => {
+    const [r,c] = k.split(',').map(Number);
+    if (r>=gridRows || c>=gridCols) delete gridData[k];
+  });
+  renderGrid();
+}
+
+async function boot() {
+  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; } } catch(e) {}
+
+  document.getElementById('garden-title').textContent = 'Garden: ' + GARDEN_CODE;
+  document.title = 'My Garden - ' + GARDEN_CODE;
+
+  const msg = document.getElementById('loading-msg');
+
+  if (!window._fbReady) {
+    msg.textContent = 'Connecting to Firebase...';
+    await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
+  }
+
+  msg.textContent = 'Loading crops...';
+  try { await loadCrops(); } catch(e) { toast('err','Could not load crops: '+e.message, 6000); }
+
+  msg.textContent = 'Loading garden...';
+  try { await loadGarden(); } catch(e) { toast('err','Could not load garden: '+e.message, 6000); }
+
+  document.getElementById('loading-overlay').classList.add('hidden');
+  const appEl = document.getElementById('app');
+  appEl.style.display = 'flex';
+  applyDark();
+  renderGrid();
+  renderSidebar();
+
+  const isEmpty = Object.keys(gridData).length === 0;
+  if (isEmpty) {
+    toast('info', 'New garden "' + GARDEN_CODE + '" - draw and hit Save');
+  } else {
+    toast('ok', 'Loaded garden "' + GARDEN_CODE + '"');
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
