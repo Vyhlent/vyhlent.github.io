@@ -334,6 +334,7 @@ async function loadAllCrops() {
 
 // ─── Dark mode ────────────────────────────────────────────
 function applyDark() {
+  document.body.classList.toggle('dark', isDark);
   document.getElementById('app').classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
