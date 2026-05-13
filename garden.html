@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Garden</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#fff;--s:#f5f4f0;--t:#eceae3;
+  --tp:#1a1a18;--ts:#5f5e5a;--tt:#888780;
+  --b1:rgba(0,0,0,0.12);--b2:rgba(0,0,0,0.25);
+  --gn:#3B6D11;--gnb:#EAF3DE;--gnt:#27500A;
+  --ab:#FAEEDA;--at:#633806;--abr:#BA7517;
+  --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
+  --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
+}
+.dark{
+  --p:#1e1e1b;--s:#272724;--t:#141412;
+  --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
+  --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
+  --gn:#7abd3e;--gnb:#1a2e08;--gnt:#c0dd97;
+  --ab:#2a1d06;--at:#FAC775;--abr:#854F0B;
+  --lb:#06192e;--lt:#85B7EB;--lbr:#185FA5;
+  --rb:#250909;--rt:#F09595;--rbr:#A32D2D;
+}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:16px;background:var(--t);color:var(--tp)}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+
+/* ── Top bar ── */
+.topbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 16px;background:var(--p);border-bottom:1px solid var(--b1);
+  position:sticky;top:0;z-index:50;
+}
+.garden-title{font-size:17px;font-weight:600;color:var(--gn);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ibtn{
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);
+  font-size:17px;flex-shrink:0;
+}
+.ibtn:hover{background:var(--s)}
+.tbtn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 16px;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:14px;
+}
+.tbtn.active{background:var(--gn);color:#EAF3DE;border-color:var(--gn)}
+.tbtn.erase.active{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.save-btn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 18px;
+  border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;
+}
+.save-btn:disabled{opacity:.5;cursor:not-allowed}
+.size-wrap{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ts)}
+.size-wrap input[type=number]{
+  width:58px;height:36px;text-align:center;border:1px solid var(--b2);border-radius:8px;
+  background:var(--p);color:var(--tp);font-size:14px;outline:none;padding:0 6px;
+}
+.size-wrap input[type=number]:focus{border-color:var(--gn)}
+
+/* ── Layout ── */
+.layout{display:flex;height:calc(100vh - 61px);overflow:hidden}
+
+/* ── Sidebar ── */
+.sidebar{
+  width:200px;min-width:160px;max-width:260px;
+  background:var(--p);border-right:1px solid var(--b1);
+  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
+}
+.sidebar-head{
+  padding:10px 12px 6px;font-size:11px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--tt);border-bottom:1px solid var(--b1);
+}
+.sidebar-search{
+  padding:8px 10px;border-bottom:1px solid var(--b1);
+}
+.sidebar-search input{
+  width:100%;height:32px;border:1px solid var(--b2);border-radius:6px;
+  background:var(--s);color:var(--tp);font-size:13px;padding:0 10px;outline:none;
+}
+.sidebar-search input:focus{border-color:var(--gn)}
+.crop-list{overflow-y:auto;flex:1;padding:6px}
+.crop-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
+  cursor:pointer;font-size:13px;color:var(--tp);border:2px solid transparent;
+  transition:background .12s;
+}
+.crop-item:hover{background:var(--s)}
+.crop-item.selected{background:var(--gnb);border-color:var(--gn);color:var(--gnt)}
+.crop-emoji{font-size:20px;flex-shrink:0;width:26px;text-align:center}
+.crop-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── Grid area ── */
+.grid-area{
+  flex:1;overflow:auto;display:flex;align-items:flex-start;
+  justify-content:flex-start;padding:20px;
+}
+.garden-grid{
+  display:grid;
+  border:1px solid var(--b2);border-radius:4px;overflow:hidden;
+  flex-shrink:0;
+}
+.gcell{
+  width:72px;height:72px;border:1px solid var(--b1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;cursor:crosshair;background:var(--p);
+  position:relative;user-select:none;transition:background .1s;
+}
+.gcell:hover{background:var(--gnb)}
+.gcell.erase-hover:hover{background:var(--rb)}
+.gcell-label{
+  position:absolute;bottom:2px;left:0;right:0;
+  font-size:9px;color:var(--tt);text-align:center;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px;
+  pointer-events:none;
+}
+
+/* ── Toast ── */
+#statusbar{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid}
+.toast.show{opacity:1}
+.toast-ok{background:var(--gnb);color:var(--gnt);border-color:var(--gn)}
+.toast-err{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.toast-info{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Token modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--p);border:1px solid var(--b1);border-radius:12px;padding:1.75rem;width:100%;max-width:480px;margin:auto}
+.modal h3{font-size:20px;font-weight:500;margin-bottom:1rem;color:var(--tp)}
+.modal p{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:1rem}
+.frow{margin-bottom:1rem}
+.frow label{display:block;font-size:13px;font-weight:500;color:var(--ts);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.frow input{width:100%;height:40px;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--tp);font-size:14px;padding:0 12px;outline:none}
+.frow input:focus{border-color:var(--gn)}
+.factions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--b1)}
+.factions button{padding:9px 22px;font-size:15px;border-radius:8px;border:1px solid var(--b2);background:var(--p);color:var(--ts)}
+.savebtn{background:var(--gn)!important;color:#EAF3DE!important;border-color:var(--gn)!important}
+.savebtn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── Legend ── */
+.legend{
+  padding:8px 12px;background:var(--s);border-top:1px solid var(--b1);
+  font-size:12px;color:var(--tt);display:flex;gap:16px;flex-wrap:wrap;align-items:center;flex-shrink:0;
+}
+
+/* ── Loading overlay ── */
+#loading-overlay{
+  position:fixed;inset:0;background:var(--t);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+}
+#loading-overlay.hidden{display:none}
+#loading-overlay .spin{width:28px;height:28px;border-width:3px}
+</style>
+</head>
+<body>
+
+<div id="loading-overlay">
+  <span class="spin" style="color:var(--gn)"></span>
+  <div style="font-size:15px;color:var(--ts)" id="loading-msg">Loading your garden…</div>
+</div>
+
+<!-- Token modal -->
+<div class="modal-overlay hidden" id="token-modal">
+  <div class="modal">
+    <h3>🔑 Authentication required</h3>
+    <p>Enter your GitHub Personal Access Token to save garden changes. The token is kept only in memory for this session.</p>
+    <p><a href="https://github.com/settings/tokens/new?scopes=repo&description=Garden+Planner" target="_blank" style="color:var(--gn)">Create a token</a> — needs the <strong>repo</strong> scope.</p>
+    <div class="frow">
+      <label>Personal Access Token</label>
+      <input type="password" id="token-input" placeholder="ghp_…" autocomplete="off" onkeydown="if(event.key==='Enter')submitToken()">
+    </div>
+    <div id="token-err" style="font-size:13px;color:var(--rt);margin:.25rem 0 .75rem;display:none"></div>
+    <div class="factions">
+      <button onclick="cancelTokenModal()">Cancel</button>
+      <button class="savebtn" id="token-btn" onclick="submitToken()">Authenticate</button>
+    </div>
+  </div>
+</div>
+
+<div id="statusbar"></div>
+
+<!-- Main app (hidden until loaded) -->
+<div id="app" style="display:none;height:100vh;display:flex;flex-direction:column">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="garden-title" id="garden-title">🌱 My Garden</div>
+
+    <!-- Draw / Erase tools -->
+    <button class="tbtn active" id="tool-draw" onclick="setTool('draw')">
+      <i class="fa-solid fa-pen"></i> Draw
+    </button>
+    <button class="tbtn erase" id="tool-erase" onclick="setTool('erase')">
+      <i class="fa-solid fa-eraser"></i> Erase
+    </button>
+
+    <!-- Grid size -->
+    <div class="size-wrap">
+      <i class="fa-solid fa-table-cells" style="font-size:13px"></i>
+      <input type="number" id="grid-cols" min="1" max="30" value="5" onchange="resizeGrid()">
+      <span>×</span>
+      <input type="number" id="grid-rows" min="1" max="30" value="5" onchange="resizeGrid()">
+    </div>
+
+    <!-- Save -->
+    <button class="save-btn" id="save-btn" onclick="saveGarden()">
+      <i class="fa-solid fa-floppy-disk"></i> Save
+    </button>
+
+    <!-- Dark mode -->
+    <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
+      <i class="fa-solid fa-moon" id="dticon"></i>
+    </button>
+
+    <!-- Home -->
+    <a href="index.html" class="ibtn" title="Back to planner">
+      <i class="fa-solid fa-house"></i>
+    </a>
+  </div>
+
+  <!-- Body -->
+  <div class="layout">
+
+    <!-- Sidebar: crop picker -->
+    <div class="sidebar">
+      <div class="sidebar-head">Crops</div>
+      <div class="sidebar-search">
+        <input type="text" id="crop-search" placeholder="Search…" oninput="renderSidebar()">
+      </div>
+      <div class="crop-list" id="crop-list">
+        <div style="padding:2rem 1rem;text-align:center;color:var(--tt);font-size:13px">
+          <span class="spin"></span> Loading crops…
+        </div>
+      </div>
+      <!-- Selected crop info -->
+      <div id="selected-info" style="display:none;padding:10px 12px;border-top:1px solid var(--b1);font-size:13px;color:var(--ts);background:var(--gnb)">
+        <span id="selected-label" style="color:var(--gnt)"></span>
+      </div>
+    </div>
+
+    <!-- Grid area -->
+    <div class="grid-area">
+      <div class="garden-grid" id="garden-grid"></div>
+    </div>
+
+  </div>
+
+  <div class="legend">
+    <span>🖊 Draw: select a crop from the sidebar, then click or drag cells</span>
+    <span>🧹 Erase: click or drag to clear cells</span>
+    <span>↕ Resize grid with the number inputs above</span>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+
+// ── Config ─────────────────────────────────────────────────
+const GH_REPO   = 'vyhlent/vyhlent.github.io';
+const GH_BRANCH = 'main';
+const GH_API    = 'https://api.github.com';
+const CROPS_PATH = 'crops/';
+const GARDENS_PATH = 'gardens/';
+
+let GH_TOKEN = '';
+let _afterAuth = null;
+
+// ── Parse garden code from URL ─────────────────────────────
+const params  = new URLSearchParams(window.location.search);
+const GARDEN_CODE = (params.get('code') || 'default').replace(/[^a-zA-Z0-9\-_]/g,'').toLowerCase();
+
+// ── State ──────────────────────────────────────────────────
+let PLANTS = [];         // [{data, sha, filename}]
+let gridData = {};       // { "row,col": {emoji, name} }
+let gridCols = 5;
+let gridRows = 5;
+let gardenSha = null;    // GitHub SHA of the garden JSON file (null if new)
+let selectedCrop = null; // {emoji, name}
+let tool = 'draw';       // 'draw' | 'erase'
+let isDark = false;
+let painting = false;    // mouse-drag flag
+
+// ── Token flow ─────────────────────────────────────────────
+function requireToken(cb) {
+  if (GH_TOKEN) { cb(); return; }
+  _afterAuth = cb;
+  document.getElementById('token-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('token-input').focus(), 60);
+}
+async function submitToken() {
+  const val = document.getElementById('token-input').value.trim();
+  const errEl = document.getElementById('token-err');
+  const btn   = document.getElementById('token-btn');
+  errEl.style.display = 'none';
+  if (!val) { errEl.textContent = 'Please enter a token.'; errEl.style.display='block'; return; }
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Verifying…';
+  try {
+    const r = await fetch(`${GH_API}/user`, {
+      headers: { Authorization: `token ${val}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!r.ok) throw new Error(`Token rejected (${r.status})`);
+    GH_TOKEN = val;
+    document.getElementById('token-input').value = '';
+    document.getElementById('token-modal').classList.add('hidden');
+    btn.disabled = false; btn.textContent = 'Authenticate';
+    toast('ok','✓ Authenticated');
+    if (_afterAuth) { const cb = _afterAuth; _afterAuth = null; cb(); }
+  } catch(e) {
+    errEl.textContent = e.message; errEl.style.display='block';
+    btn.disabled = false; btn.textContent = 'Authenticate';
+  }
+}
+function cancelTokenModal() {
+  document.getElementById('token-modal').classList.add('hidden');
+  document.getElementById('token-input').value = '';
+  document.getElementById('token-err').style.display='none';
+  _afterAuth = null;
+}
+
+// ── GitHub helpers ─────────────────────────────────────────
+function authHeaders() {
+  return {
+    Authorization: `token ${GH_TOKEN}`,
+    Accept: 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json'
+  };
+}
+async function ghGetFile(path) {
+  const r = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
+    { headers: { Accept: 'application/vnd.github.v3+json' } });
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`GitHub ${r.status}`);
+  return r.json();
+}
+async function ghPutFile(path, content, sha, message) {
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))), branch: GH_BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${path}`, {
+    method: 'PUT', headers: authHeaders(), body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || `GitHub ${r.status}`); }
+  return r.json();
+}
+
+// ── Load crops (public read) ───────────────────────────────
+function parseCropFile(src) {
+  const m = src.match(/new\s+Crop\s*\(\s*(\{[\s\S]*\})\s*\)\s*;?\s*$/);
+  if (!m) return null;
+  try { return Function('"use strict"; return (' + m[1] + ')')(); } catch(e) { return null; }
+}
+async function loadCrops() {
+  const r = await fetch(`${GH_API}/repos/${GH_REPO}/contents/${CROPS_PATH.replace(/\/$/,'')}?ref=${GH_BRANCH}`,
+    { headers: { Accept: 'application/vnd.github.v3+json' } });
+  if (!r.ok) throw new Error(`Cannot list crops (${r.status})`);
+  const files = await r.json();
+  const jsFiles = files.filter(f => f.name.endsWith('.js') && f.type === 'file');
+  PLANTS = [];
+  await Promise.all(jsFiles.map(async f => {
+    try {
+      const meta = await fetch(f.download_url).then(x => x.text());
+      const data = parseCropFile(meta);
+      if (data) PLANTS.push({ data, filename: f.name });
+    } catch(e) {}
+  }));
+  PLANTS.sort((a,b) => (a.data.name||'').localeCompare(b.data.name||''));
+}
+
+// ── Load garden data from GitHub ──────────────────────────
+async function loadGarden() {
+  const path = `${GARDENS_PATH}${GARDEN_CODE}.json`;
+  const file = await ghGetFile(path);
+  if (!file) return; // new garden — starts empty
+  const raw = decodeURIComponent(escape(atob(file.content.replace(/\n/g,''))));
+  try {
+    const saved = JSON.parse(raw);
+    gridData = saved.cells || {};
+    gardenSha = file.sha;
+    if (saved.cols) { gridCols = saved.cols; document.getElementById('grid-cols').value = gridCols; }
+    if (saved.rows) { gridRows = saved.rows; document.getElementById('grid-rows').value = gridRows; }
+  } catch(e) {}
+}
+
+// ── Save garden to GitHub ──────────────────────────────────
+async function saveGarden() {
+  requireToken(async () => {
+    const btn = document.getElementById('save-btn');
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span> Saving…';
+    try {
+      const payload = JSON.stringify({ code: GARDEN_CODE, cols: gridCols, rows: gridRows, cells: gridData, savedAt: new Date().toISOString() }, null, 2);
+      const path = `${GARDENS_PATH}${GARDEN_CODE}.json`;
+      toast('info','<span class="spin"></span> Writing to GitHub…');
+      const result = await ghPutFile(path, payload, gardenSha, `Update garden: ${GARDEN_CODE}`);
+      gardenSha = result.content.sha;
+      toast('ok', `✓ Garden "${GARDEN_CODE}" saved`);
+    } catch(e) {
+      toast('err', '✗ Save failed: ' + e.message, 8000);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save';
+    }
+  });
+}
+
+// ── Sidebar ────────────────────────────────────────────────
+function renderSidebar() {
+  const q = (document.getElementById('crop-search')?.value || '').toLowerCase();
+  const fl = PLANTS.filter(p =>
+    !q || p.data.name?.toLowerCase().includes(q) || p.data.cat?.toLowerCase().includes(q)
+  );
+  const list = document.getElementById('crop-list');
+  if (!fl.length) { list.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--tt);font-size:13px">No crops found</div>'; return; }
+  list.innerHTML = fl.map(p => {
+    const isSel = selectedCrop && selectedCrop.name === p.data.name;
+    return `<div class="crop-item${isSel?' selected':''}" onclick="selectCrop('${esc(p.data.emoji)}','${esc(p.data.name)}')">
+      <span class="crop-emoji">${esc(p.data.emoji)}</span>
+      <span class="crop-name">${esc(p.data.name)}</span>
+    </div>`;
+  }).join('');
+}
+function selectCrop(emoji, name) {
+  selectedCrop = { emoji, name };
+  tool = 'draw';
+  document.getElementById('tool-draw').classList.add('active');
+  document.getElementById('tool-erase').classList.remove('active');
+  const info = document.getElementById('selected-info');
+  const label = document.getElementById('selected-label');
+  info.style.display = 'block';
+  label.textContent = `${emoji} ${name} selected`;
+  renderSidebar();
+}
+
+// ── Tool selection ─────────────────────────────────────────
+function setTool(t) {
+  tool = t;
+  document.getElementById('tool-draw').classList.toggle('active', t === 'draw');
+  document.getElementById('tool-erase').classList.toggle('active', t === 'erase');
+}
+
+// ── Grid render ────────────────────────────────────────────
+function renderGrid() {
+  const grid = document.getElementById('garden-grid');
+  grid.style.gridTemplateColumns = `repeat(${gridCols}, 72px)`;
+  grid.innerHTML = '';
+  for (let r = 0; r < gridRows; r++) {
+    for (let c = 0; c < gridCols; c++) {
+      const key = `${r},${c}`;
+      const cell = gridData[key];
+      const div = document.createElement('div');
+      div.className = 'gcell';
+      div.dataset.key = key;
+      if (cell) {
+        div.innerHTML = `<span>${esc(cell.emoji)}</span><div class="gcell-label">${esc(cell.name)}</div>`;
+      }
+      div.addEventListener('mousedown', e => { e.preventDefault(); painting = true; applyTool(key); });
+      div.addEventListener('mouseenter', () => { if (painting) applyTool(key); });
+      grid.appendChild(div);
+    }
+  }
+}
+document.addEventListener('mouseup', () => { painting = false; });
+
+function applyTool(key) {
+  if (tool === 'erase') {
+    delete gridData[key];
+  } else if (tool === 'draw' && selectedCrop) {
+    gridData[key] = { emoji: selectedCrop.emoji, name: selectedCrop.name };
+  } else if (tool === 'draw' && !selectedCrop) {
+    toast('info', 'Select a crop from the sidebar first');
+    return;
+  }
+  // Update just this cell
+  const div = document.querySelector(`.gcell[data-key="${key}"]`);
+  if (!div) return;
+  const cell = gridData[key];
+  div.innerHTML = cell
+    ? `<span>${esc(cell.emoji)}</span><div class="gcell-label">${esc(cell.name)}</div>`
+    : '';
+}
+
+function resizeGrid() {
+  gridCols = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-cols').value) || 5));
+  gridRows = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-rows').value) || 5));
+  document.getElementById('grid-cols').value = gridCols;
+  document.getElementById('grid-rows').value = gridRows;
+  // Prune cells outside new bounds
+  Object.keys(gridData).forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    if (r >= gridRows || c >= gridCols) delete gridData[key];
+  });
+  renderGrid();
+}
+
+// ── Dark mode ──────────────────────────────────────────────
+function applyDark() {
+  document.getElementById('app').classList.toggle('dark', isDark);
+  document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+function toggleDark() {
+  isDark = !isDark; applyDark();
+  try { localStorage.setItem('gp-dark', isDark ? '1' : '0'); } catch(e) {}
+}
+
+// ── Toast ──────────────────────────────────────────────────
+function toast(type, msg, ms = 3500) {
+  const bar = document.getElementById('statusbar');
+  bar.querySelectorAll('.toast').forEach(t => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); });
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`; el.innerHTML = msg;
+  bar.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 350); }, ms);
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Boot ───────────────────────────────────────────────────
+(async () => {
+  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; } } catch(e) {}
+
+  const titleEl = document.getElementById('garden-title');
+  titleEl.textContent = `🌱 Garden: ${GARDEN_CODE}`;
+  document.title = `My Garden — ${GARDEN_CODE}`;
+
+  const loadMsg = document.getElementById('loading-msg');
+  loadMsg.textContent = 'Loading crops…';
+
+  try {
+    await loadCrops();
+    loadMsg.textContent = 'Loading your garden…';
+    await loadGarden();
+  } catch(e) {
+    loadMsg.textContent = '⚠ ' + e.message;
+    await new Promise(r => setTimeout(r, 2500));
+  }
+
+  document.getElementById('loading-overlay').classList.add('hidden');
+  document.getElementById('app').style.display = 'flex';
+  applyDark();
+
+  renderGrid();
+  renderSidebar();
+
+  if (gardenSha) {
+    toast('ok', `✓ Loaded garden "${GARDEN_CODE}"`);
+  } else {
+    toast('info', `New garden "${GARDEN_CODE}" — draw and save to create it`);
+  }
+})();
+</script>
+</body>
+</html>
