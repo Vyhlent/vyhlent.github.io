@@ -258,8 +258,7 @@ const GH_PATH   = 'crops/';        // folder path in the repo (trailing slash)
 const GH_BRANCH = 'main';
 const GH_API    = 'https://api.github.com';
 
-    { headers: { Accept: 'application/vnd.github.v3+json' } }
-  );
+    { headers: { Accept: 'application/vnd.github.v3+json' } };
   if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
   return r.json();
 }
