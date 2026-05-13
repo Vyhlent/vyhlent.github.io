@@ -17,7 +17,7 @@
   --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
   --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
 }
-html.dark{
+.dark{
   --p:#1e1e1b;--s:#272724;--t:#141412;
   --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
   --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
@@ -26,7 +26,7 @@ html.dark{
   --lb:#06192e;--lt:#85B7EB;--lbr:#185FA5;
   --rb:#250909;--rt:#F09595;--rbr:#A32D2D;
 }
-html,body{height:100%;background:var(--t);}
+html,body{height:100%;}
 body{font-family:system-ui,-apple-system,sans-serif;font-size:18px;background:var(--t);color:var(--tp)}
 input,textarea{font-family:inherit;background:var(--p);color:var(--tp);border:1px solid var(--b2);border-radius:6px;padding:8px 12px;font-size:15px;width:100%;outline:none}
 input:focus,textarea:focus{border-color:var(--gn)}
@@ -193,6 +193,56 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
+<!-- Login modal -->
+<div class="modal-overlay hidden" id="login-modal">
+  <div class="modal" style="max-width:420px">
+    <h3 id="login-modal-title">🌱 Sign in</h3>
+
+    <!-- Login fields -->
+    <div id="login-fields">
+      <div class="frow">
+        <label>Username</label>
+        <input type="text" id="login-username" placeholder="your_username" autocomplete="username"
+               onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()">
+      </div>
+      <div class="frow">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')submitLoginOrRegister()">
+      </div>
+    </div>
+
+    <!-- Register fields -->
+    <div id="reg-fields" style="display:none">
+      <div class="frow">
+        <label>Username <span style="font-weight:400;color:var(--tt)">(3–32 chars, letters/numbers/-/_)</span></label>
+        <input type="text" id="reg-username" placeholder="your_username" autocomplete="username"
+               onkeydown="if(event.key==='Enter')document.getElementById('reg-pass').focus()">
+      </div>
+      <div class="frow">
+        <label>Password <span style="font-weight:400;color:var(--tt)">(min 8 characters)</span></label>
+        <input type="password" id="reg-pass" placeholder="••••••••" autocomplete="new-password"
+               onkeydown="if(event.key==='Enter')document.getElementById('reg-pass2').focus()">
+      </div>
+      <div class="frow">
+        <label>Confirm password</label>
+        <input type="password" id="reg-pass2" placeholder="••••••••" autocomplete="new-password"
+               onkeydown="if(event.key==='Enter')submitLoginOrRegister()">
+      </div>
+    </div>
+
+    <div id="login-err" style="font-size:13px;color:var(--rt);margin:.25rem 0 .75rem;display:none"></div>
+    <div id="login-switch-row" style="font-size:13px;color:var(--ts);margin-bottom:.75rem">
+      No account? <button onclick="showLoginMode('register')" style="background:none;border:none;color:var(--gn);cursor:pointer;font-size:13px;padding:0">Create one</button>
+    </div>
+
+    <div class="factions" style="margin-top:0;padding-top:1rem;border-top:1px solid var(--b1)">
+      <button onclick="closeLoginModal()">Cancel</button>
+      <button class="savebtn" id="login-submit-btn" onclick="submitLoginOrRegister()">Sign in</button>
+    </div>
+  </div>
+</div>
+
 <!-- Edit / Add modal -->
 <div class="modal-overlay hidden" id="edit-modal">
   <div class="modal" id="edit-inner"></div>
@@ -204,7 +254,7 @@ a{color:inherit;text-decoration:none}
 <!-- ════════════════════════════════════════════════════════
      MAIN APP — visible immediately on page load, no login needed
 ════════════════════════════════════════════════════════ -->
-<div class="app" id="app">
+<div class="app dark" id="app">
   <div class="topnav">
     <div class="nav-left" id="nav-tabs">
       <button class="nbtn on" onclick="gotoPage('plants')">Plants</button>
@@ -216,9 +266,9 @@ a{color:inherit;text-decoration:none}
       <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
         <i class="fa-solid fa-moon" id="dticon"></i>
       </button>
-      <a href="https://vyhlent.github.io/" class="ibtn" title="Home">
-        <i class="fa-solid fa-house"></i>
-      </a>
+      <button class="ibtn login-btn" onclick="openLoginModal()" title="Log in" id="login-nav-btn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+      </button>
     </div>
   </div>
   <div class="nav-divider"></div>
@@ -441,7 +491,7 @@ async function loadAllCrops() {
 
 // ─── Dark mode ────────────────────────────────────────────
 function applyDark() {
-  document.documentElement.classList.toggle('dark', isDark);
+  document.getElementById('app').classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 function toggleDark() {
@@ -918,30 +968,165 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))cancelEdit();});
 document.getElementById('token-modal').addEventListener('click',e=>{if(e.target===document.getElementById('token-modal'))cancelTokenModal();});
 
+// ─── Account API ─────────────────────────────────────────
+const API_BASE = 'http://localhost:3001'; // change to your deployed URL in production
+let currentUser = null;
+let authToken   = null;
+
+async function apiCall(method, path, body, token) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function setLoggedIn(user, token) {
+  currentUser = user;
+  authToken   = token;
+  const navBtn = document.getElementById('login-nav-btn');
+  navBtn.title = `Signed in as ${user.username} — click to sign out`;
+  navBtn.innerHTML = '<i class="fa-solid fa-circle-user" style="color:var(--gn)"></i>';
+}
+
+function setLoggedOut() {
+  currentUser = null;
+  authToken   = null;
+  GH_TOKEN    = '';
+  const navBtn = document.getElementById('login-nav-btn');
+  navBtn.title = 'Log in';
+  navBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i>';
+  ['login-username','login-pass','reg-username','reg-pass','reg-pass2'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+}
+
+// ─── Login / Register modal ───────────────────────────────
+let loginMode = 'login'; // 'login' | 'register'
+
+function openLoginModal(mode) {
+  if (currentUser) { openLogoutConfirm(); return; }
+  loginMode = mode || 'login';
+  showLoginMode(loginMode);
+  document.getElementById('login-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('login-email').focus(), 60);
+}
+
+function showLoginMode(mode) {
+  loginMode = mode;
+  document.getElementById('login-fields').style.display  = mode === 'login'    ? '' : 'none';
+  document.getElementById('reg-fields').style.display    = mode === 'register' ? '' : 'none';
+  document.getElementById('login-modal-title').textContent =
+    mode === 'login' ? '🌱 Sign in' : '🌱 Create account';
+  document.getElementById('login-switch-row').innerHTML =
+    mode === 'login'
+      ? `No account? <button onclick="showLoginMode('register')" style="background:none;border:none;color:var(--gn);cursor:pointer;font-size:13px;padding:0">Create one</button>`
+      : `Already have one? <button onclick="showLoginMode('login')" style="background:none;border:none;color:var(--gn);cursor:pointer;font-size:13px;padding:0">Sign in</button>`;
+  document.getElementById('login-submit-btn').textContent =
+    mode === 'login' ? 'Sign in' : 'Create account';
+  document.getElementById('login-err').style.display = 'none';
+}
+
+function closeLoginModal() {
+  document.getElementById('login-modal').classList.add('hidden');
+  document.getElementById('login-err').style.display = 'none';
+}
+
+async function submitLoginOrRegister() {
+  const errEl = document.getElementById('login-err');
+  const btn   = document.getElementById('login-submit-btn');
+  errEl.style.display = 'none';
+
+  if (loginMode === 'login') {
+    const username = document.getElementById('login-username').value.trim();
+    const pass     = document.getElementById('login-pass').value;
+    if (!username || !pass) {
+      errEl.textContent = 'Please enter your username and password.';
+      errEl.style.display = 'block'; return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Signing in…';
+    try {
+      const data = await apiCall('POST', '/auth/login', { username, password: pass });
+      setLoggedIn(data.user, data.token);
+      closeLoginModal();
+      toast('ok', `✓ Signed in as ${data.user.username}`);
+    } catch(e) {
+      errEl.textContent = e.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Sign in';
+    }
+
+  } else {
+    const username = document.getElementById('reg-username').value.trim();
+    const pass     = document.getElementById('reg-pass').value;
+    const pass2    = document.getElementById('reg-pass2').value;
+    if (!username || !pass) {
+      errEl.textContent = 'Please fill in all fields.';
+      errEl.style.display = 'block'; return;
+    }
+    if (pass !== pass2) {
+      errEl.textContent = 'Passwords do not match.';
+      errEl.style.display = 'block'; return;
+    }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Creating account…';
+    try {
+      const data = await apiCall('POST', '/auth/register', { username, password: pass });
+      setLoggedIn(data.user, data.token);
+      closeLoginModal();
+      toast('ok', `✓ Account created — welcome, ${data.user.username}!`);
+    } catch(e) {
+      errEl.textContent = e.message;
+      errEl.style.display = 'block';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Create account';
+    }
+  }
+}
+
+function openLogoutConfirm() {
+  if (!currentUser) return;
+  if (confirm(`Sign out of ${currentUser.username}?`)) {
+    setLoggedOut();
+    toast('info', 'Signed out');
+  }
+}
+
+// Expose helper for other parts of the app to save/load user data
+async function saveUserData(key, value) {
+  if (!authToken) { toast('err', '✗ Sign in to save data'); return false; }
+  try {
+    await apiCall('PUT', `/data/${encodeURIComponent(key)}`, { value }, authToken);
+    return true;
+  } catch(e) {
+    toast('err', '✗ ' + e.message); return false;
+  }
+}
+
+async function loadUserData(key) {
+  if (!authToken) return null;
+  try {
+    const r = await apiCall('GET', `/data/${encodeURIComponent(key)}`, null, authToken);
+    return r.value;
+  } catch { return null; }
+}
+
+// Close login modal on overlay click
+document.getElementById('login-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('login-modal')) closeLoginModal();
+});
+
 // ─── Boot — loads crops immediately, no login needed ──────
 (async () => {
-  // Determine initial dark mode:
-  // 1. If user has manually toggled before, honour their saved preference.
-  // 2. Otherwise fall back to the device/OS preference.
-  try {
-    const saved = localStorage.getItem('gp-dark');
-    if (saved !== null) {
-      isDark = saved === '1';
-    } else {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-  } catch(e) {
-    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-  applyDark();
-
-  // Also update automatically if the OS theme changes while the page is open
-  // (only when the user has NOT manually overridden it)
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    try { if (localStorage.getItem('gp-dark') !== null) return; } catch(_) {}
-    isDark = e.matches;
-    applyDark();
-  });
+  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; applyDark(); } } catch(e) {}
   try {
     await loadAllCrops();
     renderCatRow();
