@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zone 6 Garden Planner</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#fff;--s:#f5f4f0;--t:#eceae3;
+  --tp:#1a1a18;--ts:#5f5e5a;--tt:#888780;
+  --b1:rgba(0,0,0,0.12);--b2:rgba(0,0,0,0.25);
+  --gn:#3B6D11;--gnb:#EAF3DE;--gnt:#27500A;
+  --ab:#FAEEDA;--at:#633806;--abr:#BA7517;
+  --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
+  --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
+}
+.dark{
+  --p:#1e1e1b;--s:#272724;--t:#141412;
+  --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
+  --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
+  --gn:#7abd3e;--gnb:#1a2e08;--gnt:#c0dd97;
+  --ab:#2a1d06;--at:#FAC775;--abr:#854F0B;
+  --lb:#06192e;--lt:#85B7EB;--lbr:#185FA5;
+  --rb:#250909;--rt:#F09595;--rbr:#A32D2D;
+}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:18px;background:var(--t);color:var(--tp)}
+input,textarea{font-family:inherit;background:var(--p);color:var(--tp);border:1px solid var(--b2);border-radius:6px;padding:8px 12px;font-size:15px;width:100%;outline:none}
+input:focus,textarea:focus{border-color:var(--gn)}
+textarea{resize:vertical;min-height:56px}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* Layout */
+.app{max-width:1200px;margin:0 auto;padding:1.5rem 1rem}
+.topnav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nav-left{display:flex;overflow-x:auto;flex:1;min-width:0;border-bottom:1px solid var(--b1)}
+.nav-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.nav-divider{border-bottom:1px solid var(--b1);margin-bottom:1.75rem}
+.nbtn{padding:12px 18px;font-size:16px;border-bottom:3px solid transparent;color:var(--ts);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;margin-bottom:-1px}
+.nbtn.on{color:var(--gn);border-bottom-color:var(--gn);font-weight:500}
+.ibtn{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:18px;text-decoration:none;flex-shrink:0}
+.ibtn:hover{background:var(--s)}
+.page{display:none}.page.on{display:block}
+
+/* Plant grid */
+.topbar{display:flex;gap:12px;margin-bottom:1.25rem;align-items:center;flex-wrap:wrap}
+.topbar input{flex:1;min-width:180px;height:46px;padding:0 16px;font-size:16px}
+.greenbtn{white-space:nowrap;padding:0 22px;height:46px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:16px}
+.cat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.cbtn{padding:7px 16px;border:1px solid var(--b2);border-radius:20px;background:var(--p);color:var(--ts);font-size:14px}
+.cbtn.on{background:var(--gn);color:#EAF3DE;border-color:var(--gn)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:2rem}
+.pcard{background:var(--p);border:1px solid var(--b1);border-radius:12px;padding:1.25rem;position:relative}
+.pcard-name{font-size:16px;font-weight:500;margin-bottom:3px;color:var(--tp)}
+.pcard-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:12px;padding:3px 10px;border-radius:10px}
+.ts_{background:var(--ab);color:var(--at)}
+.tw_{background:var(--lb);color:var(--lt)}
+.pcard-actions{display:flex;gap:7px;margin-top:14px}
+.pcard-actions button{flex:1;padding:8px 0;font-size:13px;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts)}
+.pcard-actions button:hover{background:var(--s)}
+.del-btn{color:var(--rt)!important;border-color:var(--rbr)!important}
+.cbadge{position:absolute;top:10px;right:10px;background:var(--s);border-radius:10px;font-size:12px;padding:2px 9px;color:var(--tt)}
+
+/* Detail panel */
+.panel{background:var(--p);border:1px solid var(--b1);border-radius:12px;padding:1.75rem;margin-bottom:2rem}
+.ph{display:flex;align-items:center;gap:14px;margin-bottom:1.75rem;padding-bottom:1.25rem;border-bottom:1px solid var(--b1)}
+.ph-icon{width:58px;height:58px;border-radius:10px;background:var(--gnb);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ph-title{font-size:22px;font-weight:500;color:var(--tp)}
+.ph-sub{font-size:14px;color:var(--ts);margin-top:3px}
+.stabs{display:flex;border-bottom:1px solid var(--b1);margin-bottom:1.75rem;overflow-x:auto}
+.stab{padding:10px 16px;font-size:14px;border-bottom:2px solid transparent;color:var(--ts);margin-bottom:-1px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
+.stab.on{color:var(--gn);border-bottom-color:var(--gn)}
+.tc{display:none}.tc.on{display:block}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:1.25rem}
+.icard{background:var(--s);border-radius:8px;padding:14px}
+.ilabel{font-size:13px;color:var(--tt);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+.ival{font-size:14px;font-weight:500;line-height:1.45;color:var(--tp)}
+.sh{font-size:13px;font-weight:500;color:var(--ts);text-transform:uppercase;letter-spacing:.05em;margin:1.25rem 0 .6rem}
+.abox{padding:12px 14px;border-radius:8px;margin-bottom:10px;font-size:14px;line-height:1.55;border:1px solid}
+.atip{background:var(--gnb);border-color:var(--gn);color:var(--gnt)}
+.awarn{background:var(--ab);border-color:var(--abr);color:var(--at)}
+.ainfo{background:var(--lb);border-color:var(--lbr);color:var(--lt)}
+.ditem{padding:12px 14px;border:1px solid var(--b1);border-radius:8px;margin-bottom:10px}
+.dname{font-size:14px;font-weight:500;margin-bottom:4px;color:var(--tp)}
+.ddesc{font-size:13px;color:var(--ts);line-height:1.55}
+.stagelist{list-style:none}
+.sitem{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--b1)}
+.sitem:last-child{border-bottom:none}
+.sdot{width:34px;height:34px;border-radius:50%;background:var(--gnb);color:var(--gnt);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0;margin-top:2px}
+.stitle2{font-size:14px;font-weight:500;color:var(--tp)}
+.sdesc{font-size:13px;color:var(--ts);margin-top:3px;line-height:1.55}
+.rotbox{background:var(--s);border-radius:8px;padding:1rem;margin-bottom:.85rem}
+.rtitle{font-size:14px;font-weight:500;margin-bottom:.4rem;color:var(--tp)}
+.rdesc{font-size:13px;color:var(--ts);line-height:1.55}
+.backbtn{background:none;border:1px solid var(--b2);padding:8px 18px;border-radius:8px;font-size:14px;color:var(--ts);margin-bottom:1.25rem}
+
+/* Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--p);border:1px solid var(--b1);border-radius:12px;padding:1.75rem;width:100%;max-width:680px;margin:auto}
+.modal h3{font-size:20px;font-weight:500;margin-bottom:1.25rem;color:var(--tp)}
+.modal p{font-size:14px;color:var(--ts);line-height:1.6;margin-bottom:1rem}
+.frow{margin-bottom:1rem}
+.frow label{display:block;font-size:13px;font-weight:500;color:var(--ts);text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.factions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--b1)}
+.factions button{padding:9px 22px;font-size:15px;border-radius:8px;border:1px solid var(--b2);background:var(--p);color:var(--ts)}
+.savebtn{background:var(--gn)!important;color:#EAF3DE!important;border-color:var(--gn)!important}
+.savebtn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Charts / companions */
+.ph-bar-vis{height:16px;border-radius:3px;background:linear-gradient(to right,#d32f2f,#f57c00,#fbc02d,#689f38,#2e7d32,#1565c0);position:relative;margin:8px 0 4px}
+.ph-marker-vis{position:absolute;top:-3px;width:12px;height:22px;background:var(--tp);border-radius:2px;transform:translateX(-50%);opacity:.75}
+.ph-labels-vis{display:flex;justify-content:space-between;font-size:12px;color:var(--tt)}
+.wdrop{width:17px;height:17px;border-radius:50% 50% 50% 0;background:#B5D4F4;transform:rotate(-45deg);display:inline-block;margin:2px}
+.wdrop.f{background:#185FA5}
+.stage-edit-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.rm-btn{padding:6px 11px;font-size:13px;color:var(--rt);border:1px solid var(--rbr);border-radius:8px;background:none;flex-shrink:0}
+.add-row-btn{font-size:13px;padding:8px 14px;border:1px dashed var(--b2);border-radius:8px;background:none;color:var(--ts);width:100%;margin-top:6px}
+.sdiv{border:none;border-top:1px solid var(--b1);margin:1.25rem 0}
+.no-res{text-align:center;padding:3rem;color:var(--ts);font-size:16px}
+.nut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin-bottom:1.25rem}
+.nut-card{background:var(--s);border-radius:8px;padding:12px;text-align:center}
+.nut-val{font-size:18px;font-weight:500;color:var(--tp)}
+.nut-label{font-size:12px;color:var(--tt);margin-top:3px;text-transform:uppercase;letter-spacing:.03em}
+.nut-bar-track{height:7px;border-radius:4px;background:var(--b1);overflow:hidden;margin-top:4px}
+.nut-bar-fill{height:100%;border-radius:4px}
+.cwhy{font-size:13px;color:var(--ts);line-height:1.55;margin-top:5px;padding:6px 10px;background:var(--s);border-radius:8px}
+.matrix-wrap{overflow-x:auto;margin-bottom:2rem}
+.matrix-table{border-collapse:collapse;font-size:13px}
+.matrix-table th{padding:5px 8px;font-weight:500;color:var(--ts);white-space:nowrap;font-size:12px}
+.matrix-table td{width:28px;height:28px;text-align:center;border:1px solid var(--b1);font-size:13px}
+.cg{background:var(--gnb)}.cb_{background:var(--rb)}.cs{background:var(--s)}.cn{background:var(--p)}
+.leg-row{display:flex;gap:20px;margin-bottom:1.25rem;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ts)}
+.leg-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+.fam-group{margin-bottom:1.25rem;padding:1.25rem;border:1px solid var(--b1);border-radius:12px}
+.fam-title{font-size:15px;font-weight:500;margin-bottom:.6rem;color:var(--tp)}
+.fam-crops{display:flex;flex-wrap:wrap;gap:7px}
+.page-title{font-size:20px;font-weight:500;margin-bottom:.3rem;color:var(--tp)}
+.page-sub{font-size:14px;color:var(--ts);margin-bottom:1.5rem;line-height:1.6}
+.fsec{font-size:14px;font-weight:500;color:var(--ts);text-transform:uppercase;letter-spacing:.05em;margin:1.5rem 0 .75rem}
+.rot-step{margin-bottom:12px;padding:16px 18px;border-radius:12px;border:1px solid var(--b1)}
+.rot-step-head{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.rot-badge{font-size:13px;font-weight:500;padding:4px 13px;border-radius:10px;flex-shrink:0}
+.rot-why{font-size:13px;color:var(--ts);line-height:1.6}
+
+/* Toast */
+#statusbar{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid}
+.toast.show{opacity:1}
+.toast-ok{background:var(--gnb);color:var(--gnt);border-color:var(--gn)}
+.toast-err{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.toast-info{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+
+<!-- Edit / Add modal -->
+<div class="modal-overlay hidden" id="edit-modal">
+  <div class="modal" id="edit-inner"></div>
+</div>
+
+<!-- Toast bar -->
+<div id="statusbar"></div>
+
+<!-- ════════════════════════════════════════════════════════
+     MAIN APP — visible immediately on page load, no login needed
+════════════════════════════════════════════════════════ -->
+<div class="app dark" id="app">
+  <div class="topnav">
+    <div class="nav-left" id="nav-tabs">
+      <button class="nbtn on" onclick="gotoPage('plants')">Plants</button>
+      <button class="nbtn" onclick="gotoPage('companions')">Companion chart</button>
+      <button class="nbtn" onclick="gotoPage('rotation')">Crop rotation</button>
+      <button class="nbtn" onclick="gotoPage('nutrition')">Nutrition</button>
+    </div>
+    <div class="nav-right">
+      <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
+        <i class="fa-solid fa-moon" id="dticon"></i>
+      </button>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <input type="text" id="garden-code-input" placeholder="Garden code…"
+          style="width:130px;height:42px;padding:0 12px;font-size:14px;border-radius:8px;border:1px solid var(--b2);background:var(--p);color:var(--tp);outline:none"
+          onkeydown="if(event.key==='Enter')openGarden()"
+          onfocus="this.style.borderColor='var(--gn)'"
+          onblur="this.style.borderColor='var(--b2)'">
+        <button class="ibtn" onclick="openGarden()" title="Open My Garden" style="font-size:14px;width:auto;padding:0 12px;gap:6px;display:flex;align-items:center">
+          <i class="fa-solid fa-seedling"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="nav-divider"></div>
+
+  <div id="page-plants" class="page on">
+    <div id="plist">
+      <div class="topbar">
+        <input type="text" id="search" placeholder="Search plants…" oninput="renderGrid()">
+        <button class="greenbtn" onclick="openAdd()">+ Add crop</button>
+      </div>
+      <div class="cat-row" id="cat-row"></div>
+      <div class="pgrid" id="pgrid">
+        <div style="padding:3rem;text-align:center;color:var(--ts)">
+          <span class="spin"></span> Loading crops from GitHub…
+        </div>
+      </div>
+    </div>
+    <div id="pdetail" style="display:none">
+      <button class="backbtn" onclick="showList()">← all plants</button>
+      <div id="dcontent"></div>
+    </div>
+  </div>
+
+  <div id="page-companions" class="page">
+    <div class="page-title">Companion planting chart</div>
+    <div class="page-sub">Cross-reference any two plants to see if they help (green ✓), hurt (red ✗), or are neutral.</div>
+    <div class="leg-row">
+      <span class="leg-item"><span class="leg-dot" style="background:var(--gnb);border:1px solid var(--gn)"></span>Compatible</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--rb);border:1px solid var(--rbr)"></span>Incompatible</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--s);border:1px solid var(--b1)"></span>Same plant</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--p);border:1px solid var(--b1)"></span>Neutral</span>
+    </div>
+    <div id="comp-matrix"></div>
+    <div class="fsec">Plant families — never plant the same family in the same bed consecutively</div>
+    <div id="fam-groups"></div>
+  </div>
+
+  <div id="page-rotation" class="page">
+    <div class="page-title">Crop rotation guide</div>
+    <div class="page-sub">Rotating crops through beds each year prevents disease and pest buildup, balances soil nutrients, and improves long-term yields.</div>
+    <div id="rot-content"></div>
+  </div>
+
+  <div id="page-nutrition" class="page">
+    <div class="page-title">Nutrition comparison</div>
+    <div class="page-sub">Nutritional values per 100g fresh weight. Herbs and ornamentals shown separately.</div>
+    <div id="nut-content"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ─── Config ───────────────────────────────────────────────
+// Repo and path are hard-coded; only the token is entered on demand.
+const GH_REPO   = 'vyhlent/vyhlent.github.io';
+const GH_PATH   = 'crops/';        // folder path in the repo (trailing slash)
+const GH_BRANCH = 'main';
+const GH_API    = 'https://api.github.com';
+
+    { headers: { Accept: 'application/vnd.github.v3+json' } }
+  );
+  if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+async function ghGetFile(path) {
+  const r = await fetch(
+    `${GH_API}/repos/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
+    { headers: { Accept: 'application/vnd.github.v3+json' } }
+  );
+  if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+
+// ─── Crop file parser ─────────────────────────────────────
+function parseCropFile(src) {
+  const m = src.match(/new\s+Crop\s*\(\s*(\{[\s\S]*\})\s*\)\s*;?\s*$/);
+  if (!m) throw new Error('Could not find Crop({…}) call');
+  try { return Function('"use strict"; return (' + m[1] + ')')(); }
+  catch(e) { throw new Error('Parse error: ' + e.message); }
+}
+
+// ─── Crop file generator ──────────────────────────────────
+function generateCropFile(data) {
+  const ser = (v, d = 0) => {
+    const pad = '  '.repeat(d), inn = '  '.repeat(d + 1);
+    if (v == null) return 'null';
+    if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+    if (typeof v === 'string') return `'${v.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')}'`;
+    if (Array.isArray(v)) {
+      if (!v.length) return '[]';
+      return `[\n${v.map(x => `${inn}${ser(x, d+1)}`).join(',\n')},\n${pad}]`;
+    }
+    const lines = Object.entries(v).map(([k, val]) => `${inn}${k}: ${ser(val, d+1)}`);
+    return `{\n${lines.join(',\n')},\n${pad}}`;
+  };
+  return `import Crop from '../Crop.js';\n\nexport default new Crop(${ser(data)});\n`;
+}
+
+// ─── State ────────────────────────────────────────────────
+let PLANTS       = [];   // [{data, sha, filename, path}]
+let isDark       = false;
+let activeFilter = 'All';
+let currentId    = null;
+let editingPlant = null;
+let isNew        = false;
+let cR = false, rR = false, nR = false;  // chart render flags
+
+// ─── Load all crops (public read — no token needed) ───────
+async function loadAllCrops() {
+  const files   = await ghListFolder();
+  const jsFiles = files.filter(f => f.name.endsWith('.js') && f.type === 'file');
+  if (!jsFiles.length) throw new Error('No .js files found in ' + GH_PATH);
+
+  PLANTS = [];
+  const errs = [];
+  await Promise.all(jsFiles.map(async f => {
+    try {
+      const meta = await ghGetFile(f.path);
+      const src  = decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));
+      const data = parseCropFile(src);
+      // Normalise companions to {name, why} objects
+      const norm = arr => (arr || []).map(x => typeof x === 'string' ? {name:x,why:''} : x);
+      data.companions = { good: norm(data.companions?.good), bad: norm(data.companions?.bad) };
+      PLANTS.push({ data, sha: meta.sha, filename: f.name, path: f.path });
+    } catch(e) { errs.push(`${f.name}: ${e.message}`); }
+  }));
+
+  PLANTS.sort((a,b) => a.data.name?.localeCompare(b.data.name));
+  if (errs.length) console.warn('Crop parse warnings:', errs);
+}
+
+// ─── Dark mode ────────────────────────────────────────────
+function applyDark() {
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('app').classList.toggle('dark', isDark);
+  document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+}
+function toggleDark() {
+  isDark = !isDark; applyDark();
+  try { localStorage.setItem('gp-dark', isDark ? '1' : '0'); } catch(e) {}
+}
+
+// ─── Toast ────────────────────────────────────────────────
+function toast(type, msg, ms = 3500) {
+  const bar = document.getElementById('statusbar');
+  bar.querySelectorAll('.toast').forEach(t => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); });
+  const el = document.createElement('div');
+  el.className = `toast toast-${type}`; el.innerHTML = msg;
+  bar.appendChild(el);
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('show')));
+  setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 350); }, ms);
+}
+
+// ─── Navigation ───────────────────────────────────────────
+function gotoPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.nbtn').forEach(x => x.classList.remove('on'));
+  document.getElementById('page-' + p).classList.add('on');
+  document.querySelector(`#nav-tabs .nbtn[onclick="gotoPage('${p}')"]`).classList.add('on');
+  if (p === 'companions' && !cR) { renderCompanions();    cR = true; }
+  if (p === 'rotation'   && !rR) { renderRotation();      rR = true; }
+  if (p === 'nutrition'  && !nR) { renderNutritionPage(); nR = true; }
+}
+
+function getCats() { return ['All', ...new Set(PLANTS.map(p => p.data.cat))]; }
+
+function renderCatRow() {
+  const el = document.getElementById('cat-row'); if (!el) return;
+  el.innerHTML = getCats().map(c =>
+    `<button class="cbtn${c === activeFilter ? ' on' : ''}" onclick="setFilter('${esc(c)}')">${esc(c)}</button>`
+  ).join('');
+}
+function setFilter(cat) { activeFilter = cat; renderCatRow(); renderGrid(); }
+
+function renderGrid() {
+  const q  = document.getElementById('search')?.value?.toLowerCase() || '';
+  const fl = PLANTS.filter(p =>
+    (activeFilter === 'All' || p.data.cat === activeFilter) &&
+    (!q || p.data.name?.toLowerCase().includes(q) || p.data.cat?.toLowerCase().includes(q))
+  );
+  const g = document.getElementById('pgrid'); if (!g) return;
+  if (!fl.length) { g.innerHTML = '<div class="no-res">No plants found</div>'; return; }
+  g.innerHTML = fl.map(p => `
+    <div class="pcard">
+      <span class="cbadge">${esc(p.data.cat)}</span>
+      <div style="font-size:22px;margin-bottom:6px">${esc(p.data.emoji)}</div>
+      <div class="pcard-name">${esc(p.data.name)}</div>
+      <div class="pcard-tags">
+        <span class="tag ts_">${esc((p.data.planting?.sun||'').split(' ').slice(0,2).join(' '))}</span>
+        <span class="tag tw_">${esc(p.data.water?.in)} in/wk</span>
+      </div>
+      <div class="pcard-actions">
+        <button onclick="showDetail('${esc(p.data.id)}')">View</button>
+        <button onclick="openEdit('${esc(p.data.id)}')">Edit</button>
+        <button class="del-btn" onclick="deletePlant('${esc(p.data.id)}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+// ─── Detail view ──────────────────────────────────────────
+function showDetail(id) {
+  const p = PLANTS.find(x => x.data.id === id); if (!p) return;
+  currentId = id;
+  document.getElementById('plist').style.display   = 'none';
+  document.getElementById('pdetail').style.display = 'block';
+  document.getElementById('dcontent').innerHTML    = buildDetail(p.data);
+  showTab('planting');
+}
+function showList() {
+  renderCatRow(); renderGrid();
+  document.getElementById('plist').style.display   = 'block';
+  document.getElementById('pdetail').style.display = 'none';
+}
+function showTab(tab) {
+  document.querySelectorAll('.stab').forEach(t => t.classList.toggle('on', t.dataset.tab === tab));
+  document.querySelectorAll('.tc').forEach(c  => c.classList.toggle('on', c.id === 'tc-' + tab));
+}
+
+// ─── Detail HTML helpers ──────────────────────────────────
+function phBar(ph) {
+  if (!ph || !ph.includes('–')) return '';
+  const [lo, hi] = ph.split('–').map(Number);
+  const pct = Math.round((((lo+hi)/2 - 4) / 5) * 100);
+  return `<div class="ph-bar-vis"><div class="ph-marker-vis" style="left:${pct}%"></div></div>
+<div class="ph-labels-vis"><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div>
+<div style="font-size:13px;color:var(--tt);margin-top:5px">Ideal: ${esc(ph)}</div>`;
+}
+function wVis(w) {
+  const n=parseFloat(w)||1, f=Math.floor(n), h=(n-f)>=.25;
+  let x='<div style="display:flex;gap:4px;margin:7px 0;flex-wrap:wrap">';
+  for(let i=0;i<f;i++) x+='<div class="wdrop f"></div>';
+  if(h) x+='<div class="wdrop" style="opacity:.45"></div>';
+  return x+'</div>';
+}
+function nBar(v,m,c){return`<div class="nut-bar-track"><div class="nut-bar-fill" style="width:${Math.min(100,Math.round(((v||0)/m)*100))}%;background:${c}"></div></div>`;}
+function buildNut(d) {
+  const n=d.nutrition;
+  if(!n) return '<div class="abox ainfo">No nutrition data yet.</div>';
+  if(!n.calories&&!n.protein&&!n.carbs) return `<div class="abox ainfo">${esc(n.notes||'Non-food crop.')}</div>`;
+  return `<div style="font-size:13px;color:var(--tt);margin-bottom:.6rem">Per 100g fresh weight</div>
+<div class="nut-grid">
+  <div class="nut-card"><div class="nut-val">${n.calories}</div><div class="nut-label">calories</div>${nBar(n.calories,400,'#639922')}</div>
+  <div class="nut-card"><div class="nut-val">${n.protein}g</div><div class="nut-label">protein</div>${nBar(n.protein,10,'#378ADD')}</div>
+  <div class="nut-card"><div class="nut-val">${n.carbs}g</div><div class="nut-label">carbs</div>${nBar(n.carbs,40,'#BA7517')}</div>
+  <div class="nut-card"><div class="nut-val">${n.fat}g</div><div class="nut-label">fat</div>${nBar(n.fat,10,'#D4537E')}</div>
+  <div class="nut-card"><div class="nut-val">${n.fiber}g</div><div class="nut-label">fiber</div>${nBar(n.fiber,15,'#1D9E75')}</div>
+  <div class="nut-card"><div class="nut-val">${n.vitC}mg</div><div class="nut-label">vitamin C</div>${nBar(n.vitC,100,'#EF9F27')}</div>
+</div>${n.notes?`<div class="abox ainfo" style="margin-top:.6rem">${esc(n.notes)}</div>`:''}`;
+}
+function buildSize(d) {
+  const s=d.size;
+  if(!s) return '<div class="abox ainfo">No size data yet.</div>';
+  return `<div class="igrid">
+    <div class="icard"><div class="ilabel">Average weight</div><div class="ival">${esc(s.weight)}</div></div>
+    <div class="icard"><div class="ilabel">Dimensions</div><div class="ival">${esc(s.dimensions)}</div></div>
+  </div>${s.notes?`<div class="abox ainfo">${esc(s.notes)}</div>`:''}`;
+}
+function buildComp(d) {
+  const g=d.companions?.good||[], b=d.companions?.bad||[];
+  const gH=g.map(x=>`<div style="margin-bottom:10px"><span style="font-size:13px;padding:4px 12px;border-radius:10px;display:inline-block;background:var(--gnb);color:var(--gnt)">${esc(x.name)}</span>${x.why?`<div class="cwhy">${esc(x.why)}</div>`:''}</div>`).join('');
+  const bH=b.map(x=>`<div style="margin-bottom:10px"><span style="font-size:13px;padding:4px 12px;border-radius:10px;display:inline-block;background:var(--rb);color:var(--rt)">${esc(x.name)}</span>${x.why?`<div class="cwhy">${esc(x.why)}</div>`:''}</div>`).join('');
+  return `<div class="sh">Plant with</div>${gH||"<div style='font-size:14px;color:var(--tt)'>None recorded</div>"}
+<div class="sh" style="margin-top:1rem">Keep away from</div>${bH||"<div style='font-size:14px;color:var(--tt)'>None recorded</div>"}
+<div class="abox awarn" style="margin-top:1rem"><strong>Distance note:</strong> ${esc(d.companionDist||'')}</div>
+<div class="sh">Beneficial animals</div><div style="font-size:14px;color:var(--ts);line-height:1.6">${esc(d.animals||'')}</div>`;
+}
+function buildDetail(d) {
+  return `<div class="panel">
+<div class="ph">
+  <div class="ph-icon">${esc(d.emoji)}</div>
+  <div>
+    <div class="ph-title">${esc(d.name)}</div>
+    <div class="ph-sub">${esc(d.cat)} · Zone 6 ·
+      <button style="background:none;border:none;color:var(--gn);cursor:pointer;font-size:14px;padding:0" onclick="openEdit('${esc(d.id)}')">Edit</button>
+    </div>
+  </div>
+</div>
+<div class="stabs">
+  <button class="stab on" data-tab="planting" onclick="showTab('planting')">Planting</button>
+  <button class="stab" data-tab="care" onclick="showTab('care')">Care</button>
+  <button class="stab" data-tab="nutrition" onclick="showTab('nutrition')">Nutrition & size</button>
+  <button class="stab" data-tab="companions" onclick="showTab('companions')">Companions</button>
+  <button class="stab" data-tab="problems" onclick="showTab('problems')">Diseases & pests</button>
+  <button class="stab" data-tab="growth" onclick="showTab('growth')">Growth stages</button>
+  <button class="stab" data-tab="rotation" onclick="showTab('rotation')">Rotation</button>
+</div>
+<div id="tc-planting" class="tc on">
+  <div class="igrid">
+    <div class="icard"><div class="ilabel">Zone 6 timing</div><div class="ival">${esc(d.planting?.zone6)}</div></div>
+    <div class="icard"><div class="ilabel">Depth</div><div class="ival">${esc(d.planting?.depth)}</div></div>
+    <div class="icard"><div class="ilabel">Spacing</div><div class="ival">${esc(d.planting?.spacing)}</div></div>
+    <div class="icard"><div class="ilabel">Sunlight</div><div class="ival">${esc(d.planting?.sun)}</div></div>
+  </div>
+  <div class="sh">Soil pH</div>${phBar(d.planting?.ph)}
+  ${d.special?`<div class="sh">Special instructions</div><div class="abox atip">${esc(d.special)}</div>`:''}
+</div>
+<div id="tc-care" class="tc">
+  <div class="sh">Water per week</div>${wVis(d.water?.in)}
+  <div style="font-size:14px;font-weight:500;color:var(--tp)">${esc(d.water?.in)} inches/week</div>
+  <div style="font-size:13px;color:var(--ts);margin-top:4px;margin-bottom:1.25rem">${esc(d.water?.note)}</div>
+  <div class="sh">Fertilizer</div>
+  <div class="igrid">
+    <div class="icard"><div class="ilabel">Type</div><div class="ival">${esc(d.fertilizer?.type)}</div></div>
+    <div class="icard"><div class="ilabel">Amount</div><div class="ival">${esc(d.fertilizer?.amount)}</div></div>
+  </div>
+  <div class="abox atip"><strong>Frequency:</strong> ${esc(d.fertilizer?.freq)}</div>
+</div>
+<div id="tc-nutrition" class="tc">
+  <div class="sh" style="margin-top:0">Nutritional profile</div>${buildNut(d)}
+  <div class="sh">Average size at harvest</div>${buildSize(d)}
+</div>
+<div id="tc-companions" class="tc">${buildComp(d)}</div>
+<div id="tc-problems" class="tc">
+  <div class="sh">Common diseases</div>
+  ${(d.diseases||[]).map(x=>`<div class="ditem"><div class="dname">${esc(x.name)}</div><div class="ddesc">${esc(x.desc)}</div></div>`).join('')}
+  <div class="sh">Pest control</div><div class="abox atip">${esc(d.pests)}</div>
+</div>
+<div id="tc-growth" class="tc">
+  <ul class="stagelist">${(d.stages||[]).map((s,i)=>`<li class="sitem"><div class="sdot">${i+1}</div><div><div class="stitle2">${esc(s.title)}</div><div class="sdesc">${esc(s.desc)}</div></div></li>`).join('')}</ul>
+</div>
+<div id="tc-rotation" class="tc">
+  <div class="rotbox"><div class="rtitle">Plant family</div><div class="rdesc">${esc(d.rotation?.family)}</div></div>
+  <div class="rotbox"><div class="rtitle">Rotation cycle</div><div class="rdesc">${esc(d.rotation?.cycle)}</div></div>
+</div>
+</div>`;
+}
+
+// ─── Delete — requires token ───────────────────────────────
+function deletePlant(id) {
+  const p = PLANTS.find(x => x.data.id === id); if (!p) return;
+  if (!confirm(`Delete "${p.data.name}"? This removes it from the current session.`)) return;
+  PLANTS = PLANTS.filter(x => x.data.id !== id);
+  cR=false; rR=false; nR=false;
+  renderCatRow(); renderGrid();
+  if (currentId === id) { currentId = null; showList(); }
+  toast('ok', `Deleted ${p.data.name} (session only)`);
+}
+
+// ─── Edit / Add modal ─────────────────────────────────────
+function openEdit(id) {
+  const p = PLANTS.find(x => x.data.id === id); if (!p) return;
+  editingPlant = { ...p, data: JSON.parse(JSON.stringify(p.data)) };
+  isNew = false; renderEditModal();
+}
+function openAdd() {
+  editingPlant = {
+    data:{id:'',name:'',cat:'',emoji:'🌱',
+      planting:{zone6:'',depth:'',spacing:'',ph:'6.0–7.0',sun:'Full sun'},
+      water:{in:'1',note:''},fertilizer:{type:'',amount:'',freq:''},
+      companions:{good:[],bad:[]},companionDist:'',animals:'',
+      diseases:[{name:'',desc:''}],pests:'',
+      rotation:{family:'',cycle:''},stages:[{label:'',title:'',desc:''}],special:'',
+      nutrition:{calories:0,protein:0,carbs:0,fat:0,fiber:0,vitC:0,notes:''},
+      size:{weight:'',dimensions:'',notes:''}},
+    sha:null,filename:null,path:null
+  };
+  isNew=true; renderEditModal();
+}
+
+function gGoodStr() { return (editingPlant.data.companions?.good||[]).map(g=>g.name).join(', '); }
+function gBadStr()  { return (editingPlant.data.companions?.bad||[]).map(b=>b.name).join(', '); }
+function gGoodWhy() { return (editingPlant.data.companions?.good||[]).map(g=>g.why||'').join('\n'); }
+function gBadWhy()  { return (editingPlant.data.companions?.bad||[]).map(b=>b.why||'').join('\n'); }
+
+function renderEditModal() {
+  const d=editingPlant.data, n=d.nutrition||{}, s=d.size||{};
+  document.getElementById('edit-modal').classList.remove('hidden');
+  document.getElementById('edit-inner').innerHTML=`
+<h3>${isNew?'Add new crop':'Edit: '+esc(d.name)}</h3>
+<div class="frow"><label>Crop name</label><input value="${esc(d.name)}" oninput="editingPlant.data.name=this.value"></div>
+<div class="fgrid">
+  <div class="frow"><label>Category</label><input value="${esc(d.cat)}" oninput="editingPlant.data.cat=this.value"></div>
+  <div class="frow"><label>Emoji</label><input value="${esc(d.emoji)}" oninput="editingPlant.data.emoji=this.value"></div>
+</div>
+<div class="frow">
+  <label>ID / filename ${isNew?'(lowercase, underscores only)':'(cannot change)'}</label>
+  <input value="${esc(d.id)}" ${isNew?'':'readonly style="opacity:.5"'}
+    placeholder="e.g. cherry_tomatoes"
+    oninput="editingPlant.data.id=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'_')">
+</div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Planting</div>
+<div class="frow"><label>Zone 6 timing</label><textarea oninput="editingPlant.data.planting.zone6=this.value">${esc(d.planting?.zone6)}</textarea></div>
+<div class="fgrid">
+  <div class="frow"><label>Depth</label><input value="${esc(d.planting?.depth)}" oninput="editingPlant.data.planting.depth=this.value"></div>
+  <div class="frow"><label>Spacing</label><input value="${esc(d.planting?.spacing)}" oninput="editingPlant.data.planting.spacing=this.value"></div>
+  <div class="frow"><label>Soil pH</label><input value="${esc(d.planting?.ph)}" oninput="editingPlant.data.planting.ph=this.value"></div>
+  <div class="frow"><label>Sunlight</label><input value="${esc(d.planting?.sun)}" oninput="editingPlant.data.planting.sun=this.value"></div>
+</div>
+<div class="frow"><label>Special instructions</label><textarea oninput="editingPlant.data.special=this.value">${esc(d.special||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Nutrition (per 100g fresh weight)</div>
+<div class="fgrid3">
+  <div class="frow"><label>Calories</label><input type="number" value="${n.calories||''}" oninput="editingPlant.data.nutrition.calories=+this.value||0"></div>
+  <div class="frow"><label>Protein (g)</label><input type="number" step=".1" value="${n.protein||''}" oninput="editingPlant.data.nutrition.protein=+this.value||0"></div>
+  <div class="frow"><label>Carbs (g)</label><input type="number" step=".1" value="${n.carbs||''}" oninput="editingPlant.data.nutrition.carbs=+this.value||0"></div>
+  <div class="frow"><label>Fat (g)</label><input type="number" step=".1" value="${n.fat||''}" oninput="editingPlant.data.nutrition.fat=+this.value||0"></div>
+  <div class="frow"><label>Fiber (g)</label><input type="number" step=".1" value="${n.fiber||''}" oninput="editingPlant.data.nutrition.fiber=+this.value||0"></div>
+  <div class="frow"><label>Vitamin C (mg)</label><input type="number" step=".1" value="${n.vitC||''}" oninput="editingPlant.data.nutrition.vitC=+this.value||0"></div>
+</div>
+<div class="frow"><label>Nutrition notes</label><textarea oninput="editingPlant.data.nutrition.notes=this.value">${esc(n.notes||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Size at harvest</div>
+<div class="fgrid">
+  <div class="frow"><label>Average weight</label><input value="${esc(s.weight||'')}" oninput="editingPlant.data.size.weight=this.value"></div>
+  <div class="frow"><label>Dimensions</label><input value="${esc(s.dimensions||'')}" oninput="editingPlant.data.size.dimensions=this.value"></div>
+</div>
+<div class="frow"><label>Size notes</label><textarea oninput="editingPlant.data.size.notes=this.value">${esc(s.notes||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Water & fertilizer</div>
+<div class="fgrid">
+  <div class="frow"><label>Water (in/week)</label><input value="${esc(d.water?.in||'')}" oninput="editingPlant.data.water.in=this.value"></div>
+  <div class="frow"><label>Fertilizer type</label><input value="${esc(d.fertilizer?.type||'')}" oninput="editingPlant.data.fertilizer.type=this.value"></div>
+  <div class="frow"><label>Fertilizer amount</label><input value="${esc(d.fertilizer?.amount||'')}" oninput="editingPlant.data.fertilizer.amount=this.value"></div>
+</div>
+<div class="frow"><label>Water notes</label><textarea oninput="editingPlant.data.water.note=this.value">${esc(d.water?.note||'')}</textarea></div>
+<div class="frow"><label>Fertilizer frequency</label><textarea oninput="editingPlant.data.fertilizer.freq=this.value">${esc(d.fertilizer?.freq||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Companions</div>
+<div class="frow"><label>Good companions (comma-separated names)</label><input id="fgn" value="${esc(gGoodStr())}"></div>
+<div class="frow"><label>Why each is beneficial (one per line, same order)</label><textarea id="fgw" rows="3">${esc(gGoodWhy())}</textarea></div>
+<div class="frow"><label>Bad companions (comma-separated names)</label><input id="fbn" value="${esc(gBadStr())}"></div>
+<div class="frow"><label>Why each is harmful (one per line, same order)</label><textarea id="fbw" rows="2">${esc(gBadWhy())}</textarea></div>
+<div class="frow"><label>Distance note</label><textarea oninput="editingPlant.data.companionDist=this.value">${esc(d.companionDist||'')}</textarea></div>
+<div class="frow"><label>Beneficial animals</label><textarea oninput="editingPlant.data.animals=this.value">${esc(d.animals||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Diseases</div>
+<div id="dlist">${(d.diseases||[]).map(dRow).join('')}</div>
+<button class="add-row-btn" onclick="addD()">+ add disease</button>
+<hr class="sdiv">
+<div class="frow"><label>Pest control</label><textarea oninput="editingPlant.data.pests=this.value">${esc(d.pests||'')}</textarea></div>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Growth stages</div>
+<div id="slist">${(d.stages||[]).map(stageRow).join('')}</div>
+<button class="add-row-btn" onclick="addS()">+ add stage</button>
+<hr class="sdiv"><div style="font-size:14px;font-weight:500;color:var(--ts);margin-bottom:.85rem">Crop rotation</div>
+<div class="fgrid">
+  <div class="frow"><label>Plant family</label><input value="${esc(d.rotation?.family||'')}" oninput="editingPlant.data.rotation.family=this.value"></div>
+  <div class="frow"><label>Rotation cycle</label><input value="${esc(d.rotation?.cycle||'')}" oninput="editingPlant.data.rotation.cycle=this.value"></div>
+</div>
+<div class="factions">
+  <button onclick="cancelEdit()">Cancel</button>
+  <button class="savebtn" id="save-btn" onclick="saveEdit()">${isNew?'Add crop':'Save changes'}</button>
+</div>`;
+}
+
+function dRow(d,i){return`<div class="stage-edit-row"><input style="flex:1" placeholder="Disease name" value="${esc(d.name)}" oninput="editingPlant.data.diseases[${i}].name=this.value"><textarea style="flex:2;min-height:44px;resize:vertical;font-size:13px" oninput="editingPlant.data.diseases[${i}].desc=this.value">${esc(d.desc)}</textarea><button class="rm-btn" onclick="rmD(${i})">✕</button></div>`;}
+function stageRow(s,i){return`<div class="stage-edit-row"><input style="width:65px;flex:none" placeholder="Label" value="${esc(s.label)}" oninput="editingPlant.data.stages[${i}].label=this.value"><input style="flex:1" placeholder="Stage title" value="${esc(s.title)}" oninput="editingPlant.data.stages[${i}].title=this.value"><textarea style="flex:2;min-height:44px;resize:vertical;font-size:13px" oninput="editingPlant.data.stages[${i}].desc=this.value">${esc(s.desc)}</textarea><button class="rm-btn" onclick="rmS(${i})">✕</button></div>`;}
+function addD(){editingPlant.data.diseases.push({name:'',desc:''});document.getElementById('dlist').innerHTML=editingPlant.data.diseases.map(dRow).join('');}
+function rmD(i){editingPlant.data.diseases.splice(i,1);document.getElementById('dlist').innerHTML=editingPlant.data.diseases.map(dRow).join('');}
+function addS(){editingPlant.data.stages.push({label:'',title:'',desc:''});document.getElementById('slist').innerHTML=editingPlant.data.stages.map(stageRow).join('');}
+function rmS(i){editingPlant.data.stages.splice(i,1);document.getElementById('slist').innerHTML=editingPlant.data.stages.map(stageRow).join('');}
+
+function cancelEdit() {
+  document.getElementById('edit-modal').classList.add('hidden');
+  editingPlant = null;
+}
+
+// saveEdit: validate form then save
+function saveEdit() {
+  const d = editingPlant.data;
+  if (!d.name.trim()) { alert('Please enter a crop name.'); return; }
+  if (!d.id.trim())   { alert('Please enter an ID / filename slug.'); return; }
+
+  // Collect companion data from the live text inputs
+  const gn = document.getElementById('fgn')?.value || '';
+  const gw = (document.getElementById('fgw')?.value || '').split('\n');
+  const bn = document.getElementById('fbn')?.value || '';
+  const bw = (document.getElementById('fbw')?.value || '').split('\n');
+  d.companions = {
+    good: gn.split(',').map((nm,i)=>({name:nm.trim(),why:gw[i]?.trim()||''})).filter(x=>x.name),
+    bad:  bn.split(',').map((nm,i)=>({name:nm.trim(),why:bw[i]?.trim()||''})).filter(x=>x.name),
+  };
+
+}
+
+async function _doSave() {
+  const d   = editingPlant.data;
+  const btn = document.getElementById('save-btn');
+  if (btn) { btn.disabled=true; btn.textContent='Saving...'; }
+  try {
+    if (isNew) {
+      editingPlant.filename = d.id + '.js';
+      editingPlant.path     = GH_PATH + editingPlant.filename;
+      editingPlant.sha      = null;
+    }
+
+
+
+    if (isNew) {
+      PLANTS.push(JSON.parse(JSON.stringify(editingPlant)));
+      PLANTS.sort((a,b)=>a.data.name.localeCompare(b.data.name));
+    } else {
+      const idx = PLANTS.findIndex(x => x.data.id === d.id);
+      if (idx >= 0) PLANTS[idx] = JSON.parse(JSON.stringify(editingPlant));
+    }
+
+    cR=false; rR=false; nR=false;
+    document.getElementById('edit-modal').classList.add('hidden');
+    const savedId=d.id; editingPlant=null;
+    renderCatRow(); renderGrid();
+    if (currentId===savedId) showDetail(savedId);
+    toast('ok', `Saved ${d.name}`);
+  } catch(e) {
+    if (btn) { btn.disabled=false; btn.textContent=isNew?'Add crop':'Save changes'; }
+    toast('err','Save failed: '+e.message, 8000);
+  }
+}
+
+// ─── Companion chart ──────────────────────────────────────
+function renderCompanions() {
+  const n=PLANTS.length;
+  const g=Array.from({length:n},()=>Array(n).fill(0));
+  const b=Array.from({length:n},()=>Array(n).fill(0));
+  PLANTS.forEach((p,i)=>{
+    (p.data.companions?.good||[]).forEach(x=>{const j=PLANTS.findIndex(q=>q.data.name===x.name||x.name?.toLowerCase().includes(q.data.name?.toLowerCase()));if(j>=0)g[i][j]=1;});
+    (p.data.companions?.bad||[]).forEach(x=>{const j=PLANTS.findIndex(q=>q.data.name===x.name||x.name?.toLowerCase().includes(q.data.name?.toLowerCase()));if(j>=0)b[i][j]=1;});
+  });
+  document.getElementById('comp-matrix').innerHTML=`<div class="matrix-wrap"><table class="matrix-table">
+<tr><th></th>${PLANTS.map(p=>`<th style="writing-mode:vertical-rl;height:90px;vertical-align:bottom;padding-bottom:5px" title="${esc(p.data.name)}">${esc(p.data.emoji)}</th>`).join('')}</tr>
+${PLANTS.map((p,i)=>`<tr><th style="text-align:right;padding-right:8px;white-space:nowrap;font-size:12px;color:var(--ts)">${esc(p.data.emoji)} ${esc(p.data.name.split(' ')[0])}</th>${PLANTS.map((_,j)=>{
+  if(i===j)return`<td class="cs">·</td>`;
+  if(g[i][j]||g[j][i])return`<td class="cg" title="${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
+  if(b[i][j]||b[j][i])return`<td class="cb_" title="${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✗</td>`;
+  return`<td class="cn"></td>`;
+}).join('')}</tr>`).join('')}
+</table></div>`;
+
+  const FC=['#EAF3DE','#E6F1FB','#FAEEDA','#FCEBEB','#E1F5EE','#EEEDFE','#FBEAF0','#F1EFE8'];
+  const FT=['#27500A','#0C447C','#633806','#791F1F','#085041','#3C3489','#72243E','#444441'];
+  const fams={};
+  PLANTS.forEach(p=>{const f=(p.data.rotation?.family||'Unknown').split('(')[0].trim();if(!fams[f])fams[f]=[];fams[f].push(p);});
+  document.getElementById('fam-groups').innerHTML=Object.entries(fams).map(([fam,crops],fi)=>`
+    <div class="fam-group">
+      <div class="fam-title">${esc(fam)}</div>
+      <div class="fam-crops">${crops.map(p=>`<span style="background:${FC[fi%FC.length]};color:${FT[fi%FT.length]};padding:4px 13px;border-radius:10px;font-size:13px">${esc(p.data.emoji)} ${esc(p.data.name)}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ─── Rotation ─────────────────────────────────────────────
+function renderRotation() {
+  const steps=[
+    {year:'Year 1',bg:'#EAF3DE',ft:'#27500A',crops:'Legumes',why:'Legumes fix atmospheric nitrogen into soil through root nodule bacteria, building fertility for the next crop with zero synthetic fertilizer required.',detail:'After harvest, chop and till plant residue into soil to release the fixed nitrogen directly.'},
+    {year:'Year 2',bg:'#E6F1FB',ft:'#0C447C',crops:'Brassicas & leafy greens',why:'These heavy nitrogen consumers use what the legumes built up. Their roots release glucosinolates that suppress soil-borne pathogens.',detail:'Add compost before planting to supplement nitrogen.'},
+    {year:'Year 3',bg:'#FAEEDA',ft:'#633806',crops:'Fruiting crops',why:'Heavy-feeding fruiting crops benefit from the residual organic matter. Rotating Solanaceae and Cucurbitaceae here breaks their specific disease cycles.',detail:'Most fertilizer-intensive year. Side-dress nitrogen and potassium at flowering.'},
+    {year:'Year 4',bg:'#FCEBEB',ft:'#791F1F',crops:'Root crops & alliums',why:"Root crops and alliums break the pest and pathogen cycles left by fruiting crops. Alliums' sulfur compounds actively cleanse the soil.",detail:'Low nitrogen — excess causes forked carrots and soft tubers. After year 4, cycle back to year 1.'},
+    {year:'Perennials — fixed beds',bg:'#E1F5EE',ft:'#085041',crops:'Asparagus, berries, herbs',why:'Perennial crops cannot be rotated. Site them at garden edges or dedicated beds so they do not interfere with annual rotation cycles.',detail:'Plant along a north or east edge so they do not shade annual beds.'},
+  ];
+  document.getElementById('rot-content').innerHTML=steps.map((r,i)=>`<div class="rot-step">
+<div class="rot-step-head">
+  <span class="rot-badge" style="background:${r.bg};color:${r.ft}">${esc(r.year)}</span>
+  <span style="font-size:15px;font-weight:500;color:var(--tp)">${esc(r.crops)}</span>
+  ${i<4?`<span style="color:var(--tt);margin-left:auto;font-size:13px">next: ${esc(steps[Math.min(i+1,3)].crops)}</span>`:''}
+</div>
+<div class="rot-why">${esc(r.why)}</div>
+<div style="font-size:13px;color:var(--tt);margin-top:8px;line-height:1.55">${esc(r.detail)}</div>
+</div>`).join('');
+}
+
+// ─── Nutrition charts ─────────────────────────────────────
+function renderNutritionPage() {
+  const food=PLANTS.filter(p=>p.data.nutrition?.calories>0);
+  const herb=PLANTS.filter(p=>!p.data.nutrition?.calories&&p.data.nutrition?.notes);
+  const srt=(arr,k)=>[...arr].sort((a,b)=>(b.data.nutrition[k]||0)-(a.data.nutrition[k]||0));
+  const h=Math.max(300,food.length*36+90);
+  const mkC=id=>`<div style="position:relative;width:100%;height:${h}px;margin-bottom:2rem"><canvas id="${id}"></canvas></div>`;
+  document.getElementById('nut-content').innerHTML=`
+<div style="font-size:16px;font-weight:500;margin-bottom:.3rem;color:var(--tp)">Food crops — per 100g fresh weight</div>
+<div style="font-size:14px;color:var(--ts);margin-bottom:1.5rem">Sorted highest to lowest for each nutrient.</div>
+${mkC('cal-c')}${mkC('vitc-c')}${mkC('fib-c')}${mkC('pro-c')}${mkC('carb-c')}
+<div style="font-size:16px;font-weight:500;margin:2rem 0 .4rem;color:var(--tp)">Herbs & ornamentals</div>
+<div style="font-size:14px;color:var(--ts);margin-bottom:1.25rem">Used in small culinary amounts — not directly comparable to food crops by weight.</div>
+${herb.map(p=>`<div style="padding:12px 16px;border:1px solid var(--b1);border-radius:8px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start">
+  <span style="font-size:22px;flex-shrink:0">${esc(p.data.emoji)}</span>
+  <div><div style="font-size:14px;font-weight:500;margin-bottom:4px;color:var(--tp)">${esc(p.data.name)}</div>
+  <div style="font-size:13px;color:var(--ts);line-height:1.55">${esc(p.data.nutrition?.notes)}</div></div>
+</div>`).join('')}`;
+
+  setTimeout(()=>{
+    const tc=isDark?'#B4B2A9':'#5F5E5A', gc=isDark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
+    const mkChart=(id,k,u,bg,br,lbl)=>{
+      const s=srt(food,k); const el=document.getElementById(id); if(!el)return;
+      new Chart(el,{type:'bar',data:{labels:s.map(p=>p.data.name),datasets:[{data:s.map(p=>p.data.nutrition[k]||0),backgroundColor:bg,borderColor:br,borderWidth:.5}]},
+        options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:v=>`${v.formattedValue}${u}`}}},
+          scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:13}},title:{display:true,text:lbl,color:tc,font:{size:13}}},y:{grid:{display:false},ticks:{color:tc,font:{size:13}}}}}});
+    };
+    mkChart('cal-c','calories','kcal','#97C459','#3B6D11','calories per 100g');
+    mkChart('vitc-c','vitC','mg','#FAC775','#BA7517','vitamin C (mg per 100g)');
+    mkChart('fib-c','fiber','g','#9FE1CB','#1D9E75','fiber (g per 100g)');
+    mkChart('pro-c','protein','g','#85B7EB','#185FA5','protein (g per 100g)');
+    mkChart('carb-c','carbs','g','#EF9F27','#BA7517','carbohydrates (g per 100g)');
+  },100);
+}
+
+// ─── Utilities ────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Close modals on overlay click
+document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))cancelEdit();});
+
+// ─── Garden code → open My Garden page ───────────────────
+function openGarden() {
+  const code = document.getElementById('garden-code-input').value.trim();
+  if (!code) {
+    toast('err', '✗ Enter a garden code first');
+    return;
+  }
+  // Sanitise: alphanumeric + hyphens only
+  const safe = code.replace(/[^a-zA-Z0-9\-_]/g, '').toLowerCase();
+  if (!safe) { toast('err', '✗ Invalid code — use letters, numbers, or hyphens'); return; }
+  window.location.href = `garden.html?code=${encodeURIComponent(safe)}`;
+}
+
+// ─── Boot — loads crops immediately, no login needed ──────
+(async () => {
+  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; applyDark(); } } catch(e) {}
+  try {
+    await loadAllCrops();
+    renderCatRow();
+    renderGrid();
+    toast('ok', `✓ Loaded ${PLANTS.length} crops`);
+  } catch(e) {
+    document.getElementById('pgrid').innerHTML=
+      `<div class="no-res" style="color:var(--rt)">⚠ Could not load crops: ${esc(e.message)}</div>`;
+    toast('err','✗ '+e.message, 8000);
+  }
+})();
+</script>
+</body>
+</html>
