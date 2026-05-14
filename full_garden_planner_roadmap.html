@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary);padding:0 0 2rem}
+.phase{border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg,12px);margin-bottom:1rem;overflow:hidden}
+.phase-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--color-background-secondary)}
+.phase-header:hover{background:var(--color-background-tertiary)}
+.badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.phase-title{font-size:15px;font-weight:500;flex:1}
+.phase-meta{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap}
+.chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s;margin-left:4px}
+.phase.open .chevron{transform:rotate(180deg)}
+.phase-body{display:none;padding:16px 18px;border-top:1px solid var(--color-border-tertiary)}
+.phase.open .phase-body{display:block}
+.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-tertiary);margin:14px 0 8px}
+.section-label:first-child{margin-top:0}
+.tasks{display:flex;flex-direction:column;gap:6px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:8px;background:var(--color-background-primary);border:1px solid var(--color-border-tertiary);font-size:13px;line-height:1.5}
+.task-icon{flex-shrink:0;margin-top:1px;color:var(--color-text-tertiary)}
+.task-text{color:var(--color-text-primary)}
+.task-sub{color:var(--color-text-secondary);font-size:12px;margin-top:2px}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;font-weight:500}
+.tag-new{background:#EAF3DE;color:#27500A}.tag-db{background:#E6F1FB;color:#0C447C}
+.tag-auth{background:#FAEEDA;color:#633806}.tag-ui{background:#EEEDFE;color:#3C3489}
+.tag-sec{background:#FCEBEB;color:#791F1F}.tag-data{background:#E1F5EE;color:#085041}
+@media(prefers-color-scheme:dark){
+.tag-new{background:#1a2e08;color:#c0dd97}.tag-db{background:#06192e;color:#85B7EB}
+.tag-auth{background:#2a1d06;color:#FAC775}.tag-ui{background:#1e1c3a;color:#AFA9EC}
+.tag-sec{background:#250909;color:#F09595}.tag-data{background:#04342C;color:#9FE1CB}
+}
+.complexity{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);margin-top:10px;padding:5px 10px;border-radius:6px;background:var(--color-background-tertiary)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dep{font-size:12px;color:var(--color-text-tertiary);margin-top:8px;padding:7px 10px;border-left:3px solid var(--color-border-secondary);background:var(--color-background-secondary);border-radius:0 6px 6px 0}
+.phases-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary)}
+.leg .dot{width:10px;height:10px}
+</style>
+</head>
+<body>
+
+<div class="phases-legend">
+  <span class="leg"><span class="dot" style="background:#639922"></span>New feature</span>
+  <span class="leg"><span class="dot" style="background:#185FA5"></span>Database / backend</span>
+  <span class="leg"><span class="dot" style="background:#BA7517"></span>Auth / security</span>
+  <span class="leg"><span class="dot" style="background:#534AB7"></span>UI / frontend</span>
+  <span class="leg"><span class="dot" style="background:#A32D2D"></span>Security rules</span>
+  <span class="leg"><span class="dot" style="background:#0F6E56"></span>Data / schema</span>
+</div>
+
+<div id="phases"></div>
+
+<script>
+const phases = [
+  {
+    id:'0', title:'Schema design — do this first', complexity:1,
+    color:'#0F6E56', bg:'#E1F5EE', darkBg:'#04342C', darkColor:'#9FE1CB',
+    meta:'One-time · No code yet',
+    sections:[
+      {label:'Firestore crops/{cropId} document fields',tasks:[
+        {icon:'ti-table',text:'Core fields from Crop.js',sub:'id, name, cat, emoji, planting, water, fertilizer, companions, diseases, pests, rotation, stages, nutrition, size',tags:['data']},
+        {icon:'ti-list',text:'New: type field',sub:'vegetable · fruit · tree · shrub · vine · herb · ornamental · cover crop · bulb · aquatic',tags:['data','new']},
+        {icon:'ti-plant-2',text:'New: variety field',sub:'Array of {name, description, daysToMaturity, flavorProfile, sizeNotes, zones} — one entry per named cultivar',tags:['data','new']},
+        {icon:'ti-ruler-2',text:'New: perennial / tree fields',sub:'matureHeight, matureSpread, yearsToFruit, lifespan — shown only when type is tree, shrub, or vine',tags:['data','new']},
+        {icon:'ti-heart-rate-monitor',text:'New: expanded nutrition fields',sub:'micronutrients object: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — plus dailyValue lookup table',tags:['data','new']},
+        {icon:'ti-map-pin',text:'New: zones object',sub:'zones.3 through zones.9 — each a timing string matching the current planting.zone6 format',tags:['data','new']},
+      ]},
+      {label:'Firestore security rules (set before any write)',tasks:[
+        {icon:'ti-eye',text:'crops collection: public read, no auth required',tags:['sec']},
+        {icon:'ti-shield-lock',text:'crops collection: write only if request.auth.token.admin === true',tags:['sec']},
+        {icon:'ti-user-check',text:'gardens/{uid}/{gardenId}: read/write only if request.auth.uid === uid',tags:['sec']},
+      ]},
+    ]
+  },
+  {
+    id:'A', title:'Migration — GitHub .js files → Firestore', complexity:2,
+    color:'#185FA5', bg:'#E6F1FB', darkBg:'#06192e', darkColor:'#85B7EB',
+    meta:'One-time script · Run locally',
+    dep:'Requires phase 0 schema to be finalised first',
+    sections:[
+      {label:'Migration script (Node.js, run once)',tasks:[
+        {icon:'ti-brand-github',text:'Fetch all /crops/*.js from GitHub API',sub:'Reuse parseCropFile() already in index.html — copy into the script',tags:['db']},
+        {icon:'ti-transfer',text:'Transform parsed data to new schema',sub:'Add type field (default: vegetable), add empty variety array, add empty zones object',tags:['db']},
+        {icon:'ti-database-import',text:'writeBatch() to Firestore crops collection',sub:'--dry-run flag: log only, no writes · skip-existing flag · error log per file',tags:['db']},
+        {icon:'ti-key',text:'Use Firebase Admin SDK service account key — never ship or commit the key',tags:['sec']},
+      ]},
+      {label:'After migration',tasks:[
+        {icon:'ti-trash',text:'Remove GitHub-only functions from index.html',sub:'Delete ghListFolder(), ghGetFile(), parseCropFile(), generateCropFile()',tags:['ui']},
+      ]},
+    ]
+  },
+  {
+    id:'B', title:'Swap data source — Firestore instead of GitHub', complexity:1,
+    color:'#185FA5', bg:'#E6F1FB', darkBg:'#06192e', darkColor:'#85B7EB',
+    meta:'Both index.html + garden.html',
+    dep:'Requires phase A migration to be complete',
+    sections:[
+      {label:'index.html',tasks:[
+        {icon:'ti-refresh',text:'Replace loadAllCrops() GitHub fetch with Firestore query',sub:'getDocs(collection(db, "crops")) — no rate limits, no token, Firestore offline cache included',tags:['db']},
+        {icon:'ti-filter',text:'Firestore compound queries for filter bar',sub:'Query by type and/or cat server-side instead of filtering the full client array',tags:['db','ui']},
+      ]},
+      {label:'garden.html',tasks:[
+        {icon:'ti-refresh',text:'Replace loadCrops() GitHub fetch with the same Firestore query',sub:'Both files use identical read path — consider extracting to a shared crops.js module',tags:['db']},
+      ]},
+    ]
+  },
+  {
+    id:'1', title:'Expanded nutrition tab', complexity:1,
+    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
+    meta:'index.html only · No auth needed',
+    dep:'Can be done in parallel with phases A–B after schema (phase 0) is done',
+    sections:[
+      {label:'Crop.js + crop data',tasks:[
+        {icon:'ti-dna',text:'Add micronutrients to Crop constructor',sub:'iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — all with 0 defaults',tags:['data']},
+        {icon:'ti-percentage',text:'Add dailyValue reference object',sub:'Static lookup: {iron:18, calcium:1000, potassium:4700, …} in mg/day for adult reference',tags:['data']},
+        {icon:'ti-pencil',text:'Backfill existing crop files with real micronutrient data',tags:['data']},
+      ]},
+      {label:'Nutrition tab UI',tasks:[
+        {icon:'ti-selector',text:'Dropdown: view macros / view micros / view all',tags:['ui']},
+        {icon:'ti-activity',text:'% daily value badge next to every nutrient bar',tags:['ui']},
+        {icon:'ti-arrows-sort',text:'Sort column by any nutrient on the Nutrition page',tags:['ui']},
+      ]},
+    ]
+  },
+  {
+    id:'2', title:'Fertilizer tab + USDA zone switcher', complexity:2,
+    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
+    meta:'index.html · localStorage zone pref',
+    sections:[
+      {label:'Fertilizer reference tab (new nav item, left of Nutrition)',tasks:[
+        {icon:'ti-flask',text:'Static fertilizer types reference page',sub:'Organic vs synthetic, slow-release vs liquid, NPK ratio explainer, application timing',tags:['ui','new']},
+        {icon:'ti-leaf',text:'Per-crop fertilizer card already in detail view — expand with richer data',tags:['ui']},
+      ]},
+      {label:'USDA zone switcher',tasks:[
+        {icon:'ti-map',text:'Add zone dropdown to nav (zones 3–9)',sub:'Save selection to localStorage as gp-zone · default zone 6',tags:['ui','new']},
+        {icon:'ti-calendar',text:'Planting timing card reads active zone from zones.{n} field',sub:'Falls back to planting.zone6 if zones object is missing for that crop',tags:['ui']},
+        {icon:'ti-pencil',text:'Backfill crop files with timing strings for zones 3–5 and 7–9',tags:['data']},
+      ]},
+    ]
+  },
+  {
+    id:'3', title:'Authentication — email + password', complexity:3,
+    color:'#BA7517', bg:'#FAEEDA', darkBg:'#2a1d06', darkColor:'#FAC775',
+    meta:'Firebase Auth · Both pages',
+    dep:'Required before phases 4, 5, and 6 — do not skip',
+    sections:[
+      {label:'Firebase Auth setup',tasks:[
+        {icon:'ti-mail',text:'Email + password sign-up / sign-in',sub:'Optional display name at registration · forgot-password via email',tags:['auth','new']},
+        {icon:'ti-refresh',text:'Persist session with onAuthStateChanged',sub:'Show login/logout button in nav · gate My Garden behind auth',tags:['auth']},
+      ]},
+      {label:'Firestore data model migration (do at same time)',tasks:[
+        {icon:'ti-folder',text:'Move garden documents to gardens/{uid}/{gardenId}',sub:'Replaces the current public code-based path — migrate existing saved gardens once',tags:['db']},
+        {icon:'ti-shield-lock',text:'Update Firestore security rules',sub:'gardens/{uid}/{gardenId}: only uid === request.auth.uid can read or write',tags:['sec']},
+      ]},
+      {label:'Admin custom claim',tasks:[
+        {icon:'ti-crown',text:'Set admin: true custom claim on your account via Firebase Admin SDK script',sub:'Crops write rule checks request.auth.token.admin — ordinary logged-in users cannot write crops',tags:['sec','auth']},
+      ]},
+    ]
+  },
+  {
+    id:'4', title:'My Garden v2 — multiple plots + crop tracker', complexity:2,
+    color:'#639922', bg:'#EAF3DE', darkBg:'#1a2e08', darkColor:'#c0dd97',
+    meta:'garden.html · Requires phase 3',
+    dep:'Requires phase 3 auth to be complete',
+    sections:[
+      {label:'Multiple garden plots',tasks:[
+        {icon:'ti-plus',text:'Create / rename / delete named garden plots',sub:'Each plot: {id, name, cols, rows, cells} stored at gardens/{uid}/{gardenId}',tags:['new','db']},
+        {icon:'ti-layout-sidebar',text:'Sidebar switcher between user\'s plots',tags:['ui']},
+      ]},
+      {label:'Crop tracker (separate from grid)',tasks:[
+        {icon:'ti-bookmark',text:'Watchlist: crops the user is actively growing',sub:'Add/remove from crop detail view · stored per plot or per user',tags:['new','db']},
+        {icon:'ti-calendar',text:'Planting date and notes per tracked crop',tags:['ui','new']},
+        {icon:'ti-clipboard-list',text:'Harvest log: weight, date, quality rating',tags:['ui','new']},
+      ]},
+    ]
+  },
+  {
+    id:'5', title:'Admin UI — add / edit / delete crops in browser', complexity:2,
+    color:'#BA7517', bg:'#FAEEDA', darkBg:'#2a1d06', darkColor:'#FAC775',
+    meta:'index.html · Admin-only behind auth',
+    dep:'Requires phase 3 auth (admin custom claim)',
+    sections:[
+      {label:'Wire existing edit modal to Firestore',tasks:[
+        {icon:'ti-device-floppy',text:'saveEdit() calls setDoc(doc(db,"crops",id), data)',sub:'_doSave() currently does nothing — this is the core fix',tags:['db','ui']},
+        {icon:'ti-trash',text:'deletePlant() calls deleteDoc() for permanent removal',tags:['db']},
+        {icon:'ti-shield',text:'Show Add / Edit / Delete buttons only if user has admin claim',sub:'Check (await getIdTokenResult(user)).claims.admin before rendering',tags:['sec','auth']},
+      ]},
+      {label:'Access rule: only logged-in admin can add/edit/delete',tasks:[
+        {icon:'ti-lock',text:'Add/Edit/Delete buttons hidden for non-admin users',sub:'Non-admins can only view — no crop editing from the main plants page',tags:['sec','auth']},
+        {icon:'ti-alert-triangle',text:'Firestore rule enforces this server-side regardless of UI state',tags:['sec']},
+      ]},
+      {label:'Edit modal additions for new plant types',tasks:[
+        {icon:'ti-selector',text:'Type dropdown: vegetable / fruit / tree / shrub / vine / herb / ornamental / cover crop / bulb / aquatic',tags:['ui']},
+        {icon:'ti-ruler-2',text:'Conditional tree / perennial fields: matureHeight, matureSpread, yearsToFruit',sub:'Hidden when type is vegetable or herb',tags:['ui']},
+        {icon:'ti-dna',text:'Micronutrients fields: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK',tags:['ui']},
+        {icon:'ti-map-pin',text:'Zones fields: timing text input for each zone 3–9',tags:['ui']},
+        {icon:'ti-versions',text:'Variety management: add / remove variety rows inline',sub:'Each variety: name, description, daysToMaturity, flavorProfile, sizeNotes, zones[]',tags:['ui','new']},
+        {icon:'ti-eye-off',text:'Nutrition section hidden for ornamentals; size section hidden for herbs',tags:['ui']},
+      ]},
+    ]
+  },
+  {
+    id:'6', title:'Plant varieties', complexity:2,
+    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
+    meta:'index.html · Requires phase 5 admin UI',
+    dep:'Requires phase 5 for data entry; phase 3 auth for editing',
+    sections:[
+      {label:'Data model (defined in phase 0, used here)',tasks:[
+        {icon:'ti-versions',text:'varieties[] array on each crop document',sub:'[{name, description, daysToMaturity, flavorProfile, sizeNotes, zones: []}]',tags:['data']},
+        {icon:'ti-star',text:'Recommended / heirloom / hybrid flag per variety',tags:['data','new']},
+      ]},
+      {label:'Variety UI in crop detail view',tasks:[
+        {icon:'ti-table',text:'New "Varieties" tab in the crop detail panel (between Rotation and Growth)',tags:['ui','new']},
+        {icon:'ti-cards',text:'Card per variety: name, flavor, days to maturity, zone suitability chips',tags:['ui']},
+        {icon:'ti-adjustments-horizontal',text:'Filter varieties by zone suitability using active zone setting',tags:['ui']},
+      ]},
+      {label:'Variety UI in garden plot',tasks:[
+        {icon:'ti-pencil',text:'When placing a crop on the grid, optional variety selector before placing',sub:'Cell shows variety name below crop emoji if one is chosen',tags:['ui','new']},
+      ]},
+    ]
+  },
+  {
+    id:'7', title:'Plant library expansion — trees, shrubs, ornamentals', complexity:1,
+    color:'#639922', bg:'#EAF3DE', darkBg:'#1a2e08', darkColor:'#c0dd97',
+    meta:'Data entry via admin UI · Requires phase 5',
+    dep:'All plant data entered through the admin UI from phase 5',
+    sections:[
+      {label:'New categories to add (data entry, no code changes)',tasks:[
+        {icon:'ti-tree',text:'Fruit trees',sub:'Apple, pear, peach, cherry, plum, apricot — with varieties (Honeycrisp, Fuji, etc.)',tags:['new','data']},
+        {icon:'ti-tree',text:'Nut trees',sub:'Walnut, pecan, hazelnut, chestnut, almond',tags:['new','data']},
+        {icon:'ti-trees',text:'Shade and evergreen trees',sub:'Oak, maple, spruce, pine, arborvitae — matureHeight/matureSpread fields used here',tags:['new','data']},
+        {icon:'ti-plant',text:'Berry shrubs',sub:'Blueberry, raspberry, blackberry, currant, gooseberry — with variety chips',tags:['new','data']},
+        {icon:'ti-trending-up',text:'Climbing vines',sub:'Grape, kiwi, wisteria, clematis, hops',tags:['new','data']},
+        {icon:'ti-flower',text:'Perennial and annual flowers',sub:'Coneflower, black-eyed Susan, marigold, zinnia, sunflower — with native wildflowers',tags:['new','data']},
+        {icon:'ti-circle',text:'Bulbs',sub:'Tulip, daffodil, allium, crocus, lily — planting depth field already exists',tags:['new','data']},
+        {icon:'ti-leaf',text:'Ground covers and lawn alternatives',sub:'Clover, creeping thyme, sedum, moss — rotation.family used for bed placement',tags:['new','data']},
+        {icon:'ti-droplet',text:'Aquatic plants',sub:'Watercress, lotus, cattail, water lily — note: no rotation cycle applies',tags:['new','data']},
+        {icon:'ti-hearts',text:'Medicinal herbs',sub:'Echinacea, calendula, valerian, chamomile, lemon balm',tags:['new','data']},
+        {icon:'ti-leaf',text:'Cover crops',sub:'Crimson clover, buckwheat, winter rye, hairy vetch — rotation.cycle field is primary info',tags:['new','data']},
+      ]},
+      {label:'UI filter bar additions',tasks:[
+        {icon:'ti-layout-grid',text:'Top-level type filter row above category pills',sub:'All · Vegetables · Fruits · Trees · Shrubs · Flowers · Herbs · Other',tags:['ui','new']},
+        {icon:'ti-eye-off',text:'Hide nutrition tab for ornamentals; show matureHeight/spread card for trees',tags:['ui']},
+      ]},
+    ]
+  },
+  {
+    id:'8', title:'Garden sharing + collaboration', complexity:3,
+    color:'#A32D2D', bg:'#FCEBEB', darkBg:'#250909', darkColor:'#F09595',
+    meta:'Requires phase 3 auth · Security-critical',
+    dep:'Requires phase 3. Test security rules thoroughly before deploying.',
+    sections:[
+      {label:'Sharing data model',tasks:[
+        {icon:'ti-link',text:'Add sharedWith: [{uid, role}] array to each garden document',sub:'role is "viewer" or "editor"',tags:['db','new']},
+        {icon:'ti-mail',text:'Invite by email: look up uid from email, add to sharedWith',sub:'Or generate a shareable link encoding gardenId — anyone with link can view (if owner allows)',tags:['db','new']},
+      ]},
+      {label:'Firestore security rules update — critical',tasks:[
+        {icon:'ti-shield-lock',text:'Viewers: read if uid in resource.data.sharedWith (role viewer or editor)',tags:['sec']},
+        {icon:'ti-edit',text:'Editors: write if uid in resource.data.sharedWith and role editor',tags:['sec']},
+        {icon:'ti-crown',text:'Owner (uid === resource.data.ownerId) retains full control including delete and share settings',tags:['sec']},
+        {icon:'ti-alert-triangle',text:'Test all rule combinations before deploying — use Firebase Rules Playground',tags:['sec']},
+      ]},
+      {label:'Sharing UI',tasks:[
+        {icon:'ti-settings',text:'Garden settings panel: manage sharedWith list, set role per collaborator',tags:['ui','new']},
+        {icon:'ti-users',text:'Real-time collaboration via onSnapshot — changes from any editor appear instantly',tags:['ui','new']},
+        {icon:'ti-eye',text:'Viewer sees read-only grid; editor sees full draw/erase/save tools',tags:['ui']},
+      ]},
+    ]
+  },
+];
+
+function complexityDots(n){
+  const colors=['#639922','#BA7517','#A32D2D'];
+  const c=colors[Math.min(n,3)-1];
+  const labels=['Low','Medium','High'];
+  return `<div class="complexity"><span class="dot" style="background:${c}"></span>${labels[n-1]} complexity</div>`;
+}
+
+function tagHtml(tags){
+  const map={new:'tag-new',db:'tag-db',auth:'tag-auth',ui:'tag-ui',sec:'tag-sec',data:'tag-data'};
+  const label={new:'New',db:'Firestore',auth:'Auth',ui:'UI',sec:'Security',data:'Schema'};
+  return (tags||[]).map(t=>`<span class="tag ${map[t]||''}">${label[t]||t}</span>`).join('');
+}
+
+const container=document.getElementById('phases');
+phases.forEach((p,i)=>{
+  const el=document.createElement('div');
+  el.className='phase'+(i===0?' open':'');
+  el.innerHTML=`
+<div class="phase-header" onclick="toggle(this.parentElement)">
+  <span class="badge" style="background:${p.bg};color:${p.color}">${p.id}</span>
+  <span class="phase-title">${p.title}</span>
+  <span class="phase-meta">${p.meta}</span>
+  <span class="chevron">▼</span>
+</div>
+<div class="phase-body">
+  ${p.dep?`<div class="dep">⤷ ${p.dep}</div>`:''}
+  ${p.sections.map(s=>`
+    <div class="section-label">${s.label}</div>
+    <div class="tasks">${s.tasks.map(t=>`
+      <div class="task">
+        <i class="ti ${t.icon} task-icon" aria-hidden="true"></i>
+        <div>
+          <div class="task-text">${t.text}${tagHtml(t.tags)}</div>
+          ${t.sub?`<div class="task-sub">${t.sub}</div>`:''}
+        </div>
+      </div>`).join('')}
+    </div>`).join('')}
+  ${complexityDots(p.complexity)}
+</div>`;
+  container.appendChild(el);
+});
+
+function toggle(el){el.classList.toggle('open');}
+</script>
+</body>
+</html>
