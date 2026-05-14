@@ -6,6 +6,33 @@
 <title>Zone 6 Garden Planner</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script type="module">
+import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, getDocs, collection }    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const app = initializeApp({
+  apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
+  authDomain:        "garden-planner-ddbce.firebaseapp.com",
+  projectId:         "garden-planner-ddbce",
+  storageBucket:     "garden-planner-ddbce.firebasestorage.app",
+  messagingSenderId: "293487006691",
+  appId:             "1:293487006691:web:3136660dd705d7b10946d6"
+});
+const _db = getFirestore(app);
+
+window._fbLoadCrops = async function() {
+  const snap = await getDocs(collection(_db, 'crops'));
+  const norm = arr => (arr || []).map(x => typeof x === 'string' ? {name:x,why:''} : x);
+  const plants = [];
+  snap.forEach(d => {
+    const data = d.data();
+    data.companions = { good: norm(data.companions?.good), bad: norm(data.companions?.bad) };
+    plants.push({ data, sha: null, filename: d.id + '.js', path: null });
+  });
+  return plants;
+};
+window.dispatchEvent(new Event('fb-ready'));
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -251,57 +278,6 @@ a{color:inherit;text-decoration:none}
 <script>
 'use strict';
 
-// ─── Config ───────────────────────────────────────────────
-// Repo and path are hard-coded; only the token is entered on demand.
-const GH_REPO   = 'vyhlent/vyhlent.github.io';
-const GH_PATH   = 'crops/';        // folder path in the repo (trailing slash)
-const GH_BRANCH = 'main';
-const GH_API    = 'https://api.github.com';
-
-async function ghListFolder() {
-  const r = await fetch(
-    `${GH_API}/repos/${GH_REPO}/contents/${GH_PATH}?ref=${GH_BRANCH}`,
-    { headers: { Accept: 'application/vnd.github.v3+json' } }
-  );
-  if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
-  return r.json();
-}
-
-async function ghGetFile(path) {
-  const r = await fetch(
-    `${GH_API}/repos/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
-    { headers: { Accept: 'application/vnd.github.v3+json' } }
-  );
-  if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
-  return r.json();
-}
-
-
-// ─── Crop file parser ─────────────────────────────────────
-function parseCropFile(src) {
-  const m = src.match(/new\s+Crop\s*\(\s*(\{[\s\S]*\})\s*\)\s*;?\s*$/);
-  if (!m) throw new Error('Could not find Crop({…}) call');
-  try { return Function('"use strict"; return (' + m[1] + ')')(); }
-  catch(e) { throw new Error('Parse error: ' + e.message); }
-}
-
-// ─── Crop file generator ──────────────────────────────────
-function generateCropFile(data) {
-  const ser = (v, d = 0) => {
-    const pad = '  '.repeat(d), inn = '  '.repeat(d + 1);
-    if (v == null) return 'null';
-    if (typeof v === 'number' || typeof v === 'boolean') return String(v);
-    if (typeof v === 'string') return `'${v.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n')}'`;
-    if (Array.isArray(v)) {
-      if (!v.length) return '[]';
-      return `[\n${v.map(x => `${inn}${ser(x, d+1)}`).join(',\n')},\n${pad}]`;
-    }
-    const lines = Object.entries(v).map(([k, val]) => `${inn}${k}: ${ser(val, d+1)}`);
-    return `{\n${lines.join(',\n')},\n${pad}}`;
-  };
-  return `import Crop from '../Crop.js';\n\nexport default new Crop(${ser(data)});\n`;
-}
-
 // ─── State ────────────────────────────────────────────────
 let PLANTS       = [];   // [{data, sha, filename, path}]
 let isDark       = false;
@@ -311,28 +287,14 @@ let editingPlant = null;
 let isNew        = false;
 let cR = false, rR = false, nR = false;  // chart render flags
 
-// ─── Load all crops (public read — no token needed) ───────
+// ─── Load all crops from Firestore ────────────────────────
 async function loadAllCrops() {
-  const files   = await ghListFolder();
-  const jsFiles = files.filter(f => f.name.endsWith('.js') && f.type === 'file');
-  if (!jsFiles.length) throw new Error('No .js files found in ' + GH_PATH);
-
-  PLANTS = [];
-  const errs = [];
-  await Promise.all(jsFiles.map(async f => {
-    try {
-      const meta = await ghGetFile(f.path);
-      const src  = decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));
-      const data = parseCropFile(src);
-      // Normalise companions to {name, why} objects
-      const norm = arr => (arr || []).map(x => typeof x === 'string' ? {name:x,why:''} : x);
-      data.companions = { good: norm(data.companions?.good), bad: norm(data.companions?.bad) };
-      PLANTS.push({ data, sha: meta.sha, filename: f.name, path: f.path });
-    } catch(e) { errs.push(`${f.name}: ${e.message}`); }
-  }));
-
+  if (!window._fbLoadCrops) {
+    await new Promise(res => window.addEventListener('fb-ready', res, { once: true }));
+  }
+  PLANTS = await window._fbLoadCrops();
   PLANTS.sort((a,b) => a.data.name?.localeCompare(b.data.name));
-  if (errs.length) console.warn('Crop parse warnings:', errs);
+  if (!PLANTS.length) throw new Error('No crops found in Firestore. Run the migration tool first.');
 }
 
 // ─── Dark mode ────────────────────────────────────────────
@@ -680,7 +642,7 @@ async function _doSave() {
   try {
     if (isNew) {
       editingPlant.filename = d.id + '.js';
-      editingPlant.path     = GH_PATH + editingPlant.filename;
+      editingPlant.path     = null;
       editingPlant.sha      = null;
     }
 

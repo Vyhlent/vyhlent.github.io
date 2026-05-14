@@ -6,8 +6,8 @@
 <title>My Garden</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script type="module">
-import { initializeApp }                     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp }                                       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const app = initializeApp({
   apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
@@ -22,6 +22,19 @@ window._fbDoc    = code => doc(db, "gardens", code);
 window._fbGetDoc = getDoc;
 window._fbSetDoc = setDoc;
 window._fbReady  = true;
+
+window._fbLoadCrops = async function() {
+  const snap = await getDocs(collection(db, 'crops'));
+  const norm = arr => (arr || []).map(x => typeof x === 'string' ? {name:x,why:''} : x);
+  const plants = [];
+  snap.forEach(d => {
+    const data = d.data();
+    data.companions = { good: norm(data.companions?.good), bad: norm(data.companions?.bad) };
+    plants.push({ data });
+  });
+  return plants;
+};
+
 window.dispatchEvent(new Event("fb-ready"));
 </script>
 <style>
@@ -218,10 +231,6 @@ input{font-family:inherit}
 <script>
 'use strict';
 
-const GH_REPO    = 'vyhlent/vyhlent.github.io';
-const GH_BRANCH  = 'main';
-const CROPS_PATH = 'crops';
-
 const GARDEN_CODE = (new URLSearchParams(window.location.search).get('code') || 'default')
   .replace(/[^a-zA-Z0-9\-_]/g, '').toLowerCase();
 
@@ -247,7 +256,6 @@ function toast(type, msg, ms=3500) {
 }
 
 function applyDark() {
-  document.body.classList.toggle('dark', isDark);
   document.getElementById('app').classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
@@ -256,29 +264,15 @@ function toggleDark() {
   try { localStorage.setItem('gp-dark', isDark?'1':'0'); } catch(e) {}
 }
 
-// Load crops from GitHub (public read, no auth)
-function parseCropData(src) {
-  const m = src.match(/new\s+Crop\s*\(\s*(\{[\s\S]*?\})\s*\)\s*;?\s*$/);
-  if (!m) return null;
-  try { return Function('"use strict";return('+m[1]+')')(); } catch(e) { return null; }
-}
+// Load crops from Firestore
 async function loadCrops() {
-  const r = await fetch(
-    `https://api.github.com/repos/${GH_REPO}/contents/${CROPS_PATH}?ref=${GH_BRANCH}`,
-    { headers: { Accept: 'application/vnd.github.v3+json' } }
-  );
-  if (!r.ok) throw new Error(`Cannot list crops (${r.status})`);
-  const files = (await r.json()).filter(f => f.name.endsWith('.js') && f.type==='file');
-  PLANTS = [];
-  await Promise.all(files.map(async f => {
-    try {
-      const src = await fetch(f.download_url).then(x=>x.text());
-      const data = parseCropData(src);
-      if (data) PLANTS.push({ data });
-    } catch(e) {}
-  }));
+  if (!window._fbLoadCrops) {
+    await new Promise(res => window.addEventListener('fb-ready', res, { once: true }));
+  }
+  PLANTS = await window._fbLoadCrops();
   PLANTS.sort((a,b) => (a.data.name||'').localeCompare(b.data.name||''));
 }
+
 
 // Load garden from Firestore (no auth needed)
 async function loadGarden() {
