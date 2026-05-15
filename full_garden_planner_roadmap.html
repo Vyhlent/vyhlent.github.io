@@ -1,318 +1,348 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garden Planner Roadmap</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans,system-ui);background:transparent;color:var(--color-text-primary);padding:0 0 2rem}
-.phase{border:1px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg,12px);margin-bottom:1rem;overflow:hidden}
-.phase-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--color-background-secondary)}
-.phase-header:hover{background:var(--color-background-tertiary)}
-.badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
-.phase-title{font-size:15px;font-weight:500;flex:1}
-.phase-meta{font-size:12px;color:var(--color-text-tertiary);white-space:nowrap}
-.chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s;margin-left:4px}
-.phase.open .chevron{transform:rotate(180deg)}
-.phase-body{display:none;padding:16px 18px;border-top:1px solid var(--color-border-tertiary)}
-.phase.open .phase-body{display:block}
-.section-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--color-text-tertiary);margin:14px 0 8px}
-.section-label:first-child{margin-top:0}
-.tasks{display:flex;flex-direction:column;gap:6px}
-.task{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:8px;background:var(--color-background-primary);border:1px solid var(--color-border-tertiary);font-size:13px;line-height:1.5}
-.task-icon{flex-shrink:0;margin-top:1px;color:var(--color-text-tertiary)}
-.task-text{color:var(--color-text-primary)}
-.task-sub{color:var(--color-text-secondary);font-size:12px;margin-top:2px}
-.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:8px;vertical-align:middle;font-weight:500}
-.tag-new{background:#EAF3DE;color:#27500A}.tag-db{background:#E6F1FB;color:#0C447C}
-.tag-auth{background:#FAEEDA;color:#633806}.tag-ui{background:#EEEDFE;color:#3C3489}
-.tag-sec{background:#FCEBEB;color:#791F1F}.tag-data{background:#E1F5EE;color:#085041}
-@media(prefers-color-scheme:dark){
-.tag-new{background:#1a2e08;color:#c0dd97}.tag-db{background:#06192e;color:#85B7EB}
-.tag-auth{background:#2a1d06;color:#FAC775}.tag-ui{background:#1e1c3a;color:#AFA9EC}
-.tag-sec{background:#250909;color:#F09595}.tag-data{background:#04342C;color:#9FE1CB}
+:root{
+  --p:#fff;--s:#f5f4f0;--t:#eceae3;
+  --tp:#1a1a18;--ts:#5f5e5a;--tt:#888780;
+  --b1:rgba(0,0,0,0.12);--b2:rgba(0,0,0,0.22);
+  --gn:#3B6D11;--gnb:#EAF3DE;--gnt:#27500A;
 }
-.complexity{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary);margin-top:10px;padding:5px 10px;border-radius:6px;background:var(--color-background-tertiary)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dep{font-size:12px;color:var(--color-text-tertiary);margin-top:8px;padding:7px 10px;border-left:3px solid var(--color-border-secondary);background:var(--color-background-secondary);border-radius:0 6px 6px 0}
-.phases-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem}
-.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--color-text-secondary)}
-.leg .dot{width:10px;height:10px}
+@media(prefers-color-scheme:dark){
+  :root{
+    --p:#1e1e1b;--s:#272724;--t:#141412;
+    --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
+    --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
+    --gn:#7abd3e;--gnb:#1a2e08;--gnt:#c0dd97;
+  }
+}
+html,body{min-height:100%}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:16px;background:var(--t);color:var(--tp);padding:1.5rem 1rem 3rem}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:22px;font-weight:500;margin-bottom:.3rem;color:var(--tp)}
+.subtitle{font-size:14px;color:var(--ts);margin-bottom:1.5rem;line-height:1.6}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ts)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.phase{border:1px solid var(--b1);border-radius:12px;margin-bottom:.85rem;overflow:hidden;background:var(--p)}
+.phase-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;background:var(--s)}
+.phase-header:hover{background:var(--t)}
+.badge{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.phase-title{font-size:15px;font-weight:500;flex:1;color:var(--tp)}
+.phase-meta{font-size:12px;color:var(--tt);white-space:nowrap;margin-left:auto}
+.chevron{font-size:11px;color:var(--tt);transition:transform .2s;margin-left:8px;flex-shrink:0}
+.phase.open .chevron{transform:rotate(180deg)}
+.phase-body{display:none;padding:16px 18px;border-top:1px solid var(--b1)}
+.phase.open .phase-body{display:block}
+.dep{font-size:12px;color:var(--tt);margin-bottom:10px;padding:7px 10px;border-left:3px solid var(--b2);background:var(--s);border-radius:0 6px 6px 0}
+.sec-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--tt);margin:14px 0 7px}
+.sec-label:first-child{margin-top:0}
+.tasks{display:flex;flex-direction:column;gap:6px}
+.task{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:8px;background:var(--p);border:1px solid var(--b1);font-size:13px;line-height:1.5}
+.task-icon{flex-shrink:0;margin-top:2px;color:var(--tt);font-size:15px}
+.task-main{color:var(--tp)}
+.task-sub{color:var(--ts);font-size:12px;margin-top:3px;line-height:1.55}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle;font-weight:500}
+.tn{background:#EAF3DE;color:#27500A}
+.td{background:#E6F1FB;color:#0C447C}
+.ta{background:#FAEEDA;color:#633806}
+.tu{background:#EEEDFE;color:#3C3489}
+.ts_{background:#FCEBEB;color:#791F1F}
+.tk{background:#E1F5EE;color:#085041}
+@media(prefers-color-scheme:dark){
+.tn{background:#1a2e08;color:#c0dd97}
+.td{background:#06192e;color:#85B7EB}
+.ta{background:#2a1d06;color:#FAC775}
+.tu{background:#1e1c3a;color:#AFA9EC}
+.ts_{background:#250909;color:#F09595}
+.tk{background:#04342C;color:#9FE1CB}
+}
+.new-pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;background:#EAF3DE;color:#27500A;margin-left:8px;vertical-align:middle}
+@media(prefers-color-scheme:dark){.new-pill{background:#1a2e08;color:#c0dd97}}
+.complexity{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ts);margin-top:11px;padding:5px 11px;border-radius:6px;background:var(--s)}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 </style>
 </head>
 <body>
-
-<div class="phases-legend">
-  <span class="leg"><span class="dot" style="background:#639922"></span>New feature</span>
-  <span class="leg"><span class="dot" style="background:#185FA5"></span>Database / backend</span>
-  <span class="leg"><span class="dot" style="background:#BA7517"></span>Auth / security</span>
-  <span class="leg"><span class="dot" style="background:#534AB7"></span>UI / frontend</span>
-  <span class="leg"><span class="dot" style="background:#A32D2D"></span>Security rules</span>
-  <span class="leg"><span class="dot" style="background:#0F6E56"></span>Data / schema</span>
+<div class="wrap">
+  <h1>Garden Planner — Full Roadmap</h1>
+  <p class="subtitle">Click any phase to expand. Phases should generally be completed in order; dependency notes indicate hard prerequisites.</p>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#639922"></span>New feature</span>
+    <span class="leg"><span class="leg-dot" style="background:#185FA5"></span>Database / backend</span>
+    <span class="leg"><span class="leg-dot" style="background:#BA7517"></span>Auth / security</span>
+    <span class="leg"><span class="leg-dot" style="background:#534AB7"></span>UI / frontend</span>
+    <span class="leg"><span class="leg-dot" style="background:#A32D2D"></span>Security rules</span>
+    <span class="leg"><span class="leg-dot" style="background:#0F6E56"></span>Data / schema</span>
+  </div>
+  <div id="phases"></div>
 </div>
-
-<div id="phases"></div>
-
 <script>
-const phases = [
-  {
-    id:'0', title:'Schema design — do this first', complexity:1,
-    color:'#0F6E56', bg:'#E1F5EE', darkBg:'#04342C', darkColor:'#9FE1CB',
-    meta:'One-time · No code yet',
-    sections:[
-      {label:'Firestore crops/{cropId} document fields',tasks:[
-        {icon:'ti-table',text:'Core fields from Crop.js',sub:'id, name, cat, emoji, planting, water, fertilizer, companions, diseases, pests, rotation, stages, nutrition, size',tags:['data']},
-        {icon:'ti-list',text:'New: type field',sub:'vegetable · fruit · tree · shrub · vine · herb · ornamental · cover crop · bulb · aquatic',tags:['data','new']},
-        {icon:'ti-plant-2',text:'New: variety field',sub:'Array of {name, description, daysToMaturity, flavorProfile, sizeNotes, zones} — one entry per named cultivar',tags:['data','new']},
-        {icon:'ti-ruler-2',text:'New: perennial / tree fields',sub:'matureHeight, matureSpread, yearsToFruit, lifespan — shown only when type is tree, shrub, or vine',tags:['data','new']},
-        {icon:'ti-heart-rate-monitor',text:'New: expanded nutrition fields',sub:'micronutrients object: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — plus dailyValue lookup table',tags:['data','new']},
-        {icon:'ti-map-pin',text:'New: zones object',sub:'zones.3 through zones.9 — each a timing string matching the current planting.zone6 format',tags:['data','new']},
-      ]},
-      {label:'Firestore security rules (set before any write)',tasks:[
-        {icon:'ti-eye',text:'crops collection: public read, no auth required',tags:['sec']},
-        {icon:'ti-shield-lock',text:'crops collection: write only if request.auth.token.admin === true',tags:['sec']},
-        {icon:'ti-user-check',text:'gardens/{uid}/{gardenId}: read/write only if request.auth.uid === uid',tags:['sec']},
-      ]},
-    ]
-  },
-  {
-    id:'A', title:'Migration — GitHub .js files → Firestore', complexity:2,
-    color:'#185FA5', bg:'#E6F1FB', darkBg:'#06192e', darkColor:'#85B7EB',
-    meta:'One-time script · Run locally',
-    dep:'Requires phase 0 schema to be finalised first',
-    sections:[
-      {label:'Migration script (Node.js, run once)',tasks:[
-        {icon:'ti-brand-github',text:'Fetch all /crops/*.js from GitHub API',sub:'Reuse parseCropFile() already in index.html — copy into the script',tags:['db']},
-        {icon:'ti-transfer',text:'Transform parsed data to new schema',sub:'Add type field (default: vegetable), add empty variety array, add empty zones object',tags:['db']},
-        {icon:'ti-database-import',text:'writeBatch() to Firestore crops collection',sub:'--dry-run flag: log only, no writes · skip-existing flag · error log per file',tags:['db']},
-        {icon:'ti-key',text:'Use Firebase Admin SDK service account key — never ship or commit the key',tags:['sec']},
-      ]},
-      {label:'After migration',tasks:[
-        {icon:'ti-trash',text:'Remove GitHub-only functions from index.html',sub:'Delete ghListFolder(), ghGetFile(), parseCropFile(), generateCropFile()',tags:['ui']},
-      ]},
-    ]
-  },
-  {
-    id:'B', title:'Swap data source — Firestore instead of GitHub', complexity:1,
-    color:'#185FA5', bg:'#E6F1FB', darkBg:'#06192e', darkColor:'#85B7EB',
-    meta:'Both index.html + garden.html',
-    dep:'Requires phase A migration to be complete',
-    sections:[
-      {label:'index.html',tasks:[
-        {icon:'ti-refresh',text:'Replace loadAllCrops() GitHub fetch with Firestore query',sub:'getDocs(collection(db, "crops")) — no rate limits, no token, Firestore offline cache included',tags:['db']},
-        {icon:'ti-filter',text:'Firestore compound queries for filter bar',sub:'Query by type and/or cat server-side instead of filtering the full client array',tags:['db','ui']},
-      ]},
-      {label:'garden.html',tasks:[
-        {icon:'ti-refresh',text:'Replace loadCrops() GitHub fetch with the same Firestore query',sub:'Both files use identical read path — consider extracting to a shared crops.js module',tags:['db']},
-      ]},
-    ]
-  },
-  {
-    id:'1', title:'Expanded nutrition tab', complexity:1,
-    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
-    meta:'index.html only · No auth needed',
-    dep:'Can be done in parallel with phases A–B after schema (phase 0) is done',
-    sections:[
-      {label:'Crop.js + crop data',tasks:[
-        {icon:'ti-dna',text:'Add micronutrients to Crop constructor',sub:'iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — all with 0 defaults',tags:['data']},
-        {icon:'ti-percentage',text:'Add dailyValue reference object',sub:'Static lookup: {iron:18, calcium:1000, potassium:4700, …} in mg/day for adult reference',tags:['data']},
-        {icon:'ti-pencil',text:'Backfill existing crop files with real micronutrient data',tags:['data']},
-      ]},
-      {label:'Nutrition tab UI',tasks:[
-        {icon:'ti-selector',text:'Dropdown: view macros / view micros / view all',tags:['ui']},
-        {icon:'ti-activity',text:'% daily value badge next to every nutrient bar',tags:['ui']},
-        {icon:'ti-arrows-sort',text:'Sort column by any nutrient on the Nutrition page',tags:['ui']},
-      ]},
-    ]
-  },
-  {
-    id:'2', title:'Fertilizer tab + USDA zone switcher', complexity:2,
-    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
-    meta:'index.html · localStorage zone pref',
-    sections:[
-      {label:'Fertilizer reference tab (new nav item, left of Nutrition)',tasks:[
-        {icon:'ti-flask',text:'Static fertilizer types reference page',sub:'Organic vs synthetic, slow-release vs liquid, NPK ratio explainer, application timing',tags:['ui','new']},
-        {icon:'ti-leaf',text:'Per-crop fertilizer card already in detail view — expand with richer data',tags:['ui']},
-      ]},
-      {label:'USDA zone switcher',tasks:[
-        {icon:'ti-map',text:'Add zone dropdown to nav (zones 3–9)',sub:'Save selection to localStorage as gp-zone · default zone 6',tags:['ui','new']},
-        {icon:'ti-calendar',text:'Planting timing card reads active zone from zones.{n} field',sub:'Falls back to planting.zone6 if zones object is missing for that crop',tags:['ui']},
-        {icon:'ti-pencil',text:'Backfill crop files with timing strings for zones 3–5 and 7–9',tags:['data']},
-      ]},
-    ]
-  },
-  {
-    id:'3', title:'Authentication — email + password', complexity:3,
-    color:'#BA7517', bg:'#FAEEDA', darkBg:'#2a1d06', darkColor:'#FAC775',
-    meta:'Firebase Auth · Both pages',
-    dep:'Required before phases 4, 5, and 6 — do not skip',
-    sections:[
-      {label:'Firebase Auth setup',tasks:[
-        {icon:'ti-mail',text:'Email + password sign-up / sign-in',sub:'Optional display name at registration · forgot-password via email',tags:['auth','new']},
-        {icon:'ti-refresh',text:'Persist session with onAuthStateChanged',sub:'Show login/logout button in nav · gate My Garden behind auth',tags:['auth']},
-      ]},
-      {label:'Firestore data model migration (do at same time)',tasks:[
-        {icon:'ti-folder',text:'Move garden documents to gardens/{uid}/{gardenId}',sub:'Replaces the current public code-based path — migrate existing saved gardens once',tags:['db']},
-        {icon:'ti-shield-lock',text:'Update Firestore security rules',sub:'gardens/{uid}/{gardenId}: only uid === request.auth.uid can read or write',tags:['sec']},
-      ]},
-      {label:'Admin custom claim',tasks:[
-        {icon:'ti-crown',text:'Set admin: true custom claim on your account via Firebase Admin SDK script',sub:'Crops write rule checks request.auth.token.admin — ordinary logged-in users cannot write crops',tags:['sec','auth']},
-      ]},
-    ]
-  },
-  {
-    id:'4', title:'My Garden v2 — multiple plots + crop tracker', complexity:2,
-    color:'#639922', bg:'#EAF3DE', darkBg:'#1a2e08', darkColor:'#c0dd97',
-    meta:'garden.html · Requires phase 3',
-    dep:'Requires phase 3 auth to be complete',
-    sections:[
-      {label:'Multiple garden plots',tasks:[
-        {icon:'ti-plus',text:'Create / rename / delete named garden plots',sub:'Each plot: {id, name, cols, rows, cells} stored at gardens/{uid}/{gardenId}',tags:['new','db']},
-        {icon:'ti-layout-sidebar',text:'Sidebar switcher between user\'s plots',tags:['ui']},
-      ]},
-      {label:'Crop tracker (separate from grid)',tasks:[
-        {icon:'ti-bookmark',text:'Watchlist: crops the user is actively growing',sub:'Add/remove from crop detail view · stored per plot or per user',tags:['new','db']},
-        {icon:'ti-calendar',text:'Planting date and notes per tracked crop',tags:['ui','new']},
-        {icon:'ti-clipboard-list',text:'Harvest log: weight, date, quality rating',tags:['ui','new']},
-      ]},
-    ]
-  },
-  {
-    id:'5', title:'Admin UI — add / edit / delete crops in browser', complexity:2,
-    color:'#BA7517', bg:'#FAEEDA', darkBg:'#2a1d06', darkColor:'#FAC775',
-    meta:'index.html · Admin-only behind auth',
-    dep:'Requires phase 3 auth (admin custom claim)',
-    sections:[
-      {label:'Wire existing edit modal to Firestore',tasks:[
-        {icon:'ti-device-floppy',text:'saveEdit() calls setDoc(doc(db,"crops",id), data)',sub:'_doSave() currently does nothing — this is the core fix',tags:['db','ui']},
-        {icon:'ti-trash',text:'deletePlant() calls deleteDoc() for permanent removal',tags:['db']},
-        {icon:'ti-shield',text:'Show Add / Edit / Delete buttons only if user has admin claim',sub:'Check (await getIdTokenResult(user)).claims.admin before rendering',tags:['sec','auth']},
-      ]},
-      {label:'Access rule: only logged-in admin can add/edit/delete',tasks:[
-        {icon:'ti-lock',text:'Add/Edit/Delete buttons hidden for non-admin users',sub:'Non-admins can only view — no crop editing from the main plants page',tags:['sec','auth']},
-        {icon:'ti-alert-triangle',text:'Firestore rule enforces this server-side regardless of UI state',tags:['sec']},
-      ]},
-      {label:'Edit modal additions for new plant types',tasks:[
-        {icon:'ti-selector',text:'Type dropdown: vegetable / fruit / tree / shrub / vine / herb / ornamental / cover crop / bulb / aquatic',tags:['ui']},
-        {icon:'ti-ruler-2',text:'Conditional tree / perennial fields: matureHeight, matureSpread, yearsToFruit',sub:'Hidden when type is vegetable or herb',tags:['ui']},
-        {icon:'ti-dna',text:'Micronutrients fields: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK',tags:['ui']},
-        {icon:'ti-map-pin',text:'Zones fields: timing text input for each zone 3–9',tags:['ui']},
-        {icon:'ti-versions',text:'Variety management: add / remove variety rows inline',sub:'Each variety: name, description, daysToMaturity, flavorProfile, sizeNotes, zones[]',tags:['ui','new']},
-        {icon:'ti-eye-off',text:'Nutrition section hidden for ornamentals; size section hidden for herbs',tags:['ui']},
-      ]},
-    ]
-  },
-  {
-    id:'6', title:'Plant varieties', complexity:2,
-    color:'#534AB7', bg:'#EEEDFE', darkBg:'#1e1c3a', darkColor:'#AFA9EC',
-    meta:'index.html · Requires phase 5 admin UI',
-    dep:'Requires phase 5 for data entry; phase 3 auth for editing',
-    sections:[
-      {label:'Data model (defined in phase 0, used here)',tasks:[
-        {icon:'ti-versions',text:'varieties[] array on each crop document',sub:'[{name, description, daysToMaturity, flavorProfile, sizeNotes, zones: []}]',tags:['data']},
-        {icon:'ti-star',text:'Recommended / heirloom / hybrid flag per variety',tags:['data','new']},
-      ]},
-      {label:'Variety UI in crop detail view',tasks:[
-        {icon:'ti-table',text:'New "Varieties" tab in the crop detail panel (between Rotation and Growth)',tags:['ui','new']},
-        {icon:'ti-cards',text:'Card per variety: name, flavor, days to maturity, zone suitability chips',tags:['ui']},
-        {icon:'ti-adjustments-horizontal',text:'Filter varieties by zone suitability using active zone setting',tags:['ui']},
-      ]},
-      {label:'Variety UI in garden plot',tasks:[
-        {icon:'ti-pencil',text:'When placing a crop on the grid, optional variety selector before placing',sub:'Cell shows variety name below crop emoji if one is chosen',tags:['ui','new']},
-      ]},
-    ]
-  },
-  {
-    id:'7', title:'Plant library expansion — trees, shrubs, ornamentals', complexity:1,
-    color:'#639922', bg:'#EAF3DE', darkBg:'#1a2e08', darkColor:'#c0dd97',
-    meta:'Data entry via admin UI · Requires phase 5',
-    dep:'All plant data entered through the admin UI from phase 5',
-    sections:[
-      {label:'New categories to add (data entry, no code changes)',tasks:[
-        {icon:'ti-tree',text:'Fruit trees',sub:'Apple, pear, peach, cherry, plum, apricot — with varieties (Honeycrisp, Fuji, etc.)',tags:['new','data']},
-        {icon:'ti-tree',text:'Nut trees',sub:'Walnut, pecan, hazelnut, chestnut, almond',tags:['new','data']},
-        {icon:'ti-trees',text:'Shade and evergreen trees',sub:'Oak, maple, spruce, pine, arborvitae — matureHeight/matureSpread fields used here',tags:['new','data']},
-        {icon:'ti-plant',text:'Berry shrubs',sub:'Blueberry, raspberry, blackberry, currant, gooseberry — with variety chips',tags:['new','data']},
-        {icon:'ti-trending-up',text:'Climbing vines',sub:'Grape, kiwi, wisteria, clematis, hops',tags:['new','data']},
-        {icon:'ti-flower',text:'Perennial and annual flowers',sub:'Coneflower, black-eyed Susan, marigold, zinnia, sunflower — with native wildflowers',tags:['new','data']},
-        {icon:'ti-circle',text:'Bulbs',sub:'Tulip, daffodil, allium, crocus, lily — planting depth field already exists',tags:['new','data']},
-        {icon:'ti-leaf',text:'Ground covers and lawn alternatives',sub:'Clover, creeping thyme, sedum, moss — rotation.family used for bed placement',tags:['new','data']},
-        {icon:'ti-droplet',text:'Aquatic plants',sub:'Watercress, lotus, cattail, water lily — note: no rotation cycle applies',tags:['new','data']},
-        {icon:'ti-hearts',text:'Medicinal herbs',sub:'Echinacea, calendula, valerian, chamomile, lemon balm',tags:['new','data']},
-        {icon:'ti-leaf',text:'Cover crops',sub:'Crimson clover, buckwheat, winter rye, hairy vetch — rotation.cycle field is primary info',tags:['new','data']},
-      ]},
-      {label:'UI filter bar additions',tasks:[
-        {icon:'ti-layout-grid',text:'Top-level type filter row above category pills',sub:'All · Vegetables · Fruits · Trees · Shrubs · Flowers · Herbs · Other',tags:['ui','new']},
-        {icon:'ti-eye-off',text:'Hide nutrition tab for ornamentals; show matureHeight/spread card for trees',tags:['ui']},
-      ]},
-    ]
-  },
-  {
-    id:'8', title:'Garden sharing + collaboration', complexity:3,
-    color:'#A32D2D', bg:'#FCEBEB', darkBg:'#250909', darkColor:'#F09595',
-    meta:'Requires phase 3 auth · Security-critical',
-    dep:'Requires phase 3. Test security rules thoroughly before deploying.',
-    sections:[
-      {label:'Sharing data model',tasks:[
-        {icon:'ti-link',text:'Add sharedWith: [{uid, role}] array to each garden document',sub:'role is "viewer" or "editor"',tags:['db','new']},
-        {icon:'ti-mail',text:'Invite by email: look up uid from email, add to sharedWith',sub:'Or generate a shareable link encoding gardenId — anyone with link can view (if owner allows)',tags:['db','new']},
-      ]},
-      {label:'Firestore security rules update — critical',tasks:[
-        {icon:'ti-shield-lock',text:'Viewers: read if uid in resource.data.sharedWith (role viewer or editor)',tags:['sec']},
-        {icon:'ti-edit',text:'Editors: write if uid in resource.data.sharedWith and role editor',tags:['sec']},
-        {icon:'ti-crown',text:'Owner (uid === resource.data.ownerId) retains full control including delete and share settings',tags:['sec']},
-        {icon:'ti-alert-triangle',text:'Test all rule combinations before deploying — use Firebase Rules Playground',tags:['sec']},
-      ]},
-      {label:'Sharing UI',tasks:[
-        {icon:'ti-settings',text:'Garden settings panel: manage sharedWith list, set role per collaborator',tags:['ui','new']},
-        {icon:'ti-users',text:'Real-time collaboration via onSnapshot — changes from any editor appear instantly',tags:['ui','new']},
-        {icon:'ti-eye',text:'Viewer sees read-only grid; editor sees full draw/erase/save tools',tags:['ui']},
-      ]},
-    ]
-  },
+const PHASES=[
+{id:'0',title:'Schema design — do this first',meta:'One-time · No code yet',complexity:1,
+ color:'#0F6E56',bg:'#E1F5EE',dbg:'#04342C',dc:'#9FE1CB',
+ sections:[
+  {l:'Firestore crops/{cropId} document fields',tasks:[
+   {i:'ti-table',t:'Core fields from Crop.js',s:'id, name, cat, emoji, planting, water, fertilizer, companions, diseases, pests, rotation, stages, nutrition, size',g:['k']},
+   {i:'ti-list',t:'New: type field',s:'vegetable · fruit · tree · shrub · vine · herb · ornamental · cover crop · bulb · aquatic',g:['k','n']},
+   {i:'ti-versions',t:'New: variety field',s:'Array of {name, description, daysToMaturity, flavorProfile, sizeNotes, zones} — one entry per named cultivar',g:['k','n']},
+   {i:'ti-ruler-2',t:'New: perennial / tree fields',s:'matureHeight, matureSpread, yearsToFruit, lifespan — shown only when type is tree, shrub, or vine',g:['k','n']},
+   {i:'ti-heart-rate-monitor',t:'New: expanded nutrition fields',s:'micronutrients object: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — plus dailyValue lookup table',g:['k','n']},
+   {i:'ti-map-pin',t:'New: zones object',s:'zones.3 through zones.9 — each a timing string matching the current planting.zone6 format',g:['k','n']},
+   {i:'ti-calendar',t:'New: planting window + harvest window fields',s:'plantingStart, plantingEnd, harvestStart, harvestEnd — month numbers 1–12, per zone · used by grid overlay in phase 4b',g:['k','n']},
+  ]},
+  {l:'Firestore security rules (set before any write)',tasks:[
+   {i:'ti-eye',t:'crops collection: public read, no auth required',g:['s']},
+   {i:'ti-shield-lock',t:'crops collection: write only if request.auth.token.admin === true',g:['s']},
+   {i:'ti-user-check',t:'gardens/{uid}/{gardenId}: read/write only if request.auth.uid === uid',g:['s']},
+  ]},
+ ]},
+{id:'A',title:'Migration — GitHub .js files → Firestore',meta:'One-time script · Run locally',complexity:2,
+ dep:'Requires phase 0 schema to be finalised first',
+ color:'#185FA5',bg:'#E6F1FB',dbg:'#06192e',dc:'#85B7EB',
+ sections:[
+  {l:'Migration script (Node.js, run once)',tasks:[
+   {i:'ti-brand-github',t:'Fetch all /crops/*.js from GitHub API',s:'Reuse parseCropFile() already in index.html — copy into the script',g:['d']},
+   {i:'ti-transfer',t:'Transform parsed data to new schema',s:'Add type field (default: vegetable), add empty variety array, add empty zones object, add empty planting/harvest window fields',g:['d']},
+   {i:'ti-database-import',t:'writeBatch() to Firestore crops collection',s:'--dry-run flag: log only · skip-existing flag · error log per file',g:['d']},
+   {i:'ti-key',t:'Use Firebase Admin SDK service account key — never ship or commit the key',g:['s']},
+  ]},
+  {l:'After migration',tasks:[
+   {i:'ti-trash',t:'Remove GitHub-only functions from index.html',s:'Delete ghListFolder(), ghGetFile(), parseCropFile(), generateCropFile()',g:['u']},
+  ]},
+ ]},
+{id:'B',title:'Swap data source — Firestore instead of GitHub',meta:'Both index.html + garden.html',complexity:1,
+ dep:'Requires phase A migration to be complete',
+ color:'#185FA5',bg:'#E6F1FB',dbg:'#06192e',dc:'#85B7EB',
+ sections:[
+  {l:'index.html',tasks:[
+   {i:'ti-refresh',t:'Replace loadAllCrops() GitHub fetch with Firestore query',s:'getDocs(collection(db, "crops")) — no rate limits, no token, Firestore offline cache included',g:['d']},
+   {i:'ti-filter',t:'Firestore compound queries for filter bar',s:'Query by type and/or cat server-side instead of filtering the full client array',g:['d','u']},
+  ]},
+  {l:'garden.html',tasks:[
+   {i:'ti-refresh',t:'Replace loadCrops() GitHub fetch with the same Firestore query',s:'Both files use identical read path — consider extracting to a shared crops.js module',g:['d']},
+  ]},
+ ]},
+{id:'1',title:'Expanded nutrition tab',meta:'index.html only · No auth needed',complexity:1,
+ dep:'Can be done in parallel with phases A–B after phase 0 schema is done',
+ color:'#534AB7',bg:'#EEEDFE',dbg:'#1e1c3a',dc:'#AFA9EC',
+ sections:[
+  {l:'Crop.js + crop data',tasks:[
+   {i:'ti-dna',t:'Add micronutrients to Crop constructor',s:'iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK — all with 0 defaults',g:['k']},
+   {i:'ti-percentage',t:'Add dailyValue reference object',s:'Static lookup: {iron:18, calcium:1000, potassium:4700, …} in mg/day for adult reference',g:['k']},
+   {i:'ti-pencil',t:'Backfill existing crop files with real micronutrient data',g:['k']},
+  ]},
+  {l:'Nutrition tab UI',tasks:[
+   {i:'ti-selector',t:'Dropdown: view macros / view micros / view all',g:['u']},
+   {i:'ti-activity',t:'% daily value badge next to every nutrient bar',g:['u']},
+   {i:'ti-arrows-sort',t:'Sort column by any nutrient on the Nutrition page',g:['u']},
+  ]},
+ ]},
+{id:'2',title:'Fertilizer tab + USDA zone switcher',meta:'index.html · localStorage zone pref',complexity:2,
+ color:'#534AB7',bg:'#EEEDFE',dbg:'#1e1c3a',dc:'#AFA9EC',
+ sections:[
+  {l:'Fertilizer reference tab (new nav item, left of Nutrition)',tasks:[
+   {i:'ti-flask',t:'Static fertilizer types reference page',s:'Organic vs synthetic, slow-release vs liquid, NPK ratio explainer, application timing',g:['u','n']},
+   {i:'ti-leaf',t:'Per-crop fertilizer card in detail view — expand with richer data',g:['u']},
+  ]},
+  {l:'USDA zone switcher',tasks:[
+   {i:'ti-map',t:'Add zone dropdown to nav (zones 3–9)',s:'Save selection to localStorage as gp-zone · default zone 6',g:['u','n']},
+   {i:'ti-calendar',t:'Planting timing card reads active zone from zones.{n} field',s:'Falls back to planting.zone6 if zones object is missing for that crop',g:['u']},
+   {i:'ti-pencil',t:'Backfill crop files with timing strings for zones 3–5 and 7–9',g:['k']},
+  ]},
+ ]},
+{id:'3',title:'Authentication — email + password',meta:'Firebase Auth · Both pages',complexity:3,
+ dep:'Required before phases 4, 4b, 5, 6, 7, and 8 — do not skip',
+ color:'#BA7517',bg:'#FAEEDA',dbg:'#2a1d06',dc:'#FAC775',
+ sections:[
+  {l:'Firebase Auth setup',tasks:[
+   {i:'ti-mail',t:'Email + password sign-up / sign-in',s:'Optional display name at registration · forgot-password via email',g:['a','n']},
+   {i:'ti-refresh',t:'Persist session with onAuthStateChanged',s:'Show login/logout button in nav · gate My Garden behind auth',g:['a']},
+  ]},
+  {l:'Firestore data model migration (do at same time)',tasks:[
+   {i:'ti-folder',t:'Move garden documents to gardens/{uid}/{gardenId}',s:'Replaces the current public code-based path — migrate existing saved gardens once',g:['d']},
+   {i:'ti-shield-lock',t:'Update Firestore security rules',s:'gardens/{uid}/{gardenId}: only uid === request.auth.uid can read or write',g:['s']},
+  ]},
+  {l:'Admin custom claim',tasks:[
+   {i:'ti-crown',t:'Set admin: true custom claim on your account via Firebase Admin SDK script',s:'Crops write rule checks request.auth.token.admin — ordinary logged-in users cannot write crops',g:['s','a']},
+  ]},
+ ]},
+{id:'4',title:'My Garden v2 — multiple plots + crop tracker',meta:'garden.html · Requires phase 3',complexity:2,
+ dep:'Requires phase 3 auth to be complete',
+ color:'#639922',bg:'#EAF3DE',dbg:'#1a2e08',dc:'#c0dd97',
+ sections:[
+  {l:'Multiple garden plots',tasks:[
+   {i:'ti-plus',t:'Create / rename / delete named garden plots',s:'Each plot: {id, name, cols, rows, cells} stored at gardens/{uid}/{gardenId}',g:['n','d']},
+   {i:'ti-layout-sidebar',t:'Sidebar switcher between user\'s plots',g:['u']},
+  ]},
+  {l:'Crop tracker (separate from grid)',tasks:[
+   {i:'ti-bookmark',t:'Watchlist: crops the user is actively growing',s:'Add/remove from crop detail view · stored per plot or per user',g:['n','d']},
+   {i:'ti-calendar',t:'Planting date and notes per tracked crop',g:['u','n']},
+   {i:'ti-clipboard-list',t:'Harvest log: weight, date, quality rating',g:['u','n']},
+  ]},
+ ]},
+{id:'4b',title:'Grid overlay modes — companion, planting & harvest highlights',meta:'garden.html · Requires phases 3 + 4',complexity:2,
+ dep:'Requires phase 4 grid and phase 0 planting/harvest window fields backfilled on crop documents',
+ isNew:true,
+ color:'#639922',bg:'#EAF3DE',dbg:'#1a2e08',dc:'#c0dd97',
+ sections:[
+  {l:'Overlay mode selector (toolbar addition)',tasks:[
+   {i:'ti-eye',t:'Add overlay toggle group to the garden.html toolbar',s:'Four modes: None · Companion · Planting window · Harvest window — mutually exclusive',g:['u','n']},
+   {i:'ti-x',t:'"None" mode: default — no highlights, grid behaves exactly as today',g:['u']},
+  ]},
+  {l:'Companion overlay mode',tasks:[
+   {i:'ti-hand-click',t:'Click any filled cell to set it as the focus crop',s:'One focus crop at a time; clicking again or pressing Escape clears the focus',g:['u','n']},
+   {i:'ti-check',t:'Every other filled cell turns green if the focus crop lists it as a good companion',s:'Uses companions.good array already on the crop document — no new data needed',g:['u','n']},
+   {i:'ti-x',t:'Every other filled cell turns red if the focus crop lists it as a bad companion',s:'Uses companions.bad array',g:['u','n']},
+   {i:'ti-minus',t:'Neutral or unrecognised crops stay their default colour',g:['u']},
+   {i:'ti-info-circle',t:'Tooltip on hover shows the companion reason (the "why" field)',s:'e.g. "Basil repels aphids and improves tomato flavour"',g:['u','n']},
+  ]},
+  {l:'Planting window overlay mode',tasks:[
+   {i:'ti-calendar',t:'Each filled cell coloured by whether the current month is within its planting window',s:'Uses plantingStart / plantingEnd from phase 0, filtered by active USDA zone from phase 2',g:['u','n']},
+   {i:'ti-check',t:'Green: current month is within the planting window — good time to plant',g:['u']},
+   {i:'ti-clock',t:'Amber: planting window opens within the next 4 weeks',g:['u']},
+   {i:'ti-x',t:'Red: outside planting window for this zone',g:['u']},
+   {i:'ti-calendar-event',t:'Legend shows current month and active zone so the user understands the colours',g:['u']},
+  ]},
+  {l:'Harvest window overlay mode',tasks:[
+   {i:'ti-salad',t:'Each filled cell coloured by whether the current month falls inside its harvest window',s:'Uses harvestStart / harvestEnd from phase 0, filtered by active zone',g:['u','n']},
+   {i:'ti-check',t:'Green: currently harvestable this month',g:['u']},
+   {i:'ti-clock',t:'Amber: harvest window starts within the next 4 weeks',g:['u']},
+   {i:'ti-x',t:'Red: not yet ready or season has passed',g:['u']},
+   {i:'ti-info-circle',t:'Tooltip on hover shows the harvest window as a month range',s:'e.g. "July – September"',g:['u','n']},
+  ]},
+  {l:'Shared overlay logic (internal)',tasks:[
+   {i:'ti-code',t:'computeCellOverlay(cell, mode, focusCropId, activeZone, currentMonth) pure function',s:'Returns {color, tooltip} for each cell — keeps rendering logic clean and testable',g:['u']},
+   {i:'ti-palette',t:'Cell highlight is a coloured border ring — emoji and crop name remain visible underneath',g:['u']},
+   {i:'ti-device-floppy',t:'Active overlay mode saved to localStorage (gp-overlay) so it persists across sessions',g:['u']},
+  ]},
+ ]},
+{id:'5',title:'Admin UI — add / edit / delete crops in browser',meta:'index.html · Admin-only',complexity:2,
+ dep:'Requires phase 3 auth (admin custom claim)',
+ color:'#BA7517',bg:'#FAEEDA',dbg:'#2a1d06',dc:'#FAC775',
+ sections:[
+  {l:'Wire existing edit modal to Firestore',tasks:[
+   {i:'ti-device-floppy',t:'saveEdit() calls setDoc(doc(db,"crops",id), data)',s:'_doSave() currently does nothing useful — this is the core fix',g:['d','u']},
+   {i:'ti-trash',t:'deletePlant() calls deleteDoc() for permanent removal',g:['d']},
+   {i:'ti-shield',t:'Show Add / Edit / Delete buttons only if user has admin claim',s:'Check (await getIdTokenResult(user)).claims.admin before rendering',g:['s','a']},
+  ]},
+  {l:'Access rule: only logged-in admin can add/edit/delete',tasks:[
+   {i:'ti-lock',t:'Add/Edit/Delete buttons hidden for non-admin users',s:'Non-admins can only view — no crop editing from the plants page',g:['s','a']},
+   {i:'ti-alert-triangle',t:'Firestore rule enforces this server-side regardless of UI state',g:['s']},
+  ]},
+  {l:'Edit modal additions for new plant types',tasks:[
+   {i:'ti-selector',t:'Type dropdown: vegetable / fruit / tree / shrub / vine / herb / ornamental / cover crop / bulb / aquatic',g:['u']},
+   {i:'ti-ruler-2',t:'Conditional tree / perennial fields: matureHeight, matureSpread, yearsToFruit',s:'Hidden when type is vegetable or herb',g:['u']},
+   {i:'ti-dna',t:'Micronutrients fields: iron, calcium, potassium, magnesium, zinc, folate, vitA, vitK',g:['u']},
+   {i:'ti-map-pin',t:'Zones fields: timing text input for each zone 3–9',g:['u']},
+   {i:'ti-versions',t:'Variety management: add / remove variety rows inline',s:'Each variety: name, description, daysToMaturity, flavorProfile, sizeNotes, zones[]',g:['u','n']},
+   {i:'ti-calendar',t:'Planting window fields: plantingStart, plantingEnd per zone (month numbers 1–12)',s:'Used by the grid overlay from phase 4b',g:['u','n']},
+   {i:'ti-salad',t:'Harvest window fields: harvestStart, harvestEnd per zone (month numbers 1–12)',s:'Used by the grid overlay from phase 4b',g:['u','n']},
+   {i:'ti-eye-off',t:'Nutrition section hidden for ornamentals; size section hidden for herbs',g:['u']},
+  ]},
+ ]},
+{id:'6',title:'Plant varieties',meta:'index.html · Requires phase 5',complexity:2,
+ dep:'Requires phase 5 for data entry; phase 3 auth for editing',
+ color:'#534AB7',bg:'#EEEDFE',dbg:'#1e1c3a',dc:'#AFA9EC',
+ sections:[
+  {l:'Data model (defined in phase 0, used here)',tasks:[
+   {i:'ti-versions',t:'varieties[] array on each crop document',s:'[{name, description, daysToMaturity, flavorProfile, sizeNotes, zones: []}]',g:['k']},
+   {i:'ti-star',t:'Recommended / heirloom / hybrid flag per variety',g:['k','n']},
+  ]},
+  {l:'Variety UI in crop detail view',tasks:[
+   {i:'ti-table',t:'New "Varieties" tab in the crop detail panel',g:['u','n']},
+   {i:'ti-cards',t:'Card per variety: name, flavour, days to maturity, zone suitability chips',g:['u']},
+   {i:'ti-adjustments-horizontal',t:'Filter varieties by zone suitability using active zone setting from phase 2',g:['u']},
+  ]},
+  {l:'Variety UI in garden plot',tasks:[
+   {i:'ti-pencil',t:'When placing a crop on the grid, optional variety selector before placing',s:'Cell shows variety name below crop emoji if one is chosen',g:['u','n']},
+   {i:'ti-calendar',t:'Planting and harvest window overlay uses variety-specific windows if a variety is selected',s:'Falls back to the base crop windows if no variety is specified',g:['u','n']},
+  ]},
+ ]},
+{id:'7',title:'Plant library expansion — trees, shrubs, ornamentals',meta:'Data entry via admin UI · Requires phase 5',complexity:1,
+ dep:'All plant data entered through the admin UI from phase 5',
+ color:'#639922',bg:'#EAF3DE',dbg:'#1a2e08',dc:'#c0dd97',
+ sections:[
+  {l:'New categories to add (data entry, no code changes)',tasks:[
+   {i:'ti-tree',t:'Fruit trees',s:'Apple, pear, peach, cherry, plum, apricot — with varieties (Honeycrisp, Fuji, etc.)',g:['n','k']},
+   {i:'ti-tree',t:'Nut trees',s:'Walnut, pecan, hazelnut, chestnut, almond',g:['n','k']},
+   {i:'ti-trees',t:'Shade and evergreen trees',s:'Oak, maple, spruce, pine, arborvitae — matureHeight/matureSpread fields used here',g:['n','k']},
+   {i:'ti-plant',t:'Berry shrubs',s:'Blueberry, raspberry, blackberry, currant, gooseberry',g:['n','k']},
+   {i:'ti-trending-up',t:'Climbing vines',s:'Grape, kiwi, wisteria, clematis, hops',g:['n','k']},
+   {i:'ti-flower',t:'Perennial and annual flowers',s:'Coneflower, black-eyed Susan, marigold, zinnia, sunflower — with native wildflowers',g:['n','k']},
+   {i:'ti-circle',t:'Bulbs',s:'Tulip, daffodil, allium, crocus, lily — planting depth field already exists',g:['n','k']},
+   {i:'ti-leaf',t:'Ground covers and lawn alternatives',s:'Clover, creeping thyme, sedum, moss',g:['n','k']},
+   {i:'ti-droplet',t:'Aquatic plants',s:'Watercress, lotus, cattail, water lily — no rotation cycle applies',g:['n','k']},
+   {i:'ti-hearts',t:'Medicinal herbs',s:'Echinacea, calendula, valerian, chamomile, lemon balm',g:['n','k']},
+   {i:'ti-leaf',t:'Cover crops',s:'Crimson clover, buckwheat, winter rye, hairy vetch',g:['n','k']},
+  ]},
+  {l:'UI filter bar additions',tasks:[
+   {i:'ti-layout-grid',t:'Top-level type filter row above category pills',s:'All · Vegetables · Fruits · Trees · Shrubs · Flowers · Herbs · Other',g:['u','n']},
+   {i:'ti-eye-off',t:'Hide nutrition tab for ornamentals; show matureHeight/spread card for trees',g:['u']},
+  ]},
+ ]},
+{id:'8',title:'Garden sharing + collaboration',meta:'Requires phase 3 · Security-critical',complexity:3,
+ dep:'Requires phase 3. Test all Firestore security rules thoroughly before deploying.',
+ color:'#A32D2D',bg:'#FCEBEB',dbg:'#250909',dc:'#F09595',
+ sections:[
+  {l:'Sharing data model',tasks:[
+   {i:'ti-link',t:'Add sharedWith: [{uid, role}] array to each garden document',s:'role is "viewer" or "editor"',g:['d','n']},
+   {i:'ti-mail',t:'Invite by email: look up uid from email, add to sharedWith',s:'Or generate a shareable link encoding gardenId — anyone with link can view if owner allows',g:['d','n']},
+  ]},
+  {l:'Firestore security rules update — critical',tasks:[
+   {i:'ti-shield-lock',t:'Viewers: read if uid in resource.data.sharedWith with role viewer or editor',g:['s']},
+   {i:'ti-edit',t:'Editors: write if uid in resource.data.sharedWith and role editor',g:['s']},
+   {i:'ti-crown',t:'Owner (uid === resource.data.ownerId) retains full control including delete and share settings',g:['s']},
+   {i:'ti-alert-triangle',t:'Test all rule combinations before deploying — use Firebase Rules Playground',g:['s']},
+  ]},
+  {l:'Sharing UI',tasks:[
+   {i:'ti-settings',t:'Garden settings panel: manage sharedWith list, set role per collaborator',g:['u','n']},
+   {i:'ti-users',t:'Real-time collaboration via onSnapshot — changes from any editor appear instantly',g:['u','n']},
+   {i:'ti-eye',t:'Viewer sees read-only grid with all three overlay modes available',s:'Companion, planting, and harvest overlays all work for shared viewers — draw/erase tools hidden',g:['u']},
+  ]},
+ ]},
 ];
 
-function complexityDots(n){
-  const colors=['#639922','#BA7517','#A32D2D'];
-  const c=colors[Math.min(n,3)-1];
-  const labels=['Low','Medium','High'];
-  return `<div class="complexity"><span class="dot" style="background:${c}"></span>${labels[n-1]} complexity</div>`;
-}
+const TM={n:'tn',d:'td',a:'ta',u:'tu',s:'ts_',k:'tk'};
+const TL={n:'New',d:'Firestore',a:'Auth',u:'UI',s:'Security',k:'Schema'};
+const CL=['Low','Medium','High'];
+const CC=['#639922','#BA7517','#A32D2D'];
 
-function tagHtml(tags){
-  const map={new:'tag-new',db:'tag-db',auth:'tag-auth',ui:'tag-ui',sec:'tag-sec',data:'tag-data'};
-  const label={new:'New',db:'Firestore',auth:'Auth',ui:'UI',sec:'Security',data:'Schema'};
-  return (tags||[]).map(t=>`<span class="tag ${map[t]||''}">${label[t]||t}</span>`).join('');
-}
+function tags(g){return(g||[]).map(x=>`<span class="tag ${TM[x]||''}">${TL[x]||x}</span>`).join('');}
 
-const container=document.getElementById('phases');
-phases.forEach((p,i)=>{
+const wrap=document.getElementById('phases');
+PHASES.forEach((p,i)=>{
   const el=document.createElement('div');
   el.className='phase'+(i===0?' open':'');
   el.innerHTML=`
-<div class="phase-header" onclick="toggle(this.parentElement)">
+<div class="phase-header" onclick="this.parentElement.classList.toggle('open')">
   <span class="badge" style="background:${p.bg};color:${p.color}">${p.id}</span>
-  <span class="phase-title">${p.title}</span>
+  <span class="phase-title">${p.title}${p.isNew?'<span class="new-pill">New</span>':''}</span>
   <span class="phase-meta">${p.meta}</span>
-  <span class="chevron">▼</span>
+  <span class="chevron">&#9660;</span>
 </div>
 <div class="phase-body">
-  ${p.dep?`<div class="dep">⤷ ${p.dep}</div>`:''}
+  ${p.dep?`<div class="dep">&#8627; ${p.dep}</div>`:''}
   ${p.sections.map(s=>`
-    <div class="section-label">${s.label}</div>
+    <div class="sec-label">${s.l}</div>
     <div class="tasks">${s.tasks.map(t=>`
       <div class="task">
-        <i class="ti ${t.icon} task-icon" aria-hidden="true"></i>
+        <i class="ti ${t.i} task-icon" aria-hidden="true"></i>
         <div>
-          <div class="task-text">${t.text}${tagHtml(t.tags)}</div>
-          ${t.sub?`<div class="task-sub">${t.sub}</div>`:''}
+          <div class="task-main">${t.t}${tags(t.g)}</div>
+          ${t.s?`<div class="task-sub">${t.s}</div>`:''}
         </div>
       </div>`).join('')}
     </div>`).join('')}
-  ${complexityDots(p.complexity)}
+  <div class="complexity"><span class="cdot" style="background:${CC[p.complexity-1]}"></span>${CL[p.complexity-1]} complexity</div>
 </div>`;
-  container.appendChild(el);
+  wrap.appendChild(el);
 });
-
-function toggle(el){el.classList.toggle('open');}
 </script>
 </body>
 </html>
