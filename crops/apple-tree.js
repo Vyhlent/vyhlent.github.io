@@ -67,13 +67,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 52,
-    protein:  0.3,
-    carbs:    13.8,
-    fat:      0.2,
-    fiber:    2.4,
-    vitC:     4.6,
-    notes:    'Good source of quercetin, catechin, and other antioxidants. Most found in the skin. Pectin in apples supports gut health. Low glycemic index compared to many fruits.',
+    // — Macronutrients —
+    calories:    52,
+    water:       85.6,   // g
+    protein:     0.3,   // g
+    carbs:       13.8,   // g total
+    fiber:       2.4,   // g
+    sugars:      10.4,   // g
+    fat:         0.2,   // g total
+    saturated:   0.03,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.05,   // g
+    // — Fat-soluble vitamins —
+    vitA:        3,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.18,   // mg
+    vitK:        2.2,   // µg
+    // — Water-soluble vitamins —
+    vitC:        4.6,   // mg
+    vitB1:       0.017,  // mg thiamine
+    vitB2:       0.026,  // mg riboflavin
+    vitB3:       0.091,  // mg niacin
+    vitB5:       0.061,  // mg pantothenic
+    vitB6:       0.041,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       3,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     3.4,  // mg
+    // — Macrominerals —
+    calcium:     6,  // mg
+    phosphorus:  11,  // mg
+    magnesium:   5,  // mg
+    sodium:      1,  // mg
+    potassium:   107,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.12,  // mg
+    zinc:        0.04,  // mg
+    copper:      0.027,  // mg
+    manganese:   0.035,  // mg
+    selenium:    0,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Most antioxidants (quercetin, catechin) are in the skin — eat unpeeled. Pectin supports gut microbiome. Low glycemic index relative to many fruits.',
   },
 
   size: {

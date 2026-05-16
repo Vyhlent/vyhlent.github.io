@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Alliaceae',cycle:'3–4 year rotation; do not follow other alliums'},
   stages:[{label:'Root',title:'Root establishment',desc:'Fall: roots grow, shoot emerges. Mulch after ground freezes.'},{label:'Grn',title:'Spring green',desc:'Shoots emerge; green garlic harvestable.'},{label:'Scape',title:'Scape formation',desc:'Remove curling scapes to push energy to bulb.'},{label:'Harv',title:'Harvest',desc:'Lower 1/3 of leaves brown (Jun–Jul). Cure 3–4 weeks.'}],
   special:'Plant hardneck varieties for best Zone 6 flavor. Plant Oct for Jun–Jul harvest.',
-  nutrition:{calories:149,protein:6.4,carbs:33,fat:0.5,fiber:2.1,vitC:31,notes:'Rich in allicin, manganese, and vitamin B6. Powerful antimicrobial and cardiovascular benefits.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    149,
+    water:       58.6,   // g
+    protein:     6.4,   // g
+    carbs:       33,   // g total
+    fiber:       2.1,   // g
+    sugars:      1,   // g
+    fat:         0.5,   // g total
+    saturated:   0.09,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.25,   // g
+    // — Fat-soluble vitamins —
+    vitA:        0,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.08,   // mg
+    vitK:        1.7,   // µg
+    // — Water-soluble vitamins —
+    vitC:        31.2,   // mg
+    vitB1:       0.2,  // mg thiamine
+    vitB2:       0.11,  // mg riboflavin
+    vitB3:       0.7,  // mg niacin
+    vitB5:       0.596,  // mg pantothenic
+    vitB6:       1.235,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       3,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     23.2,  // mg
+    // — Macrominerals —
+    calcium:     181,  // mg
+    phosphorus:  153,  // mg
+    magnesium:   25,  // mg
+    sodium:      17,  // mg
+    potassium:   401,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        1.7,  // mg
+    zinc:        1.16,  // mg
+    copper:      0.299,  // mg
+    manganese:   1.672,  // mg
+    selenium:    14.2,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Rich in allicin (antimicrobial), manganese (1.67 mg — 73% DV), selenium (14 µg — 26% DV), and vitamin B6 (1.24 mg — 73% DV). Powerful cardiovascular benefits. Note: typical serving is 3–9g.',
+  },
   size:{weight:'30–60g per bulb',dimensions:'1.5–2.5" diameter bulb',notes:'Each clove weighs 4–8g.'},
 });

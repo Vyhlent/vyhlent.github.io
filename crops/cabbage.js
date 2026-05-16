@@ -67,13 +67,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 25,
-    protein:  1.3,
-    carbs:    5.8,
-    fat:      0.1,
-    fiber:    2.5,
-    vitC:     36.6,
-    notes:    'Excellent source of Vitamin K and Vitamin C. Red cabbage contains anthocyanins (antioxidants). Fermented as sauerkraut or kimchi, cabbage becomes a probiotic-rich food.',
+    // — Macronutrients —
+    calories:    25,
+    water:       92.2,   // g
+    protein:     1.3,   // g
+    carbs:       5.8,   // g total
+    fiber:       2.5,   // g
+    sugars:      3.2,   // g
+    fat:         0.1,   // g total
+    saturated:   0.03,   // g
+    monounsat:   0.02,   // g
+    polyunsat:   0.04,   // g
+    // — Fat-soluble vitamins —
+    vitA:        5,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.15,   // mg
+    vitK:        76,   // µg
+    // — Water-soluble vitamins —
+    vitC:        36.6,   // mg
+    vitB1:       0.061,  // mg thiamine
+    vitB2:       0.04,  // mg riboflavin
+    vitB3:       0.234,  // mg niacin
+    vitB5:       0.212,  // mg pantothenic
+    vitB6:       0.124,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       43,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     10.7,  // mg
+    // — Macrominerals —
+    calcium:     40,  // mg
+    phosphorus:  26,  // mg
+    magnesium:   12,  // mg
+    sodium:      18,  // mg
+    potassium:   170,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.47,  // mg
+    zinc:        0.18,  // mg
+    copper:      0.019,  // mg
+    manganese:   0.16,  // mg
+    selenium:    0.3,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Excellent source of Vitamin K (76 µg) and Vitamin C. Red cabbage contains 4–6× more anthocyanins and vitamin C than green. Fermented as sauerkraut or kimchi it becomes a probiotic-rich food.',
   },
 
   size: {

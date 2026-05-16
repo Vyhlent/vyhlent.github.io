@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Fabaceae',cycle:'2–3 year rotation; follow with heavy feeders like corn/brassicas'},
   stages:[{label:'Germ',title:'Germination',desc:'7–14 days; do not plant in cold soil below 60°F.'},{label:'Grow',title:'Vegetative',desc:'Rapid growth; install pole trellis before planting.'},{label:'Flwr',title:'Flowering',desc:'Self-pollinating.'},{label:'Harv',title:'Harvest',desc:'Every 2–3 days when pods snap cleanly.'}],
   special:'Inoculate seeds with rhizobium bacteria for better nitrogen fixation in new beds.',
-  nutrition:{calories:31,protein:1.8,carbs:7,fat:0.1,fiber:2.7,vitC:12,notes:'Good source of folate, vitamin K, and silicon. Very low calorie with excellent digestive fiber.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    31,
+    water:       90.3,   // g
+    protein:     1.8,   // g
+    carbs:       7,   // g total
+    fiber:       2.7,   // g
+    sugars:      3.3,   // g
+    fat:         0.1,   // g total
+    saturated:   0.03,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.07,   // g
+    // — Fat-soluble vitamins —
+    vitA:        35,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.41,   // mg
+    vitK:        43,   // µg
+    // — Water-soluble vitamins —
+    vitC:        12.2,   // mg
+    vitB1:       0.082,  // mg thiamine
+    vitB2:       0.104,  // mg riboflavin
+    vitB3:       0.734,  // mg niacin
+    vitB5:       0.225,  // mg pantothenic
+    vitB6:       0.074,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       37,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     15.3,  // mg
+    // — Macrominerals —
+    calcium:     37,  // mg
+    phosphorus:  38,  // mg
+    magnesium:   25,  // mg
+    sodium:      6,  // mg
+    potassium:   211,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        1.03,  // mg
+    zinc:        0.24,  // mg
+    copper:      0.069,  // mg
+    manganese:   0.216,  // mg
+    selenium:    0.6,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Good source of folate (37 µg), vitamin K (43 µg — 36% DV), and silicon for connective tissue. Very low calorie with excellent digestive fiber.',
+  },
   size:{weight:'10–15g per pod',dimensions:'4–6" long pod',notes:'Harvest at 4–6 inches before seeds bulge.'},
 });

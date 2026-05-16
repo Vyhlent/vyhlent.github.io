@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Apiaceae',cycle:'3-year rotation; avoid parsnips, parsley, celery in sequence'},
   stages:[{label:'Germ',title:'Germination',desc:'14–21 days. Keep moist; burlap over bed helps.'},{label:'Thin',title:'Thinning',desc:'Thin to 2–3" when 2" tall.'},{label:'Root',title:'Root development',desc:'Cover exposed shoulders to prevent greening.'},{label:'Harv',title:'Harvest',desc:'60–80 days. Sweeter after light frost.'}],
   special:'Prepare soil 12" deep. Fall carrots are sweeter.',
-  nutrition:{calories:41,protein:0.9,carbs:9.6,fat:0.2,fiber:2.8,vitC:6,notes:'One medium carrot provides over 200% of daily vitamin A as beta-carotene.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    41,
+    water:       88.3,   // g
+    protein:     0.9,   // g
+    carbs:       9.6,   // g total
+    fiber:       2.8,   // g
+    sugars:      4.7,   // g
+    fat:         0.2,   // g total
+    saturated:   0.04,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.12,   // g
+    // — Fat-soluble vitamins —
+    vitA:        835,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.66,   // mg
+    vitK:        13.2,   // µg
+    // — Water-soluble vitamins —
+    vitC:        5.9,   // mg
+    vitB1:       0.066,  // mg thiamine
+    vitB2:       0.058,  // mg riboflavin
+    vitB3:       0.983,  // mg niacin
+    vitB5:       0.273,  // mg pantothenic
+    vitB6:       0.138,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       19,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     8.8,  // mg
+    // — Macrominerals —
+    calcium:     33,  // mg
+    phosphorus:  35,  // mg
+    magnesium:   12,  // mg
+    sodium:      69,  // mg
+    potassium:   320,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.3,  // mg
+    zinc:        0.24,  // mg
+    copper:      0.045,  // mg
+    manganese:   0.143,  // mg
+    selenium:    0.1,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'One medium carrot provides over 200% daily vitamin A as beta-carotene (835 µg RAE). Cooking increases beta-carotene bioavailability. Also a solid source of potassium and vitamin K.',
+  },
   size:{weight:'60–120g per carrot',dimensions:'6–8" long, 1" diameter',notes:'Baby carrots at 3–4 inches; mature at 6–8.'},
 });

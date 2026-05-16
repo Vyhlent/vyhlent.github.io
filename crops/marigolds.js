@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Asteraceae (annual)',cycle:'Annual; replant each year; suppresses nematodes in soil'},
   stages:[{label:'Germ',title:'Germination',desc:'5–7 days indoors.'},{label:'Seedl',title:'Seedling',desc:'Harden off before transplant.'},{label:'Bud',title:'Budding',desc:'Pinch early buds for branching.'},{label:'Bloom',title:'Continuous bloom',desc:'Deadhead to extend bloom until frost.'}],
   special:'French marigolds most effective for nematode suppression. Plant throughout the entire garden.',
-  nutrition:{calories:0,protein:0,carbs:0,fat:0,fiber:0,vitC:0,notes:'Ornamental companion plant — not a food crop. Edible flowers are mildly bitter and peppery.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    0,
+    water:       0,   // g
+    protein:     0,   // g
+    carbs:       0,   // g total
+    fiber:       0,   // g
+    sugars:      0,   // g
+    fat:         0,   // g total
+    saturated:   0,   // g
+    monounsat:   0,   // g
+    polyunsat:   0,   // g
+    // — Fat-soluble vitamins —
+    vitA:        0,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0,   // mg
+    vitK:        0,   // µg
+    // — Water-soluble vitamins —
+    vitC:        0,   // mg
+    vitB1:       0,  // mg thiamine
+    vitB2:       0,  // mg riboflavin
+    vitB3:       0,  // mg niacin
+    vitB5:       0,  // mg pantothenic
+    vitB6:       0,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       0,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     0,  // mg
+    // — Macrominerals —
+    calcium:     0,  // mg
+    phosphorus:  0,  // mg
+    magnesium:   0,  // mg
+    sodium:      0,  // mg
+    potassium:   0,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0,  // mg
+    zinc:        0,  // mg
+    copper:      0,  // mg
+    manganese:   0,  // mg
+    selenium:    0,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Ornamental companion plant — not a food crop. Edible flowers are mildly bitter and peppery. Nutritional data not applicable.',
+  },
   size:{weight:'N/A — ornamental',dimensions:'French: 6–12" tall; African: 18–36" tall',notes:'Plant densely between vegetables for maximum pest suppression.'},
 });

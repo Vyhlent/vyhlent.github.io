@@ -31,6 +31,52 @@ export default new Crop({
     { label: 'Harv', title: 'Harvest',            desc: 'Jun–Aug. Pick when fully black.' },
   ],
   special: 'Tie canes to trellis. Cut floricanes to ground after harvest.',
-  nutrition: { calories: 43, protein: 1.4, carbs: 9.6, fat: 0.5, fiber: 5.3, vitC: 21, notes: 'High in anthocyanins, vitamin C, manganese, and fiber.' },
+  nutrition: {
+    // — Macronutrients —
+    calories:    43,
+    water:       88.2,   // g
+    protein:     1.4,   // g
+    carbs:       9.6,   // g total
+    fiber:       5.3,   // g
+    sugars:      4.9,   // g
+    fat:         0.5,   // g total
+    saturated:   0.01,   // g
+    monounsat:   0.05,   // g
+    polyunsat:   0.28,   // g
+    // — Fat-soluble vitamins —
+    vitA:        11,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        1.17,   // mg
+    vitK:        19.8,   // µg
+    // — Water-soluble vitamins —
+    vitC:        21,   // mg
+    vitB1:       0.02,  // mg thiamine
+    vitB2:       0.026,  // mg riboflavin
+    vitB3:       0.646,  // mg niacin
+    vitB5:       0.276,  // mg pantothenic
+    vitB6:       0.03,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       25,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     8.5,  // mg
+    // — Macrominerals —
+    calcium:     29,  // mg
+    phosphorus:  22,  // mg
+    magnesium:   20,  // mg
+    sodium:      1,  // mg
+    potassium:   162,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.62,  // mg
+    zinc:        0.53,  // mg
+    copper:      0.165,  // mg
+    manganese:   0.646,  // mg
+    selenium:    0.4,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'High in anthocyanins, vitamin C, manganese (0.65 mg — 28% DV), and fiber. One of the higher-fiber berries.',
+  },
   size: { weight: '3–5g per berry', dimensions: '0.5–1" diameter per berry', notes: 'Full clusters weigh 20–40g.' },
 });

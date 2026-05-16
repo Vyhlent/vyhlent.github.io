@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Cucurbitaceae',cycle:'3–4 year rotation away from all cucurbits'},
   stages:[{label:'Germ',title:'Germination',desc:'5–10 days at 70–90°F.'},{label:'Vine',title:'Vine development',desc:'Rapid growth; train or let sprawl.'},{label:'Flwr',title:'Flowering',desc:'Male then female flowers; bees critical.'},{label:'Ripe',title:'Maturation',desc:'Slip test: slight pressure detaches at stem.'}],
   special:'Use black plastic mulch. Place board under fruits.',
-  nutrition:{calories:34,protein:0.8,carbs:8.2,fat:0.2,fiber:0.9,vitC:36,notes:'Excellent source of beta-carotene (vitamin A) and potassium.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    34,
+    water:       90.2,   // g
+    protein:     0.8,   // g
+    carbs:       8.2,   // g total
+    fiber:       0.9,   // g
+    sugars:      7.9,   // g
+    fat:         0.2,   // g total
+    saturated:   0.05,   // g
+    monounsat:   0,   // g
+    polyunsat:   0.06,   // g
+    // — Fat-soluble vitamins —
+    vitA:        169,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.05,   // mg
+    vitK:        2.5,   // µg
+    // — Water-soluble vitamins —
+    vitC:        36.7,   // mg
+    vitB1:       0.041,  // mg thiamine
+    vitB2:       0.019,  // mg riboflavin
+    vitB3:       0.734,  // mg niacin
+    vitB5:       0.105,  // mg pantothenic
+    vitB6:       0.072,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       21,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     7.6,  // mg
+    // — Macrominerals —
+    calcium:     9,  // mg
+    phosphorus:  15,  // mg
+    magnesium:   12,  // mg
+    sodium:      16,  // mg
+    potassium:   267,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.21,  // mg
+    zinc:        0.18,  // mg
+    copper:      0.041,  // mg
+    manganese:   0.041,  // mg
+    selenium:    0.4,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Excellent source of beta-carotene (vitamin A — 169 µg, ~19% DV) and potassium. High vitamin C. Very hydrating at 90% water.',
+  },
   size:{weight:'1–3 kg per fruit',dimensions:'5–7" diameter',notes:'Full-slip harvest: netting on rind, sweet aroma.'},
 });

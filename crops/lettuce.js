@@ -66,13 +66,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 15,
-    protein:  1.4,
-    carbs:    2.9,
-    fat:      0.2,
-    fiber:    1.3,
-    vitC:     9.2,
-    notes:    'Romaine and red-leaf types are highest in vitamins A and K. Iceberg has the lowest nutrient density. All types are very low-calorie and provide hydration (95% water).',
+    // — Macronutrients —
+    calories:    15,
+    water:       94.9,   // g
+    protein:     1.4,   // g
+    carbs:       2.9,   // g total
+    fiber:       1.3,   // g
+    sugars:      1.2,   // g
+    fat:         0.2,   // g total
+    saturated:   0.03,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.12,   // g
+    // — Fat-soluble vitamins —
+    vitA:        166,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.29,   // mg
+    vitK:        102.5,   // µg
+    // — Water-soluble vitamins —
+    vitC:        9.2,   // mg
+    vitB1:       0.07,  // mg thiamine
+    vitB2:       0.08,  // mg riboflavin
+    vitB3:       0.375,  // mg niacin
+    vitB5:       0.15,  // mg pantothenic
+    vitB6:       0.09,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       73,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     13.4,  // mg
+    // — Macrominerals —
+    calcium:     36,  // mg
+    phosphorus:  29,  // mg
+    magnesium:   13,  // mg
+    sodium:      28,  // mg
+    potassium:   194,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.86,  // mg
+    zinc:        0.18,  // mg
+    copper:      0.048,  // mg
+    manganese:   0.25,  // mg
+    selenium:    0.6,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Romaine values shown. High vitamin K (103 µg) and folate (73 µg). Romaine and red-leaf types are highest in vitamins A and K. Iceberg has the lowest nutrient density. All types are very low-calorie.',
   },
 
   size: {

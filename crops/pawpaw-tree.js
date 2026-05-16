@@ -66,13 +66,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 80,
-    protein:  1.2,
-    carbs:    18.8,
-    fat:      1.2,
-    fiber:    2.6,
-    vitC:     18.3,
-    notes:    'One of the most nutritious native North American fruits. Higher in protein, fat, and essential amino acids than most other fruit. Rich in potassium, magnesium, and Vitamins A and C. Flavor is often described as tropical — a blend of banana, mango, and vanilla custard.',
+    // — Macronutrients —
+    calories:    80,
+    water:       74.9,   // g
+    protein:     1.2,   // g
+    carbs:       18.8,   // g total
+    fiber:       2.6,   // g
+    sugars:      14.5,   // g
+    fat:         1.2,   // g total
+    saturated:   0.35,   // g
+    monounsat:   0.51,   // g
+    polyunsat:   0.22,   // g
+    // — Fat-soluble vitamins —
+    vitA:        8,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0,   // mg
+    vitK:        0,   // µg
+    // — Water-soluble vitamins —
+    vitC:        18.3,   // mg
+    vitB1:       0.04,  // mg thiamine
+    vitB2:       0.1,  // mg riboflavin
+    vitB3:       1.1,  // mg niacin
+    vitB5:       0.26,  // mg pantothenic
+    vitB6:       0.23,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       14,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     0,  // mg
+    // — Macrominerals —
+    calcium:     19,  // mg
+    phosphorus:  37,  // mg
+    magnesium:   20,  // mg
+    sodium:      0,  // mg
+    potassium:   345,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.55,  // mg
+    zinc:        0.16,  // mg
+    copper:      0.12,  // mg
+    manganese:   0.21,  // mg
+    selenium:    0,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'One of the most nutritious native North American fruits. Higher in protein (1.2g) and fat (1.2g) than most fruit. Rich in potassium (345 mg) and Vitamins A and C. Flavor: banana + mango + vanilla custard.',
   },
 
   size: {

@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Cucurbitaceae',cycle:'3–4 year rotation away from squash, pumpkins, melons'},
   stages:[{label:'Germ',title:'Germination',desc:'5–10 days at 70°F+.'},{label:'Vine',title:'Vine growth',desc:'Train up trellis early.'},{label:'Flwr',title:'Flowering',desc:'Bees essential; male flowers precede female.'},{label:'Harv',title:'Harvest',desc:'Every 1–2 days — overripe stops production.'}],
   special:'Trellis strongly recommended. Bitter cucumbers from irregular water or temps below 55°F.',
-  nutrition:{calories:15,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5,vitC:3,notes:'96% water — good source of vitamin K and silica for skin and connective tissue.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    15,
+    water:       95.2,   // g
+    protein:     0.7,   // g
+    carbs:       3.6,   // g total
+    fiber:       0.5,   // g
+    sugars:      1.7,   // g
+    fat:         0.1,   // g total
+    saturated:   0.03,   // g
+    monounsat:   0,   // g
+    polyunsat:   0.04,   // g
+    // — Fat-soluble vitamins —
+    vitA:        5,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.03,   // mg
+    vitK:        16.4,   // µg
+    // — Water-soluble vitamins —
+    vitC:        2.8,   // mg
+    vitB1:       0.027,  // mg thiamine
+    vitB2:       0.033,  // mg riboflavin
+    vitB3:       0.098,  // mg niacin
+    vitB5:       0.259,  // mg pantothenic
+    vitB6:       0.04,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       7,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     6,  // mg
+    // — Macrominerals —
+    calcium:     16,  // mg
+    phosphorus:  24,  // mg
+    magnesium:   13,  // mg
+    sodium:      2,  // mg
+    potassium:   147,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.28,  // mg
+    zinc:        0.2,  // mg
+    copper:      0.041,  // mg
+    manganese:   0.079,  // mg
+    selenium:    0.3,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       '95% water — excellent hydration. Good source of vitamin K (16 µg). Silica in cucumbers supports connective tissue and skin health.',
+  },
   size:{weight:'200–400g per cucumber',dimensions:'Slicing: 6–8" long; pickling: 3–4"',notes:'Harvest before yellowing for peak flavor.'},
 });

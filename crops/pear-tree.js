@@ -67,13 +67,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 57,
-    protein:  0.4,
-    carbs:    15.2,
-    fat:      0.1,
-    fiber:    3.1,
-    vitC:     4.3,
-    notes:    'Good source of copper and Vitamin K. Higher fiber than many fruits, largely from pectin. Asian pears have a crisper texture and slightly different nutritional profile (slightly lower sugar).',
+    // — Macronutrients —
+    calories:    57,
+    water:       83.7,   // g
+    protein:     0.4,   // g
+    carbs:       15.2,   // g total
+    fiber:       3.1,   // g
+    sugars:      9.8,   // g
+    fat:         0.1,   // g total
+    saturated:   0.01,   // g
+    monounsat:   0.03,   // g
+    polyunsat:   0.05,   // g
+    // — Fat-soluble vitamins —
+    vitA:        1,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.12,   // mg
+    vitK:        4.4,   // µg
+    // — Water-soluble vitamins —
+    vitC:        4.3,   // mg
+    vitB1:       0.012,  // mg thiamine
+    vitB2:       0.026,  // mg riboflavin
+    vitB3:       0.161,  // mg niacin
+    vitB5:       0.049,  // mg pantothenic
+    vitB6:       0.029,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       7,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     5.1,  // mg
+    // — Macrominerals —
+    calcium:     9,  // mg
+    phosphorus:  12,  // mg
+    magnesium:   7,  // mg
+    sodium:      1,  // mg
+    potassium:   116,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.18,  // mg
+    zinc:        0.1,  // mg
+    copper:      0.082,  // mg
+    manganese:   0.048,  // mg
+    selenium:    0.1,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Good source of copper (0.08 mg) and vitamin K. Higher fiber than many fruits, largely from pectin which supports gut health. Asian pears have a crisper texture and slightly different profile.',
   },
 
   size: {

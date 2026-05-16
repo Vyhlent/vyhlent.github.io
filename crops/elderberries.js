@@ -31,6 +31,52 @@ export default new Crop({
     { label: 'Prune', title: 'Annual pruning',   desc: 'Each spring: remove 1/3 of oldest canes to ground.' },
   ],
   special: "Raw elderberries are mildly toxic — always cook before eating. 'Bob Gordon' and 'Adams' are excellent Zone 6 varieties. Plant two different varieties for best cross-pollination.",
-  nutrition: { calories: 73, protein: 0.7, carbs: 18.4, fat: 0.5, fiber: 7, vitC: 36, notes: 'Exceptionally high in anthocyanins, flavonoids, and vitamin C. Raw berries contain sambunigrin — always cook before consuming.' },
+  nutrition: {
+    // — Macronutrients —
+    calories:    73,
+    water:       79.8,   // g
+    protein:     0.7,   // g
+    carbs:       18.4,   // g total
+    fiber:       7,   // g
+    sugars:      0,   // g
+    fat:         0.5,   // g total
+    saturated:   0.02,   // g
+    monounsat:   0.08,   // g
+    polyunsat:   0.25,   // g
+    // — Fat-soluble vitamins —
+    vitA:        30,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0,   // mg
+    vitK:        0,   // µg
+    // — Water-soluble vitamins —
+    vitC:        36,   // mg
+    vitB1:       0.07,  // mg thiamine
+    vitB2:       0.06,  // mg riboflavin
+    vitB3:       0.5,  // mg niacin
+    vitB5:       0.14,  // mg pantothenic
+    vitB6:       0.23,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       6,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     0,  // mg
+    // — Macrominerals —
+    calcium:     38,  // mg
+    phosphorus:  39,  // mg
+    magnesium:   5,  // mg
+    sodium:      6,  // mg
+    potassium:   280,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        1.6,  // mg
+    zinc:        0.11,  // mg
+    copper:      0.07,  // mg
+    manganese:   0.25,  // mg
+    selenium:    0,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Exceptionally high in anthocyanins, flavonoids, and vitamin C. Highest fiber of common berries (7g/100g). Raw berries contain sambunigrin — always cook before consuming.',
+  },
   size: { weight: '3–5g per cluster (hundreds of berries per cluster)', dimensions: 'Individual berry: 0.2–0.3" diameter; clusters 4–8" wide', notes: 'Harvest entire clusters with scissors when 80%+ of berries are deep purple-black.' },
 });
