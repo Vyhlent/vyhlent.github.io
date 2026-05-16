@@ -1,4 +1,5 @@
-{
+import Crop from '../Crop.js';
+export default new Crop({
   "id": "grapes",
   "name": "Grapes",
   "category": "Berry",
@@ -152,4 +153,4 @@
     "dimensions": "0.5–1\" diameter per berry; clusters 4–8\" long",
     "notes": "Concord and table grapes are typically larger (0.75–1\"). Wine grapes are smaller and higher in sugar. Harvest when berries taste sweet and seeds are brown."
   }
-}
+});
