@@ -1,4 +1,5 @@
-{
+import Crop from '../Crop.js';
+export default new Crop({
   "id": "blueberries",
   "name": "Blueberries",
   "category": "Berry",
@@ -156,4 +157,4 @@
     "dimensions": "0.3–0.7\" diameter per berry",
     "notes": "Highbush varieties produce larger berries (0.5–0.7\") than half-high types (0.3–0.5\"). Berries in a cluster ripen unevenly over 1–2 weeks — pick every 2–3 days for maximum yield."
   }
-}
+});
