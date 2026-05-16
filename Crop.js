@@ -53,13 +53,59 @@ export default class Crop {
    *   stages  {Array<{label:string, title:string, desc:string}>}
    *
    * Nutrition (per 100g fresh weight):
-   *   nutrition.calories  {number}
-   *   nutrition.protein   {number}
-   *   nutrition.carbs     {number}
-   *   nutrition.fat       {number}
-   *   nutrition.fiber     {number}
-   *   nutrition.vitC      {number}
-   *   nutrition.notes     {string}
+   *
+   *   — Macronutrients —
+   *   nutrition.calories   {number}  - kcal
+   *   nutrition.water      {number}  - g  (moisture content)
+   *   nutrition.protein    {number}  - g
+   *   nutrition.carbs      {number}  - g  (total carbohydrate)
+   *   nutrition.fiber      {number}  - g  (dietary fiber)
+   *   nutrition.sugars     {number}  - g  (total sugars)
+   *   nutrition.fat        {number}  - g  (total fat)
+   *   nutrition.saturated  {number}  - g  (saturated fat)
+   *   nutrition.monounsat  {number}  - g  (monounsaturated fat)
+   *   nutrition.polyunsat  {number}  - g  (polyunsaturated fat)
+   *
+   *   — Fat-soluble vitamins —
+   *   nutrition.vitA       {number}  - µg RAE  (retinol activity equivalents)
+   *   nutrition.vitD       {number}  - µg      (D2 + D3)
+   *   nutrition.vitE       {number}  - mg      (alpha-tocopherol)
+   *   nutrition.vitK       {number}  - µg      (phylloquinone)
+   *
+   *   — Water-soluble vitamins —
+   *   nutrition.vitC       {number}  - mg  (ascorbic acid)
+   *   nutrition.vitB1      {number}  - mg  (thiamine)
+   *   nutrition.vitB2      {number}  - mg  (riboflavin)
+   *   nutrition.vitB3      {number}  - mg  (niacin)
+   *   nutrition.vitB5      {number}  - mg  (pantothenic acid)
+   *   nutrition.vitB6      {number}  - mg  (pyridoxine)
+   *   nutrition.vitB7      {number}  - µg  (biotin)
+   *   nutrition.vitB9      {number}  - µg DFE (folate)
+   *   nutrition.vitB12     {number}  - µg  (cobalamin — almost always 0 in plants)
+   *   nutrition.choline    {number}  - mg
+   *
+   *   — Macrominerals —
+   *   nutrition.calcium    {number}  - mg
+   *   nutrition.phosphorus {number}  - mg
+   *   nutrition.magnesium  {number}  - mg
+   *   nutrition.sodium     {number}  - mg
+   *   nutrition.potassium  {number}  - mg
+   *   nutrition.chloride   {number}  - mg
+   *
+   *   — Trace minerals —
+   *   nutrition.iron       {number}  - mg
+   *   nutrition.zinc       {number}  - mg
+   *   nutrition.copper     {number}  - mg
+   *   nutrition.manganese  {number}  - mg
+   *   nutrition.selenium   {number}  - µg
+   *   nutrition.iodine     {number}  - µg
+   *   nutrition.chromium   {number}  - µg
+   *   nutrition.molybdenum {number}  - µg
+   *   nutrition.fluoride   {number}  - mg
+   *
+   *   nutrition.notes      {string}  - free-text notes
+   *
+   * Daily values (adults, FDA 2020) stored as static Crop.DV for % calculations.
    *
    * Size:
    *   size.weight      {string}  - e.g. "100–250g per fruit"
@@ -129,14 +175,59 @@ export default class Crop {
     }));
 
     // ── Nutrition ─────────────────────────────────────────────────────────────
+    const n = data.nutrition ?? {};
+
     this.nutrition = {
-      calories: data.nutrition?.calories ?? 0,
-      protein:  data.nutrition?.protein  ?? 0,
-      carbs:    data.nutrition?.carbs    ?? 0,
-      fat:      data.nutrition?.fat      ?? 0,
-      fiber:    data.nutrition?.fiber    ?? 0,
-      vitC:     data.nutrition?.vitC     ?? 0,
-      notes:    data.nutrition?.notes    ?? '',
+      // — Macronutrients —
+      calories:    n.calories    ?? 0,
+      water:       n.water       ?? 0,   // g
+      protein:     n.protein     ?? 0,   // g
+      carbs:       n.carbs       ?? 0,   // g total
+      fiber:       n.fiber       ?? 0,   // g
+      sugars:      n.sugars      ?? 0,   // g
+      fat:         n.fat         ?? 0,   // g total
+      saturated:   n.saturated   ?? 0,   // g
+      monounsat:   n.monounsat   ?? 0,   // g
+      polyunsat:   n.polyunsat   ?? 0,   // g
+
+      // — Fat-soluble vitamins —
+      vitA:        n.vitA        ?? 0,   // µg RAE
+      vitD:        n.vitD        ?? 0,   // µg
+      vitE:        n.vitE        ?? 0,   // mg
+      vitK:        n.vitK        ?? 0,   // µg
+
+      // — Water-soluble vitamins —
+      vitC:        n.vitC        ?? 0,   // mg
+      vitB1:       n.vitB1       ?? 0,   // mg thiamine
+      vitB2:       n.vitB2       ?? 0,   // mg riboflavin
+      vitB3:       n.vitB3       ?? 0,   // mg niacin
+      vitB5:       n.vitB5       ?? 0,   // mg pantothenic acid
+      vitB6:       n.vitB6       ?? 0,   // mg pyridoxine
+      vitB7:       n.vitB7       ?? 0,   // µg biotin
+      vitB9:       n.vitB9       ?? 0,   // µg DFE folate
+      vitB12:      n.vitB12      ?? 0,   // µg cobalamin
+      choline:     n.choline     ?? 0,   // mg
+
+      // — Macrominerals —
+      calcium:     n.calcium     ?? 0,   // mg
+      phosphorus:  n.phosphorus  ?? 0,   // mg
+      magnesium:   n.magnesium   ?? 0,   // mg
+      sodium:      n.sodium      ?? 0,   // mg
+      potassium:   n.potassium   ?? 0,   // mg
+      chloride:    n.chloride    ?? 0,   // mg
+
+      // — Trace minerals —
+      iron:        n.iron        ?? 0,   // mg
+      zinc:        n.zinc        ?? 0,   // mg
+      copper:      n.copper      ?? 0,   // mg
+      manganese:   n.manganese   ?? 0,   // mg
+      selenium:    n.selenium    ?? 0,   // µg
+      iodine:      n.iodine      ?? 0,   // µg
+      chromium:    n.chromium    ?? 0,   // µg
+      molybdenum:  n.molybdenum  ?? 0,   // µg
+      fluoride:    n.fluoride    ?? 0,   // mg
+
+      notes:       n.notes       ?? '',
     };
 
     // ── Size ──────────────────────────────────────────────────────────────────
@@ -146,6 +237,54 @@ export default class Crop {
       notes:      data.size?.notes      ?? '',
     };
   }
+
+  // ── Daily values (FDA 2020, adults) ────────────────────────────────────────
+  /**
+   * Reference daily intakes used to compute % DV in the UI.
+   * Units match their corresponding nutrition fields above.
+   */
+  static DV = {
+    calories:    2000,
+    fat:           78,   // g
+    saturated:     20,   // g
+    carbs:        275,   // g
+    fiber:         28,   // g
+    sugars:        50,   // g  (added-sugar DV; used as cap for display)
+    protein:       50,   // g
+    // Fat-soluble vitamins
+    vitA:         900,   // µg RAE
+    vitD:          20,   // µg
+    vitE:          15,   // mg
+    vitK:         120,   // µg
+    // Water-soluble vitamins
+    vitC:          90,   // mg
+    vitB1:          1.2, // mg
+    vitB2:          1.3, // mg
+    vitB3:         16,   // mg NE
+    vitB5:          5,   // mg
+    vitB6:          1.7, // mg
+    vitB7:          30,  // µg
+    vitB9:         400,  // µg DFE
+    vitB12:          2.4,// µg
+    choline:       550,  // mg
+    // Macrominerals
+    calcium:      1300,  // mg
+    phosphorus:   1250,  // mg
+    magnesium:     420,  // mg
+    sodium:       2300,  // mg
+    potassium:    4700,  // mg
+    chloride:     2300,  // mg
+    // Trace minerals
+    iron:          18,   // mg
+    zinc:          11,   // mg
+    copper:         0.9, // mg
+    manganese:      2.3, // mg
+    selenium:      55,   // µg
+    iodine:       150,   // µg
+    chromium:      35,   // µg
+    molybdenum:    45,   // µg
+    fluoride:       4,   // mg
+  };
 
   // ── Serialization ───────────────────────────────────────────────────────────
 
@@ -186,7 +325,8 @@ export default class Crop {
 
   /** True if this crop is ornamental / non-food. */
   get isOrnamental() {
-    return this.nutrition.calories === 0 && this.nutrition.protein === 0 && this.nutrition.carbs === 0;
+    const n = this.nutrition;
+    return n.calories === 0 && n.protein === 0 && n.carbs === 0;
   }
 
   /** Returns the good-companion names as a comma-separated string. */
@@ -197,5 +337,17 @@ export default class Crop {
   /** Returns the bad-companion names as a comma-separated string. */
   get badCompanionNames() {
     return this.companions.bad.map(b => b.name).join(', ');
+  }
+
+  /**
+   * Returns % daily value for a given nutrition key (0–100+).
+   * Returns null if the key has no DV reference or the value is 0.
+   */
+  dvPercent(key) {
+    const dv = Crop.DV[key];
+    if (!dv) return null;
+    const val = this.nutrition[key];
+    if (!val) return null;
+    return Math.round((val / dv) * 100);
   }
 }
