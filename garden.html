@@ -48,7 +48,7 @@ window.dispatchEvent(new Event("fb-ready"));
   --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
   --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
 }
-.dark{
+body.dark, .dark{
   --p:#1e1e1b;--s:#272724;--t:#141412;
   --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
   --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
@@ -243,6 +243,9 @@ let tool         = 'draw';
 let isDark       = false;
 let painting     = false;
 
+// Apply dark mode immediately to prevent flash
+try { if (localStorage.getItem('gp-dark') === '1') { isDark = true; document.body.classList.add('dark'); document.getElementById('loading-overlay').classList.add('dark'); } } catch(e) {}
+
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function toast(type, msg, ms=3500) {
@@ -256,7 +259,9 @@ function toast(type, msg, ms=3500) {
 }
 
 function applyDark() {
+  document.body.classList.toggle('dark', isDark);
   document.getElementById('app').classList.toggle('dark', isDark);
+  document.getElementById('loading-overlay').classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 function toggleDark() {
@@ -380,8 +385,6 @@ function resizeGrid() {
 }
 
 async function boot() {
-  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; } } catch(e) {}
-
   document.getElementById('garden-title').textContent = 'Garden: ' + GARDEN_CODE;
   document.title = 'My Garden - ' + GARDEN_CODE;
 
