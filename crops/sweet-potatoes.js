@@ -109,7 +109,7 @@ export default new Crop({
     chromium:    0,  // µg
     molybdenum:  0,  // µg
     fluoride:    0,  // mg
-    notes:       'Exceptional beta-carotene (vitamin A — 961 µg RAE, ~107% DV). One medium sweet potato provides more than a full day's vitamin A. Also rich in potassium and manganese. Orange-fleshed varieties highest in beta-carotene.',
+    notes:       'Exceptional beta-carotene (vitamin A — 961 µg RAE, ~107% DV). One medium sweet potato provides more than a full day\'s vitamin A. Also rich in potassium and manganese. Orange-fleshed varieties highest in beta-carotene.',
   },
 
   size: {
