@@ -64,6 +64,10 @@ h1{font-size:22px;font-weight:500;margin-bottom:.3rem;color:var(--tp)}
 }
 .new-pill{display:inline-flex;align-items:center;font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;background:#EAF3DE;color:#27500A;margin-left:8px;vertical-align:middle}
 @media(prefers-color-scheme:dark){.new-pill{background:#1a2e08;color:#c0dd97}}
+.done-pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:2px 9px;border-radius:10px;background:#E1F5EE;color:#085041;margin-left:8px;vertical-align:middle}
+@media(prefers-color-scheme:dark){.done-pill{background:#04342C;color:#9FE1CB}}
+.phase.done .phase-header{opacity:.75}
+.phase.done .phase-body{opacity:.8}
 .complexity{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ts);margin-top:11px;padding:5px 11px;border-radius:6px;background:var(--s)}
 .cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 </style>
@@ -84,7 +88,7 @@ h1{font-size:22px;font-weight:500;margin-bottom:.3rem;color:var(--tp)}
 </div>
 <script>
 const PHASES=[
-{id:'0',title:'Schema design — do this first',meta:'One-time · No code yet',complexity:1,
+{id:'0',title:'Schema design — do this first',meta:'One-time · No code yet',complexity:1,isDone:true,
  color:'#0F6E56',bg:'#E1F5EE',dbg:'#04342C',dc:'#9FE1CB',
  sections:[
   {l:'Firestore crops/{cropId} document fields',tasks:[
@@ -128,7 +132,7 @@ const PHASES=[
    {i:'ti-refresh',t:'Replace loadCrops() GitHub fetch with the same Firestore query',s:'Both files use identical read path — consider extracting to a shared crops.js module',g:['d']},
   ]},
  ]},
-{id:'1',title:'Expanded nutrition tab',meta:'index.html only · No auth needed',complexity:1,
+{id:'1',title:'Expanded nutrition tab',meta:'index.html only · No auth needed',complexity:1,isDone:true,
  dep:'Can be done in parallel with phases A–B after phase 0 schema is done',
  color:'#534AB7',bg:'#EEEDFE',dbg:'#1e1c3a',dc:'#AFA9EC',
  sections:[
@@ -318,11 +322,11 @@ function tags(g){return(g||[]).map(x=>`<span class="tag ${TM[x]||''}">${TL[x]||x
 const wrap=document.getElementById('phases');
 PHASES.forEach((p,i)=>{
   const el=document.createElement('div');
-  el.className='phase'+(i===0?' open':'');
+  el.className='phase'+(i===0?' open':'')+(p.isDone?' done':'');
   el.innerHTML=`
 <div class="phase-header" onclick="this.parentElement.classList.toggle('open')">
-  <span class="badge" style="background:${p.bg};color:${p.color}">${p.id}</span>
-  <span class="phase-title">${p.title}${p.isNew?'<span class="new-pill">New</span>':''}</span>
+  <span class="badge" style="background:${p.bg};color:${p.color}">${p.isDone?'✓':p.id}</span>
+  <span class="phase-title">${p.title}${p.isNew?'<span class="new-pill">New</span>':''}${p.isDone?'<span class="done-pill">✓ Complete</span>':''}</span>
   <span class="phase-meta">${p.meta}</span>
   <span class="chevron">&#9660;</span>
 </div>

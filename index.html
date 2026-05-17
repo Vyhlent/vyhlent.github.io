@@ -64,7 +64,8 @@ a{color:inherit;text-decoration:none}
 /* Layout */
 .app{max-width:1200px;margin:0 auto;padding:1.5rem 1rem}
 .topnav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.nav-left{display:flex;overflow-x:auto;flex:1;min-width:0;border-bottom:1px solid var(--b1)}
+.nav-left{display:flex;overflow-x:auto;flex:1;min-width:0;border-bottom:1px solid var(--b1);scrollbar-width:none;-ms-overflow-style:none}
+.nav-left::-webkit-scrollbar{display:none}
 .nav-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
 .nav-divider{border-bottom:1px solid var(--b1);margin-bottom:1.75rem}
 .nbtn{padding:12px 18px;font-size:16px;border-bottom:3px solid transparent;color:var(--ts);background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap;margin-bottom:-1px}
@@ -99,7 +100,8 @@ a{color:inherit;text-decoration:none}
 .ph-icon{width:58px;height:58px;border-radius:10px;background:var(--gnb);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .ph-title{font-size:22px;font-weight:500;color:var(--tp)}
 .ph-sub{font-size:14px;color:var(--ts);margin-top:3px}
-.stabs{display:flex;border-bottom:1px solid var(--b1);margin-bottom:1.75rem;overflow-x:auto}
+.stabs{display:flex;border-bottom:1px solid var(--b1);margin-bottom:1.75rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.stabs::-webkit-scrollbar{display:none}
 .stab{padding:10px 16px;font-size:14px;border-bottom:2px solid transparent;color:var(--ts);margin-bottom:-1px;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none}
 .stab.on{color:var(--gn);border-bottom-color:var(--gn)}
 .tc{display:none}.tc.on{display:block}
@@ -188,6 +190,35 @@ a{color:inherit;text-decoration:none}
 .matrix-table th{padding:5px 8px;font-weight:500;color:var(--ts);white-space:nowrap;font-size:12px}
 .matrix-table td{width:28px;height:28px;text-align:center;border:1px solid var(--b1);font-size:13px}
 .cg{background:var(--gnb)}.cb_{background:var(--rb)}.cs{background:var(--s)}.cn{background:var(--p)}
+.cy{background:#FFFACD;color:#7A6200}
+.cg-one{background:#D4EDDA;color:#27500A}
+@media(prefers-color-scheme:dark){.cy{background:#2E2700;color:#F0D060}.cg-one{background:#0D2018;color:#7EC897}}
+.dark .cy{background:#2E2700;color:#F0D060}
+.dark .cg-one{background:#0D2018;color:#7EC897}
+.chart-tab-row{display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap}
+.chart-tab{padding:7px 16px;border:1px solid var(--b2);border-radius:20px;background:var(--p);color:var(--ts);font-size:14px;cursor:pointer}
+.chart-tab.on{background:var(--gn);color:#EAF3DE;border-color:var(--gn)}
+.chart-section{display:none}.chart-section.on{display:block}
+.season-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:2px;margin-bottom:6px}
+.month-label{font-size:10px;text-align:center;color:var(--tt);padding:2px 0}
+.season-cell{height:24px;border-radius:3px;background:var(--s)}
+.season-cell.plant{background:#7abd3e}
+.season-cell.grow{background:#27500A}
+.season-cell.harvest{background:#EF9F27}
+.season-crop-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 12px;background:var(--p);border:1px solid var(--b1);border-radius:8px}
+.season-emoji{font-size:20px;width:26px;text-align:center;flex-shrink:0}
+.season-name{font-size:13px;font-weight:500;color:var(--tp);width:120px;flex-shrink:0}
+.season-bar{flex:1;display:grid;grid-template-columns:repeat(12,1fr);gap:2px}
+.sbar-cell{height:20px;border-radius:2px;background:var(--s)}
+.sbar-plant{background:#7abd3e}
+.sbar-grow{background:#1a5c08}
+.sbar-harvest{background:#EF9F27}
+.sun-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 12px;background:var(--p);border:1px solid var(--b1);border-radius:8px}
+.sun-track{flex:1;height:14px;border-radius:7px;background:var(--s);overflow:hidden;position:relative}
+.sun-fill{height:100%;border-radius:7px}
+.water-bar{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:8px 12px;background:var(--p);border:1px solid var(--b1);border-radius:8px}
+.water-track{flex:1;height:14px;border-radius:7px;background:var(--s);overflow:hidden}
+.water-fill{height:100%;border-radius:7px;background:#5EB0E5}
 .leg-row{display:flex;gap:20px;margin-bottom:1.25rem;flex-wrap:wrap}
 .leg-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ts)}
 .leg-dot{width:14px;height:14px;border-radius:3px;flex-shrink:0}
@@ -232,6 +263,7 @@ a{color:inherit;text-decoration:none}
     <div class="nav-left" id="nav-tabs">
       <button class="nbtn on" onclick="gotoPage('plants')">Plants</button>
       <button class="nbtn" onclick="gotoPage('companions')">Companion chart</button>
+      <button class="nbtn" onclick="gotoPage('charts')">Charts</button>
       <button class="nbtn" onclick="gotoPage('rotation')">Crop rotation</button>
       <button class="nbtn" onclick="gotoPage('nutrition')">Nutrition</button>
     </div>
@@ -276,14 +308,50 @@ a{color:inherit;text-decoration:none}
     <div class="page-title">Companion planting chart</div>
     <div class="page-sub">Cross-reference any two plants to see if they help (green ✓), hurt (red ✗), or are neutral.</div>
     <div class="leg-row">
-      <span class="leg-item"><span class="leg-dot" style="background:var(--gnb);border:1px solid var(--gn)"></span>Compatible</span>
+      <span class="leg-item"><span class="leg-dot" style="background:var(--gnb);border:1px solid var(--gn)"></span>Both compatible</span>
+      <span class="leg-item"><span class="leg-dot cg-one" style="border:1px solid var(--gn)"></span>One-sided good</span>
       <span class="leg-item"><span class="leg-dot" style="background:var(--rb);border:1px solid var(--rbr)"></span>Incompatible</span>
+      <span class="leg-item"><span class="leg-dot cy" style="border:1px solid #c0a000"></span>Conflict (good+bad)</span>
       <span class="leg-item"><span class="leg-dot" style="background:var(--s);border:1px solid var(--b1)"></span>Same plant</span>
       <span class="leg-item"><span class="leg-dot" style="background:var(--p);border:1px solid var(--b1)"></span>Neutral</span>
     </div>
     <div id="comp-matrix"></div>
     <div class="fsec">Plant families — never plant the same family in the same bed consecutively</div>
     <div id="fam-groups"></div>
+  </div>
+
+  <div id="page-charts" class="page">
+    <div class="page-title">Garden charts</div>
+    <div class="page-sub">Visual reference for planting seasons, sun, watering, and fertilizing across all crops.</div>
+    <div class="chart-tab-row">
+      <button class="chart-tab on" onclick="showChartSection('seasons')">🌱 Seasons</button>
+      <button class="chart-tab" onclick="showChartSection('sun')">☀️ Sun exposure</button>
+      <button class="chart-tab" onclick="showChartSection('water')">💧 Watering</button>
+      <button class="chart-tab" onclick="showChartSection('fertilizer')">🌿 Fertilizer</button>
+    </div>
+    <div id="chart-seasons" class="chart-section on">
+      <div class="leg-row" style="margin-bottom:1rem">
+        <span class="leg-item"><span class="leg-dot" style="background:#7abd3e"></span>Planting window</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#1a5c08"></span>Growing season</span>
+        <span class="leg-item"><span class="leg-dot" style="background:#EF9F27"></span>Harvest window</span>
+      </div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:0 10px;margin-bottom:6px;padding:0 12px">
+        <div style="width:146px"></div>
+        <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:2px">
+          ${['J','F','M','A','M','J','J','A','S','O','N','D'].map(m=>`<div class="month-label">${m}</div>`).join('')}
+        </div>
+      </div>
+      <div id="seasons-content"></div>
+    </div>
+    <div id="chart-sun" class="chart-section">
+      <div id="sun-content"></div>
+    </div>
+    <div id="chart-water" class="chart-section">
+      <div id="water-content"></div>
+    </div>
+    <div id="chart-fertilizer" class="chart-section">
+      <div id="fertilizer-content"></div>
+    </div>
   </div>
 
   <div id="page-rotation" class="page">
@@ -309,7 +377,7 @@ let activeFilter = 'All';
 let currentId    = null;
 let editingPlant = null;
 let isNew        = false;
-let cR = false, rR = false, nR = false;  // chart render flags
+let cR = false, rR = false, nR = false, chR = false;  // chart render flags
 
 // ─── Daily value reference (FDA 2020, adults) ─────────────
 const DV = {
@@ -368,6 +436,14 @@ function gotoPage(p) {
   if (p === 'companions' && !cR) { renderCompanions();    cR = true; }
   if (p === 'rotation'   && !rR) { renderRotation();      rR = true; }
   if (p === 'nutrition'  && !nR) { renderNutritionPage(); nR = true; }
+  if (p === 'charts'     && !chR) { renderAllCharts();    chR = true; }
+}
+
+function showChartSection(sec) {
+  document.querySelectorAll('.chart-section').forEach(x => x.classList.remove('on'));
+  document.querySelectorAll('.chart-tab').forEach(x => x.classList.remove('on'));
+  document.getElementById('chart-' + sec).classList.add('on');
+  document.querySelector(`.chart-tab[onclick="showChartSection('${sec}')"]`).classList.add('on');
 }
 
 function getCats() { return ['All', ...new Set(PLANTS.map(p => p.data.cat))]; }
@@ -636,7 +712,7 @@ function deletePlant(id) {
   const p = PLANTS.find(x => x.data.id === id); if (!p) return;
   if (!confirm(`Delete "${p.data.name}"? This removes it from the current session.`)) return;
   PLANTS = PLANTS.filter(x => x.data.id !== id);
-  cR=false; rR=false; nR=false;
+  cR=false; rR=false; nR=false; chR=false;
   renderCatRow(); renderGrid();
   if (currentId === id) { currentId = null; showList(); }
   toast('ok', `Deleted ${p.data.name} (session only)`);
@@ -843,7 +919,7 @@ async function _doSave() {
       if (idx >= 0) PLANTS[idx] = JSON.parse(JSON.stringify(editingPlant));
     }
 
-    cR=false; rR=false; nR=false;
+    cR=false; rR=false; nR=false; chR=false;
     document.getElementById('edit-modal').classList.add('hidden');
     const savedId=d.id; editingPlant=null;
     renderCatRow(); renderGrid();
@@ -868,8 +944,12 @@ function renderCompanions() {
 <tr><th></th>${PLANTS.map(p=>`<th style="writing-mode:vertical-rl;height:90px;vertical-align:bottom;padding-bottom:5px" title="${esc(p.data.name)}">${esc(p.data.emoji)}</th>`).join('')}</tr>
 ${PLANTS.map((p,i)=>`<tr><th style="text-align:right;padding-right:8px;white-space:nowrap;font-size:12px;color:var(--ts)">${esc(p.data.emoji)} ${esc(p.data.name.split(' ')[0])}</th>${PLANTS.map((_,j)=>{
   if(i===j)return`<td class="cs">·</td>`;
-  if(g[i][j]||g[j][i])return`<td class="cg" title="${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
-  if(b[i][j]||b[j][i])return`<td class="cb_" title="${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✗</td>`;
+  const goodI=g[i][j], goodJ=g[j][i], badI=b[i][j], badJ=b[j][i];
+  const anyGood=goodI||goodJ, anyBad=badI||badJ;
+  if(anyGood&&anyBad)return`<td class="cy" title="Conflict: one says good, other says bad — ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">⚡</td>`;
+  if(goodI&&goodJ)return`<td class="cg" title="Both compatible: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
+  if(anyGood)return`<td class="cg-one" title="One-sided good: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
+  if(anyBad)return`<td class="cb_" title="Incompatible: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✗</td>`;
   return`<td class="cn"></td>`;
 }).join('')}</tr>`).join('')}
 </table></div>`;
@@ -905,7 +985,172 @@ function renderRotation() {
 </div>`).join('');
 }
 
-// ─── Nutrition charts ─────────────────────────────────────
+// ─── Garden charts (seasons, sun, water, fertilizer) ──────
+function renderAllCharts() {
+  renderSeasonsChart();
+  renderSunChart();
+  renderWaterChart();
+  renderFertilizerChart();
+}
+
+function renderSeasonsChart() {
+  // Zone 6 approximate planting / growing / harvest windows per crop
+  // [plantStart, plantEnd, growStart, growEnd, harvestStart, harvestEnd] (1=Jan, 12=Dec)
+  const seasonData = {
+    'Tomatoes':      [4,5, 5,8, 8,10],
+    'Peppers':       [4,5, 5,9, 8,10],
+    'Cucumbers':     [5,6, 6,8, 7,9],
+    'Zucchini':      [5,6, 6,8, 7,9],
+    'Carrots':       [3,5, 4,7, 6,10],
+    'Lettuce':       [3,5, 4,6, 5,6],
+    'Spinach':       [3,4, 4,6, 5,6],
+    'Kale':          [3,4, 4,6, 5,7],
+    'Beans':         [5,6, 6,8, 7,9],
+    'Peas':          [3,4, 4,6, 5,6],
+    'Onions':        [3,4, 4,8, 7,9],
+    'Garlic':        [10,11,11,6, 6,7],
+    'Potatoes':      [4,5, 5,8, 7,9],
+    'Corn':          [5,6, 6,8, 8,9],
+    'Broccoli':      [3,4, 4,6, 5,6],
+    'Cabbage':       [3,4, 4,6, 5,6],
+    'Beets':         [3,5, 4,7, 6,9],
+    'Radishes':      [3,5, 4,6, 4,6],
+    'Basil':         [5,6, 6,9, 7,10],
+    'Parsley':       [3,5, 4,8, 6,10],
+    'Mint':          [4,5, 5,10,6,10],
+    'Dill':          [4,6, 5,8, 7,9],
+    'Cherry Tree':   [3,4, 4,7, 6,7],
+    'Mulberry Tree': [3,4, 4,8, 6,8],
+    'Honey Locust':  [4,5, 5,10,9,10],
+    'Wild Blackberry':[4,5,5,8, 7,9],
+    'Field Garlic':  [3,4, 4,7, 5,6],
+    'Pokeweed':      [4,5, 5,9, 8,10],
+    'Queen Anne\'s Lace':[4,5,5,9,7,9],
+  };
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let html = '';
+  PLANTS.forEach(p => {
+    const d = seasonData[p.data.name];
+    if (!d) return;
+    const [ps,pe,gs,ge,hs,he] = d;
+    let cells = '';
+    for (let m=1;m<=12;m++) {
+      const inPlant = ps<=pe ? (m>=ps&&m<=pe) : (m>=ps||m<=pe);
+      const inGrow  = gs<=ge ? (m>=gs&&m<=ge) : (m>=gs||m<=ge);
+      const inHarv  = hs<=he ? (m>=hs&&m<=he) : (m>=hs||m<=he);
+      let cls = '';
+      if (inGrow) cls = 'sbar-grow';
+      else if (inPlant) cls = 'sbar-plant';
+      else if (inHarv) cls = 'sbar-harvest';
+      cells += `<div class="sbar-cell ${cls}" title="${MONTHS[m-1]}"></div>`;
+    }
+    html += `<div class="season-crop-row">
+      <span class="season-emoji">${esc(p.data.emoji)}</span>
+      <span class="season-name">${esc(p.data.name)}</span>
+      <div class="season-bar">${cells}</div>
+    </div>`;
+  });
+  document.getElementById('seasons-content').innerHTML = html || '<div style="color:var(--tt);padding:1rem">No season data yet.</div>';
+}
+
+function renderSunChart() {
+  const sunMap = {
+    'Full sun':          {pct:100, color:'#F4A124'},
+    'Full Sun':          {pct:100, color:'#F4A124'},
+    'Full sun / partial':{pct:75,  color:'#EAC32E'},
+    'Partial shade':     {pct:50,  color:'#B8C860'},
+    'Full shade':        {pct:25,  color:'#55B89A'},
+  };
+  const sorted = [...PLANTS].sort((a,b)=>{
+    const aS=a.data.planting?.sun||''; const bS=b.data.planting?.sun||'';
+    const aP=(sunMap[aS]||{pct:0}).pct; const bP=(sunMap[bS]||{pct:0}).pct;
+    return bP-aP;
+  });
+  let html = '';
+  sorted.forEach(p => {
+    const sun = p.data.planting?.sun || 'Unknown';
+    const {pct=50, color='#888'} = sunMap[sun] || {};
+    html += `<div class="sun-bar">
+      <span style="font-size:19px;width:26px;text-align:center;flex-shrink:0">${esc(p.data.emoji)}</span>
+      <span style="font-size:13px;font-weight:500;color:var(--tp);width:160px;flex-shrink:0">${esc(p.data.name)}</span>
+      <div class="sun-track" title="${esc(sun)}">
+        <div class="sun-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span style="font-size:12px;color:var(--tt);width:120px;flex-shrink:0;padding-left:10px">${esc(sun)}</span>
+    </div>`;
+  });
+  document.getElementById('sun-content').innerHTML = `
+    <div style="font-size:13px;color:var(--ts);margin-bottom:1rem">Sun requirements from full sun (100%) to full shade (25%), sorted by sun preference.</div>
+    <div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;margin-bottom:8px;padding:0 12px">
+      <div style="width:186px"></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tt)"><span>Shade</span><span>Partial</span><span>Full sun</span></div>
+    </div>
+    ${html}`;
+}
+
+function renderWaterChart() {
+  const sorted = [...PLANTS].sort((a,b)=>{
+    return (parseFloat(b.data.water?.in)||0)-(parseFloat(a.data.water?.in)||0);
+  });
+  const maxW = Math.max(...sorted.map(p=>parseFloat(p.data.water?.in)||0), 2);
+  let html = '';
+  sorted.forEach(p => {
+    const w = parseFloat(p.data.water?.in) || 0;
+    const pct = Math.round((w/maxW)*100);
+    const color = w>1.5 ? '#185FA5' : w>1 ? '#5EB0E5' : '#B5D4F4';
+    html += `<div class="water-bar">
+      <span style="font-size:19px;width:26px;text-align:center;flex-shrink:0">${esc(p.data.emoji)}</span>
+      <span style="font-size:13px;font-weight:500;color:var(--tp);width:160px;flex-shrink:0">${esc(p.data.name)}</span>
+      <div class="water-track" title="${w} in/week">
+        <div class="water-fill" style="width:${pct}%;background:${color}"></div>
+      </div>
+      <span style="font-size:12px;color:var(--tt);width:80px;flex-shrink:0;padding-left:10px">${w>0?w+' in/wk':'-'}</span>
+    </div>`;
+  });
+  document.getElementById('water-content').innerHTML = `
+    <div style="font-size:13px;color:var(--ts);margin-bottom:1rem">Weekly water needs in inches, sorted from highest to lowest. Darker blue = more water needed.</div>
+    ${html}`;
+}
+
+function renderFertilizerChart() {
+  const fertMap = {
+    'Balanced':          {color:'#639922', label:'Balanced (e.g. 10-10-10)'},
+    'balanced':          {color:'#639922', label:'Balanced'},
+    'High nitrogen':     {color:'#185FA5', label:'High nitrogen (leafy growth)'},
+    'Nitrogen-rich':     {color:'#185FA5', label:'High nitrogen'},
+    'Low nitrogen':      {color:'#88C055', label:'Low nitrogen'},
+    'Phosphorus-rich':   {color:'#BA7517', label:'High phosphorus (root/flower)'},
+    'Potassium-rich':    {color:'#9080D4', label:'High potassium (fruiting)'},
+    'Compost':           {color:'#7A5C30', label:'Compost / organic matter'},
+    'Organic':           {color:'#7A5C30', label:'Organic'},
+    'None required':     {color:'#888',    label:'None required'},
+    'Minimal':           {color:'#aaa',    label:'Minimal'},
+  };
+  const groups = {};
+  PLANTS.forEach(p => {
+    const ft = p.data.fertilizer?.type || 'Unspecified';
+    let matched = 'Unspecified';
+    for (const k of Object.keys(fertMap)) { if (ft.toLowerCase().includes(k.toLowerCase())) { matched=k; break; } }
+    if (!groups[matched]) groups[matched] = [];
+    groups[matched].push(p);
+  });
+
+  let html = '';
+  Object.entries(groups).forEach(([type, crops]) => {
+    const {color='#aaa', label=type} = fertMap[type] || {};
+    html += `<div style="margin-bottom:1.25rem;padding:14px 16px;border:1px solid var(--b1);border-radius:10px;border-left:4px solid ${color}">
+      <div style="font-size:14px;font-weight:500;color:var(--tp);margin-bottom:8px">${esc(label)}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px">
+        ${crops.map(p=>`<span style="background:var(--s);padding:4px 12px;border-radius:10px;font-size:13px;color:var(--tp)">${esc(p.data.emoji)} ${esc(p.data.name)}</span>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('fertilizer-content').innerHTML = `
+    <div style="font-size:13px;color:var(--ts);margin-bottom:1rem">Crops grouped by fertilizer type. See each crop's detail view for amount and frequency.</div>
+    ${html}`;
+}
+
+
 function renderNutritionPage() {
   const food = PLANTS.filter(p => p.data.nutrition?.calories > 0);
   const herb = PLANTS.filter(p => !p.data.nutrition?.calories && p.data.nutrition?.notes);
