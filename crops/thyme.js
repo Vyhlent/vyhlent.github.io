@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Lamiaceae (perennial)',cycle:'Hardy perennial Zone 6; divide every 2–3 years'},
   stages:[{label:'Germ',title:'Germination',desc:'14–28 days from seed; transplants recommended.'},{label:'Est',title:'Establishment',desc:'Slow first year; hardy by end of season.'},{label:'Harv',title:'Harvest',desc:'Tips before flowering; cut back 1/3 max.'},{label:'Renew',title:'Renewal',desc:'Divide or cut back hard every 2–3 years.'}],
   special:'English thyme is classic culinary. Hardy in Zone 6 — returns each year. Allow to bloom for bees.',
-  nutrition:{calories:101,protein:5.6,carbs:24,fat:1.7,fiber:14,vitC:160,notes:'Rich in thymol and carvacrol — powerful antimicrobial compounds. Used in small culinary amounts.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    101,
+    water:       65.1,   // g
+    protein:     5.6,   // g
+    carbs:       24.5,   // g total
+    fiber:       14,   // g
+    sugars:      0,   // g
+    fat:         1.7,   // g total
+    saturated:   0.47,   // g
+    monounsat:   0.08,   // g
+    polyunsat:   0.53,   // g
+    // — Fat-soluble vitamins —
+    vitA:        238,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0,   // mg
+    vitK:        141.5,   // µg
+    // — Water-soluble vitamins —
+    vitC:        160.1,   // mg
+    vitB1:       0.048,  // mg thiamine
+    vitB2:       0.471,  // mg riboflavin
+    vitB3:       1.824,  // mg niacin
+    vitB5:       0.409,  // mg pantothenic
+    vitB6:       0.348,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       45,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     0,  // mg
+    // — Macrominerals —
+    calcium:     405,  // mg
+    phosphorus:  106,  // mg
+    magnesium:   160,  // mg
+    sodium:      9,  // mg
+    potassium:   609,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        17.45,  // mg
+    zinc:        1.81,  // mg
+    copper:      0.555,  // mg
+    manganese:   1.719,  // mg
+    selenium:    0.9,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Values per 100g fresh herb — typical culinary serving is ~1g. Extraordinary iron (17.5 mg), calcium (405 mg), vitamin C (160 mg), and vitamin K (142 µg) per 100g. Rich in thymol and carvacrol — powerful antimicrobial and antifungal compounds.',
+  },
   size:{weight:'N/A — culinary herb',dimensions:'Plant: 6–12" tall, spreading',notes:'Harvest stem tips 2–3 inches long.'},
 });

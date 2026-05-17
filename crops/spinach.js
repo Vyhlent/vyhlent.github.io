@@ -30,6 +30,52 @@ export default new Crop({
     { label: 'Bolt',  title: 'Bolting',      desc: 'Hot temps trigger bolting. Harvest immediately.' },
   ],
   special: 'Plant in succession every 2–3 weeks. Best flavor after a light frost.',
-  nutrition: { calories: 23, protein: 2.9, carbs: 3.6, fat: 0.4, fiber: 2.2, vitC: 28, notes: 'Exceptionally high in vitamin K, folate, and iron.' },
+  nutrition: {
+    // — Macronutrients —
+    calories:    23,
+    water:       91.4,   // g
+    protein:     2.9,   // g
+    carbs:       3.6,   // g total
+    fiber:       2.2,   // g
+    sugars:      0.4,   // g
+    fat:         0.4,   // g total
+    saturated:   0.06,   // g
+    monounsat:   0.01,   // g
+    polyunsat:   0.17,   // g
+    // — Fat-soluble vitamins —
+    vitA:        469,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        2.03,   // mg
+    vitK:        482.9,   // µg
+    // — Water-soluble vitamins —
+    vitC:        28.1,   // mg
+    vitB1:       0.078,  // mg thiamine
+    vitB2:       0.189,  // mg riboflavin
+    vitB3:       0.724,  // mg niacin
+    vitB5:       0.065,  // mg pantothenic
+    vitB6:       0.195,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       194,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     19.3,  // mg
+    // — Macrominerals —
+    calcium:     99,  // mg
+    phosphorus:  49,  // mg
+    magnesium:   79,  // mg
+    sodium:      79,  // mg
+    potassium:   558,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        2.71,  // mg
+    zinc:        0.53,  // mg
+    copper:      0.13,  // mg
+    manganese:   0.897,  // mg
+    selenium:    1,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Extraordinary vitamin K (483 µg — 403% DV) and vitamin A (469 µg — 52% DV). Folate 194 µg (49% DV). High iron (2.71 mg) though absorption is reduced by oxalates — pair with vitamin C foods to improve uptake. One of the most nutrient-dense vegetables.',
+  },
   size: { weight: '150–250g per bunch', dimensions: 'Leaves 3–6" long', notes: 'Harvest at 3–4 inches for baby spinach, 6+ for mature.' },
 });

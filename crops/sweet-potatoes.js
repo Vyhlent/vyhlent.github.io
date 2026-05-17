@@ -65,13 +65,51 @@ export default new Crop({
   ],
 
   nutrition: {
-    calories: 86,
-    protein:  1.6,
-    carbs:    20.1,
-    fat:      0.1,
-    fiber:    3.0,
-    vitC:     2.4,
-    notes:    'Excellent source of beta-carotene (Vitamin A precursor); orange-fleshed varieties can provide >100% DV Vitamin A per serving. Also rich in potassium and manganese.',
+    // — Macronutrients —
+    calories:    86,
+    water:       77.3,   // g
+    protein:     1.6,   // g
+    carbs:       20.1,   // g total
+    fiber:       3,   // g
+    sugars:      4.2,   // g
+    fat:         0.1,   // g total
+    saturated:   0.02,   // g
+    monounsat:   0,   // g
+    polyunsat:   0.04,   // g
+    // — Fat-soluble vitamins —
+    vitA:        961,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0.26,   // mg
+    vitK:        1.8,   // µg
+    // — Water-soluble vitamins —
+    vitC:        2.4,   // mg
+    vitB1:       0.078,  // mg thiamine
+    vitB2:       0.061,  // mg riboflavin
+    vitB3:       0.557,  // mg niacin
+    vitB5:       0.8,  // mg pantothenic
+    vitB6:       0.286,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       11,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     12.3,  // mg
+    // — Macrominerals —
+    calcium:     30,  // mg
+    phosphorus:  47,  // mg
+    magnesium:   25,  // mg
+    sodium:      55,  // mg
+    potassium:   337,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        0.61,  // mg
+    zinc:        0.3,  // mg
+    copper:      0.151,  // mg
+    manganese:   0.258,  // mg
+    selenium:    0.6,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Exceptional beta-carotene (vitamin A — 961 µg RAE, ~107% DV). One medium sweet potato provides more than a full day's vitamin A. Also rich in potassium and manganese. Orange-fleshed varieties highest in beta-carotene.',
   },
 
   size: {

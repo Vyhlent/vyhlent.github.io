@@ -15,6 +15,52 @@ export default new Crop({
   rotation:{family:'Lamiaceae (perennial/annual in Z6)',cycle:'Annual in Zone 6 unless protected; rotate position each year'},
   stages:[{label:'Est',title:'Establishment',desc:'Water regularly until established (4–6 weeks).'},{label:'Grow',title:'Growth',desc:'Pinch tips for bushing.'},{label:'Harv',title:'Harvest',desc:'Harvest tips continuously.'},{label:'Frost',title:'Pre-frost',desc:'Bring inside or mulch heavily before first frost.'}],
   special:'Zone 6: Arp or Hill Hardy varieties survive outdoors with heavy mulch. Otherwise grow in container.',
-  nutrition:{calories:131,protein:3.3,carbs:21,fat:5.9,fiber:14,vitC:22,notes:'Used in small culinary amounts. High in rosmarinic acid and carnosic acid. Per 100g figures are for dried herb.'},
+  nutrition: {
+    // — Macronutrients —
+    calories:    131,
+    water:       67.8,   // g
+    protein:     3.3,   // g
+    carbs:       20.7,   // g total
+    fiber:       14.1,   // g
+    sugars:      0,   // g
+    fat:         5.9,   // g total
+    saturated:   2.84,   // g
+    monounsat:   1.16,   // g
+    polyunsat:   0.9,   // g
+    // — Fat-soluble vitamins —
+    vitA:        146,   // µg RAE
+    vitD:        0,   // µg
+    vitE:        0,   // mg
+    vitK:        109.7,   // µg
+    // — Water-soluble vitamins —
+    vitC:        21.8,   // mg
+    vitB1:       0.036,  // mg thiamine
+    vitB2:       0.152,  // mg riboflavin
+    vitB3:       0.912,  // mg niacin
+    vitB5:       0.804,  // mg pantothenic
+    vitB6:       0.336,  // mg pyridoxine
+    vitB7:       0,  // µg biotin
+    vitB9:       109,  // µg DFE folate
+    vitB12:      0,  // µg cobalamin
+    choline:     0,  // mg
+    // — Macrominerals —
+    calcium:     317,  // mg
+    phosphorus:  66,  // mg
+    magnesium:   91,  // mg
+    sodium:      26,  // mg
+    potassium:   668,  // mg
+    chloride:    0,  // mg
+    // — Trace minerals —
+    iron:        6.65,  // mg
+    zinc:        0.93,  // mg
+    copper:      0.301,  // mg
+    manganese:   0.96,  // mg
+    selenium:    0,  // µg
+    iodine:      0,  // µg
+    chromium:    0,  // µg
+    molybdenum:  0,  // µg
+    fluoride:    0,  // mg
+    notes:       'Values are per 100g fresh herb. Very high vitamin K (110 µg), iron (6.65 mg — 37% DV), calcium (317 mg), and folate (109 µg). Rich in rosmarinic acid and carnosic acid (antioxidants). Note: typical serving is 1–2 teaspoons (~1–2g).',
+  },
   size:{weight:'N/A — culinary herb',dimensions:'Plant: 18–36" tall and wide',notes:'Harvest 2–3 inch stem tips.'},
 });
