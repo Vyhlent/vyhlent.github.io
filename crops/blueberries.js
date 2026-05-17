@@ -2,7 +2,7 @@ import Crop from '../Crop.js';
 export default new Crop({
   "id": "blueberries",
   "name": "Blueberries",
-  "category": "Berry",
+  "cat": "Berry",
   "emoji": "🫐",
   "planting": {
     "zone6": "Plant bare-root or container shrubs Mar–Apr or Oct; fruit in year 2–3; full production year 4–6",
