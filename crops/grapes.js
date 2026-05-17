@@ -2,7 +2,7 @@ import Crop from '../Crop.js';
 export default new Crop({
   "id": "grapes",
   "name": "Grapes",
-  "category": "Berry",
+  "cat": "Berry",
   "emoji": "🍇",
   "planting": {
     "zone6": "Plant bare-root vines Mar–Apr (soil 50°F+); container plants May; fruit in year 3",
