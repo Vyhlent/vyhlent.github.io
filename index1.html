@@ -1053,33 +1053,78 @@ function renderSeasonsChart() {
 }
 
 function renderSunChart() {
-  const sunMap = {
-    'Full sun':          {pct:100, color:'#F4A124'},
-    'Full Sun':          {pct:100, color:'#F4A124'},
-    'Full sun / partial':{pct:75,  color:'#EAC32E'},
-    'Partial shade':     {pct:50,  color:'#B8C860'},
-    'Full shade':        {pct:25,  color:'#55B89A'},
-  };
-  const sorted = [...PLANTS].sort((a,b)=>{
-    const aS=a.data.planting?.sun||''; const bS=b.data.planting?.sun||'';
-    const aP=(sunMap[aS]||{pct:0}).pct; const bP=(sunMap[bS]||{pct:0}).pct;
-    return bP-aP;
+  // Parse a sun description into a 0–100 score and a colour
+  function parseSun(raw) {
+    const s = (raw || '').toLowerCase();
+
+    // ── Extract hours if mentioned ─────────────────────────────
+    // Matches patterns like "6–8", "6-8", "8+", "6+ hrs", "4 hours"
+    let hours = null;
+    const rangeMatch = s.match(/(\d+)\s*[–\-]\s*(\d+)\s*(?:\+)?\s*h/);
+    const plusMatch  = s.match(/(\d+)\s*\+\s*h/);
+    const singleMatch = s.match(/(\d+)\s*h(?:our|r)/);
+    if (rangeMatch) {
+      hours = (parseFloat(rangeMatch[1]) + parseFloat(rangeMatch[2])) / 2;
+    } else if (plusMatch) {
+      hours = parseFloat(plusMatch[1]) + 0.5; // treat "6+" as 6.5
+    } else if (singleMatch) {
+      hours = parseFloat(singleMatch[1]);
+    }
+
+    // ── Keyword scoring ───────────────────────────────────────
+    const fullSun     = s.includes('full sun');
+    const partialSun  = s.includes('partial sun');
+    const partialShade= s.includes('partial shade') || s.includes('light shade') || s.includes('afternoon shade') || s.includes('dappled');
+    const fullShade   = s.includes('full shade') || s.includes('deep shade');
+    const tolerates   = s.includes('tolerat') || s.includes('can handle') || s.includes('benefit from some shade');
+    const yieldDrop   = s.includes('yield drops') || s.includes('production drops') || s.includes('less productive');
+
+    // ── Hour-based override ───────────────────────────────────
+    if (hours !== null) {
+      if (hours >= 8)       return { pct: 100, color: '#F4A124', label: raw };
+      if (hours >= 6)       return { pct: 85,  color: '#EAC32E', label: raw };
+      if (hours >= 4)       return { pct: 60,  color: '#B8C860', label: raw };
+      if (hours >= 2)       return { pct: 40,  color: '#55B89A', label: raw };
+      return                       { pct: 20,  color: '#2E8B57', label: raw };
+    }
+
+    // ── Keyword-based fallback ────────────────────────────────
+    if (fullSun && (partialShade || tolerates)) {
+      // e.g. "Full sun to light shade" or "Full sun; tolerates partial shade"
+      const pct = yieldDrop ? 80 : 88;
+      return { pct, color: '#EAC32E', label: raw };
+    }
+    if (fullSun)     return { pct: 100, color: '#F4A124', label: raw };
+    if (partialSun)  return { pct: 70,  color: '#C8C850', label: raw };
+    if (partialShade)return { pct: 50,  color: '#B8C860', label: raw };
+    if (fullShade)   return { pct: 20,  color: '#55B89A', label: raw };
+
+    // ── Unknown — show at 50% grey ────────────────────────────
+    return { pct: 50, color: '#888', label: raw };
+  }
+
+  const sorted = [...PLANTS].sort((a, b) => {
+    const aP = parseSun(a.data.planting?.sun).pct;
+    const bP = parseSun(b.data.planting?.sun).pct;
+    return bP - aP;
   });
+
   let html = '';
   sorted.forEach(p => {
     const sun = p.data.planting?.sun || 'Unknown';
-    const {pct=50, color='#888'} = sunMap[sun] || {};
+    const { pct, color } = parseSun(sun);
     html += `<div class="sun-bar">
       <span style="font-size:19px;width:26px;text-align:center;flex-shrink:0">${esc(p.data.emoji)}</span>
       <span style="font-size:13px;font-weight:500;color:var(--tp);width:160px;flex-shrink:0">${esc(p.data.name)}</span>
       <div class="sun-track" title="${esc(sun)}">
         <div class="sun-fill" style="width:${pct}%;background:${color}"></div>
       </div>
-      <span style="font-size:12px;color:var(--tt);width:120px;flex-shrink:0;padding-left:10px">${esc(sun)}</span>
+      <span style="font-size:12px;color:var(--tt);width:180px;flex-shrink:0;padding-left:10px;line-height:1.4">${esc(sun)}</span>
     </div>`;
   });
+
   document.getElementById('sun-content').innerHTML = `
-    <div style="font-size:13px;color:var(--ts);margin-bottom:1rem">Sun requirements from full sun (100%) to full shade (25%), sorted by sun preference.</div>
+    <div style="font-size:13px;color:var(--ts);margin-bottom:1rem">Sun requirements sorted from full sun to shade. Bar length reflects actual sun need; hover for full description.</div>
     <div style="display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;margin-bottom:8px;padding:0 12px">
       <div style="width:186px"></div>
       <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--tt)"><span>Shade</span><span>Partial</span><span>Full sun</span></div>
