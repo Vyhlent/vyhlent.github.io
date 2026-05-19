@@ -1190,25 +1190,113 @@ function renderFertilizerChart() {
   // Each rule: patterns (all case-insensitive substrings), canonical key, color, label
   // First matching rule wins — order matters for overlapping terms (e.g. 'low nitrogen' before 'nitrogen').
   const FERT_RULES = [
-    { patterns: ['balanced', '10-10-10', 'all-purpose', 'all purpose', 'general purpose'],
-      key: 'balanced',   color: '#639922', label: 'Balanced (e.g. 10-10-10)' },
-    { patterns: ['low nitrogen'],
-      key: 'low-n',      color: '#88C055', label: 'Low nitrogen' },
-    { patterns: ['high nitrogen', 'nitrogen-rich', 'nitrogen rich'],
-      key: 'high-n',     color: '#185FA5', label: 'High nitrogen (leafy growth)' },
-    { patterns: ['phosphorus-rich', 'phosphorus rich', 'high phosphorus'],
-      key: 'high-p',     color: '#BA7517', label: 'High phosphorus (root/flower)' },
-    { patterns: ['potassium-rich', 'potassium rich', 'high potassium'],
-      key: 'high-k',     color: '#9080D4', label: 'High potassium (fruiting)' },
-    { patterns: ['compost'],
-      key: 'compost',    color: '#7A5C30', label: 'Compost / organic matter' },
-    { patterns: ['organic'],
-      key: 'organic',    color: '#A07040', label: 'Organic' },
-    { patterns: ['none required', 'not required', 'unnecessary'],
-      key: 'none',       color: '#888',    label: 'None required' },
-    { patterns: ['minimal', 'light feed', 'light fertiliz'],
-      key: 'minimal',    color: '#aaa',    label: 'Minimal' },
-  ];
+  { patterns: [
+      'balanced', '10-10-10', '10-10-10', '8-8-8', '14-14-14', '20-20-20',
+      'all-purpose', 'all purpose', 'general purpose', 'general-purpose',
+      'triple 10', 'triple ten', 'equal parts', 'equal npk',
+      'complete fertilizer', 'general feed',
+    ],
+    key: 'balanced', color: '#639922', label: 'Balanced / All-purpose (e.g. 10-10-10)' },
+
+  { patterns: [
+      'low nitrogen', 'low-nitrogen', 'low n',
+      'reduce nitrogen', 'avoid excess nitrogen', 'limit nitrogen',
+      'nitrogen-light', 'light on nitrogen', 'little nitrogen',
+      '0-10-10', '0-20-20', '2-10-10', '3-15-15', '5-10-10',
+    ],
+    key: 'low-n', color: '#88C055', label: 'Low nitrogen' },
+
+  { patterns: [
+      'high nitrogen', 'nitrogen-rich', 'nitrogen rich', 'nitrogen heavy',
+      'nitrogen-heavy', 'high-nitrogen', 'extra nitrogen',
+      'boost nitrogen', 'leafy growth', 'green growth', 'foliage growth',
+      'ammonium nitrate', 'urea', 'blood meal', 'feather meal',
+      '30-0-0', '27-0-0', '46-0-0', '33-0-0',
+      '21-0-0', '15-0-0', '10-0-0', '12-0-0',
+      '30-10-10', '25-5-5', '20-5-5', '10-5-5',
+      'high n', 'n-rich', 'n rich',
+    ],
+    key: 'high-n', color: '#185FA5', label: 'High nitrogen (leafy growth)' },
+
+  { patterns: [
+      'phosphorus-rich', 'phosphorus rich', 'high phosphorus', 'high-phosphorus',
+      'phosphorus heavy', 'phosphorus boost', 'extra phosphorus',
+      'bone meal', 'rock phosphate', 'superphosphate', 'triple superphosphate',
+      'root development', 'root growth', 'blooming', 'flower set',
+      '0-46-0', '0-30-0', '0-20-0', '0-10-0',
+      '5-20-10', '5-30-5', '10-20-10', '10-52-10',
+      'high p', 'p-rich', 'p rich',
+    ],
+    key: 'high-p', color: '#BA7517', label: 'High phosphorus (root/flower)' },
+
+  { patterns: [
+      'potassium-rich', 'potassium rich', 'high potassium', 'high-potassium',
+      'potassium heavy', 'extra potassium', 'potassium boost',
+      'potash', 'wood ash', 'kelp meal', 'greensand', 'sul-po-mag',
+      'fruiting', 'fruit development', 'fruit quality', 'tuber development',
+      '0-0-50', '0-0-60', '0-0-30', '0-0-20',
+      '10-5-20', '5-5-20', '8-5-20', '3-5-20', '3-15-20',
+      'high k', 'k-rich', 'k rich',
+    ],
+    key: 'high-k', color: '#9080D4', label: 'High potassium (fruiting/tubers)' },
+
+  { patterns: [
+      'compost', 'aged compost', 'mature compost', 'compost tea',
+      'well-rotted compost', 'garden compost', 'homemade compost',
+    ],
+    key: 'compost', color: '#7A5C30', label: 'Compost / organic matter' },
+
+  { patterns: [
+      'organic', 'organic fertilizer', 'organic feed',
+      'fish emulsion', 'fish meal', 'worm castings', 'vermicompost',
+      'manure', 'aged manure', 'chicken manure', 'cow manure', 'horse manure',
+      'alfalfa meal', 'cottonseed meal', 'seaweed', 'liquid seaweed',
+      'neem cake', 'bat guano', 'green manure',
+    ],
+    key: 'organic', color: '#A07040', label: 'Organic' },
+
+  { patterns: [
+      'acidic', 'acid', 'acidifying', 'lower ph',
+      'sulfur', 'sulphur', 'ammonium sulfate', 'aluminum sulfate',
+      'soil acidifier', 'acid fertilizer', 'for acid-loving', 'acid-loving',
+      '30-10-10 acidic', '10-5-4',
+    ],
+    key: 'acidic', color: '#C08840', label: 'Acidic / pH-lowering' },
+
+  { patterns: [
+      'lime', 'dolomite', 'dolomitic', 'calcium carbonate', 'garden lime',
+      'alkaline', 'raise ph', 'sweet soil', 'calcitic',
+    ],
+    key: 'lime', color: '#85B7EB', label: 'Lime / pH-raising' },
+
+  { patterns: [
+      'slow-release', 'slow release', 'controlled release', 'controlled-release',
+      'time-release', 'time release', 'granular', 'pelleted',
+      'osmocote', 'nutricote', 'polyon',
+    ],
+    key: 'slow-release', color: '#8DC452', label: 'Slow-release / granular' },
+
+  { patterns: [
+      'liquid', 'liquid feed', 'liquid fertilizer', 'water-soluble',
+      'water soluble', 'foliar', 'foliar feed', 'foliar spray',
+      'soluble powder', 'fertigation',
+    ],
+    key: 'liquid', color: '#5EB0E5', label: 'Liquid / foliar feed' },
+
+  { patterns: [
+      'none required', 'not required', 'unnecessary', 'no fertilizer',
+      'no fertilizing', 'does not need', 'unfertilized', 'fertilizer free',
+      'self-sufficient', 'fixes nitrogen',
+    ],
+    key: 'none', color: '#888', label: 'None required' },
+
+  { patterns: [
+      'minimal', 'light feed', 'light fertiliz', 'sparingly',
+      'infrequent', 'once a year', 'once a season', 'annual feed',
+      'low feeding', 'low feeder', 'light feeder',
+    ],
+    key: 'minimal', color: '#aaa', label: 'Minimal / light feeder' },
+];
   function classifyFert(ft) {
     const ftl = (ft || '').toLowerCase();
     for (const rule of FERT_RULES) {
