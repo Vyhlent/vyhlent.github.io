@@ -85,6 +85,15 @@ input{font-family:inherit}
   border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;
 }
 .save-btn:disabled{opacity:.5;cursor:not-allowed}
+.zone-select{
+  height:36px;padding:0 22px 0 10px;border:1px solid var(--b2);border-radius:8px;
+  background:var(--p);color:var(--ts);font-size:13px;font-family:inherit;
+  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 6px center;
+}
+.zone-select:focus{border-color:var(--gn)}
+.zone-select:hover{background-color:var(--s)}
 .size-wrap{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ts)}
 .size-wrap input[type=number]{
   width:54px;height:36px;text-align:center;border:1px solid var(--b2);border-radius:8px;
@@ -190,6 +199,16 @@ input{font-family:inherit}
       <i class="fa-solid fa-floppy-disk"></i> Save
     </button>
 
+    <select class="zone-select" id="zone-select" onchange="setZone(+this.value)" title="USDA Hardiness Zone">
+      <option value="3">Zone 3</option>
+      <option value="4">Zone 4</option>
+      <option value="5">Zone 5</option>
+      <option value="6" selected>Zone 6</option>
+      <option value="7">Zone 7</option>
+      <option value="8">Zone 8</option>
+      <option value="9">Zone 9</option>
+    </select>
+
     <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
       <i class="fa-solid fa-moon" id="dticon"></i>
     </button>
@@ -241,10 +260,13 @@ let gridRows     = 5;
 let selectedCrop = null;
 let tool         = 'draw';
 let isDark       = false;
+let activeZone   = 6;
 let painting     = false;
 
 // Apply dark mode immediately to prevent flash
 try { if (localStorage.getItem('gp-dark') === '1') { isDark = true; document.body.classList.add('dark'); document.getElementById('loading-overlay').classList.add('dark'); } } catch(e) {}
+// Apply zone immediately so the select shows the right value before full boot
+try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -256,6 +278,15 @@ function toast(type, msg, ms=3500) {
   bar.appendChild(el);
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('show')));
   setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),350);}, ms);
+}
+
+function applyZone() {
+  const sel = document.getElementById('zone-select');
+  if (sel) sel.value = String(activeZone);
+}
+function setZone(z) {
+  activeZone = z;
+  try { localStorage.setItem('gp-zone', String(z)); } catch(e) {}
 }
 
 function applyDark() {
@@ -394,6 +425,9 @@ async function boot() {
     msg.textContent = 'Connecting to Firebase...';
     await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
   }
+
+  try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
+  applyZone();
 
   msg.textContent = 'Loading crops...';
   try { await loadCrops(); } catch(e) { toast('err','Could not load crops: '+e.message, 6000); }

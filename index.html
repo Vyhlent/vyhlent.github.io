@@ -231,6 +231,19 @@ a{color:inherit;text-decoration:none}
 .rot-badge{font-size:13px;font-weight:500;padding:4px 13px;border-radius:10px;flex-shrink:0}
 .rot-why{font-size:13px;color:var(--ts);line-height:1.6}
 
+/* Zone switcher */
+.zone-select{
+  height:42px;padding:0 10px 0 12px;border:1px solid var(--b2);border-radius:8px;
+  background:var(--p);color:var(--ts);font-size:14px;font-family:inherit;
+  outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;
+  padding-right:24px;
+}
+.zone-select:focus{border-color:var(--gn)}
+.zone-select:hover{background-color:var(--s)}
+.zone-label{font-size:13px;color:var(--tt);white-space:nowrap;display:flex;align-items:center;gap:6px}
+
 /* Toast */
 #statusbar{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid}
@@ -265,6 +278,18 @@ a{color:inherit;text-decoration:none}
       <button class="nbtn" onclick="gotoPage('nutrition')">Nutrition</button>
     </div>
     <div class="nav-right">
+      <span class="zone-label">
+        <i class="fa-solid fa-map-pin" style="font-size:12px"></i>
+        <select class="zone-select" id="zone-select" onchange="setZone(+this.value)" title="USDA Hardiness Zone">
+          <option value="3">Zone 3</option>
+          <option value="4">Zone 4</option>
+          <option value="5">Zone 5</option>
+          <option value="6" selected>Zone 6</option>
+          <option value="7">Zone 7</option>
+          <option value="8">Zone 8</option>
+          <option value="9">Zone 9</option>
+        </select>
+      </span>
       <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
         <i class="fa-solid fa-moon" id="dticon"></i>
       </button>
@@ -364,6 +389,7 @@ a{color:inherit;text-decoration:none}
 // ─── State ────────────────────────────────────────────────
 let PLANTS       = [];   // [{data, sha, filename, path}]
 let isDark       = false;
+let activeZone   = 6;
 let activeFilter = 'All';
 let currentId    = null;
 let editingPlant = null;
@@ -407,7 +433,41 @@ function toggleDark() {
   try { localStorage.setItem('gp-dark', isDark ? '1' : '0'); } catch(e) {}
 }
 
-// ─── Toast ────────────────────────────────────────────────
+// ─── Zone switcher ────────────────────────────────────────
+function applyZone() {
+  const sel = document.getElementById('zone-select');
+  if (sel) sel.value = String(activeZone);
+}
+function setZone(z) {
+  activeZone = z;
+  try { localStorage.setItem('gp-zone', String(z)); } catch(e) {}
+  // Re-render detail if one is open
+  if (currentId) {
+    const p = PLANTS.find(x => x.data.id === currentId);
+    if (p) document.getElementById('dcontent').innerHTML = buildDetail(p.data);
+  }
+  // Invalidate chart renders that depend on zone
+  chR = false;
+}
+/** Returns the planting timing string for the active zone.
+ *  Falls back to planting.zone6 if no zone-specific data exists. */
+function zoneTiming(d) {
+  const z = activeZone;
+  // Support zones object: {3:'...', 4:'...', ... } or zones.zone3 etc.
+  const zones = d.zones || d.planting?.zones;
+  if (zones) {
+    const v = zones[z] || zones['zone' + z] || zones[String(z)];
+    if (v) return v;
+  }
+  // Fallback for other zone keys on planting
+  if (z !== 6) {
+    const key = 'zone' + z;
+    if (d.planting?.[key]) return d.planting[key];
+  }
+  return d.planting?.zone6 || '';
+}
+
+
 function toast(type, msg, ms = 3500) {
   const bar = document.getElementById('statusbar');
   bar.querySelectorAll('.toast').forEach(t => { t.classList.remove('show'); setTimeout(() => t.remove(), 350); });
@@ -643,7 +703,7 @@ function buildDetail(d) {
   <div class="ph-icon">${esc(d.emoji)}</div>
   <div>
     <div class="ph-title">${esc(d.name)}</div>
-    <div class="ph-sub">${esc(d.cat)} · Zone 6 ·
+    <div class="ph-sub">${esc(d.cat)} · Zone ${activeZone} ·
       <button style="background:none;border:none;color:var(--gn);cursor:pointer;font-size:14px;padding:0" onclick="openEdit('${esc(d.id)}')">Edit</button>
     </div>
   </div>
@@ -659,7 +719,7 @@ function buildDetail(d) {
 </div>
 <div id="tc-planting" class="tc on">
   <div class="igrid">
-    <div class="icard"><div class="ilabel">Zone 6 timing</div><div class="ival">${esc(d.planting?.zone6)}</div></div>
+    <div class="icard"><div class="ilabel">Zone ${activeZone} timing</div><div class="ival">${esc(zoneTiming(d))}</div></div>
     <div class="icard"><div class="ilabel">Depth</div><div class="ival">${esc(d.planting?.depth)}</div></div>
     <div class="icard"><div class="ilabel">Spacing</div><div class="ival">${esc(d.planting?.spacing)}</div></div>
     <div class="icard"><div class="ilabel">Sunlight</div><div class="ival">${esc(d.planting?.sun)}</div></div>
@@ -1479,6 +1539,8 @@ function openGarden() {
 // ─── Boot — loads crops immediately, no login needed ──────
 (async () => {
   try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; applyDark(); } } catch(e) {}
+  try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
+  applyZone();
   try {
     await loadAllCrops();
     renderCatRow();
