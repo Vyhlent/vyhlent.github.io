@@ -12,47 +12,83 @@ export default class Crop {
   /**
    * @param {Object} data - All crop data fields.
    *
-   * Required fields:
+   * ── Identity ──────────────────────────────────────────────────────────────
    *   id          {string}  - Unique slug, e.g. "tomatoes"
    *   name        {string}  - Display name, e.g. "Tomatoes"
    *   cat         {string}  - Category, e.g. "Fruiting Veg"
    *   emoji       {string}  - Single emoji, e.g. "🍅"
    *
-   * Planting:
-   *   planting.zone6      {string}  - Zone 6 timing
+   * ── Planting ──────────────────────────────────────────────────────────────
+   *   planting.zone6      {string}  - Zone 6 timing (kept for back-compat)
    *   planting.depth      {string}  - Planting depth, e.g. '0.5"'
    *   planting.spacing    {string}  - Spacing info
    *   planting.ph         {string}  - Soil pH range, e.g. "6.0–7.0"
    *   planting.sun        {string}  - Sunlight requirement
    *   special             {string}  - Any special instructions
    *
-   * Water:
+   * ── Zone timing ───────────────────────────────────────────────────────────
+   * Two complementary ways to store per-zone data — use whichever fits your
+   * workflow; timing() will resolve either format.
+   *
+   * Option A — flat strings on planting (original format, still supported):
+   *   planting.zone3  {string}  - e.g. "Start indoors May, transplant Jun"
+   *   planting.zone4  {string}
+   *   planting.zone5  {string}
+   *   planting.zone6  {string}  - e.g. "Direct sow Apr–May, transplant May"
+   *   planting.zone7  {string}
+   *   planting.zone8  {string}
+   *   planting.zone9  {string}
+   *
+   * Option B — structured zones object (preferred for new data):
+   *   zones.3  {ZoneData}  - See ZoneData shape below
+   *   zones.4  {ZoneData}
+   *   zones.5  {ZoneData}
+   *   zones.6  {ZoneData}
+   *   zones.7  {ZoneData}
+   *   zones.8  {ZoneData}
+   *   zones.9  {ZoneData}
+   *
+   *   ZoneData shape:
+   *   {
+   *     timing        {string}   - Human-readable planting timing description
+   *     plantingStart {number}   - Month planting window opens  (1=Jan … 12=Dec)
+   *     plantingEnd   {number}   - Month planting window closes (1=Jan … 12=Dec)
+   *     harvestStart  {number}   - Month harvest window opens
+   *     harvestEnd    {number}   - Month harvest window closes
+   *     notes         {string}   - Any zone-specific notes (optional)
+   *   }
+   *
+   *   Months use 1-based integers. Windows that wrap across year-end are fine
+   *   (e.g. garlic: plantingStart 10, plantingEnd 11 → harvestStart 6,
+   *   harvestEnd 7). The UI treats start > end as a wrap-around.
+   *
+   * ── Water ─────────────────────────────────────────────────────────────────
    *   water.in    {string}  - Inches per week, e.g. "1–1.5"
    *   water.note  {string}  - Watering notes
    *
-   * Fertilizer:
+   * ── Fertilizer ────────────────────────────────────────────────────────────
    *   fertilizer.type     {string}
    *   fertilizer.amount   {string}
    *   fertilizer.freq     {string}
    *
-   * Companions:
+   * ── Companions ────────────────────────────────────────────────────────────
    *   companions.good  {Array<{name:string, why:string}>}
    *   companions.bad   {Array<{name:string, why:string}>}
    *   companionDist    {string}  - Distance note
    *   animals          {string}  - Beneficial animals
    *
-   * Problems:
+   * ── Problems ──────────────────────────────────────────────────────────────
    *   diseases  {Array<{name:string, desc:string}>}
    *   pests     {string}
    *
-   * Rotation:
+   * ── Rotation ──────────────────────────────────────────────────────────────
    *   rotation.family  {string}  - Plant family
    *   rotation.cycle   {string}  - Rotation cycle description
    *
-   * Growth:
+   * ── Growth ────────────────────────────────────────────────────────────────
    *   stages  {Array<{label:string, title:string, desc:string}>}
    *
-   * Nutrition (per 100g fresh weight):
+   * ── Nutrition (per 100g fresh weight) ────────────────────────────────────
    *
    *   — Macronutrients —
    *   nutrition.calories   {number}  - kcal
@@ -107,7 +143,7 @@ export default class Crop {
    *
    * Daily values (adults, FDA 2020) stored as static Crop.DV for % calculations.
    *
-   * Size:
+   * ── Size ──────────────────────────────────────────────────────────────────
    *   size.weight      {string}  - e.g. "100–250g per fruit"
    *   size.dimensions  {string}  - e.g. '2–4" diameter'
    *   size.notes       {string}
@@ -126,8 +162,35 @@ export default class Crop {
       spacing: data.planting?.spacing ?? '',
       ph:      data.planting?.ph      ?? '6.0–7.0',
       sun:     data.planting?.sun     ?? 'Full sun',
+      // Per-zone timing strings (Option A — flat format)
+      zone3:   data.planting?.zone3   ?? '',
+      zone4:   data.planting?.zone4   ?? '',
+      zone5:   data.planting?.zone5   ?? '',
+      zone7:   data.planting?.zone7   ?? '',
+      zone8:   data.planting?.zone8   ?? '',
+      zone9:   data.planting?.zone9   ?? '',
     };
     this.special = data.special ?? '';
+
+    // ── Zones (Option B — structured per-zone data) ───────────────────────
+    // Keyed by zone number as a string: '3', '4', … '9'.
+    // Each entry is a ZoneData object (see JSDoc above).
+    this.zones = {};
+    const rawZones = data.zones ?? {};
+    for (let z = 3; z <= 9; z++) {
+      const key = String(z);
+      const src = rawZones[key] ?? rawZones[z] ?? null;
+      if (src) {
+        this.zones[key] = {
+          timing:        src.timing        ?? '',
+          plantingStart: src.plantingStart ?? null,
+          plantingEnd:   src.plantingEnd   ?? null,
+          harvestStart:  src.harvestStart  ?? null,
+          harvestEnd:    src.harvestEnd    ?? null,
+          notes:         src.notes         ?? '',
+        };
+      }
+    }
 
     // ── Water ─────────────────────────────────────────────────────────────────
     this.water = {
@@ -286,14 +349,152 @@ export default class Crop {
     fluoride:       4,   // mg
   };
 
+  // ── Zone helpers ────────────────────────────────────────────────────────────
+
+  /**
+   * Returns the planting timing string for the requested zone number (3–9).
+   *
+   * Resolution order:
+   *   1. zones[zone].timing         (Option B structured data)
+   *   2. planting['zone' + zone]    (Option A flat string)
+   *   3. planting.zone6             (universal fallback)
+   *
+   * @param  {number|string} zone - USDA zone number, e.g. 6
+   * @returns {string}
+   */
+  timing(zone) {
+    const z = String(zone);
+
+    // Option B — structured zones object
+    if (this.zones[z]?.timing) return this.zones[z].timing;
+
+    // Option A — flat keys on planting
+    const flatKey = 'zone' + z;
+    if (this.planting[flatKey]) return this.planting[flatKey];
+
+    // Fallback to zone 6
+    return this.planting.zone6 ?? '';
+  }
+
+  /**
+   * Returns the ZoneData object for the given zone, or null if none stored.
+   * Merges Option-A flat timing string into the result when Option-B data
+   * exists but its `timing` field is empty.
+   *
+   * @param  {number|string} zone
+   * @returns {ZoneData|null}
+   */
+  zoneData(zone) {
+    const z     = String(zone);
+    const entry = this.zones[z] ?? null;
+    const flat  = this.planting['zone' + z] ?? '';
+
+    if (!entry && !flat) return null;
+
+    return {
+      timing:        entry?.timing        || flat || '',
+      plantingStart: entry?.plantingStart ?? null,
+      plantingEnd:   entry?.plantingEnd   ?? null,
+      harvestStart:  entry?.harvestStart  ?? null,
+      harvestEnd:    entry?.harvestEnd    ?? null,
+      notes:         entry?.notes         ?? '',
+    };
+  }
+
+  /**
+   * Returns true if the given month (1–12) falls within the planting window
+   * for the requested zone. Returns null if no window data is stored.
+   *
+   * Handles wrap-around windows (e.g. Oct–Nov → month 10 or 11 is in-window).
+   *
+   * @param  {number} month  - 1-based month (1=Jan … 12=Dec)
+   * @param  {number|string} zone
+   * @returns {boolean|null}
+   */
+  inPlantingWindow(month, zone) {
+    const d = this.zoneData(zone);
+    if (!d || d.plantingStart == null || d.plantingEnd == null) return null;
+    return Crop._inWindow(month, d.plantingStart, d.plantingEnd);
+  }
+
+  /**
+   * Returns true if the given month falls within the harvest window for the
+   * requested zone. Returns null if no window data is stored.
+   *
+   * @param  {number} month
+   * @param  {number|string} zone
+   * @returns {boolean|null}
+   */
+  inHarvestWindow(month, zone) {
+    const d = this.zoneData(zone);
+    if (!d || d.harvestStart == null || d.harvestEnd == null) return null;
+    return Crop._inWindow(month, d.harvestStart, d.harvestEnd);
+  }
+
+  /**
+   * Returns true if the planting window opens within `weeks` weeks from now
+   * for the given zone and current month.
+   *
+   * @param  {number} currentMonth  - 1-based current month
+   * @param  {number|string} zone
+   * @param  {number} [weeks=4]
+   * @returns {boolean|null}
+   */
+  plantingWindowSoon(currentMonth, zone, weeks = 4) {
+    const d = this.zoneData(zone);
+    if (!d || d.plantingStart == null) return null;
+    const monthsAhead = Math.round(weeks / 4.33); // approx months
+    for (let i = 1; i <= monthsAhead; i++) {
+      const m = ((currentMonth - 1 + i) % 12) + 1;
+      if (m === d.plantingStart) return true;
+    }
+    return false;
+  }
+
+  /**
+   * Returns a list of all zones (3–9) that have any stored data (either
+   * Option A string or Option B entry).
+   *
+   * @returns {number[]}
+   */
+  get supportedZones() {
+    const out = [];
+    for (let z = 3; z <= 9; z++) {
+      if (this.zoneData(z) !== null) out.push(z);
+    }
+    return out;
+  }
+
+  // ── Internal helpers ────────────────────────────────────────────────────────
+
+  /**
+   * Returns true if `month` falls in the inclusive window [start, end].
+   * Handles year-wrap (start > end means the window crosses Jan 1).
+   *
+   * @param  {number} month
+   * @param  {number} start  - 1–12
+   * @param  {number} end    - 1–12
+   * @returns {boolean}
+   */
+  static _inWindow(month, start, end) {
+    if (start <= end) {
+      return month >= start && month <= end;
+    }
+    // Wraps across year boundary (e.g. garlic: Oct–Jul)
+    return month >= start || month <= end;
+  }
+
   // ── Serialization ───────────────────────────────────────────────────────────
 
-  /** Returns a plain object safe for JSON.stringify / storage. */
+  /** Returns a plain object safe for JSON.stringify / Firestore storage. */
   toJSON() {
     return {
       id: this.id, name: this.name, cat: this.cat, emoji: this.emoji,
       planting: { ...this.planting },
       special: this.special,
+      zones: Object.fromEntries(
+        Object.entries(this.zones).map(([k, v]) => [k, { ...v }])
+      ),
       water: { ...this.water },
       fertilizer: { ...this.fertilizer },
       companions: {
@@ -311,7 +512,7 @@ export default class Crop {
     };
   }
 
-  /** Reconstruct a Crop instance from a plain object (e.g. from storage). */
+  /** Reconstruct a Crop instance from a plain object (e.g. from Firestore). */
   static fromJSON(obj) {
     return new Crop(obj);
   }
