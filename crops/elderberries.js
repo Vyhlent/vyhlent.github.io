@@ -1,82 +1,63 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id: 'elderberries', name: 'Elderberries', cat: 'Berry', emoji: '🍇',
-  planting: { zone6: 'Plant bare-root or container shrubs Mar–Apr or Sep–Oct; fruit in year 2–3', depth: 'Same depth as container; roots 3–4" deep', spacing: '6–10 ft apart; plant 2+ for cross-pollination', ph: '5.5–6.5', sun: 'Full sun to light shade' },
-  water: { in: '1–2', note: 'Consistent moisture especially in first 2 years; drought-tolerant once established' },
-  fertilizer: { type: 'Balanced 10-10-10 or compost', amount: '½ cup 10-10-10 per plant; 2–3 inches compost annually', freq: 'Early spring; top-dress compost each fall' },
+  id: 'elderberries',
+  name: 'Elderberries',
+  cat: 'Berry Shrub',
+  emoji: '🫐',
+  planting: {
+    zone6: 'Plant bare-root canes or container plants Mar–Apr or fall; two varieties for best pollination',
+    depth: 'Same as nursery depth or 2–3" deeper for cuttings',
+    spacing: '6–10 ft between plants; 10–12 ft between rows',
+    ph: '5.5–6.5',
+    sun: 'Full sun to partial shade (6+ hours preferred)',
+    zone3: 'Hardy to -40°F; plant May; excellent choice for cold climates',
+    zone4: 'Plant Apr–May; very hardy shrub',
+    zone5: 'Plant Apr; vigorous grower in this zone',
+    zone7: 'Plant Feb–Mar',
+    zone8: 'Plant Dec–Feb; can suffer in prolonged summer heat without moisture',
+    zone9: 'Marginally adapted; needs supplemental irrigation',
+  },
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; harvest Aug–Sep for berries; flowers Jun–Jul', plantingStart: 3, plantingEnd: 4, harvestStart: 8, harvestEnd: 9 },
+  },
+  special: 'Raw elderberries and all green parts of the plant contain cyanogenic glycosides — always cook berries before consuming. Sambucus nigra (American/European elderberry) is the species used for elderberry syrup, wine, and medicine. Plant 2 varieties for cross-pollination (Adams, Nova, Bob Gordon).',
+  water: { in: '1–1.5', note: 'Moderate and consistent. Tolerates brief waterlogging but not prolonged. Drought reduces berry production significantly.' },
+  fertilizer: { type: 'Balanced organic or compost', amount: '2–3 inches of compost worked into soil each spring', freq: 'Top-dress with compost each spring; light 10-10-10 if growth is poor; avoid over-feeding which produces lush growth but poor fruiting' },
   companions: {
     good: [
-      { name: 'Yarrow',   why: 'Yarrow attracts parasitic wasps and hoverflies that control aphids and other elderberry pests.' },
-      { name: 'Comfrey',  why: "Comfrey's deep taproots mine nutrients and its leaves make excellent mulch for elderberries." },
-      { name: 'Marigolds', why: 'Marigolds deter aphids and nematodes that affect elderberry roots and stems.' },
+      { name: 'Yarrow', why: 'Attracts beneficial insects including parasitic wasps; shares wet-meadow habitat preference' },
+      { name: 'Comfrey', why: 'Dynamic accumulator; mulched leaves add nutrients; both tolerate similar moist conditions' },
+      { name: 'Nasturtiums', why: 'Ground-level companion; attracts beneficial insects' },
     ],
     bad: [
-      { name: 'Walnut',   why: 'Black walnut releases juglone toxin which is highly toxic to elderberries and causes rapid decline.' },
-      { name: 'Tomatoes', why: 'Tomatoes share several fungal and viral diseases with elderberries and compete for the same deep nutrients.' },
+      { name: 'Walnut', why: 'Juglone from walnut roots is toxic to elderberry' },
     ],
   },
-  companionDist: 'Keep 60+ ft from black walnut trees. 10+ ft from tomatoes.',
-  animals: 'Extremely valuable for pollinators (bees, butterflies) and birds. One of the most wildlife-friendly shrubs you can grow.',
+  companionDist: 'Large vigorous shrub — give 10 ft clearance from structures; plant in a row for windbreak and wildlife hedge',
+  animals: 'Exceptional wildlife value — berries consumed by 50+ bird species. Flowers attract hundreds of pollinator species. Important native plant in eastern North America.',
   diseases: [
-    { name: 'Elderberry Mosaic Virus', desc: 'Mottled, distorted leaves; spread by aphids. Remove infected plants; control aphids aggressively.' },
-    { name: 'Botrytis (Gray Mold)',    desc: 'Gray mold on flowers and fruit in humid conditions. Improve air circulation; avoid overhead watering.' },
+    { name: 'Elderberry Leaf Spot', desc: 'Brown spots on leaves. Usually cosmetic only. Remove affected leaves; avoid overhead watering.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves in dry summers. Improve air circulation with pruning. Usually does not affect yield.' },
+    { name: 'Verticillium Wilt', desc: 'Sudden wilting of canes; brown vascular tissue. Remove and destroy affected canes. Avoid planting near tomatoes, potatoes, or strawberries.' },
   ],
-  pests: 'Aphids — neem oil or insecticidal soap; birds love the fruit — net when ripening.',
-  rotation: { family: 'Adoxaceae (perennial shrub)', cycle: 'Permanent planting — site carefully. Shrubs live 20+ years. Prune 1/3 of oldest canes each spring.' },
+  pests: 'Relatively pest-resistant. Aphids (lady beetles usually control naturally), elder shoot aphid (prune and destroy infested tip growth in spring), birds (net if yield is to be retained for harvest — though birds indicate good habitat).',
+  rotation: { family: 'Adoxaceae (Sambucus genus)', cycle: 'Permanent multi-year shrub (10–15+ year productive life). Renewal prune oldest canes to ground every 3–4 years.' },
   stages: [
-    { label: 'Est',   title: 'Establishment',   desc: 'Year 1: roots establish, moderate top growth. Do not harvest fruit.' },
-    { label: 'Yr2',   title: 'First fruiting',   desc: 'Year 2: first small fruit clusters. Limited harvest only.' },
-    { label: 'Full',  title: 'Full production',  desc: 'Year 3+: full fruit clusters. Harvest Aug–Sep when deep purple-black.' },
-    { label: 'Prune', title: 'Annual pruning',   desc: 'Each spring: remove 1/3 of oldest canes to ground.' },
+    { label: 'Spring', title: 'New growth', desc: 'Vigorous new canes emerge from roots and established wood. Can grow 6–8 ft in a single season.' },
+    { label: 'Jun–Jul', title: 'Flowering', desc: 'Large flat-topped clusters (corymbs) of tiny white flowers. Harvest some for elderflower cordial; leave the rest for fruit.' },
+    { label: 'Aug–Sep', title: 'Berry harvest', desc: 'Harvest entire clusters when berries are deep purple-black and birds start eating them. Process immediately — do NOT eat raw.' },
+    { label: 'Winter', title: 'Dormant pruning', desc: 'Prune out dead, damaged, or crossing canes. Remove canes 3+ years old (grey, thicker bark) to maintain vigorous new growth.' },
   ],
-  special: "Raw elderberries are mildly toxic — always cook before eating. 'Bob Gordon' and 'Adams' are excellent Zone 6 varieties. Plant two different varieties for best cross-pollination.",
   nutrition: {
-    // — Macronutrients —
-    calories:    73,
-    water:       79.8,   // g
-    protein:     0.7,   // g
-    carbs:       18.4,   // g total
-    fiber:       7,   // g
-    sugars:      0,   // g
-    fat:         0.5,   // g total
-    saturated:   0.02,   // g
-    monounsat:   0.08,   // g
-    polyunsat:   0.25,   // g
-    // — Fat-soluble vitamins —
-    vitA:        30,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0,   // mg
-    vitK:        0,   // µg
-    // — Water-soluble vitamins —
-    vitC:        36,   // mg
-    vitB1:       0.07,  // mg thiamine
-    vitB2:       0.06,  // mg riboflavin
-    vitB3:       0.5,  // mg niacin
-    vitB5:       0.14,  // mg pantothenic
-    vitB6:       0.23,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       6,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0,  // mg
-    // — Macrominerals —
-    calcium:     38,  // mg
-    phosphorus:  39,  // mg
-    magnesium:   5,  // mg
-    sodium:      6,  // mg
-    potassium:   280,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        1.6,  // mg
-    zinc:        0.11,  // mg
-    copper:      0.07,  // mg
-    manganese:   0.25,  // mg
-    selenium:    0,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Exceptionally high in anthocyanins, flavonoids, and vitamin C. Highest fiber of common berries (7g/100g). Raw berries contain sambunigrin — always cook before consuming.',
+    calories: 73, water: 79.8, protein: 0.7, carbs: 18.4, fiber: 7.0, sugars: 0, fat: 0.5,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 30, vitD: 0, vitE: 0, vitK: 0,
+    vitC: 36, vitB1: 0.07, vitB2: 0.06, vitB3: 0.5, vitB5: 0.14, vitB6: 0.23,
+    vitB7: 0, vitB9: 6, vitB12: 0, choline: 0,
+    calcium: 38, phosphorus: 39, magnesium: 5, sodium: 6, potassium: 280, chloride: 0,
+    iron: 1.6, zinc: 0.11, copper: 0.07, manganese: 0.26, selenium: 0.6, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'MUST BE COOKED — raw berries contain cyanogenic glycosides. Rich in anthocyanins, quercetin, and vitamin C. Elderberry syrup widely used for immune support. High fiber content.',
   },
-  size: { weight: '3–5g per cluster (hundreds of berries per cluster)', dimensions: 'Individual berry: 0.2–0.3" diameter; clusters 4–8" wide', notes: 'Harvest entire clusters with scissors when 80%+ of berries are deep purple-black.' },
+  size: { weight: '3–5g per cluster', dimensions: 'Clusters 5–10" wide; individual berries 5–8mm', notes: 'Adams and Bob Gordon are top-yielding varieties for zone 5–7' },
 });

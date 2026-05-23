@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'carrots',name:'Carrots',cat:'Root Vegetable',emoji:'🥕',
-  planting:{zone6:'Direct sow Apr 1–May 15 (spring) or Jul 15–Aug 15 (fall)',depth:'0.25" deep; thin after sprouting',spacing:'2–3" apart, rows 12"',ph:'6.0–6.8',sun:'Full sun / part shade'},
-  water:{in:'1',note:'Consistent moisture prevents forking; deep watering = deep roots'},
-  fertilizer:{type:'Low-nitrogen 5-15-15',amount:'2 lbs per 100 sq ft',freq:'At planting; potassium side-dress at 4 weeks'},
-  companions:{
-    good:[{name:'Rosemary',why:"Rosemary's aromatic oils repel carrot fly, the primary pest that burrows into carrot roots."},{name:'Onions',why:'Onions repel carrot fly while carrots repel onion fly — classic mutual benefit.'},{name:'Tomatoes',why:'Tomato foliage shades carrot beds and reduces moisture loss; both coexist well.'}],
-    bad:[{name:'Dill',why:'Dill cross-pollinates with carrot flowers when allowed to bolt, and also inhibits carrot growth.'},{name:'Anise',why:'Anise inhibits carrot germination and growth through root exudate competition.'}],
+  id: 'carrots',
+  name: 'Carrots',
+  cat: 'Root Vegetable',
+  emoji: '🥕',
+  planting: {
+    zone6: 'Direct sow Mar–May for summer; Jul–Aug for fall/winter harvest. Thin to 2–3" apart.',
+    depth: '¼" (very shallow — needs light to germinate)',
+    spacing: '2–3" apart after thinning; rows 12" wide',
+    ph: '6.0–6.8',
+    sun: 'Full sun to light partial shade',
+    zone3: 'Direct sow mid-May to Jun; fall crop not practical',
+    zone4: 'Direct sow May; fall sow mid-Jul',
+    zone5: 'Direct sow Apr; fall sow Jul–early Aug',
+    zone7: 'Direct sow Mar–Apr; fall sow Aug–Sep',
+    zone8: 'Direct sow Feb–Mar; fall sow Sep–Oct; overwinter in ground',
+    zone9: 'Grow as fall–spring crop; sow Oct–Jan',
   },
-  companionDist:'Keep 12"+ from dill and anise.',
-  animals:'Parasitic wasps; hover flies attracted by umbellifer flowers.',
-  diseases:[{name:'Alternaria Leaf Blight',desc:'Dark spots with yellow halos; remove infected tops.'},{name:'Cavity Spot',desc:'Elliptical pits — calcium deficiency; improve drainage, add lime.'}],
-  pests:'Carrot rust fly — row covers; wireworms — beneficial nematodes.',
-  rotation:{family:'Apiaceae',cycle:'3-year rotation; avoid parsnips, parsley, celery in sequence'},
-  stages:[{label:'Germ',title:'Germination',desc:'14–21 days. Keep moist; burlap over bed helps.'},{label:'Thin',title:'Thinning',desc:'Thin to 2–3" when 2" tall.'},{label:'Root',title:'Root development',desc:'Cover exposed shoulders to prevent greening.'},{label:'Harv',title:'Harvest',desc:'60–80 days. Sweeter after light frost.'}],
-  special:'Prepare soil 12" deep. Fall carrots are sweeter.',
+  zones: {
+    '6': { timing: 'Sow Mar–May; fall sow Jul–Aug; harvest 70–80 days from sowing', plantingStart: 3, plantingEnd: 5, harvestStart: 6, harvestEnd: 11 },
+  },
+  special: 'Loose, deep, rock-free soil is essential — compaction causes forked roots. Mix sand into clay soils. Cover seeds with vermiculite or burlap to retain moisture during slow (2–3 week) germination. Fall-grown carrots taste sweeter after frost converts starches to sugars.',
+  water: { in: '1', note: 'Consistent, even moisture. Uneven watering causes cracking. After thinning, mulch to retain moisture. Reduce watering slightly as roots approach maturity.' },
+  fertilizer: { type: 'Low nitrogen, high phosphorus (bone meal, 0-10-10)', amount: '2 lbs bone meal per 25 sq ft worked into soil before sowing', freq: 'Single application at bed preparation; excess nitrogen causes forked roots and excessive tops' },
+  companions: {
+    good: [
+      { name: 'Onions', why: 'Onion scent repels carrot fly; carrot scent deters onion fly — classic mutualistic pairing' },
+      { name: 'Leeks', why: 'Same mutual pest deterrence as onions' },
+      { name: 'Rosemary', why: 'Strong scent confuses carrot fly' },
+      { name: 'Lettuce', why: 'Shallow roots don\'t compete; provides living mulch; fills gaps between carrot rows' },
+      { name: 'Tomatoes', why: 'Tomatoes emit solanine which repels carrot fly' },
+    ],
+    bad: [
+      { name: 'Dill', why: 'Cross-pollinates with carrots if both are flowering; also inhibits germination when mature' },
+      { name: 'Fennel', why: 'Strongly allelopathic — inhibits carrot growth' },
+      { name: 'Parsnips', why: 'Same pest pressures compete for identical resources' },
+    ],
+  },
+  companionDist: 'Interplant onions every 4 inches within carrot rows for maximum carrot fly deterrence',
+  animals: 'Beneficial nematodes control carrot weevil larvae in soil. Ground beetles eat carrot fly pupae.',
+  diseases: [
+    { name: 'Carrot Leaf Blight', desc: 'Brown spots and blighted foliage in wet conditions. Use resistant varieties; avoid overhead watering; crop rotation.' },
+    { name: 'Root Rot (Cavity Spot)', desc: 'Elliptical cavities on roots. Caused by Pythium in poorly drained soil. Improve drainage; avoid waterlogged conditions.' },
+    { name: 'Aster Yellows', desc: 'Hairy secondary roots; yellowing foliage. Spread by leafhoppers. Use row covers; control leafhopper populations.' },
+  ],
+  pests: 'Carrot fly/rust fly (avoid bruising foliage which releases attractant scent; use fleece row cover; grow beside onions), wireworms (beneficial nematodes in soil), carrot weevil (crop rotation).',
+  rotation: { family: 'Apiaceae (Carrot family)', cycle: 'Rotate every 3 years; do not follow parsnips, celery, or parsley in same bed' },
+  stages: [
+    { label: 'Germinate', title: 'Slow germination', desc: 'Takes 14–21 days at 55–75°F. Keep soil consistently moist — critical period. Cover with burlap if soil dries quickly.' },
+    { label: 'Thin', title: 'Thinning', desc: 'Thin to 2–3 inches when seedlings are 2 inches tall. Thinning is critical — crowded carrots stay small and forked.' },
+    { label: 'Growth', title: 'Root development', desc: 'Tops grow vigorously. Root is developing underground — maintain consistent moisture.' },
+    { label: 'Harvest', title: 'Mature roots', desc: 'Harvest when shoulder is ½–¾ inch diameter at soil surface. Loosen soil with fork before pulling. Fall carrots sweeten after several frosts.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    41,
-    water:       88.3,   // g
-    protein:     0.9,   // g
-    carbs:       9.6,   // g total
-    fiber:       2.8,   // g
-    sugars:      4.7,   // g
-    fat:         0.2,   // g total
-    saturated:   0.04,   // g
-    monounsat:   0.01,   // g
-    polyunsat:   0.12,   // g
-    // — Fat-soluble vitamins —
-    vitA:        835,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.66,   // mg
-    vitK:        13.2,   // µg
-    // — Water-soluble vitamins —
-    vitC:        5.9,   // mg
-    vitB1:       0.066,  // mg thiamine
-    vitB2:       0.058,  // mg riboflavin
-    vitB3:       0.983,  // mg niacin
-    vitB5:       0.273,  // mg pantothenic
-    vitB6:       0.138,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       19,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     8.8,  // mg
-    // — Macrominerals —
-    calcium:     33,  // mg
-    phosphorus:  35,  // mg
-    magnesium:   12,  // mg
-    sodium:      69,  // mg
-    potassium:   320,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.3,  // mg
-    zinc:        0.24,  // mg
-    copper:      0.045,  // mg
-    manganese:   0.143,  // mg
-    selenium:    0.1,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'One medium carrot provides over 200% daily vitamin A as beta-carotene (835 µg RAE). Cooking increases beta-carotene bioavailability. Also a solid source of potassium and vitamin K.',
+    calories: 41, water: 88.3, protein: 0.9, carbs: 9.6, fiber: 2.8, sugars: 4.7, fat: 0.2,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 835, vitD: 0, vitE: 0.7, vitK: 13.2,
+    vitC: 5.9, vitB1: 0.07, vitB2: 0.06, vitB3: 1.0, vitB5: 0.27, vitB6: 0.14,
+    vitB7: 0, vitB9: 19, vitB12: 0, choline: 8.8,
+    calcium: 33, phosphorus: 35, magnesium: 12, sodium: 69, potassium: 320, chloride: 0,
+    iron: 0.3, zinc: 0.24, copper: 0.05, manganese: 0.14, selenium: 0.1, iodine: 0,
+    chromium: 1.5, molybdenum: 0, fluoride: 0,
+    notes: 'One of the richest plant sources of beta-carotene (pro-vitamin A). Cooked carrots have higher bioavailable carotenoids than raw. Excellent source of falcarinol, a cancer-protective compound.',
   },
-  size:{weight:'60–120g per carrot',dimensions:'6–8" long, 1" diameter',notes:'Baby carrots at 3–4 inches; mature at 6–8.'},
+  size: { weight: '50–150g per carrot', dimensions: '6–8" long, ½–¾" diameter', notes: 'Chantenay types do well in heavy clay soil; Imperator types need deep loose soil; Nantes are best for flavor' },
 });

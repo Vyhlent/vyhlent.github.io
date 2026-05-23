@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'asparagus',name:'Asparagus',cat:'Perennial Veg',emoji:'🌱',
-  planting:{zone6:'Plant crowns Apr 1–30 (soil 40°F+)',depth:'6–8" deep in trench; fill in as shoots grow',spacing:'12–18" apart, rows 4–5 ft',ph:'6.5–7.5',sun:'Full sun'},
-  water:{in:'1–2',note:'Consistent moisture first 2 years; critical during fern phase'},
-  fertilizer:{type:'Balanced 10-10-10',amount:'2 lbs per 100 sq ft',freq:'Early spring; again after harvest ends'},
-  companions:{
-    good:[{name:'Tomatoes',why:'Tomatoes repel asparagus beetle while asparagus deters root nematodes that attack tomatoes.'},{name:'Basil',why:'Basil repels asparagus beetle and its oils confuse insects seeking to lay eggs in asparagus crowns.'},{name:'Marigolds',why:'Marigolds suppress nematodes in the deep soil layers where asparagus crowns grow.'}],
-    bad:[{name:'Garlic',why:'Garlic stunts asparagus growth and competes directly for deep soil nutrients needed by the perennial crown.'},{name:'Onions',why:'Onions release allelopathic compounds that stunt the slow-developing asparagus crown.'},{name:'Potatoes',why:'Potato harvest physically disrupts asparagus root systems, and both share fungal diseases.'}],
+  id: 'asparagus',
+  name: 'Asparagus',
+  cat: 'Perennial Vegetable',
+  emoji: '🌿',
+  planting: {
+    zone6: 'Plant crowns Mar–Apr as soon as soil can be worked; direct sow seeds indoors Jan–Feb',
+    depth: '6–8" deep (crowns in trench)',
+    spacing: '12–18" apart in rows 3–4 ft wide',
+    ph: '6.5–7.5',
+    sun: 'Full sun (8+ hours)',
+    zone3: 'Plant crowns late Apr–May after last frost',
+    zone4: 'Plant crowns Apr–early May',
+    zone5: 'Plant crowns late Mar–Apr',
+    zone7: 'Plant crowns Feb–Mar',
+    zone8: 'Plant crowns Jan–Feb; choose mild-climate varieties',
+    zone9: 'Plant crowns Dec–Jan; very limited production in hot climates',
   },
-  companionDist:'Keep 24" from garlic/onions; 3 ft from potatoes.',
-  animals:'Ladybugs eat beetle eggs; toads eat many pests.',
-  diseases:[{name:'Asparagus Rust',desc:'Orange-red pustules on ferns; copper fungicide; Jersey series varieties.'},{name:'Crown Rot',desc:'Brown-orange crown, plant collapse; improve drainage.'}],
-  pests:'Asparagus beetle — hand pick; pyrethrin if severe.',
-  rotation:{family:'Asparagaceae (perennial)',cycle:'Permanent bed — productive 15–30 years'},
-  stages:[{label:'Yr1',title:'Year 1 — no harvest',desc:'Do not harvest at all; build root reserves.'},{label:'Yr2',title:'Year 2 — 2 weeks',desc:'Harvest 2 weeks only.'},{label:'Yr3',title:'Year 3+ — full',desc:'Harvest 4–6 weeks; stop when spears thin.'},{label:'Fern',title:'Fern phase',desc:'Let ferns grow all season after harvest.'}],
-  special:'First harvest year 3. Jersey Giant and Jersey Knight are excellent Zone 6 varieties.',
+  zones: {
+    '6': { timing: 'Plant crowns Mar–Apr; harvest begins year 3, Apr–May', plantingStart: 3, plantingEnd: 4, harvestStart: 4, harvestEnd: 5 },
+  },
+  special: 'Permanent planting — site carefully as bed will last 15–30 years. Do not harvest first 2 years; harvest lightly in year 3. Male hybrid varieties (Jersey Knight, Jersey Giant) produce more spears and no seed-weed problems.',
+  water: { in: '1–1.5', note: 'Even moisture during establishment. Deep watering encourages deep roots. Reduce watering in fall to allow foliage to die back naturally.' },
+  fertilizer: { type: 'Balanced 10-10-10 in spring; high phosphorus at planting', amount: '1.5 lbs per 25 ft row', freq: 'Once in early spring when spears emerge; side-dress with compost in fall' },
+  companions: {
+    good: [
+      { name: 'Tomatoes', why: 'Tomatoes repel asparagus beetles; asparagus repels nematodes that attack tomato roots' },
+      { name: 'Parsley', why: 'Attracts predatory insects that feed on asparagus beetles' },
+      { name: 'Marigolds', why: 'Deter nematodes and aphids in the asparagus bed' },
+      { name: 'Basil', why: 'Repels aphids and asparagus beetles' },
+    ],
+    bad: [
+      { name: 'Onions', why: 'Compete for nutrients and can inhibit asparagus spear production' },
+      { name: 'Garlic', why: 'Same allelopathic effect as onions on asparagus' },
+      { name: 'Potatoes', why: 'Compete strongly for space and nutrients; difficult to harvest without disturbing crowns' },
+    ],
+  },
+  companionDist: 'Plant companions at the edge of the asparagus bed, not within it — crowns need undisturbed soil',
+  animals: 'Ladybugs and lacewings prey on asparagus aphids.',
+  diseases: [
+    { name: 'Fusarium Crown Rot', desc: 'Roots turn brown and mushy; spears are thin and weak. Avoid waterlogged soil; plant resistant varieties; destroy infected crowns.' },
+    { name: 'Asparagus Rust', desc: 'Orange-red pustules on fronds. Remove affected ferns; apply sulfur fungicide. Choose rust-resistant varieties.' },
+    { name: 'Purple Spot', desc: 'Purple elliptical lesions on spears and branches. Improve air circulation; avoid overhead irrigation.' },
+  ],
+  pests: 'Asparagus beetle (hand-pick; spray with spinosad or neem), asparagus miner (remove and destroy infested fronds), cutworms (use collar barriers at transplanting).',
+  rotation: { family: 'Asparagaceae', cycle: 'Permanent perennial bed — does not rotate. Isolate from annual rotation beds.' },
+  stages: [
+    { label: 'Yr 1', title: 'Crown establishment', desc: 'Plant crowns in 6-inch trench; fill in soil as growth progresses. All top growth ferns out — do NOT harvest. Focus entirely on root building.' },
+    { label: 'Yr 2', title: 'Fern development', desc: 'Allow all spears to fern out again. You may harvest 1–2 spears per crown very lightly. Cut ferns down in late fall after frost.' },
+    { label: 'Yr 3+', title: 'Productive harvest', desc: 'Harvest spears for 4–6 weeks when 6–8 inches tall and tips are tight. Cut at ground level. Stop harvesting when spears thin to pencil size.' },
+    { label: 'Summer', title: 'Fern season', desc: 'Allow all remaining spears to fern out. Fronds photosynthesize to store energy in the crown for next year\'s harvest.' },
+    { label: 'Fall', title: 'Die-back', desc: 'Fronds yellow and die after frost. Cut to ground level or leave as mulch; apply compost over bed.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    20,
-    water:       93.2,   // g
-    protein:     2.2,   // g
-    carbs:       3.9,   // g total
-    fiber:       2.1,   // g
-    sugars:      1.9,   // g
-    fat:         0.1,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0,   // g
-    polyunsat:   0.05,   // g
-    // — Fat-soluble vitamins —
-    vitA:        38,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        1.1,   // mg
-    vitK:        41.6,   // µg
-    // — Water-soluble vitamins —
-    vitC:        5.6,   // mg
-    vitB1:       0.143,  // mg thiamine
-    vitB2:       0.141,  // mg riboflavin
-    vitB3:       0.978,  // mg niacin
-    vitB5:       0.274,  // mg pantothenic
-    vitB6:       0.091,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       52,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     16,  // mg
-    // — Macrominerals —
-    calcium:     24,  // mg
-    phosphorus:  52,  // mg
-    magnesium:   14,  // mg
-    sodium:      2,  // mg
-    potassium:   202,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        2.14,  // mg
-    zinc:        0.54,  // mg
-    copper:      0.189,  // mg
-    manganese:   0.158,  // mg
-    selenium:    2.3,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Outstanding source of folate (52 µg), vitamin K, and prebiotic inulin fiber. Selenium and iron levels are notable for a green vegetable.',
+    calories: 20, water: 93.2, protein: 2.2, carbs: 3.9, fiber: 2.1, sugars: 1.9, fat: 0.1,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 38, vitD: 0, vitE: 1.1, vitK: 41.6,
+    vitC: 5.6, vitB1: 0.14, vitB2: 0.13, vitB3: 1.1, vitB5: 0.27, vitB6: 0.09,
+    vitB7: 1.8, vitB9: 52, vitB12: 0, choline: 16,
+    calcium: 24, phosphorus: 52, magnesium: 14, sodium: 2, potassium: 202, chloride: 0,
+    iron: 2.1, zinc: 0.54, copper: 0.19, manganese: 0.16, selenium: 2.3, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Excellent source of folate (52 µg per 100g) and vitamin K. High in prebiotic inulin fiber. Contains asparagine, a natural diuretic.',
   },
-  size:{weight:'15–25g per spear',dimensions:'7–9" long spear, 0.5–0.75" diameter',notes:'Harvest at 6–8 inches. Pencil-thin spears signal the bed needs rest.'},
+  size: { weight: '15–30g per spear', dimensions: '6–9" tall, ½–¾" diameter at harvest', notes: 'Harvest when tips are tight and before scales begin to open' },
 });

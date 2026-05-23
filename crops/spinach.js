@@ -1,81 +1,66 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id: 'spinach', name: 'Spinach', cat: 'Leafy Green', emoji: '🌿',
-  planting: { zone6: 'Direct sow Mar 15–Apr 30 or Aug 15–Sep 30; tolerates light frost', depth: '0.5"', spacing: '3–6" apart, rows 12"', ph: '6.0–7.0', sun: 'Full sun / part shade' },
-  water: { in: '1–1.5', note: 'Keep consistently moist; mulch helps' },
-  fertilizer: { type: '10-10-10 balanced', amount: '1 lb per 100 sq ft', freq: 'At planting; side-dress nitrogen at 3 weeks' },
+  id: 'spinach',
+  name: 'Spinach',
+  cat: 'Leafy Green',
+  emoji: '🥬',
+  planting: {
+    zone6: 'Spring: direct sow Mar–Apr (4–6 weeks before last frost). Fall: direct sow Aug–Sep for harvest until hard freeze.',
+    depth: '½"',
+    spacing: '4–6" apart after thinning; rows 12" wide',
+    ph: '6.5–7.0',
+    sun: 'Full sun in spring; partial shade in summer (bolts in heat and long days)',
+    zone3: 'Direct sow mid-May to Jun; short spring window only',
+    zone4: 'Direct sow May; fall sow late Jul',
+    zone5: 'Direct sow Apr; fall sow early Aug',
+    zone7: 'Direct sow Feb–Mar; fall sow Sep–Oct; overwinters with light protection',
+    zone8: 'Fall–winter–spring crop; sow Sep–Feb; overwinters without protection',
+    zone9: 'Fall–spring crop; sow Oct–Mar',
+  },
+  zones: {
+    '6': { timing: 'Sow Mar–Apr; harvest Apr–May. Fall sow Aug–Sep; harvest Sep–Nov', plantingStart: 3, plantingEnd: 4, harvestStart: 4, harvestEnd: 11 },
+  },
+  special: 'Bolts (goes to seed) quickly when days exceed 14 hours and temperatures exceed 75°F — spring window is short in zone 6. Savoy types (Bloomsdale) are slower to bolt and more cold-hardy. Baby spinach harvested at 3–4 weeks. Fall spinach is sweeter and more productive than spring. Mulch fall spinach and it may overwinter for early spring harvest.',
+  water: { in: '1–1.5', note: 'Consistent moisture is essential — drought stress triggers bolting. Mulch to keep roots cool and moist. Water in morning to prevent overnight leaf wetness.' },
+  fertilizer: { type: 'High nitrogen', amount: '⅛ cup 10-10-10 per 5 ft row', freq: 'At planting and side-dress nitrogen at 3 weeks; spinach is a heavy but fast nitrogen consumer' },
   companions: {
     good: [
-      { name: 'Garlic',     why: "Garlic's sulfur compounds repel aphids and spider mites that commonly infest spinach leaves." },
-      { name: 'Radishes',   why: 'Fast-growing radishes act as trap crops for leaf miners, drawing them away from spinach.' },
-      { name: 'Peas',       why: 'Peas fix atmospheric nitrogen, enriching the soil that spinach feeds on.' },
+      { name: 'Strawberries', why: 'Spinach provides living mulch around strawberry crowns; both are cool-season crops' },
+      { name: 'Radishes', why: 'Interplant as pest trap crop and row markers; harvest radishes before spinach needs space' },
+      { name: 'Peas', why: 'Peas provide gentle shade that extends spinach season; fix nitrogen' },
+      { name: 'Garlic', why: 'Deters aphids that commonly attack spinach' },
+      { name: 'Corn (as shade)', why: 'Grow spinach on north side of established corn for summer shade that prevents bolting' },
     ],
     bad: [
-      { name: 'Fennel', why: 'Fennel releases allelopathic chemicals that inhibit germination and growth of most vegetables including spinach.' },
+      { name: 'Fennel', why: 'Allelopathic to most vegetables including spinach' },
+      { name: 'Potatoes', why: 'Compete heavily for same nutrients; different pest pressures interact' },
     ],
   },
-  companionDist: 'Keep 12"+ from fennel.',
-  animals: 'Ladybugs eat aphids; ground beetles prey on soil pests.',
+  companionDist: 'Interplant with radishes every 4 inches within rows; radish harvest opens space for spinach to spread',
+  animals: 'Aphids are the main pest — ladybugs and lacewings are key. Slugs are significant problem in cool, moist conditions.',
   diseases: [
-    { name: 'Downy Mildew',       desc: 'Yellow spots on upper leaf, gray-purple fuzz beneath. Use resistant varieties, avoid overhead watering.' },
-    { name: 'Cercospora Leaf Spot', desc: 'Circular brown spots with white centers. Remove infected leaves; copper fungicide.' },
+    { name: 'Downy Mildew', desc: 'Most serious spinach disease. Yellow patches on upper leaf; grey-purple sporulation below. Apply copper fungicide; choose resistant varieties (Tyee, Catalina); improve air circulation.' },
+    { name: 'Fusarium Wilt', desc: 'Yellowing and wilting despite moisture. No cure. Long rotation (3+ years); choose resistant varieties.' },
+    { name: 'White Rust', desc: 'White blister-like pustules on leaves. More cosmetic than destructive. Copper spray; crop rotation.' },
   ],
-  pests: 'Row covers for aphids and leaf miners; neem oil spray.',
-  rotation: { family: 'Chenopodiaceae', cycle: '3–4 year rotation; follow with legumes or grains, not beets or chard' },
+  pests: 'Aphids (insecticidal soap; reflective mulch; lady beetles), leafminers (remove and destroy affected leaves; row covers), slugs (diatomaceous earth; beer traps; copper tape), flea beetles (row covers especially at fall planting).',
+  rotation: { family: 'Amaranthaceae (Chenopodiaceae) — same family as beets and chard', cycle: 'Rotate every 2–3 years; do not follow beets or chard in same bed (share downy mildew races)' },
   stages: [
-    { label: 'Germ',  title: 'Germination', desc: '7–14 days at 50–70°F.' },
-    { label: 'Seedl', title: 'Seedling',     desc: 'Thin to 3–6 inches at 2 weeks.' },
-    { label: 'Grow',  title: 'Vegetative',   desc: 'Harvest outer leaves to extend production.' },
-    { label: 'Bolt',  title: 'Bolting',      desc: 'Hot temps trigger bolting. Harvest immediately.' },
+    { label: 'Germinate', title: 'Germination', desc: 'Germinates in 7–14 days; fastest at 50–65°F. Will germinate in near-freezing conditions — plant early.' },
+    { label: 'Thin', title: 'Thinning', desc: 'Thin to 4–6 inches when seedlings are 2 inches tall. Thinnings are edible.' },
+    { label: 'Harvest', title: 'Leaf harvest', desc: 'Begin harvesting outer leaves when 4–6 leaves present. For baby spinach, cut entire plant at 3 inches above soil and allow regrowth.' },
+    { label: 'Bolt', title: 'Bolting', desc: 'Central stalk elongates rapidly in heat or long days. Flavor turns bitter. Pull and replant for fall, or let bolt and collect seed.' },
   ],
-  special: 'Plant in succession every 2–3 weeks. Best flavor after a light frost.',
   nutrition: {
-    // — Macronutrients —
-    calories:    23,
-    water:       91.4,   // g
-    protein:     2.9,   // g
-    carbs:       3.6,   // g total
-    fiber:       2.2,   // g
-    sugars:      0.4,   // g
-    fat:         0.4,   // g total
-    saturated:   0.06,   // g
-    monounsat:   0.01,   // g
-    polyunsat:   0.17,   // g
-    // — Fat-soluble vitamins —
-    vitA:        469,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        2.03,   // mg
-    vitK:        482.9,   // µg
-    // — Water-soluble vitamins —
-    vitC:        28.1,   // mg
-    vitB1:       0.078,  // mg thiamine
-    vitB2:       0.189,  // mg riboflavin
-    vitB3:       0.724,  // mg niacin
-    vitB5:       0.065,  // mg pantothenic
-    vitB6:       0.195,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       194,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     19.3,  // mg
-    // — Macrominerals —
-    calcium:     99,  // mg
-    phosphorus:  49,  // mg
-    magnesium:   79,  // mg
-    sodium:      79,  // mg
-    potassium:   558,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        2.71,  // mg
-    zinc:        0.53,  // mg
-    copper:      0.13,  // mg
-    manganese:   0.897,  // mg
-    selenium:    1,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Extraordinary vitamin K (483 µg — 403% DV) and vitamin A (469 µg — 52% DV). Folate 194 µg (49% DV). High iron (2.71 mg) though absorption is reduced by oxalates — pair with vitamin C foods to improve uptake. One of the most nutrient-dense vegetables.',
+    calories: 23, water: 91.4, protein: 2.9, carbs: 3.6, fiber: 2.2, sugars: 0.4, fat: 0.4,
+    saturated: 0.1, monounsat: 0, polyunsat: 0.2,
+    vitA: 469, vitD: 0, vitE: 2.0, vitK: 483,
+    vitC: 28.1, vitB1: 0.08, vitB2: 0.19, vitB3: 0.7, vitB5: 0.07, vitB6: 0.2,
+    vitB7: 0, vitB9: 194, vitB12: 0, choline: 19.3,
+    calcium: 99, phosphorus: 49, magnesium: 79, sodium: 79, potassium: 558, chloride: 0,
+    iron: 2.7, zinc: 0.53, copper: 0.13, manganese: 0.9, selenium: 1.0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Extraordinary nutrient density. One of the highest folate foods (194 µg per 100g). Very high vitamin K, vitamin A, magnesium, and iron. Oxalic acid binds some iron and calcium — cooking reduces oxalate levels and increases mineral bioavailability.',
   },
-  size: { weight: '150–250g per bunch', dimensions: 'Leaves 3–6" long', notes: 'Harvest at 3–4 inches for baby spinach, 6+ for mature.' },
+  size: { weight: 'N/A — harvested by leaf', dimensions: 'Mature leaves 3–8" long', notes: 'Savoy spinach has crinkled leaves that trap grit — wash thoroughly; flat-leaf types (Tyee) are easier to clean' },
 });

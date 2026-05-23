@@ -2,78 +2,65 @@ import Crop from '../Crop.js';
 export default new Crop({
   id: 'mint',
   name: 'Mint',
-  cat: 'Herbs & Alliums',
+  cat: 'Herb',
   emoji: '🌿',
-
   planting: {
-    zone6:   'Plant transplants in spring after last frost (mid-April through May) or in late summer for fall harvest. Can also plant in early fall to establish before winter. Best to start from divisions or transplants — seed is slow and variable.',
-    depth:   '0.5 inches for rhizomes; crown at soil level for transplants',
-    spacing: '18–24 inches — mint will fill the space regardless',
-    ph:      '6.0–7.0',
-    sun:     'Full sun to partial shade',
+    zone6: 'Plant divisions or transplants Apr–May; spreads vigorously — contain in pots or with root barriers',
+    depth: 'Surface to ½" (transplants at soil level)',
+    spacing: '12–18" apart initially; will fill any available space',
+    ph: '6.0–7.0',
+    sun: 'Full sun to partial shade (afternoon shade improves leaf quality in heat)',
+    zone3: 'Hardy perennial; plant May; dies back to roots in winter and re-emerges in spring',
+    zone4: 'Plant Apr–May; very cold-hardy',
+    zone5: 'Plant Apr',
+    zone7: 'Plant Mar–Apr; may stay semi-evergreen',
+    zone8: 'Plant Feb–Mar; often stays green through winter',
+    zone9: 'Plant Feb–Mar; nearly evergreen; may struggle in summer heat',
   },
-  special: '⚠️ Plant in containers sunk in the ground, or in a dedicated bed with root barriers. Mint spreads aggressively via underground rhizomes and will colonize surrounding garden beds within 1–2 seasons if not contained. Sink a 12-inch deep barrier or use a buried pot. Many varieties available: spearmint (culinary standard), peppermint (menthol), apple mint, chocolate mint, mojito mint.',
-
-  water: {
-    in:   '1–1.5',
-    note: 'Prefers consistently moist soil. Drought causes reduced essential oil content and bitter flavor. Avoid waterlogging — good drainage with consistent moisture is ideal.',
+  zones: {
+    '6': { timing: 'Plant Apr–May; harvest Jun–Sep; cut back in fall; re-emerges Apr', plantingStart: 4, plantingEnd: 5, harvestStart: 6, harvestEnd: 9 },
   },
-
-  fertilizer: {
-    type:   'Balanced',
-    amount: 'Light application only — too much fertility reduces essential oil concentration',
-    freq:   'Compost mulch annually in spring. A light balanced liquid feed (fish emulsion or compost tea) monthly during growing season if in containers. Avoid excess nitrogen.',
-  },
-
+  special: 'MUST be contained — mint spreads by underground runners (rhizomes) and will take over a garden within 1–2 seasons. Grow in submerged pots or raised beds with buried barriers. Spearmint is mildest; peppermint is strongest; chocolate mint is best for desserts. Harvest before flowering for best flavor. Cut to 2 inches above ground 2–3 times per season.',
+  water: { in: '1–2', note: 'Prefers consistently moist soil — does not tolerate drought. Good candidate for areas that stay moist. Water frequently in containers as they dry out faster.' },
+  fertilizer: { type: 'Balanced organic (compost or fish emulsion)', amount: 'Light — excess nitrogen reduces essential oil content and flavor', freq: 'Top-dress with compost each spring; no additional feeding needed in good soil' },
   companions: {
     good: [
-      { name: 'Tomatoes',   why: 'Mint repels aphids, flea beetles, and spider mites near tomatoes. Keep contained or use cut mint as mulch.' },
-      { name: 'Cabbage',    why: 'Deters cabbage moth, aphids, and flea beetles — classic companion.' },
-      { name: 'Peppers',    why: 'Repels aphids and spider mites; improves pest balance near peppers.' },
-      { name: 'Peas',       why: 'Mint planted at row ends deters aphids from pea crops.' },
-      { name: 'Wild Blackberry', why: 'Can be planted at row ends of blackberry beds to deter Japanese beetles.' },
+      { name: 'Tomatoes', why: 'Repels aphids, spider mites, and flea beetles; improves tomato health (keep contained)' },
+      { name: 'Cabbage', why: 'Repels cabbage moth, aphids, and flea beetles from brassica beds' },
+      { name: 'Peas', why: 'Mint deters aphids that commonly attack peas' },
+      { name: 'Blackberries', why: 'Deters ants and aphids; compatible moisture requirements' },
     ],
     bad: [
-      { name: 'Parsley',   why: 'Mint can be allelopathic near parsley — inhibits parsley growth in some conditions.' },
-      { name: 'Chamomile', why: 'Mint can outcompete and suppress chamomile if not contained.' },
+      { name: 'Parsley', why: 'Mint aggressively out-competes parsley for space and moisture' },
+      { name: 'Chamomile', why: 'Some reports of mint inhibiting chamomile germination and growth' },
     ],
   },
-  companionDist: 'Most effective as a companion when used as cut mulch placed near target plants rather than planted in the bed directly. The volatile oils provide pest deterrence even from dried leaves.',
-  animals: 'Flowers attract a wide range of beneficial insects — bees, hover flies, parasitic wasps. The flowers are important late-season nectar sources. Deer occasionally browse but often dislike strong mint aroma.',
-
+  companionDist: 'Always contain in buried pots or root barriers before placing near any companion — spreading mint is worse than no mint',
+  animals: 'Excellent pollinator plant when allowed to flower. Strong scent deters deer, rabbits, and mice.',
   diseases: [
-    { name: 'Mint Rust',    desc: 'Puccinia menthae causes orange pustules on leaves and distorted growth. Remove and destroy infected plant material. Improve airflow. Resistant varieties available.' },
-    { name: 'Verticillium Wilt', desc: 'Sudden wilting of shoots. No cure — remove infected plants and avoid replanting mint in that spot for several years.' },
-    { name: 'Powdery Mildew',   desc: 'White powdery coating on leaves in humid conditions. Improve airflow; avoid overhead watering. Baking soda or sulfur spray if severe.' },
+    { name: 'Mint Rust', desc: 'Orange-brown pustules on leaves and stems. Most serious mint disease. Remove and destroy all affected growth; cut entire planting to ground and destroy clippings; do not compost. Replant with clean divisions.' },
+    { name: 'Verticillium Wilt', desc: 'Wilting and browning despite adequate water. Remove and destroy infected plants. Do not replant mint in same location for 3 years.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves, especially in fall. Improve air circulation by thinning plants; spray potassium bicarbonate.' },
   ],
-  pests: 'Mint aphids can cluster on shoot tips in spring — knock off with water spray. Spider mites in hot dry conditions — increase humidity. Cutworms occasionally sever stems at soil level.',
-
-  rotation: {
-    family: 'Lamiaceae (Mint family)',
-    cycle:  'Perennial — permanent planting in its designated bed or container. No rotation — simply cut back to the ground in fall and it regrows from rhizomes in spring.',
-  },
-
+  pests: 'Spider mites in hot dry conditions (increase humidity; neem oil), aphids (blast with water; lady beetles), cutworms (collar at base), flea beetles (diatomaceous earth). Generally pest-resistant due to strong scent.',
+  rotation: { family: 'Lamiaceae (Mint family)', cycle: 'Perennial; divide every 2–3 years to maintain vigor. Replant divisions in fresh soil.' },
   stages: [
-    { label: 'Spring', title: 'Emergence',     desc: 'New growth emerges from rhizomes in March–April. Begin harvest when stems reach 6 inches. Cut entire stems; this encourages bushy rather than leggy growth.' },
-    { label: 'May–Sep',title: 'Main harvest',  desc: 'Harvest repeatedly throughout growing season. Best flavor before flowering. Cut stems to 1 inch above ground level — regrows vigorously within 2–3 weeks.' },
-    { label: 'Jul–Aug',title: 'Flowering',     desc: 'Small pink, white, or purple flower spikes appear in midsummer. Flavor becomes slightly more bitter when in full bloom. Deadhead to prolong vegetative growth or allow to bloom for pollinators.' },
-    { label: 'Fall',   title: 'Cut back',      desc: 'Cut plants to ground level after first frost. Mulch lightly to protect rhizomes. Divide crowded clumps every 2–3 years to maintain vigor.' },
+    { label: 'Spring', title: 'Re-emergence', desc: 'New shoots emerge from roots in early Apr. Fresh growth is most flavorful — begin harvesting immediately.' },
+    { label: 'Growth', title: 'Rapid spread', desc: 'Grows rapidly in warm weather, sending out underground runners. Monitor container edges or barriers regularly.' },
+    { label: 'Harvest', title: 'Active harvest', desc: 'Harvest stems just above a leaf node. Never harvest more than ⅓ of the plant at once. Pinch flower buds as they appear.' },
+    { label: 'Cut back', title: 'Midsummer cutback', desc: 'After flowering begins, cut entire planting to 2 inches. Fresh, more flavorful growth returns within 2–3 weeks.' },
+    { label: 'Fall', title: 'Dormancy', desc: 'Tops die back after hard frost. Leave roots undisturbed; mulch lightly in zones 3–4.' },
   ],
-
   nutrition: {
-    calories: 44, water: 85.6, protein: 3.3, carbs: 8.4, fiber: 6.8, sugars: 0.2,
-    fat: 0.7, saturated: 0.19, monounsat: 0.02, polyunsat: 0.39,
-    vitA: 203, vitD: 0, vitE: 0.56, vitK: 121.7,
-    vitC: 31.8, vitB1: 0.08, vitB2: 0.18, vitB3: 0.95, vitB5: 0.24, vitB6: 0.13,
+    calories: 70, water: 78.7, protein: 3.8, carbs: 14.9, fiber: 8.0, sugars: 0.2, fat: 0.9,
+    saturated: 0.2, monounsat: 0, polyunsat: 0.5,
+    vitA: 212, vitD: 0, vitE: 0.9, vitK: 621,
+    vitC: 31.8, vitB1: 0.08, vitB2: 0.27, vitB3: 1.7, vitB5: 0.25, vitB6: 0.13,
     vitB7: 0, vitB9: 114, vitB12: 0, choline: 0,
     calcium: 243, phosphorus: 73, magnesium: 80, sodium: 31, potassium: 569, chloride: 0,
-    iron: 5.08, zinc: 1.11, copper: 0.24, manganese: 1.18, selenium: 0.6, iodine: 0,
-    notes: 'Values per 100g fresh spearmint — used in much smaller culinary quantities (1–2 tbsp per serving). Exceptional in Vitamin K, folate, iron, and calcium for an herb. Peppermint has similar profile with higher menthol content.',
+    iron: 5.1, zinc: 1.1, copper: 0.33, manganese: 1.18, selenium: 0.7, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Used in small culinary amounts. Exceptionally high vitamin K (621 µg per 100g) and iron. Contains menthol (peppermint) or carvone (spearmint) — the essential oils responsible for flavor and digestive benefits.',
   },
-
-  size: {
-    weight:     'Herb — harvested by stem/leaf volume, not weight',
-    dimensions: 'Plants reach 12–36 inches tall depending on variety',
-    notes:      'Spearmint and peppermint are the most common culinary varieties. Apple mint has softer, fuzzier leaves and milder flavor. Mojito mint (Cuban mint) has a lime-forward character.',
-  },
+  size: { weight: 'N/A — harvested by stem', dimensions: 'Plants 12–36" tall depending on variety', notes: 'Corsican mint stays under 1 inch tall — ideal for ground cover between stepping stones' },
 });

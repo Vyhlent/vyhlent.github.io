@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'raspberries',name:'Raspberries',cat:'Berry',emoji:'🍓',
-  planting:{zone6:'Plant Mar–Apr (summer) or Apr–May (fall-bearing)',depth:'Crown at soil level, roots 2–4" deep',spacing:'2–3 ft apart, rows 6–8 ft',ph:'5.5–6.5',sun:'Full sun'},
-  water:{in:'1–1.5',note:'Consistent moisture critical during cane and fruit development'},
-  fertilizer:{type:'10-10-10 or ammonium nitrate',amount:'¼ lb per plant',freq:'Spring before growth; avoid late-season N'},
-  companions:{
-    good:[{name:'Garlic',why:'Garlic repels raspberry beetle and aphids that spread mosaic virus between canes.'},{name:'Marigolds',why:'Marigolds attract beneficial insects that prey on raspberry fruitworm larvae.'},{name:'Chives',why:'Chives deter aphids, the primary vector of raspberry mosaic virus.'}],
-    bad:[{name:'Tomatoes',why:'Tomatoes share late blight and Verticillium wilt with raspberries, creating a disease reservoir.'},{name:'Potatoes',why:'Potatoes carry late blight and share fungal diseases that overwinter and attack raspberry roots.'}],
+  id: 'raspberries',
+  name: 'Raspberries',
+  cat: 'Berry Shrub',
+  emoji: '🫐',
+  planting: {
+    zone6: 'Plant bare-root canes Mar–Apr; container plants Apr–May',
+    depth: '2–3" deeper than nursery depth; spread roots horizontally',
+    spacing: '2–3 ft apart in rows; rows 8–10 ft apart',
+    ph: '5.5–6.5',
+    sun: 'Full sun (6–8 hours for best yield)',
+    zone3: 'Hardiest cane fruit; plant May; Heritage and Boyne varieties',
+    zone4: 'Plant late Apr–May; Heritage, Latham',
+    zone5: 'Plant Apr–May; wide selection',
+    zone7: 'Plant Feb–Mar; heat tolerance important; Anne (yellow), Prelude',
+    zone8: 'Plant Jan–Feb; fall-bearers better adapted to heat than summer-bearers',
+    zone9: 'Marginal; only in cooler microclimates; fall-bearing varieties',
   },
-  companionDist:'20 ft minimum from tomatoes/potatoes.',
-  animals:'Ground beetles eat larvae; parasitic wasps; bees essential.',
-  diseases:[{name:'Raspberry Mosaic Virus',desc:'Mottled distorted leaves; spread by aphids. Remove infected plants.'},{name:'Root Rot',desc:'Wilting, orange crown; improve drainage; resistant varieties.'}],
-  pests:'Aphids — neem oil; cane borers — prune wilted tips; fruitworm — hand pick.',
-  rotation:{family:'Rosaceae (perennial)',cycle:'Perennial; renovate every 8–10 years in new location'},
-  stages:[{label:'Dorm',title:'Dormancy',desc:'Winter. Roots active underground.'},{label:'Prim',title:'Primocane',desc:'New canes grow; no fruit.'},{label:'Flor',title:'Floricane',desc:'Year 2 canes flower and fruit.'},{label:'Harv',title:'Harvest',desc:'Jun–Jul (summer) or Aug–Oct (fall).'}],
-  special:'Summer-bearing: prune floricanes after harvest. Everbearing: mow all canes in early spring.',
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; summer-bearing harvest Jul; fall-bearing harvest Sep–Oct', plantingStart: 3, plantingEnd: 4, harvestStart: 7, harvestEnd: 10 },
+  },
+  special: 'Summer-bearing raspberries fruit on second-year floricanes (Jul). Fall-bearing/everbearing (Heritage, Caroline) fruit on first-year primocanes in Sep–Oct AND on the tips of the same canes in Jul — or can be mowed entirely to the ground each fall for a single large fall crop. Trellis all types with 2–3 horizontal wires between posts.',
+  water: { in: '1–1.5', note: 'Consistent moisture critical during cane development and fruiting. Drip irrigation preferred — wet foliage promotes disease. Increase during fruit development.' },
+  fertilizer: { type: 'Balanced 10-10-10', amount: '3–4 oz per plant or ½ lb per 5-ft row', freq: 'Once in early spring as buds swell; possibly a second light application mid-May; avoid late-season feeding' },
+  companions: {
+    good: [
+      { name: 'Marigolds', why: 'Deter nematodes and raspberry beetle at row edges' },
+      { name: 'Garlic', why: 'Repels aphids and fungal diseases when interplanted at ends of rows' },
+      { name: 'Tansy', why: 'Repels flying insects and ants; plant at row ends' },
+      { name: 'Yarrow', why: 'Attracts predatory wasps and hoverflies' },
+    ],
+    bad: [
+      { name: 'Blackberries', why: 'Share raspberry crown borer and verticillium wilt — plant minimum 75–100 ft apart' },
+      { name: 'Potatoes', why: 'Share verticillium wilt; infected potato soil can devastate a raspberry planting' },
+      { name: 'Tomatoes', why: 'Same verticillium wilt concern — avoid planting in beds recently used for tomatoes' },
+    ],
+  },
+  companionDist: 'Keep companions outside the row — raspberry roots spread laterally; companions within rows get crowded out',
+  animals: 'Bees essential for pollination. Birds eat ripe berries — netting needed if yield is important. Beneficial insects control aphids and small caterpillars.',
+  diseases: [
+    { name: 'Botrytis Fruit Rot', desc: 'Grey mold on fruit in wet conditions. Harvest frequently; improve air circulation; avoid overhead watering.' },
+    { name: 'Phytophthora Root Rot', desc: 'Plants wilt and die; roots black and mushy. No cure — improve drainage; plant on raised beds; choose resistant varieties.' },
+    { name: 'Cane Blight', desc: 'Dark lesions on canes; canes die. Prune infected canes to ground; sterilize pruners; improve air circulation.' },
+    { name: 'Mosaic Virus', desc: 'Mottled, curled leaves; reduced yield. Spread by aphids. No cure — remove infected plants; plant virus-indexed certified stock only.' },
+  ],
+  pests: 'Raspberry crown borer (most serious — larvae tunnel into crown; dig and destroy; apply pyrethrin to crown area), spotted wing drosophila (fine mesh netting; spinosad spray), aphids (neem oil; encourage lady beetles), Japanese beetles (hand-pick; kaolin clay).',
+  rotation: { family: 'Rosaceae (Rubus genus)', cycle: 'Permanent planting but should be renovated every 8–10 years. Remove oldest canes; tip root new plants in fresh soil away from old bed.' },
+  stages: [
+    { label: 'Spring', title: 'Primocane emergence', desc: 'New first-year canes emerge from roots. These will fruit next year (summer-bearing) or this fall (fall-bearing).' },
+    { label: 'Jul', title: 'Summer harvest', desc: 'Summer-bearing types: floricanes fruit heavily for 4–6 weeks. Pick daily — overripe berries attract pests.' },
+    { label: 'Post-harvest', title: 'Floricane removal', desc: 'Cut all fruited floricanes to ground immediately after harvest. Thin remaining primocanes to 4–6 strongest per foot of row.' },
+    { label: 'Sep–Oct', title: 'Fall harvest (everbearing)', desc: 'Fall-bearing types fruit on primocane tips Sep–Oct. After frost, cut entire planting to ground for clean slate next season.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    52,
-    water:       85.8,   // g
-    protein:     1.2,   // g
-    carbs:       11.9,   // g total
-    fiber:       6.5,   // g
-    sugars:      4.4,   // g
-    fat:         0.7,   // g total
-    saturated:   0.02,   // g
-    monounsat:   0.07,   // g
-    polyunsat:   0.38,   // g
-    // — Fat-soluble vitamins —
-    vitA:        2,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.87,   // mg
-    vitK:        7.8,   // µg
-    // — Water-soluble vitamins —
-    vitC:        26.2,   // mg
-    vitB1:       0.032,  // mg thiamine
-    vitB2:       0.038,  // mg riboflavin
-    vitB3:       0.598,  // mg niacin
-    vitB5:       0.329,  // mg pantothenic
-    vitB6:       0.055,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       21,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     12.3,  // mg
-    // — Macrominerals —
-    calcium:     25,  // mg
-    phosphorus:  29,  // mg
-    magnesium:   22,  // mg
-    sodium:      1,  // mg
-    potassium:   151,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.69,  // mg
-    zinc:        0.42,  // mg
-    copper:      0.09,  // mg
-    manganese:   0.67,  // mg
-    selenium:    0.2,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Highest fiber of common berries (6.5 g/100g). Exceptional manganese (0.67 mg — 29% DV). Rich in ellagic acid, anthocyanins, and vitamin C. Low sugar relative to other fruits.',
+    calories: 52, water: 85.8, protein: 1.2, carbs: 11.9, fiber: 6.5, sugars: 4.4, fat: 0.7,
+    saturated: 0, monounsat: 0.1, polyunsat: 0.4,
+    vitA: 2, vitD: 0, vitE: 0.9, vitK: 7.8,
+    vitC: 26.2, vitB1: 0.03, vitB2: 0.04, vitB3: 0.6, vitB5: 0.33, vitB6: 0.06,
+    vitB7: 1.5, vitB9: 21, vitB12: 0, choline: 12.3,
+    calcium: 25, phosphorus: 29, magnesium: 22, sodium: 1, potassium: 151, chloride: 0,
+    iron: 0.7, zinc: 0.42, copper: 0.09, manganese: 0.67, selenium: 0.2, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Highest fiber content of common berries (6.5g per 100g). Rich in ellagic acid, quercetin, and anthocyanins. Excellent source of vitamin C and manganese.',
   },
-  size:{weight:'2–4g per berry',dimensions:'0.5–0.75" diameter',notes:'Hollow when picked; releases cleanly from core when ripe.'},
+  size: { weight: '2–5g per berry', dimensions: '½–¾" diameter', notes: 'Heritage and Caroline produce large red berries in fall; Anne produces large yellow berries' },
 });

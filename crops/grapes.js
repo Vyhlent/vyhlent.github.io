@@ -1,156 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  "id": "grapes",
-  "name": "Grapes",
-  "cat": "Berry",
-  "emoji": "🍇",
-  "planting": {
-    "zone6": "Plant bare-root vines Mar–Apr (soil 50°F+); container plants May; fruit in year 3",
-    "depth": "Same depth as container or bare-root crown; roots 12\" deep",
-    "spacing": "6–10 ft apart on trellis; rows 8–10 ft apart",
-    "ph": "5.5–6.5",
-    "sun": "Full sun (8+ hrs) — non-negotiable for fruit quality"
+  id: 'grapes',
+  name: 'Grapes',
+  cat: 'Fruiting Vine',
+  emoji: '🍇',
+  planting: {
+    zone6: 'Plant bare-root vines Mar–Apr before buds swell; container plants Apr–May',
+    depth: 'Same as nursery or 2–3" deeper; graft union above soil if grafted',
+    spacing: '6–8 ft apart on trellis; rows 8–10 ft apart',
+    ph: '5.5–7.0',
+    sun: 'Full sun (8+ hours — essential for fruit quality and disease resistance)',
+    zone3: 'Hardy varieties only (Frontenac, Marquette, Valiant)',
+    zone4: 'Hardy varieties (Concord, Niagara, Frontenac)',
+    zone5: 'Wide selection (Concord, Catawba, Reliance)',
+    zone7: 'Excellent for American and European–American hybrids',
+    zone8: 'Muscadine grapes (Carlos, Nesbitt) are the primary choice',
+    zone9: 'Muscadine grapes; table grapes with heat tolerance',
   },
-  "water": {
-    "in": "1–1.5",
-    "note": "Deep, infrequent watering encourages deep roots. Reduce significantly as harvest approaches to concentrate sugars and prevent splitting."
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; harvest late Aug–Oct depending on variety (3–4 years to first real harvest)', plantingStart: 3, plantingEnd: 4, harvestStart: 8, harvestEnd: 10 },
   },
-  "fertilizer": {
-    "type": "Balanced 10-10-10 in spring; switch to low-nitrogen 5-10-10 after fruit set",
-    "amount": "¼ lb per vine year 1–2; ½ lb per vine year 3+",
-    "freq": "Early spring just before bud break; again after fruit set. Avoid late-season nitrogen — promotes soft growth vulnerable to winter kill."
-  },
-  "companions": {
-    "good": [
-      {
-        "name": "Geraniums",
-        "why": "Geraniums repel Japanese beetles, which are among the most destructive grape pests, defoliating vines rapidly."
-      },
-      {
-        "name": "Hyssop",
-        "why": "Hyssop attracts beneficial insects and is traditionally planted near grapes to improve flavor and deter pests."
-      },
-      {
-        "name": "Chives",
-        "why": "Chives deter aphids and Japanese beetles with their sulfur-based volatile compounds."
-      },
-      {
-        "name": "Nasturtiums",
-        "why": "Nasturtiums act as trap crops for aphids, drawing them away from grape foliage and fruit clusters."
-      },
-      {
-        "name": "Clover (cover crop)",
-        "why": "Clover fixes nitrogen between vine rows and attracts beneficial predatory insects that control grape pests."
-      }
+  special: 'Requires a sturdy trellis (7-ft posts, 2–3 horizontal wires). Most productive on a Kniffen system or VSP (Vertical Shoot Positioned) trellis. Annual dormant pruning is CRITICAL — grapevines must be aggressively pruned each winter (remove 80–90% of previous season growth) or yields collapse. Concord is the most reliable American grape for zones 5–6.',
+  water: { in: '1', note: 'Deep watering; drought tolerant once established. Reduce in late summer to encourage flavor concentration. Wet conditions promote disease — drip irrigation strongly preferred.' },
+  fertilizer: { type: 'Balanced; low nitrogen once established', amount: '¼ lb 10-10-10 per vine in years 1–2; ½ lb year 3+', freq: 'Once in early spring as buds swell; light potassium in Jun to support fruit; avoid late-season feeding' },
+  companions: {
+    good: [
+      { name: 'Basil', why: 'Repels spider mites and aphids; may improve grape flavor according to some growers' },
+      { name: 'Hyssop', why: 'Attracts beneficial insects and reportedly improves grape health' },
+      { name: 'Clover', why: 'Living mulch under vines fixes nitrogen and attracts pollinators' },
+      { name: 'Geraniums', why: 'Repel Japanese beetles which commonly damage grape leaves' },
     ],
-    "bad": [
-      {
-        "name": "Cabbage family",
-        "why": "Brassicas are allelopathically incompatible with grapes and compete for the same soil nutrients, reducing vine vigor."
-      },
-      {
-        "name": "Radishes",
-        "why": "Radishes can harbor clubroot and other fungal diseases that spread to grape root systems in wet conditions."
-      },
-      {
-        "name": "Fennel",
-        "why": "Fennel releases allelopathic chemicals that inhibit the root development and overall growth of grape vines."
-      }
-    ]
+    bad: [
+      { name: 'Cabbage', why: 'Brassica family allegedly inhibits grape vine growth' },
+      { name: 'Radishes', why: 'Some evidence of allelopathic effect on vines' },
+    ],
   },
-  "companionDist": "Keep 3+ ft from all brassicas; 12\"+ from fennel. Plant companion flowers and clover at least 18\" from the vine base to avoid competing with feeder roots.",
-  "diseases": [
-    {
-      "name": "Black Rot",
-      "desc": "Brown circular lesions on leaves, shriveled black mummified fruit. Most serious grape disease in the Midwest/Zone 6. Apply myclobutanil or copper fungicide starting at bud break; remove all mummified fruit."
-    },
-    {
-      "name": "Powdery Mildew",
-      "desc": "White powdery coating on leaves, shoots, and young fruit. Spray potassium bicarbonate, neem oil, or sulfur fungicide. Improve air circulation with proper pruning."
-    },
-    {
-      "name": "Downy Mildew",
-      "desc": "Yellow oil spots on upper leaf surface, white sporulation beneath in humid weather. Copper fungicide; avoid overhead irrigation; remove infected tissue promptly."
-    },
-    {
-      "name": "Crown Gall",
-      "desc": "Rough, corky galls at crown and graft union. Bacterial disease with no cure. Remove and destroy infected plants; sterilize tools; plant resistant rootstocks."
-    }
+  companionDist: 'Plant companions at least 2 ft from vine base; keep the immediate root zone clear for irrigation',
+  animals: 'Bees pollinate grape flowers (small, fragrant). Birds eat ripe grapes — netting required for table varieties. Japanese beetles are a primary pest threat.',
+  diseases: [
+    { name: 'Black Rot', desc: 'Most serious grape disease in the Midwest/East. Brown circular spots on leaves; black mummified berries. Remove mummies; spray copper or sulfur from bud break through mid-summer. Choose resistant varieties (Concord has good resistance).' },
+    { name: 'Downy Mildew', desc: 'White cottony growth on leaf undersides; infected shoots distort. Copper fungicide at 2-week intervals in wet springs.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves and fruit. Sulfur spray; good air circulation from trellis training.' },
+    { name: 'Botrytis Bunch Rot', desc: 'Grey mold on fruit at harvest. Thin clusters; improve air circulation; harvest promptly when ripe.' },
   ],
-  "pests": "Japanese beetles — hand pick in the morning; pyrethrin spray at dusk; use row covers on young vines. Grape berry moth — pheromone traps to monitor; Bt spray at egg hatch. Spotted wing drosophila — fine mesh netting as fruit ripens. Birds — bird netting is essential once berries color up.",
-  "animals": "Predatory wasps and lacewings control aphids and small caterpillars. Ground beetles eat larvae and pupae in soil. Bees and hoverflies are important pollinators of grape flowers.",
-  "rotation": {
-    "family": "Vitaceae (perennial vine)",
-    "cycle": "Permanent planting — site extremely carefully as vines are productive for 20–50+ years. Remove exhausted vines and do not replant grapes in the same spot for 5+ years due to soil replant disease."
-  },
-  "stages": [
-    {
-      "label": "Est",
-      "title": "Establishment (year 1–2)",
-      "desc": "Train one or two main canes up the trellis. Remove all flower clusters in year 1–2 to force energy into root and vine development. Do not harvest."
-    },
-    {
-      "label": "Yr3",
-      "title": "First harvest (year 3)",
-      "desc": "Allow a small crop. Begin proper cane or spur pruning system. Remove 80–90% of previous year's growth each dormant season."
-    },
-    {
-      "label": "Full",
-      "title": "Full production (year 4+)",
-      "desc": "Full crop. Prune aggressively each late winter/early spring (Feb–Mar in Zone 6). Thin fruit clusters for better quality."
-    },
-    {
-      "label": "Harv",
-      "title": "Harvest",
-      "desc": "Taste-test for ripeness — sugar, not color, determines readiness. Most table/juice grapes ripen Aug–Oct in Zone 6. Cut entire clusters with scissors."
-    }
+  pests: 'Japanese beetles (hand-pick; kaolin clay; neem), grape berry moth (pheromone traps; spinosad spray), grape leafhopper (encourage parasitic wasps; avoid broad-spectrum pesticides), birds (netting is most effective — essential for table grapes).',
+  rotation: { family: 'Vitaceae', cycle: 'Permanent planting — 30–50+ year productive life. Choose site very carefully; avoid frost pockets and areas with poor air circulation.' },
+  stages: [
+    { label: 'Yr 1', title: 'Establishment', desc: 'Establish the trunk. Let vine grow freely; do not train to trellis yet. Remove all flower clusters.' },
+    { label: 'Yr 2', title: 'Trunk training', desc: 'Train main trunk to trellis. Begin establishing the permanent cordon (arms). Remove all flower clusters still.' },
+    { label: 'Yr 3', title: 'First harvest', desc: 'Allow a few clusters to ripen. Prune dormant vines aggressively in late Feb–Mar.' },
+    { label: 'Yr 4+', title: 'Full production', desc: 'Full crops. Annual dormant pruning (remove 80-90% of canes) keeps vine productive. Spurs or canes depending on training system.' },
+    { label: 'Harvest', title: 'Fruit harvest', desc: 'Grapes do not ripen further after harvest — taste test before picking. Sugar (Brix) should be 18–25 for eating; 22-25+ for wine.' },
   ],
-  "special": "Zone 6 variety selection is critical. Choose cold-hardy American or hybrid varieties: Concord, Niagara, Marquette, Frontenac, Reliance, Seedless Canadice, or Himrod. European (Vitis vinifera) varieties are generally NOT reliably hardy in Zone 6. Install a sturdy trellis (T-bar or wire system) before planting — grapes need support for life. Prune heavily each year; grapes fruit only on new growth from one-year-old canes.",
-  "nutrition": {
-    "calories": 69,
-    "water": 80.5,
-    "protein": 0.7,
-    "carbs": 18,
-    "fiber": 0.9,
-    "sugars": 15.5,
-    "fat": 0.2,
-    "saturated": 0.05,
-    "monounsat": 0.01,
-    "polyunsat": 0.05,
-    "vitA": 3,
-    "vitD": 0,
-    "vitE": 0.19,
-    "vitK": 14.6,
-    "vitC": 3.2,
-    "vitB1": 0.069,
-    "vitB2": 0.07,
-    "vitB3": 0.188,
-    "vitB5": 0.05,
-    "vitB6": 0.086,
-    "vitB7": 0,
-    "vitB9": 2,
-    "vitB12": 0,
-    "choline": 5.6,
-    "calcium": 10,
-    "phosphorus": 20,
-    "magnesium": 7,
-    "sodium": 2,
-    "potassium": 191,
-    "chloride": 0,
-    "iron": 0.36,
-    "zinc": 0.07,
-    "copper": 0.127,
-    "manganese": 0.071,
-    "selenium": 0.1,
-    "iodine": 0,
-    "chromium": 0,
-    "molybdenum": 0,
-    "fluoride": 0,
-    "notes": "Rich in resveratrol (antioxidant), vitamin K, and potassium. Red/purple varieties contain significantly more anthocyanins and resveratrol than green. Concord grapes particularly high in polyphenols."
+  nutrition: {
+    calories: 69, water: 80.5, protein: 0.7, carbs: 18.1, fiber: 0.9, sugars: 15.5, fat: 0.2,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 3, vitD: 0, vitE: 0.2, vitK: 14.6,
+    vitC: 3.2, vitB1: 0.07, vitB2: 0.07, vitB3: 0.2, vitB5: 0.05, vitB6: 0.09,
+    vitB7: 1.3, vitB9: 2, vitB12: 0, choline: 5.6,
+    calcium: 10, phosphorus: 20, magnesium: 7, sodium: 2, potassium: 191, chloride: 0,
+    iron: 0.4, zinc: 0.07, copper: 0.13, manganese: 0.07, selenium: 0.1, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Rich in resveratrol (especially in skin of dark/red varieties), quercetin, and anthocyanins. Grapes contain tartaric acid and malic acid unique to the fruit.',
   },
-  "size": {
-    "weight": "2–8g per berry; 100–400g per cluster",
-    "dimensions": "0.5–1\" diameter per berry; clusters 4–8\" long",
-    "notes": "Concord and table grapes are typically larger (0.75–1\"). Wine grapes are smaller and higher in sugar. Harvest when berries taste sweet and seeds are brown."
-  }
+  size: { weight: '2–8g per berry', dimensions: '½–¾" diameter (table grapes)', notes: 'Concord produces medium blue-black berries with characteristic foxy flavor; Reliance produces seedless red table grapes' },
 });

@@ -1,66 +1,66 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'marigolds',name:'Marigolds',cat:'Flower',emoji:'🌼',
-  planting:{zone6:'Start indoors Apr 1–15; transplant May 15; direct sow May 15',depth:'0.25"',spacing:'French: 6–8"; African: 10–12"',ph:'5.8–7.0',sun:'Full sun'},
-  water:{in:'1',note:'Allow to dry slightly; overwatering reduces pest-repelling oils'},
-  fertilizer:{type:'Low-nitrogen 5-10-5',amount:'Light application',freq:'Once at planting; deadhead to encourage bloom'},
-  companions:{
-    good:[{name:'Tomatoes',why:'Marigold root exudates suppress root-knot nematodes and volatiles deter whiteflies and aphids.'},{name:'Peppers',why:'Marigolds repel pepper weevils and thrips, and attract predatory beneficial insects.'},{name:'Cucumbers',why:'Marigolds deter cucumber beetles, the primary vector of bacterial wilt in cucumbers.'}],
-    bad:[{name:'Fennel',why:'Fennel releases allelopathic chemicals that inhibit most plants including marigolds.'}],
+  id: 'marigolds',
+  name: 'Marigolds',
+  cat: 'Companion Flower',
+  emoji: '🌼',
+  planting: {
+    zone6: 'Start indoors Apr (4–6 weeks before last frost); direct sow or transplant mid-May after last frost',
+    depth: '¼"',
+    spacing: 'French (small): 6–9"; African (tall): 12–18"',
+    ph: '5.8–7.0',
+    sun: 'Full sun (6–8 hours)',
+    zone3: 'Start indoors early May; transplant Jun; frost-free window',
+    zone4: 'Start indoors late Apr; transplant late May',
+    zone5: 'Start indoors Apr; transplant mid-May',
+    zone7: 'Direct sow Apr or transplant Apr',
+    zone8: 'Direct sow Mar–Apr; fall planting Sep–Oct',
+    zone9: 'Direct sow Feb–Mar; second planting Aug–Sep',
   },
-  companionDist:'Plant marigolds throughout the garden. Keep 12" from fennel.',
-  animals:'Attracts hoverflies, parasitic wasps, ladybugs, and pollinators.',
-  diseases:[{name:'Botrytis',desc:'Gray fuzzy mold on flowers; remove spent blooms.'},{name:'Powdery Mildew',desc:'White coating in dry heat; improve air flow.'}],
-  pests:'Marigolds repel many pests. Spider mites — neem. Slugs — diatomaceous earth.',
-  rotation:{family:'Asteraceae (annual)',cycle:'Annual; replant each year; suppresses nematodes in soil'},
-  stages:[{label:'Germ',title:'Germination',desc:'5–7 days indoors.'},{label:'Seedl',title:'Seedling',desc:'Harden off before transplant.'},{label:'Bud',title:'Budding',desc:'Pinch early buds for branching.'},{label:'Bloom',title:'Continuous bloom',desc:'Deadhead to extend bloom until frost.'}],
-  special:'French marigolds most effective for nematode suppression. Plant throughout the entire garden.',
+  zones: {
+    '6': { timing: 'Transplant mid-May; blooms Jun–frost; deadhead for continuous flowering', plantingStart: 5, plantingEnd: 6, harvestStart: 6, harvestEnd: 10 },
+  },
+  special: 'French marigolds (Tagetes patula) are most effective for nematode suppression — must be planted densely and grown for an entire season. African marigolds (T. erecta) are taller and stronger-scented. Tagetes tenuifolia (signet marigold) has edible flowers with citrus flavor. Deadhead regularly for continuous bloom through frost.',
+  water: { in: '0.5–1', note: 'Drought-tolerant once established. Avoid overwatering — marigolds prefer drier conditions. Root rot occurs in waterlogged soil. Water at base to prevent botrytis on flowers.' },
+  fertilizer: { type: 'Minimal — balanced slow-release', amount: 'Light — excess nitrogen reduces flowering', freq: 'Single application of balanced granular at planting; over-fertilizing produces lush foliage with few flowers' },
+  companions: {
+    good: [
+      { name: 'Tomatoes', why: 'Repel whiteflies, aphids, and nematodes; attract beneficial insects that prey on tomato pests' },
+      { name: 'Peppers', why: 'Same whitefly and aphid deterrence; attract pollinators' },
+      { name: 'Cucumbers', why: 'Deter cucumber beetles and aphids' },
+      { name: 'Squash', why: 'Deter squash bugs and cucumber beetles' },
+      { name: 'Roses', why: 'Repel aphids and black spot-transmitting insects' },
+      { name: 'Kale', why: 'Deter cabbage moths and aphids from brassica beds' },
+    ],
+    bad: [
+      { name: 'Beans', why: 'Marigold root exudates can inhibit bean germination at very close range' },
+    ],
+  },
+  companionDist: 'Plant every 12–18 inches throughout vegetable garden; border planting is less effective than interplanting',
+  animals: 'Excellent pollinator plants — attract bees, butterflies, and hoverflies. Hoverfly larvae are predatory aphid feeders.',
+  diseases: [
+    { name: 'Botrytis Blight', desc: 'Grey mold on flowers in wet conditions. Deadhead promptly; improve air circulation; avoid overhead watering.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves in late season. Usually cosmetic; plants often past peak anyway.' },
+    { name: 'Aster Yellows', desc: 'Distorted, yellowed growth; spread by leafhoppers. Remove infected plants; control leafhoppers with row covers.' },
+  ],
+  pests: 'Spider mites in hot, dry conditions (increase humidity; neem oil), aphids (usually controlled by beneficial insects attracted by marigolds themselves), slugs in cool wet weather (diatomaceous earth).',
+  rotation: { family: 'Asteraceae (Aster family)', cycle: 'Annual; replant each year. Rotate planting locations to maximize nematode suppression benefit in different beds' },
+  stages: [
+    { label: 'Seedling', title: 'Early growth', desc: 'Fast-growing; reaches transplant size in 4–6 weeks indoors. Pinch tips at transplant to encourage bushiness.' },
+    { label: 'Bud', title: 'First buds', desc: 'First buds appear 6–8 weeks after transplanting. Pinch off first buds on African marigolds to encourage branching.' },
+    { label: 'Bloom', title: 'Peak bloom', desc: 'Prolific flowering from Jun through frost. Deadhead every 3–5 days for maximum production.' },
+    { label: 'Seed', title: 'Seed collection', desc: 'Allow some flowers to fully dry on plant in fall. Collect dried seed heads for next year. Seeds viable for 3–5 years.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    0,
-    water:       0,   // g
-    protein:     0,   // g
-    carbs:       0,   // g total
-    fiber:       0,   // g
-    sugars:      0,   // g
-    fat:         0,   // g total
-    saturated:   0,   // g
-    monounsat:   0,   // g
-    polyunsat:   0,   // g
-    // — Fat-soluble vitamins —
-    vitA:        0,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0,   // mg
-    vitK:        0,   // µg
-    // — Water-soluble vitamins —
-    vitC:        0,   // mg
-    vitB1:       0,  // mg thiamine
-    vitB2:       0,  // mg riboflavin
-    vitB3:       0,  // mg niacin
-    vitB5:       0,  // mg pantothenic
-    vitB6:       0,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       0,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0,  // mg
-    // — Macrominerals —
-    calcium:     0,  // mg
-    phosphorus:  0,  // mg
-    magnesium:   0,  // mg
-    sodium:      0,  // mg
-    potassium:   0,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0,  // mg
-    zinc:        0,  // mg
-    copper:      0,  // mg
-    manganese:   0,  // mg
-    selenium:    0,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Ornamental companion plant — not a food crop. Edible flowers are mildly bitter and peppery. Nutritional data not applicable.',
+    calories: 0, water: 0, protein: 0, carbs: 0, fiber: 0, sugars: 0, fat: 0,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 0, vitD: 0, vitE: 0, vitK: 0,
+    vitC: 0, vitB1: 0, vitB2: 0, vitB3: 0, vitB5: 0, vitB6: 0,
+    vitB7: 0, vitB9: 0, vitB12: 0, choline: 0,
+    calcium: 0, phosphorus: 0, magnesium: 0, sodium: 0, potassium: 0, chloride: 0,
+    iron: 0, zinc: 0, copper: 0, manganese: 0, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Grown as a companion plant and ornamental. Signet marigold (T. tenuifolia) petals are edible with citrus flavor — used as garnish. Not grown for nutritional value.',
   },
-  size:{weight:'N/A — ornamental',dimensions:'French: 6–12" tall; African: 18–36" tall',notes:'Plant densely between vegetables for maximum pest suppression.'},
+  size: { weight: 'N/A', dimensions: 'French types: 6–12" tall; African types: 18–36" tall', notes: 'Dwarf French marigolds (Disco, Durango series) are most reliable for compact borders and interplanting' },
 });

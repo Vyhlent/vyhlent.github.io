@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'rosemary',name:'Rosemary',cat:'Herb',emoji:'🌿',
-  planting:{zone6:'Transplant May 15–Jun 1; annual in Zone 6 or overwinter in container',depth:'Same depth as pot',spacing:'18–24" apart',ph:'6.0–7.0',sun:'Full sun'},
-  water:{in:'0.5–1',note:'Excellent drainage essential; allow to dry between waterings'},
-  fertilizer:{type:'Low-N 5-10-10 or fish emulsion',amount:'Light application only',freq:'Once spring; once midsummer'},
-  companions:{
-    good:[{name:'Beans',why:'Rosemary repels Mexican bean beetles and bean weevils with its aromatic camphor compounds.'},{name:'Carrots',why:"Rosemary's strong aroma masks carrot scent that attracts carrot fly."},{name:'Marigolds',why:'Rosemary and marigolds together create a multi-sensory pest deterrent zone.'}],
-    bad:[{name:'Cucumbers',why:"Rosemary's volatile aromatic oils inhibit cucumber vine growth and reduce fruit set."},{name:'Pumpkins',why:"Like cucumbers, pumpkins are inhibited by rosemary's allelopathic compounds."}],
+  id: 'rosemary',
+  name: 'Rosemary',
+  cat: 'Herb',
+  emoji: '🌿',
+  planting: {
+    zone6: 'Transplant May after last frost; treat as annual or bring indoors in winter in zone 6 (barely hardy)',
+    depth: 'Transplant at nursery soil level',
+    spacing: '24–36" apart (mature shrub is large)',
+    ph: '6.0–7.0',
+    sun: 'Full sun (8+ hours — essential)',
+    zone3: 'Annual only; start indoors Apr; bring in before frost',
+    zone4: 'Annual only; treat same as zone 3',
+    zone5: 'Annual or overwinter in unheated garage; Arp variety is most cold-hardy',
+    zone7: 'Perennial; may die back in hard winters; Arp and Madelene Hill are most cold-hardy',
+    zone8: 'Perennial; thrives; excellent landscape shrub',
+    zone9: 'Perennial; thrives; drought-tolerant once established',
   },
-  companionDist:'Keep 12" from cucumbers and pumpkins.',
-  animals:'Excellent pollinator attractor; volatile oils repel many vegetable pests.',
-  diseases:[{name:'Root Rot',desc:'Yellowing, wilting; almost always overwatering; improve drainage immediately.'}],
-  pests:'Generally pest-resistant. Spittlebugs — water spray; aphids — neem.',
-  rotation:{family:'Lamiaceae (perennial/annual in Z6)',cycle:'Annual in Zone 6 unless protected; rotate position each year'},
-  stages:[{label:'Est',title:'Establishment',desc:'Water regularly until established (4–6 weeks).'},{label:'Grow',title:'Growth',desc:'Pinch tips for bushing.'},{label:'Harv',title:'Harvest',desc:'Harvest tips continuously.'},{label:'Frost',title:'Pre-frost',desc:'Bring inside or mulch heavily before first frost.'}],
-  special:'Zone 6: Arp or Hill Hardy varieties survive outdoors with heavy mulch. Otherwise grow in container.',
+  zones: {
+    '6': { timing: 'Transplant May; harvest Jun–Oct; bring indoors before hard frost or treat as annual', plantingStart: 5, plantingEnd: 6, harvestStart: 6, harvestEnd: 10 },
+  },
+  special: 'In zone 6, rosemary is borderline hardy (dies at sustained temperatures below 10°F). The Arp variety is the most cold-hardy cultivar and survives zone 6 winters with heavy mulching and a sheltered south-facing location. Container growing allows bringing indoors: give a south-facing window and keep soil on the dry side in winter. Do not overwater — rosemary rots extremely easily in wet soil.',
+  water: { in: '0.5', note: 'Drought-tolerant Mediterranean herb — prefers dry conditions. Allow soil to dry completely between waterings. The most common way to kill rosemary is overwatering. Excellent drainage is essential.' },
+  fertilizer: { type: 'Minimal — light balanced slow-release', amount: 'Very light — excess fertilizer reduces aromatic oil concentration', freq: 'Single light application of slow-release balanced fertilizer in spring; no additional feeding' },
+  companions: {
+    good: [
+      { name: 'Carrots', why: 'Rosemary scent confuses carrot fly; improves carrot flavor according to some growers' },
+      { name: 'Cabbage', why: 'Strong scent deters cabbage moth egg-laying' },
+      { name: 'Beans', why: 'Repels Mexican bean beetle (one of few herbs that benefits legumes)' },
+      { name: 'Sage', why: 'Compatible Mediterranean companions with same growing requirements' },
+      { name: 'Marigolds', why: 'Combined pest-deterrent effect in vegetable garden borders' },
+    ],
+    bad: [
+      { name: 'Basil', why: 'Conflicting moisture needs — basil wants consistent moisture; rosemary wants dry conditions' },
+      { name: 'Mint', why: 'Mint requires more moisture and will compete aggressively' },
+      { name: 'Cucumbers', why: 'Different moisture requirements; rosemary stressed by cucumber irrigation schedule' },
+    ],
+  },
+  companionDist: 'Excellent border plant at the dry edge of herb and vegetable gardens; 24-inch spacing from moisture-loving herbs',
+  animals: 'Excellent pollinator plant — flowers attract bees heavily when in bloom (late spring in zones 7–9). Deer and rabbit resistant.',
+  diseases: [
+    { name: 'Root Rot (Phytophthora)', desc: 'Most common rosemary problem — caused entirely by overwatering or poor drainage. Leaves turn brown from base up; roots mushy. No recovery. Ensure perfect drainage; treat soil as desert-like.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves in humid conditions. Improve air circulation; reduce humidity around plant; apply potassium bicarbonate.' },
+    { name: 'Botrytis', desc: 'Grey mold in wet, cool conditions. Improve air circulation; avoid overwatering.' },
+  ],
+  pests: 'Generally pest-resistant due to aromatic oils. Rosemary beetle (metallic green/purple beetle; hand-pick; pyrethrin), aphids in containers (insecticidal soap), spider mites when stressed by drought or dry indoor air (mist leaves; neem oil).',
+  rotation: { family: 'Lamiaceae (Mint family)', cycle: 'Perennial in zones 7–9; annual or container plant in zone 6 and colder. Refresh container plants every 2–3 years with fresh potting mix.' },
+  stages: [
+    { label: 'Spring', title: 'New growth flush', desc: 'Fresh silvery-green new growth appears in spring. Best time for soft tip cuttings to propagate new plants.' },
+    { label: 'Summer', title: 'Active harvest', desc: 'Harvest 2–4 inch stem tips regularly throughout summer. Frequent harvesting keeps plant compact and productive. Never cut into old woody stems — they rarely re-sprout.' },
+    { label: 'Fall', title: 'Pre-frost preparation', desc: 'In zone 6: mulch heavily with straw; move containers indoors before first hard frost. Reduce watering indoors significantly.' },
+    { label: 'Winter', title: 'Indoor care', desc: 'Indoors: south window, cool temperature (50–65°F preferred), minimal water, good air circulation. Watch for spider mites in dry indoor air.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    131,
-    water:       67.8,   // g
-    protein:     3.3,   // g
-    carbs:       20.7,   // g total
-    fiber:       14.1,   // g
-    sugars:      0,   // g
-    fat:         5.9,   // g total
-    saturated:   2.84,   // g
-    monounsat:   1.16,   // g
-    polyunsat:   0.9,   // g
-    // — Fat-soluble vitamins —
-    vitA:        146,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0,   // mg
-    vitK:        109.7,   // µg
-    // — Water-soluble vitamins —
-    vitC:        21.8,   // mg
-    vitB1:       0.036,  // mg thiamine
-    vitB2:       0.152,  // mg riboflavin
-    vitB3:       0.912,  // mg niacin
-    vitB5:       0.804,  // mg pantothenic
-    vitB6:       0.336,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       109,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0,  // mg
-    // — Macrominerals —
-    calcium:     317,  // mg
-    phosphorus:  66,  // mg
-    magnesium:   91,  // mg
-    sodium:      26,  // mg
-    potassium:   668,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        6.65,  // mg
-    zinc:        0.93,  // mg
-    copper:      0.301,  // mg
-    manganese:   0.96,  // mg
-    selenium:    0,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Values are per 100g fresh herb. Very high vitamin K (110 µg), iron (6.65 mg — 37% DV), calcium (317 mg), and folate (109 µg). Rich in rosmarinic acid and carnosic acid (antioxidants). Note: typical serving is 1–2 teaspoons (~1–2g).',
+    calories: 131, water: 67.8, protein: 3.3, carbs: 20.7, fiber: 14.1, sugars: 0, fat: 5.9,
+    saturated: 2.8, monounsat: 1.2, polyunsat: 0.9,
+    vitA: 146, vitD: 0, vitE: 0.4, vitK: 0,
+    vitC: 21.8, vitB1: 0.04, vitB2: 0.15, vitB3: 0.9, vitB5: 0.8, vitB6: 0.34,
+    vitB7: 0, vitB9: 109, vitB12: 0, choline: 0,
+    calcium: 317, phosphorus: 66, magnesium: 91, sodium: 26, potassium: 668, chloride: 0,
+    iron: 6.7, zinc: 0.93, copper: 0.3, manganese: 0.96, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Used in small culinary amounts. Very high iron (6.7 mg per 100g), calcium, and potassium for an herb. Contains rosmarinic acid, carnosic acid, and carnosol — potent antioxidants with neuroprotective and anti-inflammatory properties.',
   },
-  size:{weight:'N/A — culinary herb',dimensions:'Plant: 18–36" tall and wide',notes:'Harvest 2–3 inch stem tips.'},
+  size: { weight: 'N/A — harvested by stem', dimensions: 'Upright varieties: 3–6 ft tall and wide; trailing varieties: 1–2 ft tall, 4–8 ft spread', notes: 'Arp and Madelene Hill are most cold-hardy; Tuscan Blue has strongest culinary flavor; trailing types excellent for walls' },
 });

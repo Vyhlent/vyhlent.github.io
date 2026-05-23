@@ -2,70 +2,59 @@ import Crop from '../Crop.js';
 export default new Crop({
   id: 'pokeweed',
   name: 'Pokeweed',
-  cat: 'Wild Edibles',
+  cat: 'Wild Edible',
   emoji: '🌿',
-
   planting: {
-    zone6:   'Pokeweed is a native perennial that self-seeds prolifically. If establishing, plant seeds in fall (stratification helps) or transplant in early spring. Typically not planted — it volunteers freely from bird-dispersed seed.',
-    depth:   'Surface sow or 0.25" deep; seeds need light to germinate',
-    spacing: '4–6 ft minimum — plants become very large',
-    ph:      '5.5–7.0',
-    sun:     'Full sun to partial shade',
+    zone6: 'Naturalizes readily — self-sows prolifically. If transplanting, move small seedlings in early spring before tap root deepens.',
+    depth: '½" if direct sowing saved seed',
+    spacing: 'Allow 4–6 ft per plant — becomes very large',
+    ph: '5.5–7.0',
+    sun: 'Full sun to partial shade',
+    zone3: 'Not reliably hardy; dies back to roots',
+    zone4: 'Dies back to roots in winter; re-emerges from deep root',
+    zone5: 'Perennial from root; very vigorous',
+    zone7: 'Thrives; highly productive',
+    zone8: 'Thrives; large plants',
+    zone9: 'Thrives; nearly evergreen in warmest areas',
   },
-  special: '⚠️ IMPORTANT SAFETY NOTE: Pokeweed (Phytolacca americana) is toxic in all parts when mature. However, young spring shoots under 6 inches tall (before leaves fully unfurl) are a traditional Appalachian and Southeastern US edible — "Poke Salat" — after boiling in multiple changes of water. Roots, mature leaves, berries, and seeds are toxic and should never be eaten. Wear gloves when handling mature plants as juice can irritate skin.',
-
-  water: {
-    in:   '0.5–1',
-    note: 'Tap-rooted and drought-tolerant once established. Rarely needs supplemental watering. Found naturally in moist disturbed areas but adapts well to average garden moisture.',
+  zones: {
+    '6': { timing: 'Perennial; new shoots emerge Apr–May; harvest shoots Apr–May only; berries ripen Aug–Sep', plantingStart: 4, plantingEnd: 5, harvestStart: 4, harvestEnd: 5 },
   },
-
-  fertilizer: {
-    type:   'None required',
-    amount: 'No fertilization needed',
-    freq:   'Grows vigorously in almost any soil. Excess fertility is not needed and may produce excess growth.',
-  },
-
+  special: '⚠️ TOXICITY WARNING: ALL parts of pokeweed are toxic raw. The ROOT is extremely toxic and should never be eaten. Berries are toxic especially to children. Young shoots (under 6 inches, before any pink coloration) can be made edible by boiling in THREE changes of water — a traditional Appalachian practice ("poke sallet"). Only harvest shoots before any purple/pink coloration appears. Do not plant where children play. Considered both a valuable native plant and a serious weed.',
+  water: { in: '0.5', note: 'Drought-tolerant deep-rooted perennial. No irrigation needed once established.' },
+  fertilizer: { type: 'None required', amount: 'N/A', freq: 'Wild native plant; no fertilization needed or recommended' },
   companions: {
     good: [
-      { name: 'Wild Blackberry', why: 'Both are native species that coexist in disturbed woodland edge habitat naturally.' },
-      { name: 'Elderberry',      why: 'Similar habitat preferences and wildlife value; can form a productive native hedge.' },
+      { name: 'Elderberries', why: 'Both are large native shrubs for naturalistic or food forest plantings; similar habitat' },
+      { name: 'Wild Blackberries', why: 'Co-occur naturally at woodland edges; compatible growth habit' },
     ],
     bad: [
-      { name: 'Tomatoes',     why: 'Pokeweed hosts tobacco mosaic virus and other viruses that can infect tomatoes and peppers.' },
-      { name: 'Peppers',      why: 'Same viral transmission concern as tomatoes.' },
-      { name: 'Potatoes',     why: 'Pokeweed can harbor potato virus Y — avoid proximity to Solanaceae.' },
+      { name: 'Vegetable garden', why: 'Self-seeds aggressively; toxic root is nearly impossible to fully remove once established; do not allow in production beds' },
     ],
   },
-  companionDist: 'Best placed at wild garden edges, back of borders, or in naturalistic areas away from vegetable beds. Roots grow very deep and wide (8+ ft taproot on mature plants) — difficult to remove once established.',
-  animals: 'High wildlife value — berries are eaten by 30+ bird species including mourning dove, mockingbird, cardinal, catbird, and cedar waxwing. Berries are toxic to humans and most mammals but birds process them without harm. Provides important fall and winter food for migrating birds.',
-
+  companionDist: 'Plant only in wild areas, food forests, or naturalistic gardens where toxicity risk is managed and spread can be controlled',
+  animals: 'Berries eaten by 33+ bird species including mourning doves, mockingbirds, and catbirds — birds are immune to the toxins. Important late-season wildlife food source. Host plant for various moth species.',
   diseases: [
-    { name: 'Phytophthora Root Rot', desc: 'In waterlogged soils, Phytophthora can cause crown rot. Site in well-drained areas. Rarely a problem in typical garden conditions.' },
+    { name: 'Leaf Spot', desc: 'Various fungal spots on leaves. Usually cosmetic on this vigorous plant.' },
   ],
-  pests: 'Pokeweed is rarely bothered by insects. Occasionally deer will browse young shoots. Caterpillars of the giant leopard moth feed on leaves but rarely cause serious damage.',
-
-  rotation: {
-    family: 'Phytolaccaceae (Pokeweed family)',
-    cycle:  'Native perennial with a massive taproot that regrows each year. Cannot be easily rotated. The deep taproot actually improves soil structure. To remove, must dig the entire taproot — even small pieces will resprout.',
-  },
-
+  pests: 'Virtually pest-free due to plant toxins. Deer occasionally browse young shoots but usually avoid it.',
+  rotation: { family: 'Phytolaccaceae', cycle: 'Deep-rooted perennial — essentially permanent once established. The massive taproot can be 6+ feet deep and nearly impossible to fully remove.' },
   stages: [
-    { label: 'Mar–Apr',title: 'Emerging shoots', desc: '⚠️ Only edible stage: harvest shoots under 6 inches when they first emerge in spring, before leaves fully unfurl and while stems are still white/pink at base. Boil in at least 2 changes of water before eating.' },
-    { label: 'May–Jun',title: 'Rapid growth',   desc: 'Plants grow extremely fast — 6–12 ft tall by summer. Large tropical-looking leaves and sturdy reddish stems develop. Do not eat at this stage.' },
-    { label: 'Jul–Aug',title: 'Flowering',      desc: 'Tall racemes of small white flowers followed by deep purple-black berries in hanging clusters. Spectacular ornamental appearance.' },
-    { label: 'Aug–Oct',title: 'Berry season',   desc: 'Berries ripen to deep blackberry-purple. They are ⚠️ TOXIC to humans — do not eat. Birds consume them extensively, and the juice was historically used as ink and dye.' },
-    { label: 'Nov',    title: 'Dormancy',       desc: 'Above-ground growth dies to the ground with hard frost. Massive root persists and resprouts in spring. Stalks may remain standing through winter as structure.' },
+    { label: 'Spring', title: 'Edible shoot emergence', desc: 'New shoots emerge Apr–May from the large perennial root. Harvest ONLY shoots under 6 inches and before any pink color appears. Boil in 3 changes of water before eating.' },
+    { label: 'Summer', title: 'Rapid growth', desc: 'Plants grow to 6–10 feet with hollow, purple-red stems. Deeply lobed leaves. Impressive architectural plant.' },
+    { label: 'Late summer', title: 'Flowering', desc: 'Long racemes of small white flowers appear Jul–Aug.' },
+    { label: 'Fall', title: 'Berry production', desc: 'Dark purple-black berries in pendulous clusters ripen Aug–Sep. Highly attractive to birds. TOXIC to humans.' },
   ],
-
   nutrition: {
-    calories: 0, water: 0, protein: 0, carbs: 0, fiber: 0, sugars: 0,
-    fat: 0, saturated: 0, monounsat: 0, polyunsat: 0,
-    notes: '⚠️ SAFETY WARNING: Pokeweed is toxic in all parts except properly prepared young shoots. Nutritional data is not provided as this is not a standard food crop. If foraging poke salat, consult a reliable regional foraging guide and use strict preparation protocols (multiple boilings with water changes). Do not eat berries, roots, or mature plant material.',
+    calories: 0, water: 0, protein: 0, carbs: 0, fiber: 0, sugars: 0, fat: 0,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 0, vitD: 0, vitE: 0, vitK: 0,
+    vitC: 0, vitB1: 0, vitB2: 0, vitB3: 0, vitB5: 0, vitB6: 0,
+    vitB7: 0, vitB9: 0, vitB12: 0, choline: 0,
+    calcium: 0, phosphorus: 0, magnesium: 0, sodium: 0, potassium: 0, chloride: 0,
+    iron: 0, zinc: 0, copper: 0, manganese: 0, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: '⚠️ ALL PARTS ARE TOXIC RAW — root especially. Only properly prepared (triple-boiled) young shoots are edible by traditional preparation. Not recommended for casual consumption. Grown primarily for wildlife value and naturalistic gardens.',
   },
-
-  size: {
-    weight:     'Individual plants reach 6–12 ft tall',
-    dimensions: 'Taproot: 2–6 inches diameter, 6–8 ft deep in mature plants',
-    notes:      'Berries are 8–10mm diameter, in hanging clusters 6–12 inches long. Stems are brilliant magenta-red in summer. One of the most dramatic native plants in the eastern US.',
-  },
+  size: { weight: 'N/A', dimensions: 'Plants 6–10 ft tall, 4–6 ft wide; root can extend 6+ ft deep', notes: 'One of the most architecturally striking native plants; bold textural statement in naturalistic landscapes' },
 });

@@ -1,82 +1,67 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id: 'blackberries', name: 'Blackberries', cat: 'Berry', emoji: '🫐',
-  planting: { zone6: 'Plant bare-root canes Mar–Apr; fruit in year 2', depth: 'Crown at soil level, roots 2–3" deep', spacing: '3–4 ft apart, rows 8 ft', ph: '5.5–7.0', sun: 'Full sun' },
-  water: { in: '1–2', note: 'Critical during fruit swell; drip preferred' },
-  fertilizer: { type: '10-10-10 balanced', amount: '¼ lb per plant; ½ lb established', freq: 'Early spring; again after harvest' },
+  id: 'blackberries',
+  name: 'Blackberries',
+  cat: 'Berry Shrub',
+  emoji: '🫐',
+  planting: {
+    zone6: 'Plant bare-root canes Mar–Apr; container plants Apr–May',
+    depth: '1–2" deeper than nursery depth; crowns just below soil surface',
+    spacing: '3–5 ft apart in rows 8 ft wide',
+    ph: '5.5–7.0',
+    sun: 'Full sun to partial shade (6+ hours for best yield)',
+    zone3: 'Plant May; choose very hardy varieties (Illini Hardy)',
+    zone4: 'Plant late Apr–May; Chester, Illini Hardy',
+    zone5: 'Plant Apr–early May',
+    zone7: 'Plant Feb–Mar',
+    zone8: 'Plant Jan–Feb; choose thornless varieties',
+    zone9: 'Plant Dec–Jan; limited varieties for low-chill climates',
+  },
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; harvest Jul–Aug', plantingStart: 3, plantingEnd: 4, harvestStart: 7, harvestEnd: 8 },
+  },
+  special: 'Primocane-fruiting varieties (Prime-Ark Freedom) fruit on first-year canes AND second-year canes. Erect thornless varieties (Chester, Triple Crown) easiest to manage. Tip-prune new canes at 4 ft to encourage side branching.',
+  water: { in: '1–1.5', note: 'Consistent moisture critical during fruit development. Drip irrigation preferred — wet foliage promotes disease. Increase to 2 in/week during ripening.' },
+  fertilizer: { type: 'Balanced 10-10-10', amount: '5–6 oz per plant', freq: 'Once in early spring as buds swell; avoid late-season nitrogen which delays dormancy' },
   companions: {
     good: [
-      { name: 'Marigolds', why: 'Marigold root exudates suppress nematodes and deter aphids that attack blackberry canes.' },
-      { name: 'Tansy',     why: 'Tansy repels Japanese beetles, one of the most damaging pests of blackberry fruit.' },
-      { name: 'Chives',    why: 'Chives deter aphids and Japanese beetles with their pungent volatile oils.' },
+      { name: 'Marigolds', why: 'Repel nematodes and other soil pests' },
+      { name: 'Mint', why: 'Deters aphids and ants that farm aphids (keep contained — mint spreads aggressively)' },
+      { name: 'Tansy', why: 'Repels flying insects and ants' },
     ],
     bad: [
-      { name: 'Tomatoes', why: 'Tomatoes and blackberries share Verticillium wilt fungus, dramatically increasing disease risk.' },
-      { name: 'Peppers',  why: 'Peppers are susceptible to Verticillium wilt which persists in soil and devastates blackberry roots.' },
+      { name: 'Raspberries', why: 'Can share verticillium wilt and raspberry crown borer — plant at least 100 ft apart' },
+      { name: 'Roses', why: 'Same family; share diseases like cane blight and botrytis' },
+      { name: 'Eggplant', why: 'Shares verticillium wilt pathogen' },
+      { name: 'Tomatoes', why: 'Same verticillium wilt concern — avoid planting in rotation' },
     ],
   },
-  companionDist: 'Keep 20–30 ft from tomatoes, peppers, eggplant.',
-  animals: 'Bees and butterflies pollinate; net when fruiting.',
+  companionDist: 'Plant companions outside the main cane rows; runners can crowd out low plants within rows',
+  animals: 'Excellent habitat plant — supports native bees, butterflies, and birds. Canes provide overwintering habitat for beneficial insects.',
   diseases: [
-    { name: 'Cane Blight',  desc: 'Dark brown lesions on canes; prune to healthy wood.' },
-    { name: 'Anthracnose',  desc: 'Sunken purple spots on young canes; copper fungicide in early spring.' },
+    { name: 'Orange Rust', desc: 'Bright orange pustules on underside of leaves in spring. No cure — remove and destroy entire plant including roots immediately.' },
+    { name: 'Cane Blight', desc: 'Dark lesions on canes causing dieback. Prune out infected canes well below infection; sterilize pruners.' },
+    { name: 'Rosette (Double Blossom)', desc: 'Distorted, witch-broom growth. No cure; remove infected plant. Spread by eriophyid mites.' },
+    { name: 'Botrytis Fruit Rot', desc: 'Grey mold on ripening fruit. Improve air circulation; harvest frequently; avoid overhead watering.' },
   ],
-  pests: 'Netting for birds; hand-pick Japanese beetles; neem for stink bugs.',
-  rotation: { family: 'Rosaceae (perennial)', cycle: 'Perennial — site carefully; replace after 8–12 years' },
+  pests: 'Spotted wing drosophila (fine mesh netting at ripening), raspberry crown borer (dig and destroy infested crowns), Japanese beetle (hand-pick or kaolin clay), aphids (neem oil or ladybug release).',
+  rotation: { family: 'Rosaceae (Rubus)', cycle: 'Permanent planting. Remove floricanes (second-year canes) after they fruit; new primocanes replace them annually.' },
   stages: [
-    { label: 'Dorm', title: 'Dormancy',          desc: 'First winter. Roots establish.' },
-    { label: 'Prim', title: 'Primocane',          desc: 'Year 1: vigorous canes grow, no fruit.' },
-    { label: 'Flor', title: 'Floricane',          desc: 'Year 2 canes flower and fruit.' },
-    { label: 'Harv', title: 'Harvest',            desc: 'Jun–Aug. Pick when fully black.' },
+    { label: 'Spring', title: 'Primocane emergence', desc: 'New first-year canes (primocanes) emerge from roots. These will fruit next year on lateral branches.' },
+    { label: 'Summer', title: 'Floricane fruiting', desc: 'Second-year canes (floricanes) bloom and produce fruit. Harvest when berries are fully black and come off easily.' },
+    { label: 'Post-harvest', title: 'Cane removal', desc: 'Cut floricanes to the ground immediately after fruiting. Train new primocanes to trellis; tip-prune at 4 ft.' },
+    { label: 'Fall', title: 'Late primocane growth', desc: 'Primocanes harden off for winter. Apply mulch around base after first frost.' },
   ],
-  special: 'Tie canes to trellis. Cut floricanes to ground after harvest.',
   nutrition: {
-    // — Macronutrients —
-    calories:    43,
-    water:       88.2,   // g
-    protein:     1.4,   // g
-    carbs:       9.6,   // g total
-    fiber:       5.3,   // g
-    sugars:      4.9,   // g
-    fat:         0.5,   // g total
-    saturated:   0.01,   // g
-    monounsat:   0.05,   // g
-    polyunsat:   0.28,   // g
-    // — Fat-soluble vitamins —
-    vitA:        11,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        1.17,   // mg
-    vitK:        19.8,   // µg
-    // — Water-soluble vitamins —
-    vitC:        21,   // mg
-    vitB1:       0.02,  // mg thiamine
-    vitB2:       0.026,  // mg riboflavin
-    vitB3:       0.646,  // mg niacin
-    vitB5:       0.276,  // mg pantothenic
-    vitB6:       0.03,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       25,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     8.5,  // mg
-    // — Macrominerals —
-    calcium:     29,  // mg
-    phosphorus:  22,  // mg
-    magnesium:   20,  // mg
-    sodium:      1,  // mg
-    potassium:   162,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.62,  // mg
-    zinc:        0.53,  // mg
-    copper:      0.165,  // mg
-    manganese:   0.646,  // mg
-    selenium:    0.4,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'High in anthocyanins, vitamin C, manganese (0.65 mg — 28% DV), and fiber. One of the higher-fiber berries.',
+    calories: 43, water: 88.2, protein: 1.4, carbs: 9.6, fiber: 5.3, sugars: 4.9, fat: 0.5,
+    saturated: 0, monounsat: 0, polyunsat: 0.3,
+    vitA: 11, vitD: 0, vitE: 1.2, vitK: 19.8,
+    vitC: 21, vitB1: 0.02, vitB2: 0.03, vitB3: 0.6, vitB5: 0.28, vitB6: 0.03,
+    vitB7: 0, vitB9: 25, vitB12: 0, choline: 8.5,
+    calcium: 29, phosphorus: 22, magnesium: 20, sodium: 1, potassium: 162, chloride: 0,
+    iron: 0.6, zinc: 0.53, copper: 0.17, manganese: 0.65, selenium: 0.4, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'High in anthocyanins and ellagic acid — potent antioxidants. Excellent fiber content supports digestive health.',
   },
-  size: { weight: '3–5g per berry', dimensions: '0.5–1" diameter per berry', notes: 'Full clusters weigh 20–40g.' },
+  size: { weight: '3–8g per berry', dimensions: '¾–1" diameter', notes: 'Chester and Triple Crown produce large berries; flavor best when fully ripe (black and slightly soft)' },
 });

@@ -1,121 +1,62 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id:    'pawpaw-tree',
-  name:  'Pawpaw Tree',
-  cat:   'Fruit Tree',
+  id: 'pawpaw-tree',
+  name: 'Pawpaw Tree',
+  cat: 'Fruit Tree',
   emoji: '🌳',
-
   planting: {
-    zone6:   'Plant container-grown trees in spring (April–May) or early fall (September). Bare-root trees in early spring only. Zone 6 is within the native range — pawpaws are very winter-hardy once established.',
-    depth:   'Same depth as container; do not bury graft union if grafted. Tap-root-sensitive — plant in final location; does not transplant well.',
-    spacing: '8–10\' apart in a cluster of 2+ for cross-pollination (hand-pollination strongly recommended); allow 10–15\' for mature spread. Understory settings welcome.',
-    ph:      '5.5–7.0',
-    sun:     'Shade-tolerant as juveniles (first 1–3 years benefit from shade cloth or dappled shade); full sun produces best fruit on mature trees',
+    zone6: 'Plant container-grown trees Apr–May; bare-root Mar–Apr before bud break; tap root is fragile — do not disturb',
+    depth: 'Crown at soil level; never bury trunk',
+    spacing: '15–25 ft apart; plant 2+ genetically distinct trees for cross-pollination',
+    ph: '5.5–7.0',
+    sun: 'Partial shade when young (first 1–2 years); full sun to partial shade once established',
+    zone3: 'Not reliably hardy',
+    zone4: 'Marginal; protected sites only; choose hardy selections (Susquehanna, Shenandoah)',
+    zone5: 'Plant Apr–May; excellent hardy native fruit',
+    zone7: 'Plant Feb–Mar; thrives in heat with moisture',
+    zone8: 'Plant Jan–Mar; may struggle in extreme heat; ensure adequate water',
+    zone9: 'Not well-adapted; insufficient winter chill',
   },
-  special: 'Pawpaw is the largest native fruit tree in North America. It is NOT self-fertile — plant at least 2 genetically distinct seedlings or named varieties for fruit set. Hand-pollination with a small brush greatly improves yields because native pollinators (carrion flies and beetles) are unreliable. Protect young trees from direct sun with shade cloth or tree tubes for the first 1–2 seasons. The tree spreads by clonal root sprouts — manage if desired.',
-
-  water: {
-    in:   '1–2',
-    note: 'Requires consistent moisture, especially in the first 2–3 years. Pawpaws naturally grow along streams — they like moist but well-drained soil. Mulch heavily (4–6" around base) to retain moisture and mimic forest floor conditions. Drought stress in young trees is a primary cause of failure.',
+  zones: {
+    '6': { timing: 'Plant Apr–May; harvest Sep–Oct (3–5 years to first fruit from container-grown)', plantingStart: 4, plantingEnd: 5, harvestStart: 9, harvestEnd: 10 },
   },
-
-  fertilizer: {
-    type:   'Balanced (10-10-10) or compost-based; low input once established',
-    amount: 'Young trees: ½ lb balanced fertilizer per year of age; established trees: light topdressing of compost annually',
-    freq:   'Once in early spring. Pawpaws are light feeders; over-fertilizing reduces fruit quality. Heavy compost mulch is preferred over synthetic fertilizer.',
-  },
-
+  special: 'Asimina triloba — the largest edible fruit native to North America. Custard-like tropical flavor (banana-mango-vanilla). MUST have 2 genetically different trees for cross-pollination — clones and seedlings from the same parent will not pollinate each other. Flowers are pollinated by flies and beetles, not bees. Hand-pollinate with a small paintbrush for best yields. Tap root is fragile — never buy bare-root trees more than 18 inches tall; container-grown strongly preferred.',
+  water: { in: '1–1.5', note: 'Consistent moisture especially in first 3 years. Tolerates flooding briefly. Drought stress in summer causes early fruit drop. Deep mulching (4–6 inches) is essential to retain moisture and mimic forest floor conditions.' },
+  fertilizer: { type: 'Balanced organic — compost and fish emulsion', amount: '2–3 inches compost as mulch each spring', freq: 'Light balanced fertilizer in spring years 1–3; established trees need minimal feeding in good soil' },
   companions: {
     good: [
-      { name: 'Comfrey',         why: 'Deep root nutrient accumulation; excellent chop-and-drop mulch; attracts pollinators' },
-      { name: 'Spicebush (Lindera benzoin)', why: 'Native understory shrub; shares habitat requirements; attracts spicebush swallowtail' },
-      { name: 'Elderberry',      why: 'Compatible moisture needs; attracts pollinators and wildlife' },
-      { name: 'Wild Ginger',     why: 'Native ground cover thriving under pawpaw canopy; forest floor companion' },
-      { name: 'Ramps (Wild Leek)', why: 'Woodland ground cover; shares moist, shaded habitat' },
-      { name: 'Nitrogen-fixing shrubs (e.g., Autumn Olive, Goumi)', why: 'Improve soil fertility in a food forest guild' },
+      { name: 'Comfrey', why: 'Thrives under pawpaw canopy; dynamic accumulator that mimics forest floor nutrient cycling' },
+      { name: 'Ramps (Wild Leeks)', why: 'Native woodland companion; shares moist, part-shade preference' },
+      { name: 'Spicebush', why: 'Native understory shrub; similar habitat; attracts spicebush swallowtail which also pollinates pawpaw' },
     ],
     bad: [
-      { name: 'Grass (turf)',   why: 'Strong competitor; keep a wide mulched circle at all times' },
-      { name: 'Black Walnut',   why: 'Juglone sensitivity — pawpaws are moderately sensitive; maintain distance' },
-      { name: 'Shallow-rooted annuals (directly under canopy)', why: 'Pawpaw roots spread wide and shallow; competition stresses trees' },
+      { name: 'Grass lawn', why: 'Lawn grass competes aggressively with shallow feeder roots; mowing equipment injures trunk' },
     ],
   },
-  companionDist: 'Maintain a 4–6\' deep mulch circle from trunk to drip line. Keep black walnut 30+ feet away (some sources say pawpaws tolerate juglone better than most, but caution advised). Design as part of a food forest guild for best results.',
-  animals: 'Carrion flies and beetles are the primary native pollinators (attracted by the faint scent of the maroon flowers). Hang fish meal or meat scraps in mesh bags near flowers during bloom to attract pollinators. Zebra swallowtail butterfly uses pawpaw exclusively as a larval host plant. Raccoons, opossums, foxes, and deer eagerly eat ripe fruit — harvest promptly.',
-
+  companionDist: 'Mulch ring minimum 3 ft radius; plant companions outside drip line; pawpaw spreads via root suckers to form a colony — allow or mow suckers depending on goals',
+  animals: 'Flowers pollinated by flies and carrion beetles (attracted to the faintly fetid smell). Zebra swallowtail butterfly larvae feed exclusively on pawpaw leaves — excellent host plant. Fruit eaten by raccoons, opossums, foxes, and black bears.',
   diseases: [
-    { name: 'Pawpaw Dieback',    desc: 'Poorly understood; may involve Botryosphaeria or other fungi. Prune out dead wood; ensure tree is not stressed by drought or nutrient deficiency.' },
-    { name: 'Powdery Mildew',    desc: 'Occasional in humid conditions; rarely serious. Improve air circulation between trees.' },
-    { name: 'Fruit Rots (various)', desc: 'Overripe fruit left on tree or ground rots quickly; harvest promptly at peak ripeness. Brown rot fungi can affect fruit in wet years.' },
+    { name: 'Pawpaw Bunch Disease', desc: 'Abnormal clustering of leaves and stunted shoots; spread by leafhoppers. No cure — remove and destroy infected trees. Rare in well-managed gardens.' },
+    { name: 'Leaf Spot', desc: 'Brown spots on leaves in wet seasons. Usually cosmetic. Rake and destroy fallen leaves.' },
   ],
-  pests: 'Relatively pest-free compared to other fruit trees. Zebra swallowtail caterpillars feed on leaves but rarely cause serious damage (and the butterfly is beautiful — consider leaving them). Pawpaw peduncle borer (Talponia plummeriana) can damage flower buds. Raccoons, squirrels, and deer compete for ripe fruit.',
-
-  rotation: {
-    family: 'Annonaceae (Custard Apple family) — the only temperate member of an otherwise tropical family',
-    cycle:  'Perennial tree; does not rotate. Pawpaws spread vegetatively by root sprouts, forming natural patches. Excellent long-term planting in a food forest, hedgerow, or riparian buffer.',
-  },
-
+  pests: 'Remarkably pest-resistant — pawpaw contains acetogenins (natural insecticides) in bark, leaves, and seeds. Pawpaw peduncle borer (small caterpillar in fruit stem; hand-remove), birds and mammals (netting or prompt harvest as fruit ripens).',
+  rotation: { family: 'Annonaceae (Custard Apple family)', cycle: 'Permanent native fruit tree — 50+ year lifespan. Only North American member of a largely tropical family.' },
   stages: [
-    { label: 'Yr 1–2',   title: 'Slow Establishment',  desc: 'Pawpaws invest heavily in deep root development; top growth appears very slow. Provide consistent water, mulch, and shade protection. Do not be alarmed by minimal top growth.' },
-    { label: 'Yr 2–4',   title: 'Accelerated Growth',  desc: 'Once roots are established, top growth accelerates significantly — often 2–4\' per year. Sun exposure can be increased as the tree becomes established.' },
-    { label: 'Yr 4–7',   title: 'Pre-bearing',         desc: 'Tree develops full canopy and begins flowering. Hand-pollinate all flowers for first fruit. Some trees fruit in year 4–5 from a grafted nursery plant.' },
-    { label: 'Yr 5–10+', title: 'Bearing',             desc: 'Consistent fruit production begins. Clusters of 2–9 fruits develop. Fruit ripens late August–October in Zone 6. Yield increases as tree matures.' },
-    { label: 'Spring',   title: 'Bloom',               desc: 'Maroon, 6-petaled flowers emerge in April before leaves. Flowers have a faint yeasty/fetid scent to attract carrion pollinators. Hand-pollinate with a brush for reliable fruit set.' },
-    { label: 'Late Summer', title: 'Fruit Ripening',   desc: 'Fruit turns from green to yellow-green and yields to gentle pressure when ripe (similar to a ripe avocado or banana). Skin blackens quickly after harvest; refrigerate or process immediately. Eaten fresh, frozen, or in baked goods.' },
+    { label: 'Yr 1–2', title: 'Slow establishment', desc: 'Very slow top growth in years 1–2 — energy goes to deep tap root. Do not panic; provide shade cloth and consistent moisture.' },
+    { label: 'Yr 3–5', title: 'Accelerated growth', desc: 'Once tap root established, rapid growth begins. Tree can grow 1–2 ft per year. Shade cloth can be removed.' },
+    { label: 'Spring', title: 'Unique flowers', desc: 'Dark maroon, 6-petaled flowers appear Apr–May before leaves. Hand-pollinate by transferring pollen between trees with a paintbrush for reliable fruit set.' },
+    { label: 'Sep–Oct', title: 'Fruit ripening', desc: 'Fruit turns from green to yellow-green and yields to gentle pressure when ripe. Falls from tree when fully ripe. Harvest slightly underripe and ripen indoors 3–5 days.' },
   ],
-
   nutrition: {
-    // — Macronutrients —
-    calories:    80,
-    water:       74.9,   // g
-    protein:     1.2,   // g
-    carbs:       18.8,   // g total
-    fiber:       2.6,   // g
-    sugars:      14.5,   // g
-    fat:         1.2,   // g total
-    saturated:   0.35,   // g
-    monounsat:   0.51,   // g
-    polyunsat:   0.22,   // g
-    // — Fat-soluble vitamins —
-    vitA:        8,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0,   // mg
-    vitK:        0,   // µg
-    // — Water-soluble vitamins —
-    vitC:        18.3,   // mg
-    vitB1:       0.04,  // mg thiamine
-    vitB2:       0.1,  // mg riboflavin
-    vitB3:       1.1,  // mg niacin
-    vitB5:       0.26,  // mg pantothenic
-    vitB6:       0.23,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       14,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0,  // mg
-    // — Macrominerals —
-    calcium:     19,  // mg
-    phosphorus:  37,  // mg
-    magnesium:   20,  // mg
-    sodium:      0,  // mg
-    potassium:   345,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.55,  // mg
-    zinc:        0.16,  // mg
-    copper:      0.12,  // mg
-    manganese:   0.21,  // mg
-    selenium:    0,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'One of the most nutritious native North American fruits. Higher in protein (1.2g) and fat (1.2g) than most fruit. Rich in potassium (345 mg) and Vitamins A and C. Flavor: banana + mango + vanilla custard.',
+    calories: 80, water: 74.9, protein: 1.2, carbs: 18.8, fiber: 2.6, sugars: 0, fat: 1.2,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 0, vitD: 0, vitE: 0, vitK: 0,
+    vitC: 18.3, vitB1: 0, vitB2: 0, vitB3: 0, vitB5: 0, vitB6: 0,
+    vitB7: 0, vitB9: 0, vitB12: 0, choline: 0,
+    calcium: 63, phosphorus: 47, magnesium: 113, sodium: 0, potassium: 345, chloride: 0,
+    iron: 0.9, zinc: 0, copper: 0, manganese: 0, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Exceptionally high magnesium (113 mg per 100g) and potassium for a fruit. Good vitamin C and iron. Nutritional data is limited — one of the least-studied native fruits. Seeds contain acetogenins and are NOT edible.',
   },
-
-  size: {
-    weight:     '100–500g per fruit (wild); named varieties up to 700g',
-    dimensions: '3–6" long, 2–4" diameter; oblong to oval shape',
-    notes:      'Named grafted varieties offer better fruit size, flavor, and reliability than seedlings. Top varieties for Zone 6: Shenandoah, Susquehanna, Allegheny, Mango (Overleese), and KSU-Atwood. Fruit does not ship well commercially, making homegrown pawpaws especially valuable.',
-  },
+  size: { weight: '100–500g per fruit', dimensions: '3–6" long, 2–3" wide; kidney or mango shaped', notes: 'Named varieties (Shenandoah, Susquehanna, Mango) produce larger, sweeter fruit than wild seedlings' },
 });

@@ -1,122 +1,68 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id:    'apple-tree',
-  name:  'Apple Tree',
-  cat:   'Fruit Tree',
+  id: 'apple-tree',
+  name: 'Apple Tree',
+  cat: 'Fruit Tree',
   emoji: '🍎',
-
   planting: {
-    zone6:   'Plant bare-root trees in early spring as soon as ground thaws (late March–April). Container trees can be planted spring through early fall. Avoid planting in summer heat.',
-    depth:   'Set graft union 2–3" above soil line; do not bury it. Dig hole 2–3× width of root ball, same depth.',
-    spacing: 'Dwarf: 8–10\' apart; Semi-dwarf: 12–15\'; Standard: 20–30\'. Rows 15–30\' apart by rootstock size.',
-    ph:      '6.0–7.0',
-    sun:     'Full sun (minimum 8 hrs for best fruit production)',
+    zone6: 'Plant bare-root trees in early spring (Mar–Apr) before bud break, or container-grown in fall',
+    depth: 'Crown at soil level',
+    spacing: '15–25 ft apart (dwarf 8–10 ft)',
+    ph: '6.0–7.0',
+    sun: 'Full sun (6–8 hours minimum)',
+    zone3: 'Plant May after last frost; choose hardy varieties (Haralson, Zestar)',
+    zone4: 'Plant late Apr–May; varieties: Honeycrisp, Cortland',
+    zone5: 'Plant Apr; wide variety selection',
+    zone7: 'Plant Feb–Mar; choose low-chill varieties',
+    zone8: 'Plant Jan–Feb; requires low-chill varieties (Anna, Dorsett Golden)',
+    zone9: 'Plant Dec–Jan; only ultra-low-chill varieties (TropicSweet)',
   },
-  special: 'Most apple varieties require a pollinizer — plant at least 2 different varieties that bloom at the same time. Choose disease-resistant varieties (e.g., Liberty, Enterprise, Honeycrisp) to reduce spray needs. Select rootstock by desired tree size (M.9 dwarf, M.26 semi-dwarf, seedling standard).',
-
-  water: {
-    in:   '1–2',
-    note: 'Critical in the first 2 years for establishment; deep, infrequent watering encourages deep roots. Mulch to conserve moisture. Reduce irrigation in late summer to harden wood before winter. Avoid wet soil around trunk (crown rot).',
+  zones: {
+    '6': { timing: 'Plant early spring (Mar–Apr); harvest Aug–Oct depending on variety', plantingStart: 3, plantingEnd: 4, harvestStart: 8, harvestEnd: 10 },
   },
-
-  fertilizer: {
-    type:   'Balanced (10-10-10) or nitrogen-focused in early years; reduce nitrogen on bearing trees',
-    amount: 'Young trees: 1 cup 10-10-10 per year of age (max 4 cups). Bearing trees: based on annual shoot growth (aim for 12–18" new growth per year)',
-    freq:   'Once in early spring before bud break. Avoid fertilizing after July (promotes soft growth vulnerable to frost).',
-  },
-
+  special: 'Most varieties require a cross-pollinating partner within 50 ft. Requires 500–1200 chill hours (below 45°F) depending on variety. Dwarf rootstock recommended for home gardens.',
+  water: { in: '1–1.5', note: 'Deep watering once or twice a week; consistent moisture critical during fruit development (Jun–Aug). Reduce in fall.' },
+  fertilizer: { type: '10-10-10 balanced (young trees); low nitrogen once bearing', amount: '1 cup per year of tree age up to 10 cups', freq: 'Once in early spring before bud break; avoid late-season feeding' },
   companions: {
     good: [
-      { name: 'Comfrey',      why: 'Deep roots mine nutrients; chop-and-drop mulch; attracts pollinators' },
-      { name: 'Nasturtiums',  why: 'Trap crop for aphids; attract beneficial insects' },
-      { name: 'Chives',       why: 'Repel aphids and apple scab; deter borers' },
-      { name: 'Marigolds',    why: 'Deter nematodes and various pests at root zone' },
-      { name: 'Clover (white)', why: 'Living mulch; fixes nitrogen; attracts pollinators' },
-      { name: 'Daffodils',    why: 'Deter deer, voles, and other burrowing rodents near roots' },
+      { name: 'Marigolds', why: 'Repel codling moth and aphids when planted around the drip line' },
+      { name: 'Chives', why: 'Deter apple scab and powdery mildew' },
+      { name: 'Nasturtiums', why: 'Trap crop for aphids; attract beneficial insects' },
+      { name: 'Comfrey', why: 'Dynamic accumulator; mulched leaves add potassium and calcium' },
     ],
     bad: [
-      { name: 'Grass (turf)',  why: 'Competes heavily for water and nutrients; keep grass away from drip line' },
-      { name: 'Potatoes',     why: 'Share fire blight susceptibility; can exchange diseases' },
-      { name: 'Fennel',       why: 'Allelopathic; inhibits many plants including fruit trees' },
-      { name: 'Walnut trees', why: 'Juglone toxicity from black walnut roots kills apple trees' },
+      { name: 'Potatoes', why: 'Share blight pathogens; potato blight can infect apple foliage' },
+      { name: 'Fennel', why: 'Allelopathic to most fruit trees; inhibits growth' },
     ],
   },
-  companionDist: 'Keep grass turf 3–4\' from trunk (mulch circle). Black walnuts should be 50–80\' away. Interplant beneficial herbs and ground covers freely within the drip line.',
-  animals: 'Honeybees are essential pollinators. Encourage by planting spring-blooming flowers. Beneficial predatory wasps and parasitic wasps attack codling moth and aphids. Bluebirds and chickadees eat insects.',
-
+  companionDist: 'Keep grass away from trunk out to 2 ft; apply wood chip mulch in a 3–4 ft ring',
+  animals: 'Honeybees essential for pollination. Mason bees are highly efficient pollinators.',
   diseases: [
-    { name: 'Apple Scab (Venturia inaequalis)', desc: 'Most common disease; olive-brown lesions on leaves and fruit. Plant resistant varieties; apply fungicide at green tip through petal fall if needed; rake and remove fallen leaves.' },
-    { name: 'Fire Blight (Erwinia amylovora)', desc: 'Bacterial disease causing shoot tips to wilt and turn brown ("shepherd\'s crook"). Cut out infected wood 12" below symptoms; sterilize tools. Plant resistant varieties.' },
-    { name: 'Powdery Mildew',                  desc: 'White powdery coating on young leaves and shoots. Improve air circulation; avoid excess nitrogen; apply sulfur or neem sprays.' },
-    { name: 'Cedar-Apple Rust',                desc: 'Requires both apple and juniper/cedar hosts. Causes orange lesions on leaves. Remove nearby junipers or plant resistant varieties.' },
+    { name: 'Apple Scab', desc: 'Fungal disease causing olive-green spots on leaves and fruit. Spray sulfur or copper fungicide from bud break through petal fall. Choose resistant varieties (Liberty, Freedom, Enterprise).' },
+    { name: 'Fire Blight', desc: 'Bacterial disease causing branches to look burned. Prune 12 inches below infection; sterilize tools between cuts with 10% bleach. Avoid high-nitrogen fertilizer.' },
+    { name: 'Powdery Mildew', desc: 'White powdery coating on young shoots. Prune affected tips; improve air circulation; spray potassium bicarbonate.' },
+    { name: 'Cedar-Apple Rust', desc: 'Orange gelatinous growths on nearby Eastern red cedar infect apple leaves. Remove nearby cedar galls; choose resistant varieties.' },
   ],
-  pests: 'Codling moth (primary pest; larvae in fruit), apple maggot, plum curculio, aphids, spider mites, scale insects, and borers. Deer and voles damage bark and roots. An integrated spray schedule and physical traps (kaolin clay, sticky traps, trunk guards) are essential for quality fruit.',
-
-  rotation: {
-    family: 'Rosaceae (Rose family)',
-    cycle:  'Perennial tree; does not rotate. Do not replant apples in soil where apple, pear, or other Rosaceae trees recently grew (replant disease). Choose a fresh site or fumigate/amend heavily.',
-  },
-
+  pests: 'Codling moth (hang pheromone traps May–Sep; bag individual fruits), apple maggot (red sphere traps), plum curculio (kaolin clay spray), aphids (horticultural oil in early spring), Japanese beetle (hand-pick or neem oil).',
+  rotation: { family: 'Rosaceae', cycle: 'Permanent planting — site carefully; do not replant in soil where another apple or stone fruit has grown within 10 years (replant disease)' },
   stages: [
-    { label: 'Yr 1–2',   title: 'Establishment',      desc: 'Focus on root and scaffold branch development. Remove all fruit in year 1; remove most in year 2. Water and mulch consistently. Train branch angles.' },
-    { label: 'Yr 2–4',   title: 'Juvenile Growth',    desc: 'Tree fills out its framework. Begin light pruning to open canopy. Some trees begin bearing fruit. Continue training.' },
-    { label: 'Yr 4–7',   title: 'Coming into Bearing', desc: 'First meaningful harvests. Thin fruit to 6" between apples for good size and to prevent biennial bearing. Annual dormant pruning important.' },
-    { label: 'Yr 7–20+', title: 'Full Production',    desc: 'Mature bearing tree. Annual dormant pruning, pest management, and fertilization maintain productivity. Trees can produce for 50–100+ years.' },
-    { label: 'Spring',   title: 'Bloom & Pollination', desc: 'Blooms mid-April to early May in Zone 6. Pollinators (especially bees) are critical during the 7–10 day bloom window. Late frost can destroy the crop.' },
+    { label: 'Yr 1–2', title: 'Establishment', desc: 'Focus on root development. Prune to a central leader or open vase. Remove any fruit that sets so energy goes to roots.' },
+    { label: 'Yr 3–5', title: 'Juvenile growth', desc: 'First fruiting may begin. Continue annual dormant pruning in late Feb–Mar. Establish scaffold branches.' },
+    { label: 'Yr 5+', title: 'Bearing', desc: 'Full production. Annual dormant pruning keeps tree open and productive. Thin fruit to 6 inches apart in Jun for large, quality apples.' },
+    { label: 'Spring', title: 'Bloom', desc: 'White to pink blossoms appear Apr–May. Critical pollination window — avoid spraying insecticides during bloom.' },
+    { label: 'Summer', title: 'Fruit development', desc: 'June drop is normal. Thin remaining fruit. Water consistently. Watch for scab and codling moth.' },
+    { label: 'Fall', title: 'Harvest', desc: 'Harvest when flesh is firm and starchy-sweet (starch-iodine test). Store in cool (32–40°F), humid conditions.' },
   ],
-
   nutrition: {
-    // — Macronutrients —
-    calories:    52,
-    water:       85.6,   // g
-    protein:     0.3,   // g
-    carbs:       13.8,   // g total
-    fiber:       2.4,   // g
-    sugars:      10.4,   // g
-    fat:         0.2,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0.01,   // g
-    polyunsat:   0.05,   // g
-    // — Fat-soluble vitamins —
-    vitA:        3,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.18,   // mg
-    vitK:        2.2,   // µg
-    // — Water-soluble vitamins —
-    vitC:        4.6,   // mg
-    vitB1:       0.017,  // mg thiamine
-    vitB2:       0.026,  // mg riboflavin
-    vitB3:       0.091,  // mg niacin
-    vitB5:       0.061,  // mg pantothenic
-    vitB6:       0.041,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       3,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     3.4,  // mg
-    // — Macrominerals —
-    calcium:     6,  // mg
-    phosphorus:  11,  // mg
-    magnesium:   5,  // mg
-    sodium:      1,  // mg
-    potassium:   107,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.12,  // mg
-    zinc:        0.04,  // mg
-    copper:      0.027,  // mg
-    manganese:   0.035,  // mg
-    selenium:    0,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Most antioxidants (quercetin, catechin) are in the skin — eat unpeeled. Pectin supports gut microbiome. Low glycemic index relative to many fruits.',
+    calories: 52, water: 85.6, protein: 0.3, carbs: 13.8, fiber: 2.4, sugars: 10.4, fat: 0.2,
+    saturated: 0, monounsat: 0.1, polyunsat: 0.1,
+    vitA: 3, vitD: 0, vitE: 0.2, vitK: 2.2,
+    vitC: 4.6, vitB1: 0.02, vitB2: 0.03, vitB3: 0.1, vitB5: 0.06, vitB6: 0.04,
+    vitB7: 0, vitB9: 3, vitB12: 0, choline: 3.4,
+    calcium: 6, phosphorus: 11, magnesium: 5, sodium: 1, potassium: 107, chloride: 0,
+    iron: 0.1, zinc: 0.04, copper: 0.03, manganese: 0.04, selenium: 0, iodine: 0,
+    chromium: 1, molybdenum: 0, fluoride: 0,
+    notes: 'Per 100g raw apple with skin. Rich in quercetin and pectin (soluble fiber) which support gut health and cholesterol management.',
   },
-
-  size: {
-    weight:     '100–350g per fruit (varies widely by variety)',
-    dimensions: '2.5–4" diameter',
-    notes:      'Hundreds of varieties exist with wildly different flavor, color, and ripening times (early: Lodi/Yellow Transparent; mid: Honeycrisp, McIntosh; late: Fuji, Granny Smith, Enterprise). Zone 6 gardeners should select varieties with appropriate chilling requirements (800–1200 hrs typical).',
-  },
+  size: { weight: '100–300g per fruit', dimensions: '2.5–3.5" diameter', notes: 'Dwarf trees produce full-size fruit. Thin to one fruit per 6" for best size.' },
 });

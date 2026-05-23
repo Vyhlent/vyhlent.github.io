@@ -1,0 +1,62 @@
+import Crop from '../Crop.js';
+export default new Crop({
+  id: 'queens-lace',
+  name: "Queen Anne's Lace",
+  cat: 'Wild Edible',
+  emoji: '🌸',
+  planting: {
+    zone6: 'Self-sows freely; direct sow in fall or very early spring for best germination (needs cold stratification)',
+    depth: '⅛" — seed needs light',
+    spacing: '6–12" apart if intentionally planting; self-spaces naturally',
+    ph: '6.0–7.5',
+    sun: 'Full sun to partial shade',
+    zone3: 'Biennial/annual; reseeds in most climates',
+    zone4: 'Self-sows; very adaptable',
+    zone5: 'Naturalized weed; thrives',
+    zone7: 'Thrives; can be overwintering biennial',
+    zone8: 'Fall-planted biennial; flowers following spring',
+    zone9: 'Fall annual or biennial',
+  },
+  zones: {
+    '6': { timing: 'Sow fall or early spring; flowers Jun–Sep in year 2 (biennial)', plantingStart: 3, plantingEnd: 4, harvestStart: 6, harvestEnd: 9 },
+  },
+  special: '⚠️ LOOK-ALIKE WARNING: Queen Anne\'s Lace (Daucus carota) resembles Poison Hemlock (Conium maculatum) and Poison Water Hemlock (Cicuta species) which are DEADLY. Always verify identification by: (1) hairy stems — QAL has hairy stems, hemlock has smooth purple-blotched stems, (2) carrot smell when leaves or roots are crushed, (3) single dark purple flower in center of white flower cluster. Never harvest without 100% positive ID. The root is a wild carrot — edible in year 1 before it becomes tough and woody. An ancestor of the cultivated carrot.',
+  water: { in: '0.5', note: 'Drought-tolerant wildflower; no irrigation needed; actually prefers dry, lean conditions — rich moist soil produces rank growth at the expense of flowers' },
+  fertilizer: { type: 'None — prefers poor soil', amount: 'N/A', freq: 'Rich soil reduces flowering and increases rank growth; grow in unamended soil' },
+  companions: {
+    good: [
+      { name: 'Tomatoes', why: 'Attracts parasitic wasps (Ichneumonidae) and predatory flies that prey on tomato hornworm' },
+      { name: 'Peppers', why: 'Same beneficial insect attraction benefit' },
+      { name: 'Carrots', why: 'Both are Apiaceae — shares beneficial insect habitat; note: may cross-pollinate with cultivated carrots affecting seed quality' },
+      { name: 'Grapes', why: 'Beneficial insect habitat planted at vineyard edges is a traditional practice' },
+    ],
+    bad: [
+      { name: 'Cultivated Carrots (seed saving)', why: 'Will cross-pollinate with carrots — keep away from carrots you intend to save seed from' },
+    ],
+  },
+  companionDist: 'Plant at garden edges, along fences, or in wild areas — not within production beds where it self-seeds aggressively',
+  animals: 'One of the top plants for attracting beneficial insects — supports over 50 species of parasitic wasps, predatory beetles, and hoverflies. Excellent for biological pest control in nearby beds.',
+  diseases: [
+    { name: 'Leaf Blight', desc: 'Various fungal spots. Cosmetic only on this vigorous plant.' },
+  ],
+  pests: 'Essentially pest-free. Carrot aphid occasionally colonizes; usually controlled by the same beneficial insects the plant attracts.',
+  rotation: { family: 'Apiaceae (Carrot family)', cycle: 'Biennial — flowers and seeds in year 2, then dies. Self-sows prolifically to naturalize. Manage by deadheading before seed set if spread needs to be controlled.' },
+  stages: [
+    { label: 'Yr 1', title: 'Rosette stage', desc: 'First year: ferny, carrot-scented rosette of leaves stays low to the ground. Root is a small wild carrot — edible raw or cooked this year.' },
+    { label: 'Yr 2 spring', title: 'Bolt and bud', desc: 'Second year: sends up tall (2–4 ft) flowering stalk in spring. Harvest opportunity ends as stem becomes fibrous.' },
+    { label: 'Bloom', title: 'Full flower', desc: 'Flat-topped white flower clusters (umbels) bloom Jun–Sep. Each flower head has a distinctive single dark purple floret at center. Excellent beneficial insect habitat.' },
+    { label: 'Seed', title: 'Seed and dispersal', desc: 'Flower heads curl inward as seeds mature — the "bird\'s nest" stage. Seeds disperse by wind and clinging to clothing and animal fur.' },
+  ],
+  nutrition: {
+    calories: 35, water: 88.0, protein: 0.9, carbs: 8.2, fiber: 1.5, sugars: 3.5, fat: 0.2,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 50, vitD: 0, vitE: 0.2, vitK: 10,
+    vitC: 5, vitB1: 0.04, vitB2: 0.03, vitB3: 0.4, vitB5: 0.1, vitB6: 0.1,
+    vitB7: 0, vitB9: 12, vitB12: 0, choline: 5,
+    calcium: 35, phosphorus: 30, magnesium: 10, sodium: 10, potassium: 230, chloride: 0,
+    iron: 0.4, zinc: 0.2, copper: 0.04, manganese: 0.15, selenium: 0.3, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: '⚠️ Requires 100% positive ID before consuming — deadly look-alikes exist. Young first-year roots edible, similar to thin cultivated carrots. Primarily grown as a beneficial insect habitat plant, not for food.',
+  },
+  size: { weight: 'Root: 20–60g (first year)', dimensions: 'Plants 2–4 ft tall in bloom', notes: 'Flowers are excellent in arrangements — cut just as they open fully' },
+});

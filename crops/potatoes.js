@@ -1,66 +1,71 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'potatoes',name:'Potatoes',cat:'Root Vegetable',emoji:'🥔',
-  planting:{zone6:'Plant seed potatoes Apr 15–May 15 (soil 45°F+)',depth:'3–4" deep; hill up as plants grow',spacing:'12" apart, rows 30–36"',ph:'4.8–5.5',sun:'Full sun'},
-  water:{in:'1–2',note:'Critical during tuber set; reduce after tops die back'},
-  fertilizer:{type:'Low-nitrogen 5-10-10',amount:'3 lbs per 100 sq ft',freq:'Pre-plant; low-N when hilling; avoid N after flowering'},
-  companions:{
-    good:[{name:'Beans',why:'Beans fix nitrogen and the dense canopy repels Colorado potato beetle.'},{name:'Marigolds',why:'Marigolds repel nematodes and Colorado potato beetle with their root exudates and volatile oils.'},{name:'Corn',why:'Corn and potatoes occupy different root zones and coexist well with minimal resource competition.'}],
-    bad:[{name:'Tomatoes',why:'Tomatoes and potatoes share late blight (Phytophthora infestans) which spreads rapidly between them.'},{name:'Cucumbers',why:'Cucumbers share Phytophthora fungal diseases and compete for potassium that both crops need.'},{name:'Raspberries',why:'Raspberry roots harbor Verticillium wilt which devastates potatoes.'}],
+  id: 'potatoes',
+  name: 'Potatoes',
+  cat: 'Root Vegetable',
+  emoji: '🥔',
+  planting: {
+    zone6: 'Plant seed potatoes late Mar–Apr (2–4 weeks before last frost date); soil must be above 45°F',
+    depth: '3–4" deep; hill up soil as plants grow',
+    spacing: '12" apart in rows 2.5–3 ft wide',
+    ph: '5.0–6.5',
+    sun: 'Full sun (6–8 hours)',
+    zone3: 'Plant mid-May after last frost; short-season varieties (Yukon Gold, Norland)',
+    zone4: 'Plant May; wide variety selection',
+    zone5: 'Plant Apr–early May',
+    zone7: 'Plant Mar; also possible Aug–Sep for fall crop',
+    zone8: 'Plant Feb–Mar; also plant Sep–Oct for winter–spring harvest',
+    zone9: 'Plant Jan–Feb; also plant Aug–Sep for fall crop',
   },
-  companionDist:'Keep 3+ ft from tomatoes/peppers/eggplant; 3 ft from cucumbers.',
-  animals:'Ground beetles eat grubs; row covers exclude flies.',
-  diseases:[{name:'Late Blight',desc:'Dark water-soaked patches; destroy all infected tissue; copper fungicide.'},{name:'Common Scab',desc:'Rough corky patches; lower soil pH to 4.8–5.2; certified seed.'}],
-  pests:'Colorado potato beetle — hand pick eggs/adults; spinosad spray.',
-  rotation:{family:'Solanaceae',cycle:'3–4 year rotation; not after tomatoes, peppers, eggplant'},
-  stages:[{label:'Sprt',title:'Sprouting',desc:'Pre-sprout (chit) 2–4 weeks before planting.'},{label:'Veg',title:'Vegetative',desc:'Hill soil around stems every 2–3 weeks.'},{label:'Tuber',title:'Tuber set',desc:'At flowering; consistent water critical.'},{label:'Harv',title:'Harvest',desc:'Mature: 2–3 weeks after tops die; cure 2 weeks.'}],
-  special:'Never plant where Solanaceae grew in 3 years. Green flesh is toxic.',
+  zones: {
+    '6': { timing: 'Plant late Mar–Apr; harvest late Jun (early) or Aug–Sep (main crop)', plantingStart: 3, plantingEnd: 4, harvestStart: 6, harvestEnd: 9 },
+  },
+  special: 'Always plant certified disease-free seed potatoes — never supermarket potatoes. Cut seed potatoes to 1.5–2 oz pieces with at least 2 eyes; cure cut pieces 2 days before planting. Hill soil up around stems as plants grow — tubers that are exposed to light turn green and become toxic. Cure harvested potatoes 1–2 weeks in a cool, dark, humid space before long-term storage.',
+  water: { in: '1–2', note: 'Consistent moisture critical especially during tuber initiation (when plants bloom). Uneven watering causes hollow heart and knobby tubers. Stop watering when tops begin to die back.' },
+  fertilizer: { type: 'Balanced with emphasis on phosphorus and potassium', amount: '5–10-10 at 3 lbs per 100 sq ft', freq: 'Mix into soil before planting; avoid high nitrogen which produces lush tops and poor tubers; side-dress with balanced fertilizer when plants are 6 inches tall' },
+  companions: {
+    good: [
+      { name: 'Beans', why: 'Beans fix nitrogen; potatoes benefit from consistent available nitrogen; beans deter Colorado potato beetle' },
+      { name: 'Marigolds', why: 'Repel Colorado potato beetles and nematodes — most effective pest deterrent for potatoes' },
+      { name: 'Horseradish', why: 'Planted at corners of potato bed reportedly deters Colorado potato beetle and blister beetle' },
+      { name: 'Catnip', why: 'Repels Colorado potato beetle' },
+    ],
+    bad: [
+      { name: 'Tomatoes', why: 'Same family; share late blight (Phytophthora infestans) — the Irish Famine pathogen. Keep strictly separated.' },
+      { name: 'Fennel', why: 'Allelopathic; inhibits potato growth' },
+      { name: 'Sunflowers', why: 'Sunflowers inhibit potato growth and attract similar pests' },
+      { name: 'Cucumbers', why: 'Shared blight pressure; competition for resources' },
+      { name: 'Squash', why: 'Same pest and disease overlap; compete for space' },
+      { name: 'Raspberries', why: 'Share verticillium wilt; avoid planting near each other' },
+    ],
+  },
+  companionDist: 'Plant marigolds every 12 inches around the perimeter of the potato bed for maximum beetle deterrence',
+  animals: 'Ground beetles and parasitic wasps prey on Colorado potato beetle larvae. Encourage by avoiding broad-spectrum insecticides.',
+  diseases: [
+    { name: 'Late Blight', desc: 'The most destructive plant disease in history. Dark, water-soaked lesions on leaves; white sporulation in humid conditions. Spreads explosively. Apply copper fungicide preventively in wet weather; destroy infected plants immediately; do not compost.' },
+    { name: 'Early Blight', desc: 'Concentric dark rings (target pattern) on lower leaves. Less serious than late blight. Apply copper or chlorothalonil fungicide; improve air circulation.' },
+    { name: 'Common Scab', desc: 'Rough, corky lesions on tuber skin. Caused by Streptomyces in alkaline soils. Keep pH below 6.0; avoid liming potato beds; keep soil consistently moist.' },
+    { name: 'Blackleg', desc: 'Black, slimy stem base; wilting. Bacterial disease. Plant certified seed; ensure good drainage; destroy infected plants.' },
+  ],
+  pests: 'Colorado potato beetle (most serious — hand-pick adults and orange egg clusters; Bt var. tenebrionis; spinosad), aphids (neem oil; insecticidal soap), wireworms (beneficial nematodes; trap crop radishes), flea beetles (row covers; diatomaceous earth), leafhoppers (row covers).',
+  rotation: { family: 'Solanaceae (Nightshade family)', cycle: 'Rotate every 3–4 years; do not follow tomatoes, peppers, or eggplant; excellent after a cover crop of buckwheat or rye' },
+  stages: [
+    { label: 'Sprout', title: 'Emergence', desc: 'Shoots emerge 2–4 weeks after planting. Begin hilling when shoots are 6–8 inches tall — hill to leave 4 inches of growth exposed.' },
+    { label: 'Vegetative', title: 'Rapid top growth', desc: 'Vigorous foliage growth. Hill a second time when plants are 12 inches tall. Tubers begin forming.' },
+    { label: 'Bloom', title: 'Flowering', desc: 'Small white, pink, or purple flowers signal active tuber development. Maintain consistent watering.' },
+    { label: 'Early harvest', title: 'New potatoes', desc: 'Dig carefully 2–3 weeks after flowering for small, tender new potatoes. Leave remaining plants to mature.' },
+    { label: 'Cure', title: 'Main harvest and curing', desc: 'Harvest when tops have fully died back. Cure 10–14 days at 50–60°F, high humidity before storage. Properly cured potatoes store 4–6 months.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    77,
-    water:       79.4,   // g
-    protein:     2,   // g
-    carbs:       17,   // g total
-    fiber:       2.2,   // g
-    sugars:      0.8,   // g
-    fat:         0.1,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0,   // g
-    polyunsat:   0.04,   // g
-    // — Fat-soluble vitamins —
-    vitA:        0,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.01,   // mg
-    vitK:        1.9,   // µg
-    // — Water-soluble vitamins —
-    vitC:        19.7,   // mg
-    vitB1:       0.081,  // mg thiamine
-    vitB2:       0.032,  // mg riboflavin
-    vitB3:       1.061,  // mg niacin
-    vitB5:       0.296,  // mg pantothenic
-    vitB6:       0.298,  // mg pyridoxine
-    vitB7:       0.4,  // µg biotin
-    vitB9:       16,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     12.1,  // mg
-    // — Macrominerals —
-    calcium:     12,  // mg
-    phosphorus:  57,  // mg
-    magnesium:   23,  // mg
-    sodium:      6,  // mg
-    potassium:   425,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.78,  // mg
-    zinc:        0.3,  // mg
-    copper:      0.108,  // mg
-    manganese:   0.153,  // mg
-    selenium:    0.4,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Excellent source of potassium (425 mg — 9% DV) and vitamin B6 (0.30 mg — 18% DV). Most nutrients are concentrated just beneath the skin — eat unpeeled when possible. Green flesh contains solanine and must be discarded.',
+    calories: 77, water: 79.4, protein: 2.0, carbs: 17.5, fiber: 2.2, sugars: 0.8, fat: 0.1,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 0, vitD: 0, vitE: 0.1, vitK: 1.9,
+    vitC: 19.7, vitB1: 0.08, vitB2: 0.03, vitB3: 1.1, vitB5: 0.3, vitB6: 0.3,
+    vitB7: 0, vitB9: 16, vitB12: 0, choline: 12.1,
+    calcium: 12, phosphorus: 57, magnesium: 23, sodium: 6, potassium: 421, chloride: 0,
+    iron: 0.8, zinc: 0.3, copper: 0.11, manganese: 0.15, selenium: 0.4, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Values for baked potato with skin. Excellent potassium source (421 mg per 100g). Skin contains most of the fiber and micronutrients. Contains resistant starch that feeds beneficial gut bacteria, especially when cooled after cooking.',
   },
-  size:{weight:'100–300g per tuber',dimensions:'2–4" diameter',notes:'New potatoes: golf ball size. Mature: after tops die back.'},
+  size: { weight: '100–400g per potato', dimensions: '2–4" diameter', notes: 'Fingerling types are small and elongated; Russets are large and floury; Yukon Gold are medium, waxy, and buttery' },
 });

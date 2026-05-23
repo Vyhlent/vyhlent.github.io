@@ -1,160 +1,65 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  "id": "blueberries",
-  "name": "Blueberries",
-  "cat": "Berry",
-  "emoji": "🫐",
-  "planting": {
-    "zone6": "Plant bare-root or container shrubs Mar–Apr or Oct; fruit in year 2–3; full production year 4–6",
-    "depth": "Same depth as container; do NOT plant deeper — crown must stay at soil level",
-    "spacing": "4–6 ft apart within rows; rows 8–10 ft apart. Plant at least 2 different varieties for cross-pollination.",
-    "ph": "4.5–5.2 — the single most critical factor. Blueberries WILL NOT thrive above pH 5.5.",
-    "sun": "Full sun (6–8+ hrs). Tolerate light afternoon shade but yield drops significantly."
+  id: 'blueberries',
+  name: 'Blueberries',
+  cat: 'Berry Shrub',
+  emoji: '🫐',
+  planting: {
+    zone6: 'Plant bare-root or container plants Mar–Apr; two cultivars required for cross-pollination',
+    depth: 'Crown at or just above soil level; do not bury',
+    spacing: '4–6 ft apart (highbush); rows 10 ft apart',
+    ph: '4.5–5.5 (critical — must acidify soil)',
+    sun: 'Full sun (6–8 hours)',
+    zone3: 'Plant May; half-high varieties (Northblue, Northsky)',
+    zone4: 'Plant May; half-high or hardy highbush (Patriot, Northland)',
+    zone5: 'Plant Apr–May; highbush (Bluecrop, Blueray)',
+    zone7: 'Plant Feb–Mar; southern highbush varieties',
+    zone8: 'Plant Jan–Feb; southern highbush (O\'Neal, Sunshine Blue)',
+    zone9: 'Plant Dec–Jan; rabbiteye or southern highbush low-chill varieties',
   },
-  "water": {
-    "in": "1–2",
-    "note": "Consistent, even moisture is critical — blueberries have shallow roots and no root hairs. Drip irrigation is ideal. Mulch 3–4\" deep with pine bark or sawdust to retain moisture and maintain soil acidity. Never let plants dry out during fruit development."
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; harvest Jul–Aug depending on variety', plantingStart: 3, plantingEnd: 4, harvestStart: 7, harvestEnd: 8 },
   },
-  "fertilizer": {
-    "type": "Acid-forming fertilizer: ammonium sulfate (21-0-0) or azalea/blueberry-specific fertilizer. NEVER use calcium nitrate or wood ash — they raise pH.",
-    "amount": "1 oz ammonium sulfate per year of plant age (max 8 oz per mature plant)",
-    "freq": "Split into two applications: early spring at bud swell and again 6 weeks later. Stop fertilizing by July 1 to allow hardening before winter."
-  },
-  "companions": {
-    "good": [
-      {
-        "name": "Azaleas / Rhododendrons",
-        "why": "Azaleas share the same acid soil requirements (pH 4.5–5.5) and companion planting them together creates a compatible acid soil zone that benefits both."
-      },
-      {
-        "name": "Pine bark mulch (not a plant)",
-        "why": "Pine bark or pine needle mulch gradually acidifies soil as it breaks down, maintaining the low pH blueberries require and suppressing weeds."
-      },
-      {
-        "name": "Thyme",
-        "why": "Thyme's low-growing habit makes an excellent ground cover between blueberry bushes, suppressing weeds and attracting beneficial pollinators."
-      },
-      {
-        "name": "Strawberries",
-        "why": "Strawberries share similar soil acidity preferences and coexist well around blueberry bushes as a ground cover, maximizing bed productivity."
-      },
-      {
-        "name": "Clover (cover crop)",
-        "why": "Crimson or white clover between rows fixes nitrogen and draws in bees, which dramatically improve blueberry pollination and yield."
-      }
+  special: 'SOIL pH IS CRITICAL — soil must be 4.5–5.5 or plants will not thrive. Amend with elemental sulfur months before planting; test annually. Need 2+ varieties for good yield. Highbush takes 3–4 years to reach full production.',
+  water: { in: '1–2', note: 'Shallow roots require consistent moisture. Mulch heavily with pine bark or wood chips (4–6 inches) to retain moisture and maintain acidity. Do not let dry out.' },
+  fertilizer: { type: 'Acid fertilizer (ammonium sulfate or azalea/rhododendron formula)', amount: '1 oz ammonium sulfate per year of plant age, up to 8 oz', freq: 'Split between early spring and mid-May; never feed after Jul or fruiting is delayed' },
+  companions: {
+    good: [
+      { name: 'Thyme', why: 'Low-growing companion that shares acid soil preference; deters some pests' },
+      { name: 'Rhododendrons', why: 'Same pH requirements; aesthetically compatible; no resource competition' },
+      { name: 'Pine trees', why: 'Fallen needles help maintain acidic mulch environment' },
     ],
-    "bad": [
-      {
-        "name": "Tomatoes",
-        "why": "Tomatoes prefer near-neutral pH (6.0–6.8) and will fail in the highly acidic soil blueberries need; competing in a shared bed stunts both crops."
-      },
-      {
-        "name": "Brassicas (kale, cabbage)",
-        "why": "Brassicas require neutral-to-slightly-acidic soil and are allelopathically incompatible with blueberries at low pH levels."
-      },
-      {
-        "name": "Nightshades (peppers, potatoes)",
-        "why": "All Solanaceae prefer near-neutral pH and compete poorly with blueberries in acid conditions, and some share fungal root diseases."
-      },
-      {
-        "name": "Grass (lawn grasses)",
-        "why": "Lawn grasses compete aggressively for water and nutrients in the shallow root zone blueberries depend on, severely reducing yield."
-      }
-    ]
+    bad: [
+      { name: 'Tomatoes', why: 'Tomatoes prefer neutral pH (6.0–7.0) — incompatible soil requirements' },
+      { name: 'Peppers', why: 'Same pH conflict; both will suffer in a compromise soil' },
+      { name: 'Fennel', why: 'Allelopathic; inhibits growth of most plants including blueberries' },
+    ],
   },
-  "companionDist": "Keep all pH-sensitive vegetables at least 6 ft away from blueberry beds. Maintain a dedicated acid-soil zone around blueberries. Keep lawn grass at least 3 ft back and use a physical edging barrier.",
-  "diseases": [
-    {
-      "name": "Mummy Berry",
-      "desc": "Shoots wilt and turn brown in spring (shoot strike phase); berries shrivel to hard gray mummies at harvest. Most serious blueberry disease in Zone 6. Rake and remove all mummies before bud break; apply propiconazole fungicide at green tip stage."
-    },
-    {
-      "name": "Blueberry Stem Blight",
-      "desc": "Sudden wilting of individual shoots with reddish-brown discoloration from tip downward. Prune infected stems 6\" below visible symptoms; sterilize pruners between cuts with 10% bleach solution."
-    },
-    {
-      "name": "Botrytis Blossom Blight",
-      "desc": "Gray mold on blossoms in cool, wet spring weather; blossoms turn brown and fail to set fruit. Improve air circulation with proper pruning; avoid overhead irrigation during bloom."
-    },
-    {
-      "name": "Bacterial Canker",
-      "desc": "Reddish-brown lesions on canes in early spring. Remove infected canes; avoid overhead irrigation; plant resistant varieties (Bluecrop, Duke, Elliott are more resistant)."
-    }
+  companionDist: 'Isolate in dedicated acid-soil beds; modifying soil pH throughout a mixed garden is impractical',
+  animals: 'Bumble bees are primary pollinators. Net bushes with bird netting when fruit begins to ripen — birds are the #1 threat to yield.',
+  diseases: [
+    { name: 'Mummyberry', desc: 'Most serious blueberry disease. Berries turn pink then dry into hard "mummies". Rake up and destroy mummies before bud break; apply mulch to prevent spore release.' },
+    { name: 'Blueberry Stem Blight', desc: 'Rapid wilting and death of individual canes. Prune well below infection; improve drainage. Avoid wounding canes.' },
+    { name: 'Botrytis Blight', desc: 'Grey mold on blossoms and berries in wet springs. Improve air circulation; remove infected tissue.' },
   ],
-  "pests": "Birds — bird netting is the single most important pest control for blueberries; install before fruit colors. Spotted wing drosophila — fine mesh netting; harvest promptly when ripe. Blueberry tip borer — prune out wilted tips in spring and destroy. Blueberry stem gall wasp — prune and destroy galls. Aphids — neem oil spray; encourage ladybugs.",
-  "animals": "Bumblebees are the most effective pollinators of blueberries (they 'buzz pollinate' releasing pollen). Plant pollinator habitat nearby. Ground beetles eat larvae. Birds eat many insects but also the fruit — use netting.",
-  "rotation": {
-    "family": "Ericaceae (perennial shrub)",
-    "cycle": "Permanent planting — blueberry shrubs are productive for 20–50 years with proper care. Site selection is critical. If replanting, do not plant blueberries in the same location for at least 5 years due to soil-borne disease buildup. Rejuvenate old bushes by removing 1–2 of the oldest canes each year."
-  },
-  "stages": [
-    {
-      "label": "Est",
-      "title": "Establishment (year 1–2)",
-      "desc": "Remove all flower buds in year 1 to force energy into root and bush development. Water consistently; apply acid mulch; test and adjust soil pH. Expect minimal growth until roots establish."
-    },
-    {
-      "label": "Yr2",
-      "title": "Limited harvest (year 2–3)",
-      "desc": "Allow a small harvest. Begin removing oldest, weakest canes. Soil pH management becomes critical — test annually."
-    },
-    {
-      "label": "Full",
-      "title": "Full production (year 4–6+)",
-      "desc": "Mature bushes yield 5–10 lbs per plant annually. Prune each late winter: remove oldest canes, weak twiggy growth, and low-hanging branches. Keep 6–8 healthy canes per bush."
-    },
-    {
-      "label": "Harv",
-      "title": "Harvest",
-      "desc": "Berries ripen Jun–Aug in Zone 6 depending on variety. Berries are ripe 5–7 days AFTER they turn blue — taste-test for sweetness. Pick every few days; ripe berries release easily with a gentle roll."
-    }
+  pests: 'Spotted wing drosophila (use fine mesh netting), blueberry maggot (yellow sticky traps + spinosad), blueberry tip borer (prune out infested tips), birds (netting — most critical protection).',
+  rotation: { family: 'Ericaceae (Heath family)', cycle: 'Permanent planting — 20–30 year lifespan. Renew old unproductive canes by pruning oldest 20% annually.' },
+  stages: [
+    { label: 'Yr 1–2', title: 'Establishment', desc: 'Remove flower buds years 1–2 to direct energy to root growth. Mulch heavily with pine bark.' },
+    { label: 'Yr 3–4', title: 'First harvest', desc: 'Allow fruiting. Yields increase each year. Prune oldest/weakest canes in late winter.' },
+    { label: 'Bloom', title: 'Flowering', desc: 'White bell-shaped flowers in Apr–May. Cross-pollination between two varieties dramatically increases yield.' },
+    { label: 'Harvest', title: 'Berry ripening', desc: 'Berries turn blue 1–3 weeks before they\'re ripe. Wait for berries to drop easily — fully ripe blueberries are sweeter with more antioxidants.' },
   ],
-  "special": "SOIL pH IS EVERYTHING. Test soil before planting. If pH is above 5.5, lower it by incorporating elemental sulfur (1–2 lbs per 100 sq ft) several months before planting — pH cannot be dropped quickly. Retest and adjust annually. Zone 6 recommended varieties — Highbush (best yield): Bluecrop, Duke, Bluejay, Chandler, Elliott. Half-high (most cold-hardy): Northblue, Northcountry, Chippewa, Polaris. Plant at least 2 different varieties for cross-pollination — this can increase yields by 30–60%. Never plant in a low spot where cold air pools — late spring frost kills open blossoms.",
-  "nutrition": {
-    "calories": 57,
-    "water": 84.2,
-    "protein": 0.7,
-    "carbs": 14.5,
-    "fiber": 2.4,
-    "sugars": 10,
-    "fat": 0.3,
-    "saturated": 0.03,
-    "monounsat": 0.05,
-    "polyunsat": 0.15,
-    "vitA": 3,
-    "vitD": 0,
-    "vitE": 0.57,
-    "vitK": 19.3,
-    "vitC": 9.7,
-    "vitB1": 0.037,
-    "vitB2": 0.041,
-    "vitB3": 0.418,
-    "vitB5": 0.124,
-    "vitB6": 0.052,
-    "vitB7": 0,
-    "vitB9": 6,
-    "vitB12": 0,
-    "choline": 6,
-    "calcium": 6,
-    "phosphorus": 12,
-    "magnesium": 6,
-    "sodium": 1,
-    "potassium": 77,
-    "chloride": 0,
-    "iron": 0.28,
-    "zinc": 0.16,
-    "copper": 0.057,
-    "manganese": 0.336,
-    "selenium": 0.1,
-    "iodine": 0,
-    "chromium": 0,
-    "molybdenum": 0,
-    "fluoride": 0,
-    "notes": "One of the highest antioxidant foods. Exceptional anthocyanin content (blue pigment) linked to brain health, reduced inflammation, and cardiovascular benefits. Also contain pterostilbene and resveratrol."
+  nutrition: {
+    calories: 57, water: 84.2, protein: 0.7, carbs: 14.5, fiber: 2.4, sugars: 9.9, fat: 0.3,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 3, vitD: 0, vitE: 0.6, vitK: 19.3,
+    vitC: 9.7, vitB1: 0.04, vitB2: 0.04, vitB3: 0.4, vitB5: 0.12, vitB6: 0.05,
+    vitB7: 0.9, vitB9: 6, vitB12: 0, choline: 6,
+    calcium: 6, phosphorus: 12, magnesium: 6, sodium: 1, potassium: 77, chloride: 0,
+    iron: 0.3, zinc: 0.16, copper: 0.06, manganese: 0.34, selenium: 0.1, iodine: 0,
+    chromium: 0.2, molybdenum: 0, fluoride: 0,
+    notes: 'Highest antioxidant content of commonly consumed fruits. Rich in anthocyanins (responsible for blue color) linked to brain health, heart health, and reduced inflammation.',
   },
-  "size": {
-    "weight": "1–3g per berry; total yield 5–10 lbs per mature bush",
-    "dimensions": "0.3–0.7\" diameter per berry",
-    "notes": "Highbush varieties produce larger berries (0.5–0.7\") than half-high types (0.3–0.5\"). Berries in a cluster ripen unevenly over 1–2 weeks — pick every 2–3 days for maximum yield."
-  }
+  size: { weight: '1–4g per berry', dimensions: '½–¾" diameter', notes: 'Jersey and Elliot varieties produce the largest highbush berries' },
 });

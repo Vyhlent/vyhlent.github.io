@@ -1,0 +1,63 @@
+import Crop from '../Crop.js';
+export default new Crop({
+  id: 'honey-locust',
+  name: 'Honey Locust',
+  cat: 'Native Tree',
+  emoji: '🌳',
+  planting: {
+    zone6: 'Plant balled-and-burlapped or container trees Apr–May; bare-root Mar–Apr',
+    depth: 'Crown at soil level; never bury trunk flare',
+    spacing: '30–70 ft from other large trees; 15–20 ft from structures',
+    ph: '6.0–8.0 (very adaptable — tolerates alkaline soils)',
+    sun: 'Full sun',
+    zone3: 'Hardy to -40°F; highly cold-tolerant',
+    zone4: 'Excellent; very hardy',
+    zone5: 'Thrives; excellent for difficult sites',
+    zone7: 'Excellent; also performs well in heat',
+    zone8: 'Good performance; tolerates heat and drought',
+    zone9: 'Adapted; very drought-tolerant',
+  },
+  zones: {
+    '6': { timing: 'Plant spring or fall; seed pods ripen Oct–Nov', plantingStart: 3, plantingEnd: 5, harvestStart: 10, harvestEnd: 11 },
+  },
+  special: 'Gleditsia triacanthos — a native American tree with edible sweet seed pods. Wild trees have large, branched thorns; thornless varieties (Sunburst, Shademaster, Skyline) are used in landscaping. Pods contain a sweet, edible pulp historically eaten by Indigenous peoples and early settlers — and relished by livestock and wildlife. Nitrogen-fixing tree that improves soil. Very drought-tolerant once established.',
+  water: { in: '1', note: 'Drought-tolerant once established (3+ years). Deep water during establishment. No supplemental irrigation needed for mature trees in most climates.' },
+  fertilizer: { type: 'None required (nitrogen-fixing)', amount: 'N/A', freq: 'Nitrogen-fixing — adds fertility to surrounding soil. No fertilizer needed except on very depleted soils.' },
+  companions: {
+    good: [
+      { name: 'Comfrey', why: 'Thrives under filtered honey locust canopy; dynamic accumulator' },
+      { name: 'Clover', why: 'Both are nitrogen fixers; interplanted in food forest systems' },
+      { name: 'Pawpaw', why: 'Shade-tolerant understory tree; thrives under honey locust dappled shade' },
+    ],
+    bad: [
+      { name: 'Black Walnut', why: 'Juglone from black walnut inhibits honey locust seedlings' },
+    ],
+  },
+  companionDist: 'Large canopy tree — give 30 ft clearance; pairs well with understory species in food forest design',
+  animals: 'Pods eaten by deer, squirrels, rabbits, and livestock. Excellent nectar source — fragrant flowers attract bees intensely in spring. Supports numerous insects including specialist native bees.',
+  diseases: [
+    { name: 'Thyronectria Canker', desc: 'Cankers and dieback on stressed trees. Keep trees healthy; avoid wounding. Prune cankers out during dry weather.' },
+    { name: 'Honey Locust Pod Gall Midge', desc: 'Galls on leaflets; usually cosmetic. Rake and destroy fallen leaflets.' },
+    { name: 'Mimosa Webworm', desc: 'Silken webbing in branch tips; defoliation. Spray Bt when caterpillars are small (Jun). More common in urban conditions.' },
+  ],
+  pests: 'Generally pest-resistant when healthy. Honey locust plant bug (usually self-resolves), leafhoppers (cosmetic damage only), spider mites in drought stress (increase watering).',
+  rotation: { family: 'Fabaceae (Legume family)', cycle: 'Permanent landscape/food forest tree — 100+ year lifespan. Choose site carefully; large root system at maturity.' },
+  stages: [
+    { label: 'Spring', title: 'Leaf out', desc: 'One of the last trees to leaf out in spring (late Apr–May). Fragrant cream-yellow flower clusters appear. Excellent bee forage.' },
+    { label: 'Summer', title: 'Dappled shade', desc: 'Fine compound leaves create dappled light shade — one of the few trees that allows understory gardening directly beneath it.' },
+    { label: 'Fall', title: 'Pod ripening', desc: 'Long (6–18 inch) flat seed pods turn brown and papery. Sweet pulp around seeds is edible. Pods fall and decompose quickly.' },
+    { label: 'Winter', title: 'Branch structure', desc: 'Zigzag branching pattern with (on wild trees) impressive branched thorns up to 12 inches. Thornless landscape varieties bred for safety.' },
+  ],
+  nutrition: {
+    calories: 0, water: 0, protein: 0, carbs: 0, fiber: 0, sugars: 0, fat: 0,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 0, vitD: 0, vitE: 0, vitK: 0,
+    vitC: 0, vitB1: 0, vitB2: 0, vitB3: 0, vitB5: 0, vitB6: 0,
+    vitB7: 0, vitB9: 0, vitB12: 0, choline: 0,
+    calcium: 0, phosphorus: 0, magnesium: 0, sodium: 0, potassium: 0, chloride: 0,
+    iron: 0, zinc: 0, copper: 0, manganese: 0, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Primarily a landscape, wildlife, and shade tree. Seed pod pulp is edible (sweet) but not typically harvested for human food in modern use. Grown for shade, nitrogen fixation, wildlife value, and beauty.',
+  },
+  size: { weight: 'N/A', dimensions: '30–70 ft tall, 30–50 ft spread at maturity', notes: 'Thornless landscape varieties stay more compact (30–45 ft); Sunburst variety has golden-yellow new growth' },
+});

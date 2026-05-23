@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'thyme',name:'Thyme',cat:'Herb',emoji:'🌿',
-  planting:{zone6:'Transplant Apr 15–May 15; hardy perennial in Zone 6',depth:'Same depth as pot; seeds surface-sow',spacing:'9–12" apart',ph:'6.0–8.0',sun:'Full sun'},
-  water:{in:'0.5–1',note:'Excellent drainage; root rot common in wet soil'},
-  fertilizer:{type:'Dilute balanced or compost',amount:'Minimal; prefers lean soil',freq:'Once spring with compost; rarely needs more'},
-  companions:{
-    good:[{name:'Tomatoes',why:'Thyme repels tomato hornworm moths with its aromatic thymol compounds.'},{name:'Potatoes',why:'Thyme deters potato beetles and whitefly that spreads viral diseases.'},{name:'Strawberries',why:'Thyme repels worms and slugs that damage strawberry fruit.'}],
-    bad:[{name:'Mint',why:'Mint aggressively spreads by underground runners and overwhelms thyme, competing for everything.'},{name:'Fennel',why:"Fennel's allelopathic chemicals inhibit thyme and most other herbs."}],
+  id: 'thyme',
+  name: 'Thyme',
+  cat: 'Herb',
+  emoji: '🌿',
+  planting: {
+    zone6: 'Plant transplants Apr–May; direct sow Apr after last frost; perennial but may need protection in harsh winters',
+    depth: '⅛" (surface sow — needs light); transplant at nursery level',
+    spacing: '12–18" apart; creeping thyme 6–12"',
+    ph: '6.0–8.0 (highly adaptable; tolerates alkaline soils)',
+    sun: 'Full sun (6–8 hours — essential for flavor concentration)',
+    zone3: 'Marginally hardy; heavy mulch and sheltered location; may behave as annual',
+    zone4: 'Hardy with protection; mulch heavily',
+    zone5: 'Reliably perennial with some winter dieback; comes back from roots',
+    zone7: 'Perennial; thrives; may stay semi-evergreen through winter',
+    zone8: 'Perennial; nearly evergreen; blooms heavily in spring',
+    zone9: 'Perennial; evergreen; may decline in summer heat without drainage',
   },
-  companionDist:'Keep 12" from fennel; contain mint in pots.',
-  animals:'Major bee and butterfly attractor when in bloom.',
-  diseases:[{name:'Root Rot',desc:'Overwatering or clay soil; ensure excellent drainage.'}],
-  pests:'Very pest-resistant. Occasional aphids/spider mites — neem oil.',
-  rotation:{family:'Lamiaceae (perennial)',cycle:'Hardy perennial Zone 6; divide every 2–3 years'},
-  stages:[{label:'Germ',title:'Germination',desc:'14–28 days from seed; transplants recommended.'},{label:'Est',title:'Establishment',desc:'Slow first year; hardy by end of season.'},{label:'Harv',title:'Harvest',desc:'Tips before flowering; cut back 1/3 max.'},{label:'Renew',title:'Renewal',desc:'Divide or cut back hard every 2–3 years.'}],
-  special:'English thyme is classic culinary. Hardy in Zone 6 — returns each year. Allow to bloom for bees.',
+  zones: {
+    '6': { timing: 'Plant Apr–May; harvest Jun–Sep actively; light harvest Oct–Nov; semi-dormant winter', plantingStart: 4, plantingEnd: 5, harvestStart: 6, harvestEnd: 10 },
+  },
+  special: 'Thyme requires excellent drainage above all else — it will die in wet soil regardless of temperature. Rocky, sandy, or gravelly soil is ideal. In heavy clay, plant in raised beds or containers. English thyme (Thymus vulgaris) is the culinary standard. Lemon thyme has a citrus note. Creeping thyme (T. serpyllum) is a beautiful low ground cover. Harvest before flowering for maximum flavor oil content.',
+  water: { in: '0.5', note: 'Drought-tolerant Mediterranean herb — allow soil to dry completely between waterings. Overwatering is the primary cause of thyme death. In containers, ensure perfect drainage and water sparingly.' },
+  fertilizer: { type: 'Minimal or none', amount: 'Lean soil produces most flavorful thyme', freq: 'No regular fertilizing; optional single light application of slow-release balanced fertilizer in spring; rich soil reduces aromatic oil content' },
+  companions: {
+    good: [
+      { name: 'Cabbage', why: 'Repels cabbage moth, cabbage worm, and whitefly; excellent brassica companion' },
+      { name: 'Tomatoes', why: 'Repels hornworm and whitefly; compatible sun and drainage needs' },
+      { name: 'Eggplant', why: 'Repels flea beetles — primary eggplant pest' },
+      { name: 'Strawberries', why: 'Repels worms; shares dry, sunny conditions; does not compete' },
+      { name: 'Roses', why: 'Repels black spot-transmitting insects; beautiful low border plant' },
+      { name: 'Blueberries', why: 'Shares acidic-to-neutral pH and full sun preference; low enough not to compete' },
+    ],
+    bad: [
+      { name: 'Basil', why: 'Conflicting moisture needs — basil requires consistent moisture; thyme wants dry conditions' },
+      { name: 'Cilantro', why: 'Cilantro requires more moisture; different care requirements lead to one plant suffering' },
+    ],
+  },
+  companionDist: 'Excellent low border and edging plant throughout the vegetable garden; plant along paths where foot traffic releases scent',
+  animals: 'Outstanding pollinator plant — flowers attract bees intensely during bloom. Honey made from thyme-foraging bees (especially in Greece) is considered premium. Deer and rabbit resistant.',
+  diseases: [
+    { name: 'Root Rot', desc: 'Primary thyme problem — exclusively caused by wet soil or poor drainage. No recovery. Prevention is the only cure: excellent drainage is non-negotiable.' },
+    { name: 'Alternaria Blight', desc: 'Dark spots on leaves in humid conditions. Improve air circulation; avoid overhead watering.' },
+    { name: 'Botrytis', desc: 'Grey mold in cool, wet conditions. Improve drainage; reduce humidity; trim back dense growth.' },
+  ],
+  pests: 'Generally pest-free due to aromatic oils. Occasional spider mites in dry indoor conditions (mist; neem oil). Root aphids in containers (drench with neem oil solution).',
+  rotation: { family: 'Lamiaceae (Mint family)', cycle: 'Perennial in zones 5–9. Replace plants every 3–4 years when they become woody and less productive. Propagate from stem cuttings or layering.' },
+  stages: [
+    { label: 'Spring', title: 'New growth', desc: 'Fresh new growth emerges from woody stems in Apr. This is the prime harvesting period — new growth has highest oil content.' },
+    { label: 'Bloom', title: 'Flowering', desc: 'Tiny pink-purple flowers cover plant in May–Jun. Allow some to bloom for pollinators; harvest the rest for culinary use. Flavor is excellent at this stage.' },
+    { label: 'Summer', title: 'Active harvest', desc: 'Continue harvesting stem tips throughout summer. Never harvest more than ⅓ of the plant at once. Shear back in July for fresh second flush of growth.' },
+    { label: 'Fall', title: 'Harden off', desc: 'Slow harvesting in fall to allow plant to harden off for winter. Avoid cutting into old wood. In zone 5–6, mulch lightly after ground freezes.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    101,
-    water:       65.1,   // g
-    protein:     5.6,   // g
-    carbs:       24.5,   // g total
-    fiber:       14,   // g
-    sugars:      0,   // g
-    fat:         1.7,   // g total
-    saturated:   0.47,   // g
-    monounsat:   0.08,   // g
-    polyunsat:   0.53,   // g
-    // — Fat-soluble vitamins —
-    vitA:        238,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0,   // mg
-    vitK:        141.5,   // µg
-    // — Water-soluble vitamins —
-    vitC:        160.1,   // mg
-    vitB1:       0.048,  // mg thiamine
-    vitB2:       0.471,  // mg riboflavin
-    vitB3:       1.824,  // mg niacin
-    vitB5:       0.409,  // mg pantothenic
-    vitB6:       0.348,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       45,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0,  // mg
-    // — Macrominerals —
-    calcium:     405,  // mg
-    phosphorus:  106,  // mg
-    magnesium:   160,  // mg
-    sodium:      9,  // mg
-    potassium:   609,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        17.45,  // mg
-    zinc:        1.81,  // mg
-    copper:      0.555,  // mg
-    manganese:   1.719,  // mg
-    selenium:    0.9,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Values per 100g fresh herb — typical culinary serving is ~1g. Extraordinary iron (17.5 mg), calcium (405 mg), vitamin C (160 mg), and vitamin K (142 µg) per 100g. Rich in thymol and carvacrol — powerful antimicrobial and antifungal compounds.',
+    calories: 101, water: 65.1, protein: 5.6, carbs: 24.5, fiber: 14.0, sugars: 0, fat: 1.7,
+    saturated: 0.5, monounsat: 0.1, polyunsat: 0.5,
+    vitA: 190, vitD: 0, vitE: 0.5, vitK: 0,
+    vitC: 160.1, vitB1: 0.05, vitB2: 0.47, vitB3: 1.8, vitB5: 0.41, vitB6: 0.35,
+    vitB7: 0, vitB9: 45, vitB12: 0, choline: 0,
+    calcium: 405, phosphorus: 106, magnesium: 160, sodium: 9, potassium: 609, chloride: 0,
+    iron: 17.4, zinc: 1.81, copper: 0.56, manganese: 1.72, selenium: 0, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Used in small culinary amounts. Extraordinarily high iron (17.4 mg per 100g) and calcium (405 mg) for an herb. Very high vitamin C. Contains thymol and carvacrol — essential oils with potent antimicrobial, antifungal, and antioxidant properties.',
   },
-  size:{weight:'N/A — culinary herb',dimensions:'Plant: 6–12" tall, spreading',notes:'Harvest stem tips 2–3 inches long.'},
+  size: { weight: 'N/A — harvested by stem tip', dimensions: 'Upright English thyme: 12–18" tall; creeping thyme: 2–4" tall, 18-24" spread', notes: 'Creeping thyme tolerates light foot traffic and creates fragrant pathways; English thyme is best for culinary use' },
 });

@@ -1,66 +1,69 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'cucumbers',name:'Cucumbers',cat:'Vine Vegetable',emoji:'🥒',
-  planting:{zone6:'Start May 1–10; transplant or sow May 25–Jun 10 (soil 65°F+)',depth:'Direct sow 0.5–1"; transplant at pot depth',spacing:'Vining: 12" on trellis; bush: 18–24"',ph:'6.0–7.0',sun:'Full sun'},
-  water:{in:'1–2',note:'Never let soil dry — causes bitter fruit'},
-  fertilizer:{type:'Balanced 10-10-10',amount:'1 lb per 100 sq ft',freq:'At planting; every 3–4 weeks; reduce N after fruiting'},
-  companions:{
-    good:[{name:'Corn',why:'Corn provides physical support for vining cucumbers and creates a helpful microclimate.'},{name:'Beans',why:'Beans fix nitrogen that cucumber vines consume heavily during fruit production.'},{name:'Marigolds',why:'Marigolds deter cucumber beetles, the primary vector of bacterial wilt that devastates cucumbers.'}],
-    bad:[{name:'Potatoes',why:'Potatoes and cucumbers share Phytophthora blight, amplifying fungal disease pressure.'},{name:'Sage',why:'Sage releases volatile compounds that inhibit cucumber vine development.'},{name:'Melons',why:'Melons share powdery mildew and cucumber beetle infestations, concentrating problems.'}],
+  id: 'cucumbers',
+  name: 'Cucumbers',
+  cat: 'Fruiting Vine',
+  emoji: '🥒',
+  planting: {
+    zone6: 'Direct sow mid-May to Jun; start indoors early May for 2-week head start',
+    depth: '½–1"',
+    spacing: '12" apart on trellis; 18–24" for bush types; rows 4–5 ft apart',
+    ph: '6.0–7.0',
+    sun: 'Full sun (6–8 hours)',
+    zone3: 'Start indoors early May; transplant Jun; choose short-season varieties',
+    zone4: 'Start indoors late Apr; transplant late May',
+    zone5: 'Direct sow mid-May; start indoors Apr',
+    zone7: 'Direct sow late Apr',
+    zone8: 'Direct sow late Mar–Apr; second crop Aug',
+    zone9: 'Direct sow Mar; second crop Aug–Sep',
   },
-  companionDist:'Keep 3 ft from potatoes; 3 ft from melons; 12" from aromatic herbs.',
-  animals:'Bees critical for pollination; ground beetles eat larvae.',
-  diseases:[{name:'Cucumber Mosaic Virus',desc:'Mottled leaves, stunted plants; spread by aphids; remove infected plants.'},{name:'Angular Leaf Spot',desc:'Angular spots along veins; copper bactericide; avoid overhead watering.'}],
-  pests:'Cucumber beetle — row covers until flowering; pickle worm — Bt.',
-  rotation:{family:'Cucurbitaceae',cycle:'3–4 year rotation away from squash, pumpkins, melons'},
-  stages:[{label:'Germ',title:'Germination',desc:'5–10 days at 70°F+.'},{label:'Vine',title:'Vine growth',desc:'Train up trellis early.'},{label:'Flwr',title:'Flowering',desc:'Bees essential; male flowers precede female.'},{label:'Harv',title:'Harvest',desc:'Every 1–2 days — overripe stops production.'}],
-  special:'Trellis strongly recommended. Bitter cucumbers from irregular water or temps below 55°F.',
+  zones: {
+    '6': { timing: 'Sow mid-May; harvest Jul–Sep (55–65 days from sowing)', plantingStart: 5, plantingEnd: 6, harvestStart: 7, harvestEnd: 9 },
+  },
+  special: 'Train vertically on trellis for better air circulation and easier harvest. Harvest frequently (every 1–2 days when producing) — overripe cucumbers turn yellow, become bitter, and stop new fruit production. Burpless varieties have thinner skin and fewer seeds.',
+  water: { in: '1–1.5', note: 'Consistent moisture is critical — uneven watering causes bitter cucumbers. Increase to 2 in/week in peak heat. Water at base; wet foliage promotes powdery mildew.' },
+  fertilizer: { type: 'Balanced then high potassium', amount: '1 tbsp 10-10-10 per transplant', freq: 'At planting; side-dress with balanced fertilizer when first flowers appear; switch to low-nitrogen high-potassium when fruiting' },
+  companions: {
+    good: [
+      { name: 'Beans', why: 'Beans fix nitrogen; cucumbers benefit from consistent nitrogen availability' },
+      { name: 'Corn', why: 'Corn provides windbreak and light shade; cucumber vines cover corn base to suppress weeds' },
+      { name: 'Dill', why: 'Attracts predatory wasps and ladybugs that control aphids and cucumber beetles' },
+      { name: 'Marigolds', why: 'Repel cucumber beetles and nematodes' },
+      { name: 'Nasturtiums', why: 'Trap crop for aphids; attract beneficials' },
+      { name: 'Sunflowers', why: 'Attract pollinators critical for cucumber fruit set' },
+    ],
+    bad: [
+      { name: 'Sage', why: 'Inhibits cucumber growth when planted nearby' },
+      { name: 'Potatoes', why: 'Attract blight; compete for resources' },
+      { name: 'Melons', why: 'Compete for space; can cross-pollinate affecting seed quality' },
+    ],
+  },
+  companionDist: 'Plant marigolds every 12–18 inches along cucumber row perimeter',
+  animals: 'Bees essential for pollination. Parthenocarpic (self-fruiting) varieties produce without bees — ideal for greenhouse growing.',
+  diseases: [
+    { name: 'Powdery Mildew', desc: 'White coating on leaves, usually older ones first. Most common cucumber problem. Improve air circulation (trellis); spray potassium bicarbonate; choose resistant varieties.' },
+    { name: 'Downy Mildew', desc: 'Yellow angular spots on upper leaf surface. Spreads rapidly in humid conditions. Copper fungicide; avoid overhead watering.' },
+    { name: 'Bacterial Wilt', desc: 'Sudden wilting — no recovery. Spread by cucumber beetles. Prevent beetles with row covers at planting (remove at flowering). Test by cutting stem and touching cut ends — presence of sticky thread = bacterial wilt.' },
+    { name: 'Angular Leaf Spot', desc: 'Water-soaked angular spots that turn grey-white. Avoid overhead irrigation; copper spray; crop rotation.' },
+  ],
+  pests: 'Cucumber beetles (row covers early season; kaolin clay; pyrethrin spray), aphids (neem oil; blast with water), spider mites (increase humidity; neem), squash bugs (hand-remove eggs; diatomaceous earth).',
+  rotation: { family: 'Cucurbitaceae (Gourd family)', cycle: 'Rotate every 2–3 years; do not follow squash, melons, or pumpkins in same bed' },
+  stages: [
+    { label: 'Sprout', title: 'Germination', desc: 'Emerges in 7–10 days at 70°F+. Cold, wet soil causes seed rot.' },
+    { label: 'Vine', title: 'Vine development', desc: 'Vines grow rapidly. Train onto trellis. Remove row covers when flowers appear for pollinator access.' },
+    { label: 'Bloom', title: 'Flowering', desc: 'Male flowers appear first. Female flowers (with tiny cucumber at base) appear 1–2 weeks later.' },
+    { label: 'Harvest', title: 'Continuous harvest', desc: 'Harvest slicing cucumbers at 6–8 inches; pickling types at 2–4 inches. Check every 1–2 days. Never let cucumbers turn yellow on vine.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    15,
-    water:       95.2,   // g
-    protein:     0.7,   // g
-    carbs:       3.6,   // g total
-    fiber:       0.5,   // g
-    sugars:      1.7,   // g
-    fat:         0.1,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0,   // g
-    polyunsat:   0.04,   // g
-    // — Fat-soluble vitamins —
-    vitA:        5,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.03,   // mg
-    vitK:        16.4,   // µg
-    // — Water-soluble vitamins —
-    vitC:        2.8,   // mg
-    vitB1:       0.027,  // mg thiamine
-    vitB2:       0.033,  // mg riboflavin
-    vitB3:       0.098,  // mg niacin
-    vitB5:       0.259,  // mg pantothenic
-    vitB6:       0.04,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       7,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     6,  // mg
-    // — Macrominerals —
-    calcium:     16,  // mg
-    phosphorus:  24,  // mg
-    magnesium:   13,  // mg
-    sodium:      2,  // mg
-    potassium:   147,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.28,  // mg
-    zinc:        0.2,  // mg
-    copper:      0.041,  // mg
-    manganese:   0.079,  // mg
-    selenium:    0.3,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       '95% water — excellent hydration. Good source of vitamin K (16 µg). Silica in cucumbers supports connective tissue and skin health.',
+    calories: 15, water: 95.2, protein: 0.7, carbs: 3.6, fiber: 0.5, sugars: 1.7, fat: 0.1,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 5, vitD: 0, vitE: 0.0, vitK: 16.4,
+    vitC: 2.8, vitB1: 0.03, vitB2: 0.03, vitB3: 0.1, vitB5: 0.26, vitB6: 0.04,
+    vitB7: 0, vitB9: 7, vitB12: 0, choline: 6,
+    calcium: 16, phosphorus: 24, magnesium: 13, sodium: 2, potassium: 147, chloride: 0,
+    iron: 0.3, zinc: 0.2, copper: 0.04, manganese: 0.08, selenium: 0.3, iodine: 0,
+    chromium: 0.9, molybdenum: 0, fluoride: 0,
+    notes: 'Extremely high water content (95%) makes cucumbers very hydrating. Peel contains the majority of the nutrients — eat unpeeled when possible.',
   },
-  size:{weight:'200–400g per cucumber',dimensions:'Slicing: 6–8" long; pickling: 3–4"',notes:'Harvest before yellowing for peak flavor.'},
+  size: { weight: '150–300g per cucumber (slicing)', dimensions: '6–9" long, 1.5–2" diameter', notes: 'Pickling varieties: 2–4" long; Persian cucumbers: thin-skinned and seedless, 5–7"' },
 });

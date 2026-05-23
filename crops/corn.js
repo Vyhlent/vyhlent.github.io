@@ -1,66 +1,68 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'corn',name:'Corn',cat:'Grain',emoji:'🌽',
-  planting:{zone6:'Direct sow May 15–Jun 15 (soil 60°F+)',depth:'1–1.5" deep',spacing:'9–12" apart, rows 30–36"; plant in blocks',ph:'5.8–6.8',sun:'Full sun'},
-  water:{in:'1–2',note:'Critical during tasseling and silking'},
-  fertilizer:{type:'High nitrogen 46-0-0 (urea)',amount:'1.5 lbs per 100 sq ft',freq:'At planting; knee-high side-dress; again at tasseling'},
-  companions:{
-    good:[{name:'Beans',why:'Beans fix nitrogen which corn exhausts from soil — the Three Sisters system.'},{name:'Squash',why:"Squash's large leaves shade soil between corn rows, reducing weeds and retaining moisture."},{name:'Cucumbers',why:'Cucumbers can use corn stalks as natural trellises.'}],
-    bad:[{name:'Tomatoes',why:'Corn earworm attacks both crops; growing them together creates a massive pest reservoir.'},{name:'Celery',why:'Celery releases compounds that stunt corn root development.'}],
+  id: 'corn',
+  name: 'Corn',
+  cat: 'Grain / Vegetable',
+  emoji: '🌽',
+  planting: {
+    zone6: 'Direct sow mid-May to Jun when soil reaches 60°F; succession plant every 2 weeks through Jun',
+    depth: '1–1.5"',
+    spacing: '9–12" in rows 30–36" apart; plant in blocks of 4+ rows for pollination',
+    ph: '5.8–6.8',
+    sun: 'Full sun (8+ hours)',
+    zone3: 'Sow late May–early Jun; short-season varieties only (Earlivee, Sugar Buns)',
+    zone4: 'Sow late May; choose 65–75 day varieties',
+    zone5: 'Sow mid-May; wide selection',
+    zone7: 'Sow late Apr',
+    zone8: 'Sow Mar–Apr; also possible Aug for fall crop',
+    zone9: 'Sow Mar; second crop Aug–Sep',
   },
-  companionDist:'Plant in blocks for pollination. Keep 3 ft from tomatoes.',
-  animals:'Trichogramma wasps parasitize earworm eggs; birds eat worms.',
-  diseases:[{name:"Stewart's Wilt",desc:'Yellow streaks, stunted plants; spread by flea beetles; resistant varieties.'},{name:'Common Rust',desc:'Reddish-brown pustules; cosmetic in most cases; resistant varieties.'}],
-  pests:'Earworm — Bt or oil dropper on silks; corn borer — Bt spray.',
-  rotation:{family:'Poaceae',cycle:'2–3 year rotation; follow with legumes to replenish nitrogen'},
-  stages:[{label:'Germ',title:'Germination',desc:'Needs warm soil — cold causes poor emergence.'},{label:'V-stg',title:'Vegetative',desc:'Side-dress nitrogen at V6 (knee-high).'},{label:'Silk',title:'Tasseling & silking',desc:'Plant in blocks for wind pollination.'},{label:'Harv',title:'Harvest',desc:'Milk stage: 18–24 days after silking. 1–2 day window!'}],
-  special:'Plant in blocks of 4+ rows for wind pollination. Succession plant every 2 weeks.',
+  zones: {
+    '6': { timing: 'Sow mid-May; harvest Aug–Sep (75–90 days from sowing)', plantingStart: 5, plantingEnd: 6, harvestStart: 8, harvestEnd: 9 },
+  },
+  special: 'Wind-pollinated — must plant in blocks (not single rows) of at least 4x4 for good pollination. Sweet corn needs isolation from field corn, popcorn, and other sweet corn types to prevent cross-pollination affecting sweetness. Harvest within 20 minutes of cooking for peak sweetness.',
+  water: { in: '1–1.5', note: 'Critical periods: at tassel/silk emergence and during ear development. Drought stress at silking causes poor kernel fill (gaps in ear).' },
+  fertilizer: { type: 'High nitrogen', amount: '¼ cup 10-10-10 per 5 ft row at planting', freq: 'Side-dress with nitrogen when plants are knee-high (12–18 inches) and again at tasseling' },
+  companions: {
+    good: [
+      { name: 'Beans', why: 'Three Sisters — beans fix nitrogen for corn; corn provides bean pole support' },
+      { name: 'Squash', why: 'Three Sisters — squash leaves shade soil preventing weeds and moisture loss' },
+      { name: 'Cucumbers', why: 'Use corn stalks as support; shading at base deters cucumber beetle' },
+      { name: 'Marigolds', why: 'Deter corn earworm moths and aphids' },
+    ],
+    bad: [
+      { name: 'Tomatoes', why: 'Both susceptible to same fungal diseases; compete for water and nutrients' },
+      { name: 'Fennel', why: 'Inhibits germination and growth of most vegetables including corn' },
+      { name: 'Celery', why: 'Allelopathic to corn in close proximity' },
+    ],
+  },
+  companionDist: 'Three Sisters spacing: plant corn first, add beans 1 week later (1 ft from corn), squash 2 weeks after corn (3 ft out)',
+  animals: 'Beneficial insects control corn earworm. Bats consume adult moths. Trichogramma wasps parasitize earworm eggs.',
+  diseases: [
+    { name: 'Gray Leaf Spot', desc: 'Rectangular grey-tan lesions on leaves. Most serious in humid conditions. Choose resistant varieties; rotate crops; no-till reduces infection.' },
+    { name: 'Northern Corn Leaf Blight', desc: 'Large tan cigar-shaped lesions. Avoid overhead watering; resistant varieties (use the NCLB designation on seed packet).' },
+    { name: 'Common Smut', desc: 'Grotesque grey-white galls on ears and tassels. Remove and destroy galls before they burst. Do not compost. Rotate crops.' },
+    { name: 'Stewart\'s Wilt', desc: 'Bacterial disease spread by corn flea beetle. Water-soaked streaks on leaves. Control flea beetles with row covers early season.' },
+  ],
+  pests: 'Corn earworm (apply Bt or mineral oil in silk; pheromone traps), corn borer (Bt spray on tassels), aphids (syrphid flies and ladybugs; avoid broad-spectrum pesticides), raccoons (electric fence or wire mesh), deer (8-ft fence).',
+  rotation: { family: 'Poaceae (Grass family)', cycle: 'Rotate every 2–3 years; do not follow sorghum or other grasses; excellent after legumes (beans, peas)' },
+  stages: [
+    { label: 'Emerge', title: 'Germination', desc: 'Germinates in 7–10 days when soil is 60°F+. Cold, wet soil causes seed rot.' },
+    { label: 'V-stage', title: 'Vegetative growth', desc: 'Rapid growth in warm weather. Side-dress nitrogen at knee-high stage.' },
+    { label: 'Tassel', title: 'Tasseling', desc: 'Male pollen-shedding tassels emerge at top. Silk emerges from ear tips within 2–3 days. Each silk strand connects to a kernel — all must be pollinated.' },
+    { label: 'Milk', title: 'Milk stage', desc: 'Kernels are plump and milky when pierced. Peak eating quality. Harvest now.' },
+    { label: 'Dough', title: 'Dough / Dent', desc: 'Kernels begin to dent and dry. Too late for fresh eating; dry for corn meal or popcorn varieties.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    86,
-    water:       76.1,   // g
-    protein:     3.2,   // g
-    carbs:       19,   // g total
-    fiber:       2.7,   // g
-    sugars:      3.2,   // g
-    fat:         1.2,   // g total
-    saturated:   0.18,   // g
-    monounsat:   0.35,   // g
-    polyunsat:   0.56,   // g
-    // — Fat-soluble vitamins —
-    vitA:        10,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.07,   // mg
-    vitK:        0.3,   // µg
-    // — Water-soluble vitamins —
-    vitC:        6.8,   // mg
-    vitB1:       0.155,  // mg thiamine
-    vitB2:       0.055,  // mg riboflavin
-    vitB3:       1.77,  // mg niacin
-    vitB5:       0.717,  // mg pantothenic
-    vitB6:       0.093,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       42,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     29.2,  // mg
-    // — Macrominerals —
-    calcium:     2,  // mg
-    phosphorus:  89,  // mg
-    magnesium:   37,  // mg
-    sodium:      15,  // mg
-    potassium:   270,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.52,  // mg
-    zinc:        0.46,  // mg
-    copper:      0.054,  // mg
-    manganese:   0.163,  // mg
-    selenium:    0.6,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Good source of B vitamins (B1, B3, B9), magnesium, and phosphorus. Best eaten within hours of harvest — sugars convert to starch rapidly. Yellow corn provides lutein and zeaxanthin for eye health.',
+    calories: 86, water: 76.0, protein: 3.3, carbs: 19.0, fiber: 2.7, sugars: 3.2, fat: 1.4,
+    saturated: 0.2, monounsat: 0.4, polyunsat: 0.6,
+    vitA: 9, vitD: 0, vitE: 0.1, vitK: 0.3,
+    vitC: 6.8, vitB1: 0.2, vitB2: 0.07, vitB3: 1.7, vitB5: 0.72, vitB6: 0.09,
+    vitB7: 6, vitB9: 42, vitB12: 0, choline: 29,
+    calcium: 2, phosphorus: 89, magnesium: 37, sodium: 15, potassium: 270, chloride: 0,
+    iron: 0.5, zinc: 0.46, copper: 0.05, manganese: 0.16, selenium: 0.6, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Values for fresh sweet corn. Contains lutein and zeaxanthin which support eye health. Niacin in corn is bound and only released by nixtamalization (soaking in lime water).',
   },
-  size:{weight:'200–300g per ear',dimensions:'7–9" long ear, 1.5–2" diameter',notes:'Pierce a kernel — milky white sap = perfect. 1–2 day harvest window at peak.'},
+  size: { weight: '200–350g per ear with husk', dimensions: '7–9" ears with 16–18 rows of kernels', notes: 'Bicolor and supersweet varieties stay sweeter longer after harvest' },
 });

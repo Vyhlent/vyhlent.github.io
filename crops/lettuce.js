@@ -1,121 +1,67 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id:    'lettuce',
-  name:  'Lettuce',
-  cat:   'Leafy Green',
-  emoji: '🥬',
-
+  id: 'lettuce',
+  name: 'Lettuce',
+  cat: 'Leafy Green',
+  emoji: '🥗',
   planting: {
-    zone6:   'Direct sow or transplant as soon as soil can be worked (late March–April); succession-plant every 2–3 weeks through May. Second planting in late August–September for fall harvest.',
-    depth:   '⅛" (barely cover seed; needs light to germinate)',
-    spacing: '6–12" apart (loose-leaf 6"; head types 10–12"); rows 12–18" apart. Can broadcast in beds and thin.',
-    ph:      '6.0–7.0',
-    sun:     'Full sun in spring/fall; partial shade (3–4 hrs) tolerated and preferred in summer to extend season',
+    zone6: 'Direct sow Mar–May (spring); succession sow every 2 weeks. Fall: sow Aug–Sep for Oct–Nov harvest.',
+    depth: '⅛" (needs light to germinate — barely cover)',
+    spacing: 'Leaf types: 6–8"; head types: 10–12"; rows 12" wide',
+    ph: '6.0–7.0',
+    sun: 'Full sun in spring; partial shade in summer to prevent bolting',
+    zone3: 'Direct sow late May; short spring/fall window',
+    zone4: 'Direct sow May; fall sow late Jul',
+    zone5: 'Direct sow Apr; fall sow Aug',
+    zone7: 'Direct sow Mar; fall sow Sep–Oct',
+    zone8: 'Fall–spring crop; sow Sep–Feb',
+    zone9: 'Fall–spring crop; sow Oct–Mar',
   },
-  special: 'Lettuce is a cool-season crop that bolts (goes to seed) quickly in heat above 75 °F. Use shade cloth in summer. For transplants, harden off carefully. Cut-and-come-again harvesting extends production.',
-
-  water: {
-    in:   '1–1.5',
-    note: 'Shallow roots require consistent, even moisture. Drip irrigation or careful overhead watering in morning. Drought stress causes bitterness and early bolting.',
+  zones: {
+    '6': { timing: 'Spring sow Mar–May; fall sow Aug–Sep; harvest 45–60 days from sowing', plantingStart: 3, plantingEnd: 5, harvestStart: 4, harvestEnd: 11 },
   },
-
-  fertilizer: {
-    type:   'Balanced nitrogen-forward (e.g., 10-5-5 or fish emulsion)',
-    amount: '1–2 lbs 10-10-10 per 100 sq ft at bed prep; liquid feed every 2–3 weeks',
-    freq:   'Pre-plant incorporation + liquid feeds during the season; avoid excess nitrogen late (causes tip-burn)',
-  },
-
+  special: 'Bolts (goes to seed) quickly in heat above 75°F — flavor turns bitter. Use bolt-resistant varieties (Jericho, Sierra) for summer. Shade cloth (30–50%) dramatically extends season in summer. Ideal cut-and-come-again crop: harvest outer leaves repeatedly. Loose-leaf types are easiest; butterhead is most heat-tolerant of heading types.',
+  water: { in: '1–1.5', note: 'Shallow roots require consistent moisture — never let dry out. Mulch around plants to retain moisture and keep roots cool. Water in the morning.' },
+  fertilizer: { type: 'High nitrogen', amount: 'Light application — ⅛ cup 10-10-10 per 5 ft row', freq: 'Side-dress nitrogen every 3 weeks for long-season plantings; fast grower that benefits from consistent nitrogen' },
   companions: {
     good: [
-      { name: 'Carrots',   why: 'Lettuce shades soil, keeping carrot area cool and moist' },
-      { name: 'Radishes',  why: 'Fast-growing; break soil for lettuce roots and deter aphids' },
-      { name: 'Strawberries', why: 'Mutually beneficial ground cover pairing' },
-      { name: 'Chives',    why: 'Repel aphids and other soft-bodied insects' },
-      { name: 'Nasturtiums', why: 'Trap crop for aphids; edible flowers' },
-      { name: 'Tall crops (Corn, Pole Beans)', why: 'Provide afternoon shade to extend lettuce season in summer' },
+      { name: 'Carrots', why: 'Carrots break up soil for lettuce roots; lettuce shades carrot shoulders' },
+      { name: 'Radishes', why: 'Interplant as living markers; harvest before lettuce needs space' },
+      { name: 'Garlic', why: 'Deters aphids that commonly attack lettuce' },
+      { name: 'Strawberries', why: 'Lettuce fills gaps between strawberry plants; compatible root zones' },
+      { name: 'Tall crops (corn, tomatoes)', why: 'Provide afternoon shade that prevents bolting in summer' },
     ],
     bad: [
-      { name: 'Fennel',  why: 'Allelopathic to most vegetables including lettuce' },
-      { name: 'Parsley', why: 'Can inhibit lettuce germination' },
-      { name: 'Celery',  why: 'Competes heavily and shares some pests' },
+      { name: 'Celery', why: 'Competes aggressively for same nutrients and water' },
+      { name: 'Fennel', why: 'Allelopathic to lettuce and most vegetables' },
+      { name: 'Parsley', why: 'Some reports of mutual growth inhibition in close proximity' },
     ],
   },
-  companionDist: 'Interplant herbs and flowers freely; keep fennel 3+ feet away.',
-  animals: 'Ladybugs and lacewings control aphids; attract with flowering herbs nearby.',
-
+  companionDist: 'Interplant between taller crops (every 6 inches) for space efficiency and natural shading',
+  animals: 'Aphids are the main attacker — ladybugs and lacewings are key predators. Slugs and snails are serious problems in cool, wet weather.',
   diseases: [
-    { name: 'Downy Mildew',   desc: 'Yellow patches on upper leaves, grey fuzz beneath; improve air circulation, avoid overhead watering, use resistant varieties.' },
-    { name: 'Bottom Rot (Rhizoctonia)', desc: 'Slimy, collapsed base; caused by wet, warm conditions. Improve drainage and air flow.' },
-    { name: 'Tip Burn',       desc: 'Brown leaf edges from calcium deficiency or heat stress; not a pathogen but a cultural issue. Increase airflow and maintain even moisture.' },
-    { name: 'Lettuce Mosaic Virus', desc: 'Mottled, distorted leaves spread by aphids. Remove infected plants; control aphid populations.' },
+    { name: 'Downy Mildew', desc: 'Yellow patches on leaves with grey sporulation below. Most common lettuce disease. Apply copper fungicide; improve air circulation; choose resistant varieties.' },
+    { name: 'Bottom Rot', desc: 'Slimy brown collapse at base of plant. Caused by Rhizoctonia in wet, warm soil. Avoid overwatering; improve drainage.' },
+    { name: 'Tipburn', desc: 'Brown, papery inner leaf edges — calcium deficiency in rapidly growing heads. Water consistently; avoid high humidity; choose tipburn-resistant varieties.' },
   ],
-  pests: 'Aphids (most common), slugs, snails, earwigs, cutworms, and rabbits. Row covers provide excellent protection early in the season.',
-
-  rotation: {
-    family: 'Asteraceae (Daisy/Composite family)',
-    cycle:  'Rotate every 2–3 years; avoid following other Asteraceae (endive, chicory, artichoke). Fast-maturing, so it fits well as a gap crop in rotations between heavy feeders.',
-  },
-
+  pests: 'Aphids (insecticidal soap; lady beetles; aluminum foil mulch), slugs and snails (diatomaceous earth; beer traps; copper tape), cabbage looper (Bt spray), leafminers (remove affected leaves; row covers), cutworms (collar around stem).',
+  rotation: { family: 'Asteraceae (Aster family)', cycle: 'Rotate every 2–3 years; avoid following endive or chicory in same bed' },
   stages: [
-    { label: 'Day 0–7',   title: 'Germination',       desc: 'Seeds germinate at 40–75 °F (optimal 60–65 °F). Keep soil moist. Light aids germination — do not bury deeply.' },
-    { label: 'Day 7–21',  title: 'Seedling',           desc: 'True leaves emerge; thin to proper spacing. Susceptible to damping-off — ensure good airflow.' },
-    { label: 'Day 21–45', title: 'Vegetative Growth',  desc: 'Rapid leaf production. Begin cut-and-come-again harvesting for loose-leaf types. Maintain moisture and feed.' },
-    { label: 'Day 45–70', title: 'Head Fill / Harvest', desc: 'Head types fill out and firm up. Harvest loose-leaf continuously; cut heads at base when firm.' },
-    { label: 'Day 70+',   title: 'Bolting',            desc: 'Warm temperatures trigger seed stalk. Leaves become bitter. Pull plants and replant or sow fall crop.' },
+    { label: 'Germinate', title: 'Germination', desc: 'Germinates in 2–8 days at 60–70°F. Seed is dormant above 80°F — refrigerate seed for 24 hours before sowing in heat.' },
+    { label: 'Seedling', title: 'Thinning', desc: 'Thin to final spacing when seedlings have 2 true leaves. Thinnings are edible micro-greens.' },
+    { label: 'Harvest', title: 'Leaf harvest', desc: 'Begin harvesting outer leaves at 3–4 inches. For heading types, harvest when head feels firm.' },
+    { label: 'Bolt', title: 'Bolting', desc: 'Hot weather triggers elongated central stalk and flowering. Flavor becomes bitter. Pull plants and replant in fall.' },
   ],
-
   nutrition: {
-    // — Macronutrients —
-    calories:    15,
-    water:       94.9,   // g
-    protein:     1.4,   // g
-    carbs:       2.9,   // g total
-    fiber:       1.3,   // g
-    sugars:      1.2,   // g
-    fat:         0.2,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0.01,   // g
-    polyunsat:   0.12,   // g
-    // — Fat-soluble vitamins —
-    vitA:        166,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.29,   // mg
-    vitK:        102.5,   // µg
-    // — Water-soluble vitamins —
-    vitC:        9.2,   // mg
-    vitB1:       0.07,  // mg thiamine
-    vitB2:       0.08,  // mg riboflavin
-    vitB3:       0.375,  // mg niacin
-    vitB5:       0.15,  // mg pantothenic
-    vitB6:       0.09,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       73,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     13.4,  // mg
-    // — Macrominerals —
-    calcium:     36,  // mg
-    phosphorus:  29,  // mg
-    magnesium:   13,  // mg
-    sodium:      28,  // mg
-    potassium:   194,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.86,  // mg
-    zinc:        0.18,  // mg
-    copper:      0.048,  // mg
-    manganese:   0.25,  // mg
-    selenium:    0.6,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Romaine values shown. High vitamin K (103 µg) and folate (73 µg). Romaine and red-leaf types are highest in vitamins A and K. Iceberg has the lowest nutrient density. All types are very low-calorie.',
+    calories: 15, water: 95.1, protein: 1.4, carbs: 2.9, fiber: 1.3, sugars: 1.2, fat: 0.2,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 166, vitD: 0, vitE: 0.2, vitK: 102,
+    vitC: 9.2, vitB1: 0.06, vitB2: 0.06, vitB3: 0.4, vitB5: 0.13, vitB6: 0.07,
+    vitB7: 0, vitB9: 73, vitB12: 0, choline: 13.4,
+    calcium: 36, phosphorus: 29, magnesium: 13, sodium: 28, potassium: 194, chloride: 0,
+    iron: 0.9, zinc: 0.18, copper: 0.03, manganese: 0.25, selenium: 0.6, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Romaine has the highest nutrient density of common lettuce types — significantly more vitamin A and K than iceberg. Red-leaf varieties contain anthocyanins. Good folate source.',
   },
-
-  size: {
-    weight:     '150–600g per head depending on type (butterhead ~200g, romaine ~400g, iceberg ~600g)',
-    dimensions: '8–14" tall (romaine); 6–10" diameter (head types)',
-    notes:      'Types include loose-leaf, butterhead, romaine, and crisphead (iceberg). Loose-leaf varieties are easiest and most productive for home gardens.',
-  },
+  size: { weight: 'Leaf lettuce: N/A; Romaine: 200–400g; Iceberg: 300–700g per head', dimensions: 'Loose-leaf: 8–12" spread; head types: 6–10" diameter', notes: 'Cut-and-come-again harvesting doubles or triples total yield compared to one-time harvest' },
 });

@@ -1,66 +1,66 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'basil',name:'Basil',cat:'Herb',emoji:'🌿',
-  planting:{zone6:'Start indoors Apr 15–May 1; transplant Jun 1+ (very frost sensitive)',depth:'0.25" indoors; transplant at pot depth',spacing:'12–18" apart',ph:'6.0–7.0',sun:'Full sun (6+ hrs minimum)'},
-  water:{in:'1–1.5',note:'Keep moist; cold water below 50°F causes black spots; water in morning'},
-  fertilizer:{type:'Balanced 10-10-10 or fish emulsion',amount:'Light application',freq:'Every 3–4 weeks; heavy feeding reduces flavor'},
-  companions:{
-    good:[{name:'Tomatoes',why:'Basil repels thrips, aphids, and whiteflies from tomatoes and may improve fruit flavor.'},{name:'Peppers',why:'Basil and peppers have compatible needs; basil deters thrips that attack pepper flowers.'},{name:'Marigolds',why:'Marigolds and basil together create a powerful pest-deterrent zone for the whole bed.'}],
-    bad:[{name:'Sage',why:"Sage releases allelopathic compounds that inhibit basil's growth — direct competition causes stunted growth."},{name:'Rosemary',why:'Rosemary and basil have conflicting water needs (dry vs moist), causing one to suffer.'},{name:'Fennel',why:"Fennel's allelopathic chemicals stunt basil and inhibit essential oil production."}],
+  id: 'basil',
+  name: 'Basil',
+  cat: 'Herb',
+  emoji: '🌿',
+  planting: {
+    zone6: 'Start indoors Apr (6–8 weeks before last frost); transplant May after soil warms to 60°F',
+    depth: '¼" (seed); transplant at soil level',
+    spacing: '12–18" apart',
+    ph: '6.0–7.0',
+    sun: 'Full sun (6–8 hours)',
+    zone3: 'Start indoors late Mar; transplant Jun',
+    zone4: 'Start indoors early Apr; transplant late May',
+    zone5: 'Start indoors Apr; transplant mid-May',
+    zone7: 'Direct sow or transplant late Apr',
+    zone8: 'Direct sow Mar–Apr; fall crop Sep–Oct',
+    zone9: 'Direct sow Feb–Mar; again Sep–Oct',
   },
-  companionDist:'Keep 18" from sage/rosemary; 12" from fennel.',
-  animals:'Bees love basil flowers; allow some to bolt for pollinators.',
-  diseases:[{name:'Fusarium Wilt',desc:'One-sided wilting, brown stem streaks; destroy plants; use resistant varieties.'},{name:'Downy Mildew',desc:'Yellow patches on leaves; resistant varieties; improve air circulation.'}],
-  pests:'Japanese beetles — hand pick; aphids — neem; slugs — diatomaceous earth.',
-  rotation:{family:'Lamiaceae (annual)',cycle:'Annual; rotate each year'},
-  stages:[{label:'Seed',title:'Seedling (indoors)',desc:'5–7 days; very cold-sensitive.'},{label:'Est',title:'Establishment',desc:'Rapid in warm weather; pinch flower buds.'},{label:'Pinch',title:'Pinching phase',desc:'Continuously pinch flower stalks; longest productive phase.'},{label:'Bolt',title:'Flowering',desc:'Allow some to flower and set seed.'}],
-  special:'Plant one basil per tomato. Below 50°F permanently damages basil. Genovese, Nufar excellent in Zone 6.',
+  zones: {
+    '6': { timing: 'Transplant May–Jun; harvest Jun–Sep; bolts in heat', plantingStart: 5, plantingEnd: 6, harvestStart: 6, harvestEnd: 9 },
+  },
+  special: 'Highly cold-sensitive — dies at 50°F. Pinch flower spikes immediately to prolong leaf production. Harvest in morning after dew dries for best flavor. Sweet Genovese is most popular; Thai basil has anise notes.',
+  water: { in: '1', note: 'Keep evenly moist but not waterlogged. Water at base — wet leaves invite fungal disease. Wilting in afternoon heat is normal if mornings are moist.' },
+  fertilizer: { type: 'Balanced organic (fish emulsion or compost tea)', amount: 'Diluted half-strength', freq: 'Every 2–3 weeks; avoid heavy nitrogen which reduces flavor concentration' },
+  companions: {
+    good: [
+      { name: 'Tomatoes', why: 'Classic pairing — basil repels thrips, aphids, and tomato hornworm; may enhance tomato flavor' },
+      { name: 'Peppers', why: 'Repels aphids and spider mites from pepper plants' },
+      { name: 'Asparagus', why: 'Repels asparagus beetles' },
+      { name: 'Marigolds', why: 'Combined pest-repellent effect against whiteflies and aphids' },
+    ],
+    bad: [
+      { name: 'Sage', why: 'Allelopathic — sage inhibits basil germination and growth when planted closely' },
+      { name: 'Thyme', why: 'Competing moisture preferences; thyme prefers dry, basil prefers moist' },
+      { name: 'Fennel', why: 'Fennel inhibits most herbs including basil' },
+    ],
+  },
+  companionDist: 'Plant 12–18 inches from tomatoes for best effect; close enough for aromatic interaction',
+  animals: 'Pollinators love basil flowers — allow some plants to flower at season end for bees.',
+  diseases: [
+    { name: 'Downy Mildew', desc: 'Yellowing leaves with grey-purple fuzz underneath. Use resistant varieties (Eleonora); improve air circulation; avoid overhead watering.' },
+    { name: 'Fusarium Wilt', desc: 'Sudden wilting and brown streaking in stem. No cure — remove plant immediately; do not replant basil in same spot for 3 years.' },
+    { name: 'Root Rot', desc: 'Caused by overwatering or poor drainage. Ensure well-draining soil; water only when top inch is dry.' },
+  ],
+  pests: 'Japanese beetles (hand-pick), aphids (strong water spray or neem oil), slugs (diatomaceous earth), spider mites (increase humidity, neem oil).',
+  rotation: { family: 'Lamiaceae (Mint family)', cycle: 'Annual herb; rotate annually to prevent fusarium buildup' },
+  stages: [
+    { label: 'Sprout', title: 'Germination', desc: 'Seeds germinate in 5–10 days at 70°F+. Keep warm and moist.' },
+    { label: 'Seedling', title: 'Early growth', desc: 'First true leaves appear. Begin hardening off transplants 1–2 weeks before moving outside.' },
+    { label: 'Harvest', title: 'Active harvest', desc: 'Begin harvesting when plant has 6–8 leaves. Always cut above a leaf node. Pinch out flower buds as they appear.' },
+    { label: 'Bolt', title: 'Flowering', desc: 'Hot weather triggers flowering. Flavor becomes slightly bitter. Pinch flowers to extend harvest or allow to set seed for saving.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    23,
-    water:       92.1,   // g
-    protein:     3.2,   // g
-    carbs:       2.7,   // g total
-    fiber:       1.6,   // g
-    sugars:      0.3,   // g
-    fat:         0.6,   // g total
-    saturated:   0.04,   // g
-    monounsat:   0.09,   // g
-    polyunsat:   0.39,   // g
-    // — Fat-soluble vitamins —
-    vitA:        264,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.8,   // mg
-    vitK:        414.8,   // µg
-    // — Water-soluble vitamins —
-    vitC:        18,   // mg
-    vitB1:       0.034,  // mg thiamine
-    vitB2:       0.076,  // mg riboflavin
-    vitB3:       0.902,  // mg niacin
-    vitB5:       0.209,  // mg pantothenic
-    vitB6:       0.155,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       68,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     11.4,  // mg
-    // — Macrominerals —
-    calcium:     177,  // mg
-    phosphorus:  56,  // mg
-    magnesium:   64,  // mg
-    sodium:      4,  // mg
-    potassium:   295,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        3.17,  // mg
-    zinc:        0.81,  // mg
-    copper:      0.385,  // mg
-    manganese:   1.148,  // mg
-    selenium:    0.3,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Exceptional vitamin K (415 µg) and vitamin A content. Rich in eugenol (anti-inflammatory). High iron for an herb. Note: amounts eaten per serving are small.',
+    calories: 23, water: 92.1, protein: 3.2, carbs: 2.7, fiber: 1.6, sugars: 0.3, fat: 0.6,
+    saturated: 0, monounsat: 0.1, polyunsat: 0.4,
+    vitA: 264, vitD: 0, vitE: 0.8, vitK: 414,
+    vitC: 18, vitB1: 0.03, vitB2: 0.08, vitB3: 0.9, vitB5: 0.21, vitB6: 0.16,
+    vitB7: 0, vitB9: 68, vitB12: 0, choline: 11.4,
+    calcium: 177, phosphorus: 56, magnesium: 64, sodium: 4, potassium: 295, chloride: 0,
+    iron: 3.2, zinc: 0.81, copper: 0.39, manganese: 1.15, selenium: 0.3, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Used in small culinary amounts. Exceptionally high in vitamin K (414 µg per 100g). Rich in linalool and eugenol — aromatic compounds with anti-inflammatory properties.',
   },
-  size:{weight:'N/A — culinary herb',dimensions:'Plant: 12–24" tall',notes:'Harvest by pinching stems above a leaf node.'},
+  size: { weight: 'N/A — harvested by leaf/stem', dimensions: 'Plants 12–24" tall at maturity', notes: 'Compact varieties like Spicy Globe stay under 12 inches; great for containers' },
 });

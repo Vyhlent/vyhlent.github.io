@@ -1,66 +1,67 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'cantaloupe',name:'Cantaloupe',cat:'Vine Fruit',emoji:'🍈',
-  planting:{zone6:'Start indoors Apr 15–May 1; transplant May 15–30',depth:'1" direct sow; transplant at pot depth',spacing:'2–3 ft per hill, hills 4–6 ft apart',ph:'6.0–6.5',sun:'Full sun (8+ hrs)'},
-  water:{in:'1–2',note:'Taper off near ripeness to concentrate sugar'},
-  fertilizer:{type:'5-10-10; switch to 0-0-60 at vine run',amount:'2 lbs per 100 sq ft',freq:'At transplant; vine run; first fruit set'},
-  companions:{
-    good:[{name:'Corn',why:'Tall corn acts as a windbreak for sprawling cantaloupe vines.'},{name:'Marigolds',why:'Marigolds deter cucumber beetles, the chief pest and virus vector for cantaloupe.'},{name:'Nasturtiums',why:'Nasturtiums act as trap crops for aphids, keeping them off the melon vines.'}],
-    bad:[{name:'Potatoes',why:'Potatoes compete heavily for potassium and share fungal diseases that affect cantaloupe.'},{name:'Cucumbers',why:'Cucumbers share powdery mildew and cucumber beetle infestations, amplifying pressure on both crops.'}],
+  id: 'cantaloupe',
+  name: 'Cantaloupe',
+  cat: 'Fruiting Vine',
+  emoji: '🍈',
+  planting: {
+    zone6: 'Start indoors early May (2–3 weeks before last frost); transplant late May after soil reaches 70°F',
+    depth: '½–1" (seed), 2–3 seeds per hill then thin to 2',
+    spacing: '18–24" in rows, hills 4–6 ft apart; or hills 6 ft apart',
+    ph: '6.0–6.5',
+    sun: 'Full sun (8+ hours)',
+    zone3: 'Short season — start indoors early May; transplant Jun; choose early varieties (Minnesota Midget)',
+    zone4: 'Start indoors early May; transplant late May; use row covers to extend season',
+    zone5: 'Start indoors Apr; transplant mid-May',
+    zone7: 'Direct sow late Apr; transplant Apr',
+    zone8: 'Direct sow late Mar–Apr',
+    zone9: 'Direct sow Mar or Aug for fall crop',
   },
-  companionDist:'Keep 3 ft from cucumbers; 4+ ft from potatoes.',
-  animals:'Bees essential for pollination; ground beetles eat larvae.',
-  diseases:[{name:'Powdery Mildew',desc:'White coating on leaves; neem oil or potassium bicarbonate.'},{name:'Gummy Stem Blight',desc:'Water-soaked lesions with gummy exudate; chlorothalonil; rotate crops.'}],
-  pests:'Cucumber beetles — row covers until flowering; aphids — neem.',
-  rotation:{family:'Cucurbitaceae',cycle:'3–4 year rotation away from all cucurbits'},
-  stages:[{label:'Germ',title:'Germination',desc:'5–10 days at 70–90°F.'},{label:'Vine',title:'Vine development',desc:'Rapid growth; train or let sprawl.'},{label:'Flwr',title:'Flowering',desc:'Male then female flowers; bees critical.'},{label:'Ripe',title:'Maturation',desc:'Slip test: slight pressure detaches at stem.'}],
-  special:'Use black plastic mulch. Place board under fruits.',
+  zones: {
+    '6': { timing: 'Transplant late May; harvest Aug–Sep (75–90 days from transplant)', plantingStart: 5, plantingEnd: 6, harvestStart: 8, harvestEnd: 9 },
+  },
+  special: 'Requires warm soil and air temperatures — do not rush transplanting. Reduce watering as fruits approach maturity for sweeter flavor. Slip-test for ripeness: ripe cantaloupe separates from vine with gentle pressure ("full slip"). Bush varieties (Bushstar, Minnesota Midget) ideal for small gardens.',
+  water: { in: '1–2', note: 'Deep, infrequent watering. Critical during vine establishment and fruit development. Stop or greatly reduce watering 1–2 weeks before harvest to concentrate sugars.' },
+  fertilizer: { type: 'Balanced, then high potassium at fruiting', amount: '½ cup 10-10-10 per hill at planting', freq: 'Side-dress when vines begin to run; switch to low-nitrogen/high-potassium at flowering to promote fruit quality' },
+  companions: {
+    good: [
+      { name: 'Corn', why: 'Corn provides windbreak; cantaloupe vines shade out weeds around corn base' },
+      { name: 'Marigolds', why: 'Repel aphids, cucumber beetles, and nematodes' },
+      { name: 'Nasturtiums', why: 'Trap crop for aphids and cucumber beetles' },
+      { name: 'Radishes', why: 'Deter cucumber beetles when planted nearby' },
+    ],
+    bad: [
+      { name: 'Potatoes', why: 'Both susceptible to blight; competing vines create disease pressure' },
+      { name: 'Cucumbers', why: 'Can cross-pollinate affecting seed quality; compete for space and nutrients' },
+    ],
+  },
+  companionDist: 'Vines spread 6–8 ft; give ample space or train onto a trellis with slings to support heavy fruit',
+  animals: 'Bees essential for pollination. Male flowers appear first — don\'t be alarmed if early flowers don\'t set fruit.',
+  diseases: [
+    { name: 'Powdery Mildew', desc: 'White powder on older leaves. Most common cantaloupe disease. Improve air circulation; spray potassium bicarbonate or sulfur; choose resistant varieties.' },
+    { name: 'Downy Mildew', desc: 'Yellow angular spots on upper leaf surface with grey-purple sporulation below. Apply copper fungicide preventively in wet weather.' },
+    { name: 'Bacterial Wilt', desc: 'Sudden wilting of vines. Caused by cucumber beetles. No cure — prevent cucumber beetles with row covers early season (remove at flowering for pollination).' },
+    { name: 'Alternaria Blight', desc: 'Dark lesions on older leaves. Rotate crops; avoid overhead watering.' },
+  ],
+  pests: 'Cucumber beetles (kaolin clay, row covers early, trap crops), squash vine borer (unlikely on cantaloupe vs squash), aphids (neem oil), spider mites (water spray, neem oil in hot dry weather).',
+  rotation: { family: 'Cucurbitaceae (Gourd family)', cycle: 'Rotate every 2–3 years; do not follow cucumbers, squash, or pumpkins in same bed' },
+  stages: [
+    { label: 'Sprout', title: 'Germination / transplant', desc: 'Germinates in 5–10 days at 75°F+. Handle roots carefully when transplanting — do not disturb.' },
+    { label: 'Vine', title: 'Vine running', desc: 'Vines spread rapidly in warm weather. Train or direct away from paths. Keep weeds cleared.' },
+    { label: 'Bloom', title: 'Flowering', desc: 'Male flowers appear first. Female flowers (with tiny fruit at base) appear 1–2 weeks later. Bees must move pollen between flowers.' },
+    { label: 'Set', title: 'Fruit development', desc: 'Fruits swell rapidly over 4–6 weeks. Slip each fruit onto small board or tile to prevent rot. Reduce water.' },
+    { label: 'Harvest', title: 'Full slip', desc: 'Ripe when skin turns tan-beige, netting is prominent, and fruit slips from vine with light pressure. Fragrant when ripe.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    34,
-    water:       90.2,   // g
-    protein:     0.8,   // g
-    carbs:       8.2,   // g total
-    fiber:       0.9,   // g
-    sugars:      7.9,   // g
-    fat:         0.2,   // g total
-    saturated:   0.05,   // g
-    monounsat:   0,   // g
-    polyunsat:   0.06,   // g
-    // — Fat-soluble vitamins —
-    vitA:        169,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.05,   // mg
-    vitK:        2.5,   // µg
-    // — Water-soluble vitamins —
-    vitC:        36.7,   // mg
-    vitB1:       0.041,  // mg thiamine
-    vitB2:       0.019,  // mg riboflavin
-    vitB3:       0.734,  // mg niacin
-    vitB5:       0.105,  // mg pantothenic
-    vitB6:       0.072,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       21,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     7.6,  // mg
-    // — Macrominerals —
-    calcium:     9,  // mg
-    phosphorus:  15,  // mg
-    magnesium:   12,  // mg
-    sodium:      16,  // mg
-    potassium:   267,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.21,  // mg
-    zinc:        0.18,  // mg
-    copper:      0.041,  // mg
-    manganese:   0.041,  // mg
-    selenium:    0.4,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Excellent source of beta-carotene (vitamin A — 169 µg, ~19% DV) and potassium. High vitamin C. Very hydrating at 90% water.',
+    calories: 34, water: 90.2, protein: 0.8, carbs: 8.2, fiber: 0.9, sugars: 7.9, fat: 0.2,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 169, vitD: 0, vitE: 0.1, vitK: 2.5,
+    vitC: 36.7, vitB1: 0.04, vitB2: 0.02, vitB3: 0.7, vitB5: 0.11, vitB6: 0.07,
+    vitB7: 0, vitB9: 21, vitB12: 0, choline: 7.6,
+    calcium: 9, phosphorus: 15, magnesium: 12, sodium: 16, potassium: 267, chloride: 0,
+    iron: 0.2, zinc: 0.18, copper: 0.04, manganese: 0.04, selenium: 0.4, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Excellent source of beta-carotene (vitamin A) and vitamin C. High water content makes it very hydrating.',
   },
-  size:{weight:'1–3 kg per fruit',dimensions:'5–7" diameter',notes:'Full-slip harvest: netting on rind, sweet aroma.'},
+  size: { weight: '0.5–2 kg per fruit', dimensions: '5–7" diameter (typical netted muskmelon)', notes: 'Small-fruited varieties like Minnesota Midget produce 4-inch fruits perfect for small gardens' },
 });

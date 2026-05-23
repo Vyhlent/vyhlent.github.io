@@ -1,0 +1,63 @@
+import Crop from '../Crop.js';
+export default new Crop({
+  id: 'field-garlic',
+  name: 'Field Garlic',
+  cat: 'Wild Edible',
+  emoji: '🌱',
+  planting: {
+    zone6: 'Naturalizes on its own in zone 6; if transplanting wild clumps, move in early spring or fall',
+    depth: '1–2" for bulblets',
+    spacing: 'Naturalizes to fill available space; if controlled, 6" apart',
+    ph: '5.5–7.0',
+    sun: 'Full sun to partial shade',
+    zone3: 'Perennial — very cold hardy',
+    zone4: 'Perennial — hardy',
+    zone5: 'Perennial — naturalizes freely',
+    zone7: 'Perennial — thrives',
+    zone8: 'Perennial — may go dormant in summer heat',
+    zone9: 'Perennial — summer dormancy common',
+  },
+  zones: {
+    '6': { timing: 'Perennial; foliage emerges Mar–Apr; harvest greens and bulblets Mar–Jun', plantingStart: 3, plantingEnd: 4, harvestStart: 3, harvestEnd: 6 },
+  },
+  special: 'Allium vineale — a common "wild garlic" weed that is also an edible wild plant. All parts are edible: green tops, small bulbs, and aerial bulblets. Strong garlic-onion flavor. Often considered a weed in lawns and gardens — use it as a food rather than fighting it. Do not confuse with toxic wild onion look-alikes; the garlic smell is the definitive identification.',
+  water: { in: '0.5', note: 'Drought-tolerant perennial — requires no irrigation once established; naturalistic plant' },
+  fertilizer: { type: 'None required', amount: 'N/A', freq: 'Wild/naturalistic plant; no fertilization needed' },
+  companions: {
+    good: [
+      { name: 'Fruit trees', why: 'Natural pest deterrent when growing beneath trees; repels aphids, borers, and rodents' },
+      { name: 'Roses', why: 'Classic companion — repels aphids and black spot when planted around rose bases' },
+      { name: 'Carrots', why: 'Wild garlic scent confuses carrot fly in the same way cultivated garlic does' },
+    ],
+    bad: [
+      { name: 'Beans', why: 'Alliums inhibit bean growth — keep field garlic away from bean beds' },
+      { name: 'Peas', why: 'Same allium-legume inhibition' },
+    ],
+  },
+  companionDist: 'Allow to naturalize beneath fruit trees and at garden edges; actively remove from legume beds',
+  animals: 'Pollinators visit flowers in early summer. Deer-resistant plant.',
+  diseases: [
+    { name: 'White Rot', desc: 'Fluffy white mycelium at bulb base. Sclerotia persist in soil for 20+ years. Remove infected plants; do not replant alliums in that spot.' },
+    { name: 'Rust', desc: 'Orange pustules on leaves. Usually cosmetic. Improve air circulation.' },
+  ],
+  pests: 'Generally pest-free. Deer, rabbits, and most pests avoid it due to pungent scent.',
+  rotation: { family: 'Amaryllidaceae (Allium genus)', cycle: 'Perennial that self-propagates via bulblets and seeds. Manage spread by harvesting before seeds set.' },
+  stages: [
+    { label: 'Spring', title: 'Green emergence', desc: 'Thin green hollow leaves emerge early Mar. Harvest young leaves as garlic-flavored herb.' },
+    { label: 'Late spring', title: 'Bulblet development', desc: 'Aerial bulblets form at stem tops (the "umbel"). These can be harvested and eaten or will fall and spread the plant.' },
+    { label: 'Summer', title: 'Dormancy', desc: 'Tops die back in summer heat. Small bulbs remain dormant underground.' },
+    { label: 'Fall', title: 'Re-emergence', desc: 'May re-emerge briefly in cool fall weather in some climates.' },
+  ],
+  nutrition: {
+    calories: 30, water: 90.0, protein: 1.8, carbs: 6.5, fiber: 1.2, sugars: 1.0, fat: 0.1,
+    saturated: 0, monounsat: 0, polyunsat: 0,
+    vitA: 15, vitD: 0, vitE: 0.1, vitK: 30,
+    vitC: 10, vitB1: 0.05, vitB2: 0.04, vitB3: 0.3, vitB5: 0.1, vitB6: 0.2,
+    vitB7: 0, vitB9: 15, vitB12: 0, choline: 5,
+    calcium: 40, phosphorus: 30, magnesium: 10, sodium: 5, potassium: 200, chloride: 0,
+    iron: 1.0, zinc: 0.3, copper: 0.05, manganese: 0.2, selenium: 0.5, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Estimated values for wild allium greens; similar to cultivated garlic greens. Contains allicin precursors with antimicrobial properties. Use as garlic substitute in cooking — milder than cultivated garlic.',
+  },
+  size: { weight: 'N/A (harvested as greens or small bulblets)', dimensions: 'Plants 12–24" tall', notes: 'Bulbs are small (marble-sized); aerial bulblets are pea-sized and have excellent garlic flavor' },
+});

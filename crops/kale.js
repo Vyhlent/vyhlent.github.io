@@ -1,66 +1,68 @@
 import Crop from '../Crop.js';
 export default new Crop({
-  id:'kale',name:'Kale',cat:'Leafy Green',emoji:'🥬',
-  planting:{zone6:'Direct sow Mar 15–May 1 (spring) or Jul 15–Aug 15 (fall)',depth:'0.5"',spacing:'12–18" apart, rows 18–24"',ph:'6.0–7.5',sun:'Full sun / part shade'},
-  water:{in:'1–1.5',note:'Consistent moisture; slight drought-stress in fall intensifies flavor'},
-  fertilizer:{type:'High-nitrogen 10-10-10 or fish emulsion',amount:'2 lbs per 100 sq ft',freq:'At planting; side-dress nitrogen monthly'},
-  companions:{
-    good:[{name:'Beets',why:"Beets and kale are compatible root/leaf crop partners that don't compete for resources."},{name:'Marigolds',why:'Marigolds deter cabbage moths and whiteflies that devastate kale leaves.'},{name:'Nasturtiums',why:'Nasturtiums act as trap crops for aphids, drawing them away from kale foliage.'}],
-    bad:[{name:'Tomatoes',why:'Tomatoes and brassicas like kale compete for calcium and magnesium, causing deficiencies in both.'},{name:'Beans',why:"Beans are inhibited by kale's glucosinolate root exudates, reducing bean yield."},{name:'Strawberries',why:'Strawberries are stunted near brassicas; they share fungal diseases.'}],
+  id: 'kale',
+  name: 'Kale',
+  cat: 'Brassica',
+  emoji: '🥬',
+  planting: {
+    zone6: 'Spring: direct sow Mar–Apr or transplant Apr–May. Fall: direct sow Jul–Aug for best crop — flavor peaks after frost.',
+    depth: '¼–½"',
+    spacing: '12–18" apart in rows 18–24" wide',
+    ph: '6.0–7.5',
+    sun: 'Full sun to partial shade (tolerates more shade than most vegetables)',
+    zone3: 'Direct sow Jun; harvest into early fall; mulch for extended season',
+    zone4: 'Direct sow mid-May; fall sow mid-Jul',
+    zone5: 'Direct sow Apr–May; fall sow late Jul',
+    zone7: 'Direct sow Feb–Mar; fall sow Sep; kale overwinters easily',
+    zone8: 'Fall–winter primary season; plant Oct–Nov',
+    zone9: 'Fall/winter/spring crop; plant Oct–Feb',
   },
-  companionDist:'Keep 18" from beans; 12" from tomatoes/strawberries.',
-  animals:'Parasitic wasps; ground beetles; spiders eat insects.',
-  diseases:[{name:'Black Rot',desc:'Yellow V-shaped lesions, black veins; copper bactericide; rotate.'},{name:'Downy Mildew',desc:'Yellow spots above, gray fuzz below; copper spray; improve air flow.'}],
-  pests:'Cabbage worms — Bt; aphids — neem; flea beetles — row covers.',
-  rotation:{family:'Brassicaceae',cycle:'3–4 year rotation; not after broccoli, cabbage, cauliflower'},
-  stages:[{label:'Germ',title:'Germination',desc:'5–8 days in cool soil.'},{label:'Juv',title:'Juvenile',desc:'Thin to 12–18"; thinnings are edible microgreens.'},{label:'Harv',title:'Harvest',desc:'Harvest outer leaves; central tip keeps producing.'},{label:'Winter',title:'Overwintering',desc:'Fall kale sweetens with frost; overwinters in Zone 6.'}],
-  special:'Lacinato, Red Russian, Winterbor are excellent Zone 6 varieties. Sweeter after frost.',
+  zones: {
+    '6': { timing: 'Spring sow Mar–Apr; fall sow Jul–Aug; harvest Oct–Feb from fall plantings', plantingStart: 3, plantingEnd: 8, harvestStart: 5, harvestEnd: 2 },
+  },
+  special: 'Frost dramatically improves kale flavor — converts starches to sugars, making leaves sweeter and more tender. Lacinato (Dinosaur) kale is most cold-hardy and sweet. Curly kale is the most commonly grown. Red Russian kale is most tender and mild. Harvest outer leaves to keep plants producing for months.',
+  water: { in: '1–1.5', note: 'Consistent moisture; tolerates brief drought better than most brassicas. Reduce watering slightly in fall — slight stress before frost improves flavor even more.' },
+  fertilizer: { type: 'High nitrogen', amount: '¼ cup 10-10-10 per transplant or ½ lb per 10-ft row', freq: 'Side-dress nitrogen every 4–6 weeks for long-season harvests; kale is a heavy feeder' },
+  companions: {
+    good: [
+      { name: 'Dill', why: 'Attracts parasitic wasps that control cabbageworm; plant away from kale seed saving (cross-family, no cross issues but dill bolts quickly)' },
+      { name: 'Marigolds', why: 'Deter aphids and cabbage moths' },
+      { name: 'Nasturtiums', why: 'Trap crop for aphids' },
+      { name: 'Onions', why: 'Scent deters cabbage moth egg-laying' },
+      { name: 'Garlic', why: 'Repels aphids and cabbage moth' },
+    ],
+    bad: [
+      { name: 'Strawberries', why: 'Brassica compounds inhibit strawberry root development' },
+      { name: 'Tomatoes', why: 'Allelopathic interaction; tomatoes inhibit brassica growth' },
+      { name: 'Fennel', why: 'Inhibits nearly all plants including kale' },
+    ],
+  },
+  companionDist: 'Plant garlic and onions at 12-inch intervals within kale rows for embedded pest deterrence',
+  animals: 'Parasitic wasps (Trichogramma) are key for cabbageworm control — attract with dill, yarrow, and fennel planted at garden periphery.',
+  diseases: [
+    { name: 'Downy Mildew', desc: 'Yellow patches on upper leaf surface; grey-purple sporulation below. Apply copper fungicide preventively in wet seasons; improve air circulation.' },
+    { name: 'Black Rot', desc: 'V-shaped yellow lesions from leaf margins; blackened veins. Crop rotation; disease-free seed; avoid overhead watering.' },
+    { name: 'Alternaria Leaf Spot', desc: 'Concentric dark rings on older leaves. Remove affected foliage; copper spray.' },
+  ],
+  pests: 'Cabbageworm (Bt spray; row covers), cabbage looper (Bt spray), aphids (insecticidal soap; strong water spray; introduce ladybugs), flea beetles (row covers; diatomaceous earth), harlequin bugs in warm zones (hand-remove; neem).',
+  rotation: { family: 'Brassicaceae (Mustard family)', cycle: 'Rotate every 3–4 years; do not follow cabbage, broccoli, turnips, or radishes' },
+  stages: [
+    { label: 'Seedling', title: 'Emergence', desc: 'Germinates quickly (4–7 days at 55–75°F). Thin to proper spacing. Install row cover against flea beetles.' },
+    { label: 'Juvenile', title: 'Leaf development', desc: 'Outer leaves reach harvest size at about 60 days. Begin harvesting lower leaves.' },
+    { label: 'Harvest', title: 'Continuous leaf harvest', desc: 'Pick lower/outer leaves regularly. Keep central growing point intact. Plant can produce for 3–6 months.' },
+    { label: 'Frost', title: 'Flavor peak', desc: 'First hard frost (28°F) triggers maximum sugar conversion. Fall kale is dramatically sweeter than summer kale.' },
+    { label: 'Overwintering', title: 'Cold resilience', desc: 'Kale survives temperatures to 10–15°F with mulching. Lacinato is hardiest. Resume growth and harvest in early spring.' },
+  ],
   nutrition: {
-    // — Macronutrients —
-    calories:    35,
-    water:       89.6,   // g
-    protein:     2.9,   // g
-    carbs:       4.4,   // g total
-    fiber:       4.1,   // g
-    sugars:      0.99,   // g
-    fat:         1.5,   // g total
-    saturated:   0.19,   // g
-    monounsat:   0.1,   // g
-    polyunsat:   0.67,   // g
-    // — Fat-soluble vitamins —
-    vitA:        241,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.66,   // mg
-    vitK:        389.6,   // µg
-    // — Water-soluble vitamins —
-    vitC:        93.4,   // mg
-    vitB1:       0.113,  // mg thiamine
-    vitB2:       0.347,  // mg riboflavin
-    vitB3:       1,  // mg niacin
-    vitB5:       0.37,  // mg pantothenic
-    vitB6:       0.271,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       141,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     0.5,  // mg
-    // — Macrominerals —
-    calcium:     150,  // mg
-    phosphorus:  92,  // mg
-    magnesium:   47,  // mg
-    sodium:      38,  // mg
-    potassium:   447,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        1.47,  // mg
-    zinc:        0.56,  // mg
-    copper:      0.29,  // mg
-    manganese:   0.659,  // mg
-    selenium:    0.9,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'One of the most nutrient-dense foods. Extraordinary vitamin K (390 µg — 325% DV), vitamin A (241 µg), vitamin C (93 mg — 103% DV), folate (141 µg — 35% DV), and calcium. Anti-cancer glucosinolates.',
+    calories: 35, water: 89.6, protein: 2.9, carbs: 4.4, fiber: 4.1, sugars: 0.8, fat: 1.5,
+    saturated: 0.2, monounsat: 0.1, polyunsat: 0.7,
+    vitA: 500, vitD: 0, vitE: 1.5, vitK: 817,
+    vitC: 93.4, vitB1: 0.11, vitB2: 0.13, vitB3: 1.0, vitB5: 0.09, vitB6: 0.27,
+    vitB7: 0, vitB9: 141, vitB12: 0, choline: 0.5,
+    calcium: 254, phosphorus: 92, magnesium: 34, sodium: 38, potassium: 447, chloride: 0,
+    iron: 1.5, zinc: 0.39, copper: 0.29, manganese: 0.77, selenium: 0.9, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'One of the most nutrient-dense foods known. Extremely high vitamin K (817 µg per 100g), vitamin C, and vitamin A. Rich in lutein and zeaxanthin for eye health. Contains glucosinolates — cancer-protective compounds.',
   },
-  size:{weight:'200–400g per bunch',dimensions:'Leaves 8–16" long',notes:'Harvest at 8–10 inches for best flavor.'},
+  size: { weight: 'N/A — harvested leaf by leaf', dimensions: 'Mature leaves 12–18" long', notes: 'Baby kale harvested at 4–6 weeks for salads; mature leaves better for cooking' },
 });

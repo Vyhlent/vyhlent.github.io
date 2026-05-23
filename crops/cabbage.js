@@ -1,122 +1,68 @@
 import Crop from '../Crop.js';
-
 export default new Crop({
-  id:    'cabbage',
-  name:  'Cabbage',
-  cat:   'Brassica',
+  id: 'cabbage',
+  name: 'Cabbage',
+  cat: 'Brassica',
   emoji: '🥬',
-
   planting: {
-    zone6:   'Start indoors 6–8 weeks before last frost (late Feb–March). Transplant outdoors 2–4 weeks before last frost (early–mid April). For fall crop, start indoors in July and transplant in August.',
-    depth:   '¼–½" for seeds; set transplants deep (to first true leaf)',
-    spacing: '12–18" apart; rows 24–36" apart. Closer spacing produces smaller heads.',
-    ph:      '6.0–7.5',
-    sun:     'Full sun (6+ hrs); tolerates light afternoon shade in warm spells',
+    zone6: 'Spring: start indoors Feb–Mar; transplant Apr–early May. Fall: direct sow Jul or transplant Aug for Oct harvest.',
+    depth: '¼–½" (seed)',
+    spacing: '12–18" apart in rows 24" wide',
+    ph: '6.0–7.5',
+    sun: 'Full sun (6+ hours)',
+    zone3: 'Start indoors Mar; transplant Jun; fall crop not practical',
+    zone4: 'Start indoors Feb–Mar; transplant May; fall crop Jul',
+    zone5: 'Start indoors Feb; transplant Apr–May; fall crop Jul–early Aug',
+    zone7: 'Spring transplant Mar–Apr; fall direct sow Aug–Sep',
+    zone8: 'Fall–winter primary season; transplant Sep–Nov',
+    zone9: 'Grow as fall/winter/spring crop; transplant Oct–Jan',
   },
-  special: 'Cabbage is frost-hardy and actually sweetened by light frost. Use floating row covers to protect against pests (cabbage worms) from day one. Add lime if pH is below 6.5 to help prevent clubroot.',
-
-  water: {
-    in:   '1–1.5',
-    note: 'Even, consistent moisture is critical — irregular watering causes heads to split. Water at the base; wet foliage encourages fungal disease. Reduce water slightly as heads mature.',
+  zones: {
+    '6': { timing: 'Spring transplant Apr–May; Fall direct sow Jul–Aug; harvest Jun or Oct', plantingStart: 4, plantingEnd: 5, harvestStart: 6, harvestEnd: 10 },
   },
-
-  fertilizer: {
-    type:   'High nitrogen early, then balanced (e.g., 10-10-10)',
-    amount: '2–3 lbs 10-10-10 per 100 sq ft worked into bed; side-dress with nitrogen 3 weeks after transplant',
-    freq:   'At planting, then side-dress once or twice during head development',
-  },
-
+  special: 'Cool-season crop — flavor improves after light frost. Bolts and splits in heat. For fall crops, count back 70–80 days from first expected frost. Use row covers to extend season and deter cabbage moth.',
+  water: { in: '1–1.5', note: 'Consistent moisture is critical — uneven watering causes heads to split. Avoid wetting foliage. Reduce watering slightly as heads approach maturity.' },
+  fertilizer: { type: 'High nitrogen initially; reduce as head forms', amount: '¼ cup 10-10-10 per transplant', freq: 'Side-dress with nitrogen fertilizer 3 weeks after transplant; stop when head begins to form' },
   companions: {
     good: [
-      { name: 'Dill',         why: 'Attracts parasitic wasps that prey on cabbage worms' },
-      { name: 'Nasturtiums',  why: 'Trap crop for aphids; attract beneficial insects' },
-      { name: 'Onions',       why: 'Strong scent confuses and deters cabbage moths' },
-      { name: 'Celery',       why: 'Repels cabbage white butterfly' },
-      { name: 'Chamomile',    why: 'Said to improve cabbage flavor and growth' },
-      { name: 'Marigolds',    why: 'Deter nematodes and various insects' },
+      { name: 'Dill', why: 'Attracts wasps that parasitize imported cabbageworm' },
+      { name: 'Marigolds', why: 'Deter cabbage moths and aphids' },
+      { name: 'Onions', why: 'Strong scent masks cabbage from pests; reduce aphid pressure' },
+      { name: 'Mint', why: 'Repels cabbage moth and aphids (keep contained)' },
+      { name: 'Nasturtiums', why: 'Trap crop for aphids; attract aphid predators' },
     ],
     bad: [
-      { name: 'Strawberries', why: 'Inhibit each other\'s growth when planted close' },
-      { name: 'Tomatoes',     why: 'Both are heavy feeders; compete and share some pests' },
-      { name: 'Fennel',       why: 'Allelopathic; inhibits growth of most vegetables' },
-      { name: 'Rue',          why: 'Reportedly inhibits cabbage and other brassicas' },
+      { name: 'Strawberries', why: 'Brassicas inhibit strawberry growth' },
+      { name: 'Tomatoes', why: 'Allelopathic interaction — tomatoes inhibit brassica growth' },
+      { name: 'Fennel', why: 'Inhibits most brassicas; keep well separated' },
+      { name: 'Grapes', why: 'Brassicas allegedly inhibit grape vine growth' },
     ],
   },
-  companionDist: 'Keep bad companions 4+ feet away; interplant alliums and herbs freely among brassicas.',
-  animals: 'Ground beetles eat cabbage root fly eggs and slug eggs. Paper wasps and parasitic wasps prey on caterpillars. Encourage with leaf mulch and insectary flowers.',
-
+  companionDist: 'Use tall companion plants on north side to avoid shading; space 18 inches minimum from most companions',
+  animals: 'Parasitic wasps (Trichogramma sp.) are key predators of cabbageworm eggs. Attract with dill and yarrow.',
   diseases: [
-    { name: 'Clubroot',           desc: 'Soil-borne slime mold causing swollen, distorted roots; wilting plant. Raise soil pH to 7.0–7.5; long rotation (7+ years) out of brassicas; use resistant varieties.' },
-    { name: 'Black Rot (Xanthomonas)', desc: 'V-shaped yellow lesions on leaves turning black veins. Use certified seed; avoid overhead watering; rotate crops.' },
-    { name: 'Downy Mildew',       desc: 'Yellow patches on leaves with grey-purple fuzz below; cool, humid conditions. Improve airflow; avoid dense planting.' },
-    { name: 'Sclerotinia Rot',    desc: 'White cottony mold on stems/base; watery rot. Improve drainage and avoid overhead watering.' },
+    { name: 'Clubroot', desc: 'Roots swell and distort; plant wilts and yellows. Raise soil pH to 7.0+ with lime. Destroy infected plants; do not compost. Avoid replanting brassicas in same bed for 7+ years.' },
+    { name: 'Black Rot', desc: 'V-shaped yellow lesions from leaf margins; black veins. Bacterial disease spread by rain splash. Use disease-free seed; avoid overhead watering; rotate crops.' },
+    { name: 'Downy Mildew', desc: 'Yellow patches on leaves with grey-white fuzz underneath. Improve air circulation; avoid wet foliage. Spray copper fungicide preventively.' },
   ],
-  pests: 'Imported cabbageworm, cabbage looper, and diamondback moth caterpillars are the primary threats. Also aphids (especially woolly aphids), cabbage maggot root fly, flea beetles, and slugs. Row covers from transplant are the single best defense.',
-
-  rotation: {
-    family: 'Brassicaceae (Mustard family)',
-    cycle:  'Do NOT follow any other brassica (broccoli, kale, cauliflower, radish, turnip). Rotate on a 3–4 year cycle minimum (7 years if clubroot is present). Good predecessors: legumes. Good successors: alliums or root veg.',
-  },
-
+  pests: 'Imported cabbageworm (Bacillus thuringiensis — Bt), cabbage looper (Bt spray), aphids (insecticidal soap or strong water spray), flea beetles (row covers at transplant), root maggot (collar around stem base).',
+  rotation: { family: 'Brassicaceae (Mustard family)', cycle: 'Rotate every 3–4 years; do not follow another brassica (broccoli, kale, turnips) in same bed' },
   stages: [
-    { label: 'Wk 0–2',   title: 'Germination & Seedling', desc: 'Germinates in 5–10 days at 65–75 °F. Start indoors; provide bright light to prevent leggy seedlings.' },
-    { label: 'Wk 2–6',   title: 'Transplant & Establishment', desc: 'Harden off over 7–10 days. Transplant into garden; protect with row covers immediately.' },
-    { label: 'Wk 6–10',  title: 'Leafy Growth',           desc: 'Large outer leaves develop. Side-dress with nitrogen. Scout for pests under leaves daily.' },
-    { label: 'Wk 10–14', title: 'Head Initiation',        desc: 'Inner leaves begin cupping inward. Maintain even watering to prevent splitting.' },
-    { label: 'Wk 14–18', title: 'Head Fill & Harvest',    desc: 'Head firms up. Harvest when head is solid and firm to the touch. Cut at base with a sharp knife.' },
+    { label: 'Seedling', title: 'Transplant establishment', desc: 'Harden off transplants 7–10 days before moving outside. Plant on overcast day or in evening.' },
+    { label: 'Rosette', title: 'Leaf expansion', desc: 'Outer leaves grow and expand. Fertilize with nitrogen. Install row cover now to prevent moth egg-laying.' },
+    { label: 'Head', title: 'Head formation', desc: 'Outer leaves cup inward and head begins to form. Reduce nitrogen; maintain water consistency.' },
+    { label: 'Harvest', title: 'Mature head', desc: 'Harvest when head feels firm when squeezed. Cut at base; leave outer leaves. After harvest, leave root in ground — often produces small side shoots.' },
   ],
-
   nutrition: {
-    // — Macronutrients —
-    calories:    25,
-    water:       92.2,   // g
-    protein:     1.3,   // g
-    carbs:       5.8,   // g total
-    fiber:       2.5,   // g
-    sugars:      3.2,   // g
-    fat:         0.1,   // g total
-    saturated:   0.03,   // g
-    monounsat:   0.02,   // g
-    polyunsat:   0.04,   // g
-    // — Fat-soluble vitamins —
-    vitA:        5,   // µg RAE
-    vitD:        0,   // µg
-    vitE:        0.15,   // mg
-    vitK:        76,   // µg
-    // — Water-soluble vitamins —
-    vitC:        36.6,   // mg
-    vitB1:       0.061,  // mg thiamine
-    vitB2:       0.04,  // mg riboflavin
-    vitB3:       0.234,  // mg niacin
-    vitB5:       0.212,  // mg pantothenic
-    vitB6:       0.124,  // mg pyridoxine
-    vitB7:       0,  // µg biotin
-    vitB9:       43,  // µg DFE folate
-    vitB12:      0,  // µg cobalamin
-    choline:     10.7,  // mg
-    // — Macrominerals —
-    calcium:     40,  // mg
-    phosphorus:  26,  // mg
-    magnesium:   12,  // mg
-    sodium:      18,  // mg
-    potassium:   170,  // mg
-    chloride:    0,  // mg
-    // — Trace minerals —
-    iron:        0.47,  // mg
-    zinc:        0.18,  // mg
-    copper:      0.019,  // mg
-    manganese:   0.16,  // mg
-    selenium:    0.3,  // µg
-    iodine:      0,  // µg
-    chromium:    0,  // µg
-    molybdenum:  0,  // µg
-    fluoride:    0,  // mg
-    notes:       'Excellent source of Vitamin K (76 µg) and Vitamin C. Red cabbage contains 4–6× more anthocyanins and vitamin C than green. Fermented as sauerkraut or kimchi it becomes a probiotic-rich food.',
+    calories: 25, water: 92.2, protein: 1.3, carbs: 5.8, fiber: 2.5, sugars: 3.2, fat: 0.1,
+    saturated: 0, monounsat: 0, polyunsat: 0.1,
+    vitA: 5, vitD: 0, vitE: 0.2, vitK: 76,
+    vitC: 36.6, vitB1: 0.06, vitB2: 0.04, vitB3: 0.2, vitB5: 0.21, vitB6: 0.12,
+    vitB7: 0, vitB9: 43, vitB12: 0, choline: 10.7,
+    calcium: 40, phosphorus: 26, magnesium: 12, sodium: 18, potassium: 170, chloride: 0,
+    iron: 0.5, zinc: 0.18, copper: 0.02, manganese: 0.16, selenium: 0.3, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Excellent source of vitamin C and vitamin K. Contains glucosinolates (sulforaphane precursors) linked to cancer prevention. Red/purple cabbage contains significantly more antioxidants than green.',
   },
-
-  size: {
-    weight:     '0.5–3 kg per head (typical garden harvest 1–2 kg)',
-    dimensions: '6–10" diameter',
-    notes:      'Varieties include green (most common), red/purple, savoy (crinkled), and napa/Chinese types. Early varieties mature in 60–70 days; main-season types in 80–120 days.',
-  },
+  size: { weight: '0.5–3 kg per head', dimensions: '6–10" diameter', notes: 'Savoy types have crinkled leaves and milder flavor; red types take longer to mature' },
 });

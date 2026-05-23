@@ -1,0 +1,63 @@
+import Crop from '../Crop.js';
+export default new Crop({
+  id: 'mulberry-tree',
+  name: 'Mulberry Tree',
+  cat: 'Fruit Tree',
+  emoji: '🌳',
+  planting: {
+    zone6: 'Plant bare-root Mar–Apr or container plants Apr–May',
+    depth: 'Crown at soil level',
+    spacing: '25–35 ft apart (standard); 10–15 ft for dwarf varieties',
+    ph: '5.5–7.0',
+    sun: 'Full sun to partial shade (full sun for best fruit yield)',
+    zone3: 'White mulberry (Morus alba) is hardiest; red mulberry (M. rubra) zone 5+',
+    zone4: 'White mulberry; plant May',
+    zone5: 'Red and white mulberry; plant Apr–May',
+    zone7: 'Plant Feb–Mar; all species excellent',
+    zone8: 'Plant Jan–Feb; white and red mulberry; Everbearing variety',
+    zone9: 'Plant Dec–Jan; Pakistan mulberry; white mulberry',
+  },
+  zones: {
+    '6': { timing: 'Plant Mar–Apr; harvest Jun–Aug (2–3 year wait for first fruit)', plantingStart: 3, plantingEnd: 4, harvestStart: 6, harvestEnd: 8 },
+  },
+  special: 'One of the easiest and most productive fruit trees. Red mulberry (Morus rubra) is the native American species — best flavor. White mulberry (M. alba) is more cold-hardy and drought-tolerant. Illinois Everbearing is an excellent named variety with a long fruiting season. Berries ripen and fall over 4–6 weeks — lay a tarp under tree and shake branches for easy harvest. Fruit stains permanently.',
+  water: { in: '1', note: 'Drought-tolerant once established (3+ years). Deep water during first 2 seasons. Mature trees need no supplemental irrigation in most climates.' },
+  fertilizer: { type: 'Minimal — balanced once per year if needed', amount: '½ lb 10-10-10 per inch trunk diameter', freq: 'Once in early spring only if growth is poor; over-fertilizing promotes excessive vegetative growth at expense of fruit' },
+  companions: {
+    good: [
+      { name: 'Comfrey', why: 'Dynamic accumulator; thrives under canopy; provides mineral mulch' },
+      { name: 'Garlic', why: 'Planted at base deters borers and rodents from gnawing bark' },
+      { name: 'Nasturtiums', why: 'Ground cover under tree that attracts beneficial insects' },
+    ],
+    bad: [
+      { name: 'Vegetable garden', why: 'Fallen berries stain; aggressive surface roots compete with shallow-rooted vegetables; place away from production beds' },
+    ],
+  },
+  companionDist: 'Plant where fallen fruit can be tolerated (away from patios, driveways); give 30 ft from structures for mature spread',
+  animals: 'Exceptional wildlife tree — over 50 bird species eat mulberries. Caterpillars (silkworm) hosted on white mulberry. Plant as a sacrifice tree to keep birds off other fruits.',
+  diseases: [
+    { name: 'Bacterial Blight', desc: 'Blackened, dying shoot tips and dark lesions on leaves. Prune affected growth; copper spray at bud break in wet springs.' },
+    { name: 'Powdery Mildew', desc: 'White coating on leaves in late season. Usually cosmetic. Improve air circulation with pruning.' },
+    { name: 'Popcorn Disease (Ciboria carunculoides)', desc: 'Immature berries swell like popcorn. Remove and destroy affected fruit. Usually minor.' },
+  ],
+  pests: 'Generally pest-free. Birds (considered a pest and a benefit simultaneously). Fall webworm (prune out web tents; Bt spray). Scale insects (horticultural oil while dormant).',
+  rotation: { family: 'Moraceae', cycle: 'Permanent fruit tree — 50–100+ year lifespan. Choose site very carefully.' },
+  stages: [
+    { label: 'Yr 1–2', title: 'Establishment', desc: 'Focus on root development. Water deeply and consistently. Some trees fruit in year 2.' },
+    { label: 'Yr 3+', title: 'Fruiting', desc: 'Increasing yields each year. Full production by year 5–7. Some trees produce 20–50 lbs of fruit annually.' },
+    { label: 'Spring', title: 'Leaf and flower', desc: 'Leaves emerge in May. Inconspicuous catkin flowers appear with leaves.' },
+    { label: 'Jun–Aug', title: 'Berry harvest', desc: 'Berries ripen over 4–6 week window. Red when unripe, dark purple-black when fully ripe. Shake branches onto tarp for easy harvest.' },
+  ],
+  nutrition: {
+    calories: 43, water: 87.7, protein: 1.4, carbs: 9.8, fiber: 1.7, sugars: 8.1, fat: 0.4,
+    saturated: 0, monounsat: 0.1, polyunsat: 0.2,
+    vitA: 1, vitD: 0, vitE: 0.9, vitK: 7.8,
+    vitC: 36.4, vitB1: 0.03, vitB2: 0.1, vitB3: 0.6, vitB5: 0.07, vitB6: 0.05,
+    vitB7: 0, vitB9: 6, vitB12: 0, choline: 12.3,
+    calcium: 39, phosphorus: 38, magnesium: 18, sodium: 10, potassium: 194, chloride: 0,
+    iron: 1.8, zinc: 0.12, copper: 0.06, manganese: 0.86, selenium: 0.6, iodine: 0,
+    chromium: 0, molybdenum: 0, fluoride: 0,
+    notes: 'Excellent source of vitamin C and iron for a fruit. Rich in resveratrol (same as red wine grapes), anthocyanins, and rutin. High manganese content.',
+  },
+  size: { weight: '2–5g per berry', dimensions: '¾–1.5" long', notes: 'Pakistan mulberry produces exceptionally long berries (2–3 inches) but is only hardy to zone 7' },
+});
