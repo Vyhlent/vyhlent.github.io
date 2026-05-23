@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garden Planner</title>
+<title>Zone 6 Garden Planner</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script type="module">
@@ -284,7 +284,7 @@ a{color:inherit;text-decoration:none}
           <option value="3">Zone 3</option>
           <option value="4">Zone 4</option>
           <option value="5">Zone 5</option>
-          <option value="6">Zone 6</option>
+          <option value="6" selected>Zone 6</option>
           <option value="7">Zone 7</option>
           <option value="8">Zone 8</option>
           <option value="9">Zone 9</option>
@@ -337,10 +337,11 @@ a{color:inherit;text-decoration:none}
       <button class="chart-tab" onclick="showChartSection('companions')">🤝 Companions</button>
     </div>
     <div id="chart-seasons" class="chart-section on">
-      <div class="leg-row" style="margin-bottom:1rem">
+      <div class="leg-row" style="margin-bottom:.6rem">
         <span class="leg-item"><span class="leg-dot" style="background:#7abd3e"></span>Planting window</span>
         <span class="leg-item"><span class="leg-dot" style="background:#1a5c08"></span>Growing season</span>
         <span class="leg-item"><span class="leg-dot" style="background:#EF9F27"></span>Harvest window</span>
+        <span id="seasons-zone-label" style="margin-left:auto;font-size:13px;color:var(--tt)"></span>
       </div>
       <div id="seasons-header"></div>
       <div id="seasons-content"></div>
@@ -446,18 +447,28 @@ function setZone(z) {
     const p = PLANTS.find(x => x.data.id === currentId);
     if (p) document.getElementById('dcontent').innerHTML = buildDetail(p.data);
   }
-  // Invalidate chart renders that depend on zone
-  chR = false;
+  // Re-render seasons chart immediately (it's zone-dependent).
+  // If the charts page has already been rendered, update it in place so the
+  // user sees the change without having to navigate away and back.
+  if (chR) {
+    renderSeasonsChart();
+  } else {
+    chR = false;
+  }
 }
 /** Returns the planting timing string for the active zone.
  *  Falls back to planting.zone6 if no zone-specific data exists. */
 function zoneTiming(d) {
   const z = activeZone;
   // Support zones object: {3:'...', 4:'...', ... } or zones.zone3 etc.
+  // Each entry may be a plain string OR a ZoneData object {timing, plantingStart, ...}
   const zones = d.zones || d.planting?.zones;
   if (zones) {
     const v = zones[z] || zones['zone' + z] || zones[String(z)];
-    if (v) return v;
+    if (v) {
+      // If it's a ZoneData object, return the timing string; otherwise return as-is
+      return (typeof v === 'object' && v !== null) ? (v.timing || '') : v;
+    }
   }
   // Fallback for other zone keys on planting
   if (z !== 6) {
@@ -1061,7 +1072,10 @@ function renderAllCharts() {
 }
 
 function renderSeasonsChart() {
-  // Inject month header row via JS (can't use template literals in static HTML)
+  // Update zone indicator label
+  const zLabel = document.getElementById('seasons-zone-label');
+  if (zLabel) zLabel.textContent = `Showing Zone ${activeZone}`;
+  // Inject month header row
   document.getElementById('seasons-header').innerHTML =
     `<div style="display:grid;grid-template-columns:auto 1fr;gap:0 10px;margin-bottom:6px;padding:0 12px">
       <div style="width:146px"></div>
@@ -1069,68 +1083,138 @@ function renderSeasonsChart() {
         ${['J','F','M','A','M','J','J','A','S','O','N','D'].map(m=>`<div class="month-label">${m}</div>`).join('')}
       </div>
     </div>`;
-  // Zone 6 approximate planting / growing / harvest windows per crop
-  // [plantStart, plantEnd, growStart, growEnd, harvestStart, harvestEnd] (1=Jan, 12=Dec)
-  const seasonData = {
-    'Tomatoes':      [4,5, 5,8, 8,10],
-    'Peppers':       [4,5, 5,9, 8,10],
-    'Cucumbers':     [5,6, 6,8, 7,9],
-    'Zucchini':      [5,6, 6,8, 7,9],
-    'Carrots':       [3,5, 4,7, 6,10],
-    'Lettuce':       [3,5, 4,6, 5,6],
-    'Spinach':       [3,4, 4,6, 5,6],
-    'Kale':          [3,4, 4,6, 5,7],
-    'Beans':         [5,6, 6,8, 7,9],
-    'Peas':          [3,4, 4,6, 5,6],
-    'Onions':        [3,4, 4,8, 7,9],
-    'Garlic':        [10,11,11,6, 6,7],
-    'Potatoes':      [4,5, 5,8, 7,9],
-    'Corn':          [5,6, 6,8, 8,9],
-    'Broccoli':      [3,4, 4,6, 5,6],
-    'Cabbage':       [3,4, 4,6, 5,6],
-    'Beets':         [3,5, 4,7, 6,9],
-    'Radishes':      [3,5, 4,6, 4,6],
-    'Basil':         [5,6, 6,9, 7,10],
-    'Parsley':       [3,5, 4,8, 6,10],
-    'Mint':          [4,5, 5,10,6,10],
-    'Dill':          [4,6, 5,8, 7,9],
-    'Cherry Tree':   [3,4, 4,7, 6,7],
-    'Mulberry Tree': [3,4, 4,8, 6,8],
-    'Honey Locust':  [4,5, 5,10,9,10],
-    'Wild Blackberry':[4,5,5,8, 7,9],
-    'Field Garlic':  [3,4, 4,7, 5,6],
-    'Pokeweed':      [4,5, 5,9, 8,10],
-    'Queen Anne\'s Lace':[4,5,5,9,7,9],
+
+  // ── Static fallback table (zone 6 baseline) ──────────────────────────────
+  // Used when a crop has no structured zones data for the active zone.
+  // Keys are matched as substrings against crop names.
+  // [plantStart, plantEnd, growStart, growEnd, harvestStart, harvestEnd] (1=Jan)
+  const FALLBACK_Z6 = {
+    'Tomatoes':           [4,5, 5,8, 8,10],
+    'Peppers':            [4,5, 5,9, 8,10],
+    'Cucumbers':          [5,6, 6,8, 7,9],
+    'Zucchini':           [5,6, 6,8, 7,9],
+    'Carrots':            [3,5, 4,7, 6,10],
+    'Lettuce':            [3,5, 4,6, 5,6],
+    'Spinach':            [3,4, 4,6, 5,6],
+    'Kale':               [3,4, 4,6, 5,7],
+    'Beans':              [5,6, 6,8, 7,9],
+    'Peas':               [3,4, 4,6, 5,6],
+    'Onions':             [3,4, 4,8, 7,9],
+    'Garlic':             [10,11,11,6, 6,7],
+    'Potatoes':           [4,5, 5,8, 7,9],
+    'Corn':               [5,6, 6,8, 8,9],
+    'Broccoli':           [3,4, 4,6, 5,6],
+    'Cabbage':            [3,4, 4,6, 5,6],
+    'Beets':              [3,5, 4,7, 6,9],
+    'Radishes':           [3,5, 4,6, 4,6],
+    'Basil':              [5,6, 6,9, 7,10],
+    'Parsley':            [3,5, 4,8, 6,10],
+    'Mint':               [4,5, 5,10,6,10],
+    'Dill':               [4,6, 5,8, 7,9],
+    'Cherry Tree':        [3,4, 4,7, 6,7],
+    'Mulberry Tree':      [3,4, 4,8, 6,8],
+    'Honey Locust':       [4,5, 5,10,9,10],
+    'Wild Blackberry':    [4,5, 5,8, 7,9],
+    'Field Garlic':       [3,4, 4,7, 5,6],
+    'Pokeweed':           [4,5, 5,9, 8,10],
+    "Queen Anne's Lace":  [4,5, 5,9, 7,9],
+    'Asparagus':          [3,4, 4,5, 4,5],
+    'Blackberries':       [3,4, 5,8, 7,8],
+    'Blueberries':        [3,4, 5,8, 7,8],
+    'Apple Tree':         [3,4, 4,9, 8,10],
+    'Pear Tree':          [3,4, 4,9, 8,10],
+    'Elderberries':       [3,4, 5,9, 8,9],
+    'Raspberries':        [3,4, 5,8, 7,8],
+    'Grapes':             [3,4, 5,10,8,10],
+    'Sweet Potatoes':     [5,6, 6,9, 9,10],
+    'Red Onions':         [4,5, 5,8, 7,8],
+    'Cantaloupe':         [5,6, 6,8, 8,9],
+    'Green Beans':        [5,6, 6,8, 7,9],
+    'Thyme':              [4,5, 5,10,6,10],
+    'Rosemary':           [5,6, 6,10,6,10],
+    'Marigolds':          [5,6, 6,10,6,10],
+    'Dogwood':            [4,5, 4,10,9,10],
+    'Pawpaw Tree':        [4,5, 5,10,9,10],
+    'Aloe':               [5,9, 5,9, 1,12],
   };
-  // Substring-match: find the seasonData key whose name appears in (or contains) the crop name
-  function findSeasonEntry(name) {
-    const nl = (name || '').toLowerCase();
-    // First try: crop name contains a seasonData key (e.g. "Cherry Tomatoes" → "Tomatoes")
-    for (const k of Object.keys(seasonData)) {
-      if (nl.includes(k.toLowerCase())) return seasonData[k];
+
+  // Zone offsets relative to zone 6 baseline (in months; positive = later, negative = earlier).
+  // Rough horticultural approximation: each zone is ~2 weeks (~0.5 month) warmer/cooler.
+  const ZONE_OFFSET = { 3:-2, 4:-1.5, 5:-1, 6:0, 7:1, 8:2, 9:2.5 };
+
+  function clampMonth(m) {
+    // Wrap into 1–12 range
+    m = Math.round(m);
+    if (m < 1) m += 12;
+    if (m > 12) m -= 12;
+    return m;
+  }
+
+  /** Derive a season window tuple for the active zone from a crop data object.
+   *  Priority:
+   *    1. Structured zones[zone] object with plantingStart/End, harvestStart/End
+   *    2. Static fallback table with zone offset applied
+   *    3. null (crop not shown in chart)
+   */
+  function getWindowForZone(cropData) {
+    const z = String(activeZone);
+    const zonesObj = cropData.zones;
+
+    // 1 — Structured ZoneData object from Firestore
+    if (zonesObj) {
+      const entry = zonesObj[z] || zonesObj['zone' + z];
+      if (entry && typeof entry === 'object') {
+        const ps = entry.plantingStart, pe = entry.plantingEnd;
+        const hs = entry.harvestStart,  he = entry.harvestEnd;
+        if (ps && pe && hs && he) {
+          // Grow window: from planting end to harvest start (approximate)
+          const gs = pe, ge = hs;
+          return [ps, pe, gs, ge, hs, he];
+        }
+      }
     }
-    // Second try: a seasonData key contains the crop name (e.g. crop "Cherry" → "Cherry Tree")
-    for (const k of Object.keys(seasonData)) {
-      if (k.toLowerCase().includes(nl)) return seasonData[k];
+
+    // 2 — Static fallback table with zone-offset adjustment
+    const name = cropData.name || '';
+    const nl = name.toLowerCase();
+    let entry = null;
+    for (const k of Object.keys(FALLBACK_Z6)) {
+      if (nl.includes(k.toLowerCase()) || k.toLowerCase().includes(nl)) {
+        entry = FALLBACK_Z6[k]; break;
+      }
     }
-    return null;
+    if (!entry) return null;
+
+    const offset = ZONE_OFFSET[activeZone] ?? 0;
+    if (offset === 0) return entry;
+
+    // Shift planting and harvest windows by zone offset; keep grow window derived
+    let [ps, pe, , , hs, he] = entry;
+    ps = clampMonth(ps + offset);
+    pe = clampMonth(pe + offset);
+    hs = clampMonth(hs + offset);
+    he = clampMonth(he + offset);
+    const gs = pe, ge = hs;
+    return [ps, pe, gs, ge, hs, he];
+  }
+
+  function inWindow(m, start, end) {
+    if (start <= end) return m >= start && m <= end;
+    return m >= start || m <= end; // wraps across Jan
   }
 
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let html = '';
   PLANTS.forEach(p => {
-    const d = findSeasonEntry(p.data.name);
-    if (!d) return;
-    const [ps,pe,gs,ge,hs,he] = d;
+    const w = getWindowForZone(p.data);
+    if (!w) return;
+    const [ps, pe, gs, ge, hs, he] = w;
     let cells = '';
-    for (let m=1;m<=12;m++) {
-      const inPlant = ps<=pe ? (m>=ps&&m<=pe) : (m>=ps||m<=pe);
-      const inGrow  = gs<=ge ? (m>=gs&&m<=ge) : (m>=gs||m<=ge);
-      const inHarv  = hs<=he ? (m>=hs&&m<=he) : (m>=hs||m<=he);
+    for (let m = 1; m <= 12; m++) {
       let cls = '';
-      if (inGrow) cls = 'sbar-grow';
-      else if (inPlant) cls = 'sbar-plant';
-      else if (inHarv) cls = 'sbar-harvest';
+      if (inWindow(m, gs, ge))       cls = 'sbar-grow';
+      else if (inWindow(m, ps, pe))  cls = 'sbar-plant';
+      else if (inWindow(m, hs, he))  cls = 'sbar-harvest';
       cells += `<div class="sbar-cell ${cls}" title="${MONTHS[m-1]}"></div>`;
     }
     html += `<div class="season-crop-row">
@@ -1139,7 +1223,8 @@ function renderSeasonsChart() {
       <div class="season-bar">${cells}</div>
     </div>`;
   });
-  document.getElementById('seasons-content').innerHTML = html || '<div style="color:var(--tt);padding:1rem">No season data yet.</div>';
+  document.getElementById('seasons-content').innerHTML =
+    html || `<div style="color:var(--tt);padding:1rem">No season data for Zone ${activeZone} yet.</div>`;
 }
 
 function renderSunChart() {
