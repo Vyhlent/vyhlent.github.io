@@ -6,8 +6,10 @@
 <title>My Garden</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script type="module">
-import { initializeApp }                                       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp }                                                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, getDocs, collection,
+         query, where }                                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signOut }                         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const app = initializeApp({
   apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
@@ -17,11 +19,16 @@ const app = initializeApp({
   messagingSenderId: "293487006691",
   appId:             "1:293487006691:web:3136660dd705d7b10946d6"
 });
-const db = getFirestore(app);
-window._fbDoc    = code => doc(db, "gardens", code);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+// Expose db helpers
+window._db = db;
 window._fbGetDoc = getDoc;
 window._fbSetDoc = setDoc;
-window._fbReady  = true;
+window._fbQuery  = query;
+window._fbWhere  = where;
+window._fbCollection = collection;
 
 window._fbLoadCrops = async function() {
   const snap = await getDocs(collection(db, 'crops'));
@@ -35,7 +42,38 @@ window._fbLoadCrops = async function() {
   return plants;
 };
 
-window.dispatchEvent(new Event("fb-ready"));
+// Resolve username → uid using the usernames lookup collection
+window._fbResolveUsername = async function(username) {
+  const snap = await getDoc(doc(db, 'usernames', username.toLowerCase()));
+  if (!snap.exists()) return null;
+  return snap.data().uid;
+};
+
+// Load garden by uid
+window._fbLoadGarden = async function(uid) {
+  return getDoc(doc(db, 'gardens', uid));
+};
+
+// Save garden (only owner)
+window._fbSaveGarden = async function(uid, data) {
+  return setDoc(doc(db, 'gardens', uid), data);
+};
+
+// Expose auth
+window._auth = auth;
+window._fbSignOut = () => signOut(auth);
+
+// Auth state watcher — fires once on load
+window._authReady = new Promise(resolve => {
+  onAuthStateChanged(auth, user => {
+    window._currentUser = user || null;
+    resolve(user);
+    // After first call keep updating
+    onAuthStateChanged(auth, u => { window._currentUser = u || null; });
+  });
+});
+
+window.dispatchEvent(new Event('fb-ready'));
 </script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -48,7 +86,7 @@ window.dispatchEvent(new Event("fb-ready"));
   --lb:#E6F1FB;--lt:#0C447C;--lbr:#378ADD;
   --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
 }
-body.dark, .dark{
+body.dark{
   --p:#1e1e1b;--s:#272724;--t:#141412;
   --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
   --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
@@ -93,13 +131,30 @@ input{font-family:inherit}
   background-repeat:no-repeat;background-position:right 6px center;
 }
 .zone-select:focus{border-color:var(--gn)}
-.zone-select:hover{background-color:var(--s)}
 .size-wrap{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ts)}
 .size-wrap input[type=number]{
   width:54px;height:36px;text-align:center;border:1px solid var(--b2);border-radius:8px;
   background:var(--p);color:var(--tp);font-size:14px;outline:none;padding:0 4px;
 }
 .size-wrap input[type=number]:focus{border-color:var(--gn)}
+/* readonly badge shown to non-owners */
+.readonly-badge{
+  display:flex;align-items:center;gap:6px;height:36px;padding:0 14px;
+  border:1px solid var(--abr);border-radius:8px;background:var(--ab);color:var(--at);font-size:13px;
+  flex-shrink:0;
+}
+/* user pill in topbar */
+.user-pill{
+  display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;
+  border:1px solid var(--b2);border-radius:8px;background:var(--s);
+  font-size:13px;color:var(--ts);flex-shrink:0;
+}
+.user-pill .uname{font-weight:600;color:var(--gn)}
+.sign-out-btn{
+  height:36px;padding:0 12px;border:1px solid var(--b2);border-radius:8px;
+  background:var(--p);color:var(--ts);font-size:13px;
+}
+.sign-out-btn:hover{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
 
 .layout{display:flex;height:calc(100vh - 62px);overflow:hidden}
 
@@ -107,49 +162,33 @@ input{font-family:inherit}
   width:196px;min-width:150px;background:var(--p);
   border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
 }
-.sidebar-head{
-  padding:10px 12px 6px;font-size:11px;font-weight:600;letter-spacing:.07em;
-  text-transform:uppercase;color:var(--tt);border-bottom:1px solid var(--b1);flex-shrink:0;
-}
+.sidebar-head{padding:10px 12px 6px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tt);border-bottom:1px solid var(--b1);flex-shrink:0}
 .sidebar-search{padding:7px 10px;border-bottom:1px solid var(--b1);flex-shrink:0}
-.sidebar-search input{
-  width:100%;height:30px;border:1px solid var(--b2);border-radius:6px;
-  background:var(--s);color:var(--tp);font-size:13px;padding:0 10px;outline:none;
-}
+.sidebar-search input{width:100%;height:30px;border:1px solid var(--b2);border-radius:6px;background:var(--s);color:var(--tp);font-size:13px;padding:0 10px;outline:none;}
 .sidebar-search input:focus{border-color:var(--gn)}
 .crop-list{overflow-y:auto;flex:1;padding:5px}
-.crop-item{
-  display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;
-  cursor:pointer;font-size:13px;color:var(--tp);border:2px solid transparent;
-}
+.crop-item{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;cursor:pointer;font-size:13px;color:var(--tp);border:2px solid transparent;}
 .crop-item:hover{background:var(--s)}
 .crop-item.selected{background:var(--gnb);border-color:var(--gn);color:var(--gnt)}
+.crop-item.disabled{cursor:default;opacity:.6}
+.crop-item.disabled:hover{background:transparent}
 .crop-emoji{font-size:19px;flex-shrink:0;width:24px;text-align:center}
 .crop-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.selected-info{
-  padding:9px 12px;border-top:1px solid var(--b1);
-  font-size:12px;color:var(--gnt);background:var(--gnb);flex-shrink:0;display:none;
-}
+.selected-info{padding:9px 12px;border-top:1px solid var(--b1);font-size:12px;color:var(--gnt);background:var(--gnb);flex-shrink:0;display:none}
 
 .grid-area{flex:1;overflow:auto;padding:20px;display:flex;align-items:flex-start}
 .garden-grid{display:grid;border:1px solid var(--b2);border-radius:4px;overflow:hidden;flex-shrink:0}
 .gcell{
   width:70px;height:70px;border:1px solid var(--b1);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  font-size:26px;cursor:crosshair;background:var(--p);position:relative;user-select:none;
+  font-size:26px;background:var(--p);position:relative;user-select:none;
 }
-.gcell:hover{background:var(--gnb)}
-.gcell.eh:hover{background:var(--rb)}
-.gcell-label{
-  font-size:9px;color:var(--tt);text-align:center;margin-top:2px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  width:100%;padding:0 3px;pointer-events:none;
-}
+.gcell.editable{cursor:crosshair}
+.gcell.editable:hover{background:var(--gnb)}
+.gcell.eh.editable:hover{background:var(--rb)}
+.gcell-label{font-size:9px;color:var(--tt);text-align:center;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;padding:0 3px;pointer-events:none}
 
-.legend{
-  padding:7px 14px;background:var(--s);border-top:1px solid var(--b1);
-  font-size:12px;color:var(--tt);display:flex;gap:18px;flex-wrap:wrap;align-items:center;flex-shrink:0;
-}
+.legend{padding:7px 14px;background:var(--s);border-top:1px solid var(--b1);font-size:12px;color:var(--tt);display:flex;gap:18px;flex-wrap:wrap;align-items:center;flex-shrink:0}
 
 #statusbar{position:fixed;bottom:1.25rem;right:1.25rem;z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
 .toast{padding:10px 16px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;border:1px solid}
@@ -160,10 +199,7 @@ input{font-family:inherit}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-#loading-overlay{
-  position:fixed;inset:0;background:var(--t);z-index:200;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
-}
+#loading-overlay{position:fixed;inset:0;background:var(--t);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 #loading-overlay.hidden{display:none}
 </style>
 </head>
@@ -179,40 +215,54 @@ input{font-family:inherit}
 <div id="app" style="display:none;height:100vh;flex-direction:column">
 
   <div class="topbar">
-    <div class="garden-title" id="garden-title">My Garden</div>
+    <div class="garden-title" id="garden-title">Garden</div>
 
-    <button class="tbtn active" id="tool-draw" onclick="setTool('draw')">
+    <!-- Draw/Erase — shown only to owner -->
+    <button class="tbtn active owner-only" id="tool-draw" onclick="setTool('draw')" style="display:none">
       <i class="fa-solid fa-pen"></i> Draw
     </button>
-    <button class="tbtn erase" id="tool-erase" onclick="setTool('erase')">
+    <button class="tbtn erase owner-only" id="tool-erase" onclick="setTool('erase')" style="display:none">
       <i class="fa-solid fa-eraser"></i> Erase
     </button>
 
-    <div class="size-wrap">
+    <!-- Grid resize — shown only to owner -->
+    <div class="size-wrap owner-only" id="size-controls" style="display:none">
       <i class="fa-solid fa-table-cells" style="font-size:13px"></i>
       <input type="number" id="grid-cols" min="1" max="30" value="5" onchange="resizeGrid()">
       <span style="color:var(--tt)">x</span>
       <input type="number" id="grid-rows" min="1" max="30" value="5" onchange="resizeGrid()">
     </div>
 
-    <button class="save-btn" id="save-btn" onclick="saveGarden()">
+    <!-- Save — shown only to owner -->
+    <button class="save-btn owner-only" id="save-btn" onclick="saveGarden()" style="display:none">
       <i class="fa-solid fa-floppy-disk"></i> Save
     </button>
 
+    <!-- Read-only badge — shown to visitors -->
+    <div class="readonly-badge visitor-only" id="readonly-badge" style="display:none">
+      <i class="fa-solid fa-eye"></i> View only
+    </div>
+
     <select class="zone-select" id="zone-select" onchange="setZone(+this.value)" title="USDA Hardiness Zone">
-      <option value="3">Zone 3</option>
-      <option value="4">Zone 4</option>
-      <option value="5">Zone 5</option>
-      <option value="6" selected>Zone 6</option>
-      <option value="7">Zone 7</option>
-      <option value="8">Zone 8</option>
+      <option value="3">Zone 3</option><option value="4">Zone 4</option>
+      <option value="5">Zone 5</option><option value="6" selected>Zone 6</option>
+      <option value="7">Zone 7</option><option value="8">Zone 8</option>
       <option value="9">Zone 9</option>
     </select>
+
+    <!-- Logged-in user pill (shown when viewing someone else's garden while logged in) -->
+    <div class="user-pill" id="user-pill" style="display:none">
+      <i class="fa-solid fa-seedling" style="color:var(--gn)"></i>
+      <span class="uname" id="user-pill-name"></span>
+    </div>
+
+    <button class="sign-out-btn" id="sign-out-btn" onclick="doSignOut()" style="display:none" title="Sign out">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </button>
 
     <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
       <i class="fa-solid fa-moon" id="dticon"></i>
     </button>
-
     <a href="index.html" class="ibtn" title="Back to planner">
       <i class="fa-solid fa-house"></i>
     </a>
@@ -239,10 +289,8 @@ input{font-family:inherit}
     </div>
   </div>
 
-  <div class="legend">
-    <span>Draw: pick a crop then click or drag cells</span>
-    <span>Erase: click or drag to clear</span>
-    <span>Resize with the number inputs above</span>
+  <div class="legend" id="legend-bar">
+    <span id="legend-text">Loading…</span>
   </div>
 
 </div>
@@ -250,8 +298,9 @@ input{font-family:inherit}
 <script>
 'use strict';
 
-const GARDEN_CODE = (new URLSearchParams(window.location.search).get('code') || 'default')
-  .replace(/[^a-zA-Z0-9\-_]/g, '').toLowerCase();
+// ── Parse ?user= from URL ────────────────────────────────
+const TARGET_USERNAME = (new URLSearchParams(window.location.search).get('user') || '')
+  .replace(/[^a-zA-Z0-9_\-]/g, '').toLowerCase();
 
 let PLANTS       = [];
 let gridData     = {};
@@ -262,10 +311,11 @@ let tool         = 'draw';
 let isDark       = false;
 let activeZone   = 6;
 let painting     = false;
+let isOwner      = false;      // set after auth resolves
+let ownerUid     = null;       // uid of the garden owner
 
-// Apply dark mode immediately to prevent flash
+// Apply dark mode immediately
 try { if (localStorage.getItem('gp-dark') === '1') { isDark = true; document.body.classList.add('dark'); document.getElementById('loading-overlay').classList.add('dark'); } } catch(e) {}
-// Apply zone immediately so the select shows the right value before full boot
 try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -291,8 +341,7 @@ function setZone(z) {
 
 function applyDark() {
   document.body.classList.toggle('dark', isDark);
-  document.getElementById('app').classList.toggle('dark', isDark);
-  document.getElementById('loading-overlay').classList.toggle('dark', isDark);
+  document.getElementById('loading-overlay')?.classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
 }
 function toggleDark() {
@@ -300,19 +349,68 @@ function toggleDark() {
   try { localStorage.setItem('gp-dark', isDark?'1':'0'); } catch(e) {}
 }
 
-// Load crops from Firestore
-async function loadCrops() {
-  if (!window._fbLoadCrops) {
-    await new Promise(res => window.addEventListener('fb-ready', res, { once: true }));
+async function doSignOut() {
+  await window._fbSignOut();
+  window.location.href = 'index.html';
+}
+
+// ── Show/hide owner vs visitor controls ──────────────────
+function applyOwnerUI() {
+  document.querySelectorAll('.owner-only').forEach(el => el.style.display = isOwner ? '' : 'none');
+  document.querySelectorAll('.visitor-only').forEach(el => el.style.display = !isOwner ? '' : 'none');
+
+  // Show user pill + sign-out for any logged-in user visiting someone else's garden
+  const cu = window._currentUser;
+  const userPill = document.getElementById('user-pill');
+  const soBtn    = document.getElementById('sign-out-btn');
+  if (cu && cu.uid !== ownerUid) {
+    // Visiting — show their own username in pill
+    userPill.style.display = '';
+    soBtn.style.display    = '';
+    // Fetch their username for the pill
+    window._fbGetDoc(window._db && window._db ? window._fbGetDoc : null);
+    (async () => {
+      try {
+        const snap = await window._fbGetDoc(
+          Object.assign(Object.create(null), { id: cu.uid }),
+          // Use proper doc ref
+        );
+      } catch(_) {}
+      // Fallback: try to get username from users/{uid}
+      try {
+        const usnap = await window._fbGetDoc(
+          // We'll use the globally exposed db
+          (await (async()=>{ return (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).doc(window._db, 'users', cu.uid); }))()
+        );
+        if (usnap.exists()) {
+          document.getElementById('user-pill-name').textContent = usnap.data().username || '';
+          userPill.style.display = '';
+        }
+      } catch(_) {}
+    })();
+  } else if (!cu) {
+    userPill.style.display = 'none';
+    soBtn.style.display    = 'none';
   }
+
+  // Update legend
+  const legendText = document.getElementById('legend-text');
+  if (isOwner) {
+    legendText.textContent = 'Draw: pick a crop then click or drag cells  ·  Erase: click or drag to clear  ·  Resize with the number inputs above';
+  } else {
+    legendText.textContent = `Viewing ${TARGET_USERNAME}'s garden — sign in to edit your own`;
+  }
+}
+
+// ── Load crops ────────────────────────────────────────────
+async function loadCrops() {
   PLANTS = await window._fbLoadCrops();
   PLANTS.sort((a,b) => (a.data.name||'').localeCompare(b.data.name||''));
 }
 
-
-// Load garden from Firestore (no auth needed)
-async function loadGarden() {
-  const snap = await window._fbGetDoc(window._fbDoc(GARDEN_CODE));
+// ── Load garden by owner uid ──────────────────────────────
+async function loadGarden(uid) {
+  const snap = await window._fbLoadGarden(uid);
   if (!snap.exists()) return;
   const saved = snap.data();
   gridData = saved.cells || {};
@@ -320,20 +418,22 @@ async function loadGarden() {
   if (saved.rows) { gridRows = saved.rows; document.getElementById('grid-rows').value = gridRows; }
 }
 
-// Save garden to Firestore (no auth needed)
+// ── Save garden ───────────────────────────────────────────
 async function saveGarden() {
+  if (!isOwner) { toast('err', 'You can only save your own garden'); return; }
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spin"></span> Saving...';
   try {
-    await window._fbSetDoc(window._fbDoc(GARDEN_CODE), {
-      code:    GARDEN_CODE,
+    await window._fbSaveGarden(ownerUid, {
+      uid:     ownerUid,
+      username:TARGET_USERNAME,
       cols:    gridCols,
       rows:    gridRows,
       cells:   gridData,
       savedAt: new Date().toISOString()
     });
-    toast('ok', 'Garden "' + GARDEN_CODE + '" saved');
+    toast('ok', 'Garden saved!');
   } catch(e) {
     toast('err', 'Save failed: ' + e.message, 8000);
   } finally {
@@ -342,6 +442,7 @@ async function saveGarden() {
   }
 }
 
+// ── Sidebar ───────────────────────────────────────────────
 function renderSidebar() {
   const q = (document.getElementById('crop-search')?.value||'').toLowerCase();
   const fl = PLANTS.filter(p => !q || (p.data.name||'').toLowerCase().includes(q) || (p.data.cat||'').toLowerCase().includes(q));
@@ -349,13 +450,16 @@ function renderSidebar() {
   if (!fl.length) { list.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--tt);font-size:13px">No crops found</div>'; return; }
   list.innerHTML = fl.map(p => {
     const sel = selectedCrop && selectedCrop.name === p.data.name;
-    return `<div class="crop-item${sel?' selected':''}" onclick="selectCrop('${esc(p.data.emoji)}','${esc(p.data.name)}')">
+    const dis = !isOwner ? ' disabled' : '';
+    const click = isOwner ? `onclick="selectCrop('${esc(p.data.emoji)}','${esc(p.data.name)}')"` : '';
+    return `<div class="crop-item${sel?' selected':''}${dis}" ${click}>
       <span class="crop-emoji">${esc(p.data.emoji)}</span>
       <span class="crop-name">${esc(p.data.name)}</span>
     </div>`;
   }).join('');
 }
 function selectCrop(emoji, name) {
+  if (!isOwner) return;
   selectedCrop = { emoji, name };
   setTool('draw');
   document.getElementById('selected-label').textContent = emoji + ' ' + name;
@@ -364,13 +468,14 @@ function selectCrop(emoji, name) {
 }
 
 function setTool(t) {
+  if (!isOwner) return;
   tool = t;
   document.getElementById('tool-draw').classList.toggle('active', t==='draw');
   document.getElementById('tool-erase').classList.toggle('active', t==='erase');
-  // Update hover class on all cells
   document.querySelectorAll('.gcell').forEach(c => c.classList.toggle('eh', t==='erase'));
 }
 
+// ── Grid ──────────────────────────────────────────────────
 function renderGrid() {
   const grid = document.getElementById('garden-grid');
   grid.style.gridTemplateColumns = `repeat(${gridCols},70px)`;
@@ -380,11 +485,13 @@ function renderGrid() {
       const key = `${r},${c}`;
       const cell = gridData[key];
       const div = document.createElement('div');
-      div.className = 'gcell' + (tool==='erase' ? ' eh' : '');
+      div.className = 'gcell' + (isOwner ? ' editable' : '') + (isOwner && tool==='erase' ? ' eh' : '');
       div.dataset.key = key;
       if (cell) div.innerHTML = `<span>${esc(cell.emoji)}</span><div class="gcell-label">${esc(cell.name)}</div>`;
-      div.addEventListener('mousedown', e => { e.preventDefault(); painting=true; applyTool(key, div); });
-      div.addEventListener('mouseenter', () => { if(painting) applyTool(key, div); });
+      if (isOwner) {
+        div.addEventListener('mousedown', e => { e.preventDefault(); painting=true; applyTool(key, div); });
+        div.addEventListener('mouseenter', () => { if(painting) applyTool(key, div); });
+      }
       grid.appendChild(div);
     }
   }
@@ -392,6 +499,7 @@ function renderGrid() {
 document.addEventListener('mouseup', () => { painting=false; });
 
 function applyTool(key, div) {
+  if (!isOwner) return;
   if (tool==='erase') {
     delete gridData[key];
     div.innerHTML = '';
@@ -404,6 +512,7 @@ function applyTool(key, div) {
 }
 
 function resizeGrid() {
+  if (!isOwner) return;
   gridCols = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-cols').value)||5));
   gridRows = Math.max(1, Math.min(30, parseInt(document.getElementById('grid-rows').value)||5));
   document.getElementById('grid-cols').value = gridCols;
@@ -415,38 +524,70 @@ function resizeGrid() {
   renderGrid();
 }
 
+// ── Boot ──────────────────────────────────────────────────
 async function boot() {
-  document.getElementById('garden-title').textContent = 'Garden: ' + GARDEN_CODE;
-  document.title = 'My Garden - ' + GARDEN_CODE;
-
-  const msg = document.getElementById('loading-msg');
-
-  if (!window._fbReady) {
-    msg.textContent = 'Connecting to Firebase...';
-    await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
+  if (!TARGET_USERNAME) {
+    document.getElementById('loading-msg').textContent = 'No garden specified.';
+    document.getElementById('loading-overlay').innerHTML =
+      '<div style="text-align:center;padding:2rem"><div style="font-size:18px;color:var(--ts);margin-bottom:1rem">No garden specified</div>' +
+      '<a href="index.html" style="color:var(--gn);font-size:15px">← Back to planner</a></div>';
+    return;
   }
+
+  document.getElementById('loading-msg').textContent = 'Connecting…';
+  await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
 
   try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
   applyZone();
 
-  msg.textContent = 'Loading crops...';
+  // 1. Resolve username → uid
+  document.getElementById('loading-msg').textContent = 'Looking up garden…';
+  ownerUid = await window._fbResolveUsername(TARGET_USERNAME);
+  if (!ownerUid) {
+    document.getElementById('loading-overlay').innerHTML =
+      `<div style="text-align:center;padding:2rem"><div style="font-size:18px;color:var(--ts);margin-bottom:1rem">No garden found for <strong>${esc(TARGET_USERNAME)}</strong></div><a href="index.html" style="color:var(--gn);font-size:15px">← Back to planner</a></div>`;
+    return;
+  }
+
+  // 2. Wait for auth state
+  document.getElementById('loading-msg').textContent = 'Checking auth…';
+  await window._authReady;
+  const cu = window._currentUser;
+  isOwner = !!(cu && cu.uid === ownerUid);
+
+  // 3. Load crops
+  document.getElementById('loading-msg').textContent = 'Loading crops…';
   try { await loadCrops(); } catch(e) { toast('err','Could not load crops: '+e.message, 6000); }
 
-  msg.textContent = 'Loading garden...';
-  try { await loadGarden(); } catch(e) { toast('err','Could not load garden: '+e.message, 6000); }
+  // 4. Load garden
+  document.getElementById('loading-msg').textContent = 'Loading garden…';
+  try { await loadGarden(ownerUid); } catch(e) { toast('err','Could not load garden: '+e.message, 6000); }
 
+  // 5. Show app
   document.getElementById('loading-overlay').classList.add('hidden');
   const appEl = document.getElementById('app');
   appEl.style.display = 'flex';
   applyDark();
+  applyOwnerUI();
+
+  const displayName = TARGET_USERNAME.charAt(0).toUpperCase() + TARGET_USERNAME.slice(1);
+  document.getElementById('garden-title').textContent = isOwner ? `🌱 ${displayName}'s Garden` : `${displayName}'s Garden`;
+  document.title = `${displayName}'s Garden`;
+
   renderGrid();
   renderSidebar();
 
-  const isEmpty = Object.keys(gridData).length === 0;
-  if (isEmpty) {
-    toast('info', 'New garden "' + GARDEN_CODE + '" - draw and hit Save');
+  if (isOwner && Object.keys(gridData).length === 0) {
+    toast('info', 'Your garden is empty — pick a crop and start drawing!');
+  } else if (!isOwner) {
+    toast('info', `Viewing ${TARGET_USERNAME}'s garden`);
   } else {
-    toast('ok', 'Loaded garden "' + GARDEN_CODE + '"');
+    toast('ok', 'Garden loaded');
+  }
+
+  // Show sign-out button for any logged-in user
+  if (cu) {
+    document.getElementById('sign-out-btn').style.display = '';
   }
 }
 

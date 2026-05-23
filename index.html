@@ -3,12 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Garden Planner</title>
+<title>Zone 6 Garden Planner</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script type="module">
-import { initializeApp }                        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, getDocs, collection }    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, getDocs, collection, doc, getDoc, setDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword,
+         signInWithEmailAndPassword, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const app = initializeApp({
   apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
@@ -18,7 +23,8 @@ const app = initializeApp({
   messagingSenderId: "293487006691",
   appId:             "1:293487006691:web:3136660dd705d7b10946d6"
 });
-const _db = getFirestore(app);
+const _db   = getFirestore(app);
+const _auth = getAuth(app);
 
 window._fbLoadCrops = async function() {
   const snap = await getDocs(collection(_db, 'crops'));
@@ -31,6 +37,55 @@ window._fbLoadCrops = async function() {
   });
   return plants;
 };
+
+// ── Auth helpers ─────────────────────────────────────────
+window._auth = _auth;
+
+window._fbSignUp = async function(username, password, email) {
+  const unSnap = await getDoc(doc(_db, 'usernames', username.toLowerCase()));
+  if (unSnap.exists()) throw new Error('Username already taken');
+  const emailToUse = email.trim() || (username.toLowerCase() + '@garden.local');
+  const cred = await createUserWithEmailAndPassword(_auth, emailToUse, password);
+  const uid  = cred.user.uid;
+  await setDoc(doc(_db, 'users', uid), {
+    uid, username: username.toLowerCase(), email: email.trim() || '', createdAt: new Date().toISOString()
+  });
+  await setDoc(doc(_db, 'usernames', username.toLowerCase()), { uid });
+  return cred.user;
+};
+
+window._fbSignIn = async function(usernameOrEmail, password) {
+  let emailToUse = usernameOrEmail.trim();
+  if (!emailToUse.includes('@')) {
+    const unSnap = await getDoc(doc(_db, 'usernames', emailToUse.toLowerCase()));
+    if (!unSnap.exists()) throw new Error('Username not found');
+    const uid = unSnap.data().uid;
+    const userSnap = await getDoc(doc(_db, 'users', uid));
+    if (!userSnap.exists()) throw new Error('Account data missing');
+    const userData = userSnap.data();
+    emailToUse = userData.email || (emailToUse.toLowerCase() + '@garden.local');
+  }
+  const cred = await signInWithEmailAndPassword(_auth, emailToUse, password);
+  return cred.user;
+};
+
+window._fbSignOut = () => signOut(_auth);
+
+window._fbGetCurrentUsername = async function(uid) {
+  const snap = await getDoc(doc(_db, 'users', uid));
+  return snap.exists() ? snap.data().username : null;
+};
+
+window._currentUser = null;
+window._authReady = new Promise(resolve => {
+  let resolved = false;
+  onAuthStateChanged(_auth, user => {
+    window._currentUser = user || null;
+    if (!resolved) { resolved = true; resolve(user); }
+    window.dispatchEvent(new CustomEvent('auth-changed', { detail: user }));
+  });
+});
+
 window.dispatchEvent(new Event('fb-ready'));
 </script>
 <style>
@@ -253,10 +308,65 @@ a{color:inherit;text-decoration:none}
 .toast-info{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
 .spin{display:inline-block;width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:5px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Auth modal ─────────────────────────────────────────── */
+.auth-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.auth-modal-overlay.hidden{display:none}
+.auth-box{background:var(--p);border:1px solid var(--b1);border-radius:14px;padding:2rem;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.auth-box h2{font-size:20px;font-weight:600;color:var(--tp);margin-bottom:.3rem}
+.auth-box .auth-sub{font-size:13px;color:var(--ts);margin-bottom:1.5rem;line-height:1.5}
+.auth-field{margin-bottom:.9rem}
+.auth-field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--tt);margin-bottom:5px}
+.auth-field input{height:42px;padding:0 12px;font-size:15px;border-radius:8px;border:1px solid var(--b2);background:var(--p);color:var(--tp);width:100%;outline:none;font-family:inherit}
+.auth-field input:focus{border-color:var(--gn)}
+.auth-field .hint{font-size:11px;color:var(--tt);margin-top:4px}
+.auth-submit{width:100%;height:44px;border:none;border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:15px;font-weight:500;font-family:inherit;margin-top:.5rem;cursor:pointer}
+.auth-submit:disabled{opacity:.5;cursor:not-allowed}
+.auth-toggle{text-align:center;font-size:13px;color:var(--ts);margin-top:1rem}
+.auth-toggle a{color:var(--gn);cursor:pointer;text-decoration:underline}
+.auth-err{background:var(--rb);color:var(--rt);border:1px solid var(--rbr);border-radius:8px;padding:9px 13px;font-size:13px;margin-bottom:.9rem;display:none}
+.auth-err.show{display:block}
+/* nav auth area */
+.nav-auth-loggedin{display:flex;align-items:center;gap:8px}
+.nav-username-badge{display:flex;align-items:center;gap:6px;height:42px;padding:0 14px;border:1px solid var(--gn);border-radius:8px;background:var(--gnb);color:var(--gnt);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;flex-shrink:0}
+.nav-username-badge:hover{background:var(--gn);color:#EAF3DE}
+.nav-signout-btn{width:42px;height:42px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:16px;cursor:pointer}
+.nav-signout-btn:hover{background:var(--rb);color:var(--rt);border-color:var(--rbr)}
+.nav-signin-btn{display:flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;flex-shrink:0}
+.nav-signin-btn:hover{opacity:.9}
 </style>
 </head>
 <body>
 
+
+<!-- Auth modal -->
+<div class="auth-modal-overlay hidden" id="auth-modal">
+  <div class="auth-box">
+    <h2 id="auth-title">Sign in</h2>
+    <p class="auth-sub" id="auth-sub">Welcome back to your garden.</p>
+    <div class="auth-err" id="auth-err"></div>
+    <div class="auth-field" id="auth-username-field">
+      <label>Username</label>
+      <input type="text" id="auth-username" placeholder="e.g. greenthumb" autocomplete="username"
+        oninput="this.value=this.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase()" maxlength="30">
+      <div class="hint" id="auth-username-hint" style="display:none">Letters, numbers, underscores only</div>
+    </div>
+    <div class="auth-field" id="auth-email-field" style="display:none">
+      <label>Email <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tt)">(optional)</span></label>
+      <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
+      <div class="hint">Needed only if you want password recovery</div>
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="Any password works" autocomplete="current-password" minlength="1">
+    </div>
+    <button class="auth-submit" id="auth-submit" onclick="authSubmit()">Sign in</button>
+    <div class="auth-toggle">
+      <span id="auth-toggle-text">No account? </span>
+      <a onclick="authToggleMode()">Create one</a>
+    </div>
+  </div>
+</div>
 
 <!-- Edit / Add modal -->
 <div class="modal-overlay hidden" id="edit-modal">
@@ -293,14 +403,18 @@ a{color:inherit;text-decoration:none}
       <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
         <i class="fa-solid fa-moon" id="dticon"></i>
       </button>
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-        <input type="text" id="garden-code-input" placeholder="Garden code…"
-          style="width:130px;height:42px;padding:0 12px;font-size:14px;border-radius:8px;border:1px solid var(--b2);background:var(--p);color:var(--tp);outline:none"
-          onkeydown="if(event.key==='Enter')openGarden()"
-          onfocus="this.style.borderColor='var(--gn)'"
-          onblur="this.style.borderColor='var(--b2)'">
-        <button class="ibtn" onclick="openGarden()" title="Open My Garden" style="font-size:14px;width:auto;padding:0 12px;gap:6px;display:flex;align-items:center">
+      <!-- Auth widget: shown when logged out -->
+      <button class="nav-signin-btn" id="nav-signin-btn" onclick="openAuthModal()">
+        <i class="fa-solid fa-seedling"></i> My Garden
+      </button>
+      <!-- Auth widget: shown when logged in -->
+      <div class="nav-auth-loggedin" id="nav-loggedin" style="display:none">
+        <a class="nav-username-badge" id="nav-garden-link" href="#" title="Open my garden">
           <i class="fa-solid fa-seedling"></i>
+          <span id="nav-username-display">…</span>
+        </a>
+        <button class="nav-signout-btn" onclick="doNavSignOut()" title="Sign out">
+          <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
     </div>
@@ -1608,24 +1722,119 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 // Close modals on overlay click
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))cancelEdit();});
 
-// ─── Garden code → open My Garden page ───────────────────
-function openGarden() {
-  const code = document.getElementById('garden-code-input').value.trim();
-  if (!code) {
-    toast('err', '✗ Enter a garden code first');
-    return;
+// ─── Auth modal state ─────────────────────────────────────
+let authMode = 'signin'; // 'signin' | 'signup'
+
+function openAuthModal() {
+  authMode = 'signin';
+  updateAuthModal();
+  document.getElementById('auth-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('auth-username').focus(), 50);
+}
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.add('hidden');
+  document.getElementById('auth-err').classList.remove('show');
+}
+function authToggleMode() {
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  updateAuthModal();
+}
+function updateAuthModal() {
+  const isSignup = authMode === 'signup';
+  document.getElementById('auth-title').textContent     = isSignup ? 'Create account' : 'Sign in';
+  document.getElementById('auth-sub').textContent       = isSignup ? 'Pick a username to get started.' : 'Welcome back to your garden.';
+  document.getElementById('auth-submit').textContent    = isSignup ? 'Create account' : 'Sign in';
+  document.getElementById('auth-toggle-text').textContent = isSignup ? 'Already have one? ' : 'No account? ';
+  document.querySelector('#auth-modal .auth-toggle a').textContent = isSignup ? 'Sign in' : 'Create one';
+  document.getElementById('auth-email-field').style.display  = isSignup ? '' : 'none';
+  document.getElementById('auth-username-hint').style.display = isSignup ? '' : 'none';
+  document.getElementById('auth-password').autocomplete = isSignup ? 'new-password' : 'current-password';
+  document.getElementById('auth-err').classList.remove('show');
+}
+async function authSubmit() {
+  const username = document.getElementById('auth-username').value.trim().toLowerCase();
+  const password = document.getElementById('auth-password').value;
+  const email    = document.getElementById('auth-email').value.trim();
+  const errEl    = document.getElementById('auth-err');
+  const btn      = document.getElementById('auth-submit');
+  errEl.classList.remove('show');
+
+  if (!username) { errEl.textContent='Enter a username'; errEl.classList.add('show'); return; }
+  if (!password) { errEl.textContent='Enter a password'; errEl.classList.add('show'); return; }
+  if (authMode === 'signup' && !/^[a-z0-9_]+$/.test(username)) {
+    errEl.textContent='Username can only contain letters, numbers, underscores'; errEl.classList.add('show'); return;
   }
-  // Sanitise: alphanumeric + hyphens only
-  const safe = code.replace(/[^a-zA-Z0-9\-_]/g, '').toLowerCase();
-  if (!safe) { toast('err', '✗ Invalid code — use letters, numbers, or hyphens'); return; }
-  window.location.href = `garden.html?code=${encodeURIComponent(safe)}`;
+
+  btn.disabled = true;
+  btn.textContent = authMode === 'signup' ? 'Creating…' : 'Signing in…';
+  try {
+    if (authMode === 'signup') {
+      await window._fbSignUp(username, password, email);
+    } else {
+      await window._fbSignIn(username, password);
+    }
+    closeAuthModal();
+    // auth-changed event will update the UI
+  } catch(e) {
+    let msg = e.message;
+    if (msg.includes('email-already-in-use')) msg = 'Username already taken';
+    if (msg.includes('wrong-password') || msg.includes('invalid-credential')) msg = 'Incorrect password';
+    if (msg.includes('invalid-email')) msg = 'Invalid email address';
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = authMode === 'signup' ? 'Create account' : 'Sign in';
+  }
 }
 
-// ─── Boot — loads crops immediately, no login needed ──────
+// Close auth modal on overlay click
+document.getElementById('auth-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('auth-modal')) closeAuthModal();
+});
+
+// Keyboard enter in auth modal
+document.getElementById('auth-modal').addEventListener('keydown', e => {
+  if (e.key === 'Enter') authSubmit();
+});
+
+async function doNavSignOut() {
+  await window._fbSignOut();
+}
+
+// ─── Update nav auth widget ────────────────────────────────
+async function updateNavAuth(user) {
+  const signinBtn = document.getElementById('nav-signin-btn');
+  const loggedin  = document.getElementById('nav-loggedin');
+  if (!user) {
+    signinBtn.style.display = '';
+    loggedin.style.display  = 'none';
+    return;
+  }
+  signinBtn.style.display = 'none';
+  loggedin.style.display  = '';
+  // Get username
+  try {
+    const username = await window._fbGetCurrentUsername(user.uid);
+    if (username) {
+      document.getElementById('nav-username-display').textContent = username;
+      document.getElementById('nav-garden-link').href = `garden.html?user=${encodeURIComponent(username)}`;
+    }
+  } catch(e) { /* silent */ }
+}
+
+// Listen for auth changes
+window.addEventListener('auth-changed', e => updateNavAuth(e.detail));
+
+// ─── Boot ──────────────────────────────────────────────────
 (async () => {
   try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; applyDark(); } } catch(e) {}
   try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
   applyZone();
+  // Wait for firebase to be ready then check auth
+  await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
+  // Update nav once auth resolves (non-blocking for crops)
+  window._authReady.then(user => updateNavAuth(user));
   try {
     await loadAllCrops();
     renderCatRow();
