@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Zone 6 Garden Planner</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script>
+// Apply dark mode before first paint to prevent flash
+(function(){
+  try {
+    var dark = localStorage.getItem('gp-dark');
+    // If never set, default to light
+    if (dark === '1') {
+      document.documentElement.classList.add('dark-early');
+    }
+  } catch(e) {}
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script type="module">
 import { initializeApp }
@@ -158,6 +170,16 @@ window.dispatchEvent(new Event('fb-ready'));
   --rb:#FCEBEB;--rt:#791F1F;--rbr:#E24B4A;
 }
 .dark{
+  --p:#1e1e1b;--s:#272724;--t:#141412;
+  --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
+  --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
+  --gn:#7abd3e;--gnb:#1a2e08;--gnt:#c0dd97;
+  --ab:#2a1d06;--at:#FAC775;--abr:#854F0B;
+  --lb:#06192e;--lt:#85B7EB;--lbr:#185FA5;
+  --rb:#250909;--rt:#F09595;--rbr:#A32D2D;
+}
+/* Applied immediately by inline script to prevent dark→light flash on reload */
+.dark-early body,.dark-early #app{
   --p:#1e1e1b;--s:#272724;--t:#141412;
   --tp:#e8e6df;--ts:#b4b2a9;--tt:#686763;
   --b1:rgba(255,255,255,0.1);--b2:rgba(255,255,255,0.18);
@@ -435,7 +457,7 @@ a{color:inherit;text-decoration:none}
 <!-- ════════════════════════════════════════════════════════
      MAIN APP — visible immediately on page load, no login needed
 ════════════════════════════════════════════════════════ -->
-<div class="app dark" id="app">
+<div class="app" id="app">
   <div class="topnav">
     <div class="nav-left" id="nav-tabs">
       <button class="nbtn on" onclick="gotoPage('plants')">Plants</button>
@@ -599,6 +621,8 @@ function applyDark() {
   document.body.classList.toggle('dark', isDark);
   document.getElementById('app').classList.toggle('dark', isDark);
   document.getElementById('dticon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+  // Remove the early-applied class (no longer needed once JS has run)
+  document.documentElement.classList.remove('dark-early');
 }
 function toggleDark() {
   isDark = !isDark; applyDark();
@@ -1897,7 +1921,7 @@ window.addEventListener('auth-changed', e => updateNavAuth(e.detail));
 
 // ─── Boot ──────────────────────────────────────────────────
 (async () => {
-  try { if (localStorage.getItem('gp-dark')==='1') { isDark=true; applyDark(); } } catch(e) {}
+  try { isDark = localStorage.getItem('gp-dark') === '1'; applyDark(); } catch(e) {}
   try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
   applyZone();
   // Wait for firebase to be ready then check auth
