@@ -214,6 +214,39 @@ input{font-family:inherit}
 
 #loading-overlay{position:fixed;inset:0;background:var(--t);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 #loading-overlay.hidden{display:none}
+
+/* Find a Garden panel */
+.find-panel{
+  position:fixed;top:62px;right:0;bottom:0;width:300px;
+  background:var(--p);border-left:1px solid var(--b1);
+  display:flex;flex-direction:column;z-index:40;
+  transform:translateX(100%);transition:transform .25s ease;
+}
+.find-panel.open{transform:translateX(0)}
+.find-panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--b1);flex-shrink:0;
+}
+.find-panel-title{font-size:14px;font-weight:600;color:var(--tp)}
+.find-close-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b2);border-radius:6px;background:var(--p);color:var(--ts);font-size:14px;cursor:pointer}
+.find-close-btn:hover{background:var(--s)}
+.find-search-wrap{padding:10px 12px;border-bottom:1px solid var(--b1);flex-shrink:0;display:flex;gap:8px}
+.find-search-wrap input{flex:1;height:36px;padding:0 10px;border:1px solid var(--b2);border-radius:8px;background:var(--s);color:var(--tp);font-size:14px;outline:none;font-family:inherit}
+.find-search-wrap input:focus{border-color:var(--gn)}
+.find-search-btn{height:36px;padding:0 14px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:13px;font-family:inherit;white-space:nowrap}
+.find-results{overflow-y:auto;flex:1;padding:8px}
+.find-result-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--b1);margin-bottom:6px;text-decoration:none;color:var(--tp)}
+.find-result-item:hover{background:var(--gnb);border-color:var(--gn)}
+.find-result-name{font-size:14px;font-weight:500;color:var(--gn)}
+.find-result-sub{font-size:12px;color:var(--tt);margin-top:2px}
+.find-empty{padding:2rem 1rem;text-align:center;color:var(--tt);font-size:13px}
+/* Find button in topbar */
+.find-btn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:14px;
+}
+.find-btn:hover{background:var(--s)}
+.find-btn.open{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
 </style>
 </head>
 <body>
@@ -273,6 +306,9 @@ input{font-family:inherit}
       <i class="fa-solid fa-right-from-bracket"></i>
     </button>
 
+    <button class="find-btn" id="find-btn" onclick="toggleFindPanel()" title="Find another garden">
+      <i class="fa-solid fa-magnifying-glass"></i> Find Garden
+    </button>
     <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
       <i class="fa-solid fa-moon" id="dticon"></i>
     </button>
@@ -304,6 +340,23 @@ input{font-family:inherit}
 
   <div class="legend" id="legend-bar">
     <span id="legend-text">Loading…</span>
+  </div>
+
+  <!-- Find a Garden slide-in panel -->
+  <div class="find-panel" id="find-panel">
+    <div class="find-panel-head">
+      <span class="find-panel-title"><i class="fa-solid fa-magnifying-glass" style="margin-right:6px"></i>Find a Garden</span>
+      <button class="find-close-btn" onclick="toggleFindPanel()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="find-search-wrap">
+      <input type="text" id="find-input" placeholder="Enter username…"
+        oninput="this.value=this.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase()"
+        onkeydown="if(event.key==='Enter')searchGarden()">
+      <button class="find-search-btn" onclick="searchGarden()">Go</button>
+    </div>
+    <div class="find-results" id="find-results">
+      <div class="find-empty">Search for a username to visit their garden.</div>
+    </div>
   </div>
 
 </div>
@@ -521,13 +574,80 @@ function resizeGrid() {
   renderGrid();
 }
 
+// ── Find a Garden panel ───────────────────────────────────
+function toggleFindPanel() {
+  const panel = document.getElementById('find-panel');
+  const btn   = document.getElementById('find-btn');
+  const open  = panel.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  if (open) setTimeout(() => document.getElementById('find-input').focus(), 260);
+}
+
+async function searchGarden() {
+  const username = (document.getElementById('find-input').value || '').trim().toLowerCase();
+  const resultsEl = document.getElementById('find-results');
+  if (!username) {
+    resultsEl.innerHTML = '<div class="find-empty">Enter a username to search.</div>';
+    return;
+  }
+  resultsEl.innerHTML = '<div class="find-empty"><span class="spin"></span> Looking up…</div>';
+  try {
+    const uid = await window._fbResolveUsername(username);
+    if (!uid) {
+      resultsEl.innerHTML = `<div class="find-empty">No garden found for <strong>${esc(username)}</strong>.</div>`;
+      return;
+    }
+    // Load the garden to get some info
+    const snap = await window._fbLoadGarden(uid);
+    const gardenData = snap.exists() ? snap.data() : null;
+    const cellCount  = gardenData ? Object.keys(gardenData.cells || {}).length : 0;
+    const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+    const isSelf = ownerUid && uid === ownerUid;
+    const href = `garden.html?user=${encodeURIComponent(username)}`;
+    resultsEl.innerHTML = `
+      <a class="find-result-item" href="${href}">
+        <span style="font-size:28px">🌱</span>
+        <div>
+          <div class="find-result-name">${esc(displayName)}'s Garden</div>
+          <div class="find-result-sub">${cellCount} crop${cellCount !== 1 ? 's' : ''} planted${isSelf ? ' · your garden' : ''}</div>
+        </div>
+        <i class="fa-solid fa-arrow-right" style="margin-left:auto;color:var(--tt)"></i>
+      </a>`;
+  } catch(e) {
+    resultsEl.innerHTML = `<div class="find-empty" style="color:var(--rt)">Error: ${esc(e.message)}</div>`;
+  }
+}
+
 // ── Boot ──────────────────────────────────────────────────
 async function boot() {
   if (!TARGET_USERNAME) {
-    document.getElementById('loading-msg').textContent = 'No garden specified.';
-    document.getElementById('loading-overlay').innerHTML =
-      '<div style="text-align:center;padding:2rem"><div style="font-size:18px;color:var(--ts);margin-bottom:1rem">No garden specified</div>' +
-      '<a href="index.html" style="color:var(--gn);font-size:15px">← Back to planner</a></div>';
+    // No user in URL — wait for firebase then check if we're logged in
+    await new Promise(res => window.addEventListener('fb-ready', res, {once:true}));
+    await window._authReady;
+    const cu = window._currentUser;
+    if (cu && window._currentUsername) {
+      // Redirect to own garden
+      window.location.replace(`garden.html?user=${encodeURIComponent(window._currentUsername)}`);
+      return;
+    }
+    // Not logged in — show a find-garden landing page
+    document.getElementById('loading-overlay').classList.add('hidden');
+    const appEl = document.getElementById('app');
+    appEl.style.display = 'flex';
+    applyDark();
+    document.getElementById('garden-title').textContent = '🌱 Gardens';
+    document.title = 'Gardens';
+    // Hide owner controls, show visitor UI
+    document.querySelectorAll('.owner-only').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.visitor-only').forEach(el => el.style.display = 'none');
+    document.getElementById('legend-text').textContent = 'Search for a username above to visit their garden';
+    // Show an empty grid placeholder
+    document.getElementById('garden-grid').innerHTML =
+      '<div style="padding:3rem 2rem;text-align:center;color:var(--tt);font-size:14px;line-height:1.8">' +
+      '🌱<br>Search for a garden<br>using the <strong>Find</strong> button above</div>';
+    document.getElementById('garden-grid').style.border = 'none';
+    // Open the find panel automatically
+    toggleFindPanel();
     return;
   }
 
