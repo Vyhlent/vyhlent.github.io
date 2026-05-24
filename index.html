@@ -11,8 +11,7 @@ import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, getDocs, collection, doc, getDoc, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, createUserWithEmailAndPassword,
-         signInWithEmailAndPassword, onAuthStateChanged, signOut }
+import { getAuth, signInAnonymously, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const app = initializeApp({
@@ -38,51 +37,110 @@ window._fbLoadCrops = async function() {
   return plants;
 };
 
-// ── Auth helpers ─────────────────────────────────────────
+// ── Auth helpers (anonymous auth + Firestore username store) ─────────────────
+// We use anonymous Firebase Auth for the session token/uid, and store a
+// simple password hash in Firestore for sign-in verification.
+// On sign-up:  signInAnonymously → get uid → store {username, pwHash} → done.
+// On sign-in:  look up username → get uid + pwHash → verify password →
+//              restore session by saving uid to localStorage (uid is stable).
+// Sessions persist via localStorage key 'gp-uid'. On page load we check if
+// the current anonymous auth uid matches the stored uid; if not we just keep
+// the anonymous session but mark the user as logged-in by uid lookup.
+
 window._auth = _auth;
+window._db   = _db;
 
-window._fbSignUp = async function(username, password, email) {
-  const unSnap = await getDoc(doc(_db, 'usernames', username.toLowerCase()));
+// Simple non-cryptographic hash — good enough for a garden planner.
+// For real security use bcrypt server-side; this is client-only.
+async function _hashPassword(password) {
+  const enc = new TextEncoder().encode(password);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+window._fbSignUp = async function(username, password) {
+  const uname = username.toLowerCase();
+  // Check username not taken
+  const unSnap = await getDoc(doc(_db, 'usernames', uname));
   if (unSnap.exists()) throw new Error('Username already taken');
-  const emailToUse = email.trim() || (username.toLowerCase() + '@garden.local');
-  const cred = await createUserWithEmailAndPassword(_auth, emailToUse, password);
+  // Sign in anonymously to get a stable uid
+  const cred = await signInAnonymously(_auth);
   const uid  = cred.user.uid;
+  const pwHash = await _hashPassword(password);
+  // Store user profile and username index
   await setDoc(doc(_db, 'users', uid), {
-    uid, username: username.toLowerCase(), email: email.trim() || '', createdAt: new Date().toISOString()
+    uid, username: uname, pwHash, createdAt: new Date().toISOString()
   });
-  await setDoc(doc(_db, 'usernames', username.toLowerCase()), { uid });
+  await setDoc(doc(_db, 'usernames', uname), { uid });
+  // Persist session
+  try { localStorage.setItem('gp-uid', uid); localStorage.setItem('gp-username', uname); } catch(e) {}
+  window._currentUser = cred.user;
+  window._currentUsername = uname;
   return cred.user;
 };
 
-window._fbSignIn = async function(usernameOrEmail, password) {
-  let emailToUse = usernameOrEmail.trim();
-  if (!emailToUse.includes('@')) {
-    const unSnap = await getDoc(doc(_db, 'usernames', emailToUse.toLowerCase()));
-    if (!unSnap.exists()) throw new Error('Username not found');
-    const uid = unSnap.data().uid;
-    const userSnap = await getDoc(doc(_db, 'users', uid));
-    if (!userSnap.exists()) throw new Error('Account data missing');
-    const userData = userSnap.data();
-    emailToUse = userData.email || (emailToUse.toLowerCase() + '@garden.local');
-  }
-  const cred = await signInWithEmailAndPassword(_auth, emailToUse, password);
-  return cred.user;
+window._fbSignIn = async function(username, password) {
+  const uname = username.toLowerCase();
+  // Resolve username → uid
+  const unSnap = await getDoc(doc(_db, 'usernames', uname));
+  if (!unSnap.exists()) throw new Error('Username not found');
+  const uid = unSnap.data().uid;
+  // Fetch user doc to verify password
+  const userSnap = await getDoc(doc(_db, 'users', uid));
+  if (!userSnap.exists()) throw new Error('Account not found');
+  const userData = userSnap.data();
+  const pwHash = await _hashPassword(password);
+  if (pwHash !== userData.pwHash) throw new Error('Incorrect password');
+  // Sign in anonymously (new session token, but we track identity by uid in localStorage)
+  await signInAnonymously(_auth);
+  // Persist the real uid so we know who this is
+  try { localStorage.setItem('gp-uid', uid); localStorage.setItem('gp-username', uname); } catch(e) {}
+  window._currentUser = { uid };
+  window._currentUsername = uname;
+  return window._currentUser;
 };
 
-window._fbSignOut = () => signOut(_auth);
+window._fbSignOut = async function() {
+  await signOut(_auth);
+  try { localStorage.removeItem('gp-uid'); localStorage.removeItem('gp-username'); } catch(e) {}
+  window._currentUser = null;
+  window._currentUsername = null;
+};
 
 window._fbGetCurrentUsername = async function(uid) {
+  // Fast path: check localStorage
+  const cached = localStorage.getItem('gp-username');
+  const cachedUid = localStorage.getItem('gp-uid');
+  if (cached && cachedUid === uid) return cached;
   const snap = await getDoc(doc(_db, 'users', uid));
   return snap.exists() ? snap.data().username : null;
 };
 
+// Restore session from localStorage on load
 window._currentUser = null;
+window._currentUsername = null;
+try {
+  const storedUid = localStorage.getItem('gp-uid');
+  const storedUN  = localStorage.getItem('gp-username');
+  if (storedUid) {
+    window._currentUser    = { uid: storedUid };
+    window._currentUsername = storedUN || null;
+  }
+} catch(e) {}
+
 window._authReady = new Promise(resolve => {
-  let resolved = false;
+  // Resolve immediately using localStorage session (anonymous auth state
+  // still fires but we don't rely on it for identity — uid from localStorage is canonical)
+  resolve(window._currentUser);
+  // Still watch anonymous auth state for signOut detection
   onAuthStateChanged(_auth, user => {
-    window._currentUser = user || null;
-    if (!resolved) { resolved = true; resolve(user); }
-    window.dispatchEvent(new CustomEvent('auth-changed', { detail: user }));
+    if (!user) {
+      // Signed out — clear session
+      window._currentUser    = null;
+      window._currentUsername = null;
+      try { localStorage.removeItem('gp-uid'); localStorage.removeItem('gp-username'); } catch(e) {}
+    }
+    window.dispatchEvent(new CustomEvent('auth-changed', { detail: window._currentUser }));
   });
 });
 
@@ -351,14 +409,10 @@ a{color:inherit;text-decoration:none}
         oninput="this.value=this.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase()" maxlength="30">
       <div class="hint" id="auth-username-hint" style="display:none">Letters, numbers, underscores only</div>
     </div>
-    <div class="auth-field" id="auth-email-field" style="display:none">
-      <label>Email <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--tt)">(optional)</span></label>
-      <input type="email" id="auth-email" placeholder="you@example.com" autocomplete="email">
-      <div class="hint">Needed only if you want password recovery</div>
-    </div>
     <div class="auth-field">
       <label>Password</label>
       <input type="password" id="auth-password" placeholder="Any password works" autocomplete="current-password" minlength="1">
+      <div class="hint" id="auth-pw-hint" style="display:none">You'll need this to sign in on other devices</div>
     </div>
     <button class="auth-submit" id="auth-submit" onclick="authSubmit()">Sign in</button>
     <div class="auth-toggle">
@@ -1746,15 +1800,14 @@ function updateAuthModal() {
   document.getElementById('auth-submit').textContent    = isSignup ? 'Create account' : 'Sign in';
   document.getElementById('auth-toggle-text').textContent = isSignup ? 'Already have one? ' : 'No account? ';
   document.querySelector('#auth-modal .auth-toggle a').textContent = isSignup ? 'Sign in' : 'Create one';
-  document.getElementById('auth-email-field').style.display  = isSignup ? '' : 'none';
   document.getElementById('auth-username-hint').style.display = isSignup ? '' : 'none';
+  document.getElementById('auth-pw-hint').style.display = isSignup ? '' : 'none';
   document.getElementById('auth-password').autocomplete = isSignup ? 'new-password' : 'current-password';
   document.getElementById('auth-err').classList.remove('show');
 }
 async function authSubmit() {
   const username = document.getElementById('auth-username').value.trim().toLowerCase();
   const password = document.getElementById('auth-password').value;
-  const email    = document.getElementById('auth-email').value.trim();
   const errEl    = document.getElementById('auth-err');
   const btn      = document.getElementById('auth-submit');
   errEl.classList.remove('show');
@@ -1769,7 +1822,7 @@ async function authSubmit() {
   btn.textContent = authMode === 'signup' ? 'Creating…' : 'Signing in…';
   try {
     if (authMode === 'signup') {
-      await window._fbSignUp(username, password, email);
+      await window._fbSignUp(username, password);
     } else {
       await window._fbSignIn(username, password);
     }
@@ -1813,10 +1866,11 @@ async function updateNavAuth(user) {
   }
   signinBtn.style.display = 'none';
   loggedin.style.display  = '';
-  // Get username
+  // Use cached username first, then fetch if needed
   try {
-    const username = await window._fbGetCurrentUsername(user.uid);
+    const username = window._currentUsername || await window._fbGetCurrentUsername(user.uid);
     if (username) {
+      window._currentUsername = username;
       document.getElementById('nav-username-display').textContent = username;
       document.getElementById('nav-garden-link').href = `garden.html?user=${encodeURIComponent(username)}`;
     }

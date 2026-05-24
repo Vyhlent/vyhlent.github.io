@@ -9,7 +9,7 @@
 import { initializeApp }                                                from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, getDocs, collection,
          query, where }                                                  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getAuth, onAuthStateChanged, signOut }                         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, signInAnonymously, onAuthStateChanged, signOut }       from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const app = initializeApp({
   apiKey:            "AIzaSyABvIAAPYNs1WJvsCZmV0kTf7Spx-EV_Zk",
@@ -63,14 +63,27 @@ window._fbSaveGarden = async function(uid, data) {
 window._auth = auth;
 window._fbSignOut = () => signOut(auth);
 
-// Auth state watcher — fires once on load
-window._authReady = new Promise(resolve => {
-  onAuthStateChanged(auth, user => {
-    window._currentUser = user || null;
-    resolve(user);
-    // After first call keep updating
-    onAuthStateChanged(auth, u => { window._currentUser = u || null; });
-  });
+// Session restored from localStorage (same as index.html)
+window._currentUser = null;
+window._currentUsername = null;
+try {
+  const storedUid = localStorage.getItem('gp-uid');
+  const storedUN  = localStorage.getItem('gp-username');
+  if (storedUid) {
+    window._currentUser    = { uid: storedUid };
+    window._currentUsername = storedUN || null;
+  }
+} catch(e) {}
+
+window._authReady = Promise.resolve(window._currentUser);
+
+// Watch for sign-out
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    window._currentUser    = null;
+    window._currentUsername = null;
+    try { localStorage.removeItem('gp-uid'); localStorage.removeItem('gp-username'); } catch(e) {}
+  }
 });
 
 window.dispatchEvent(new Event('fb-ready'));
@@ -351,6 +364,7 @@ function toggleDark() {
 
 async function doSignOut() {
   await window._fbSignOut();
+  try { localStorage.removeItem('gp-uid'); localStorage.removeItem('gp-username'); } catch(e) {}
   window.location.href = 'index.html';
 }
 
@@ -364,30 +378,13 @@ function applyOwnerUI() {
   const userPill = document.getElementById('user-pill');
   const soBtn    = document.getElementById('sign-out-btn');
   if (cu && cu.uid !== ownerUid) {
-    // Visiting — show their own username in pill
-    userPill.style.display = '';
-    soBtn.style.display    = '';
-    // Fetch their username for the pill
-    window._fbGetDoc(window._db && window._db ? window._fbGetDoc : null);
-    (async () => {
-      try {
-        const snap = await window._fbGetDoc(
-          Object.assign(Object.create(null), { id: cu.uid }),
-          // Use proper doc ref
-        );
-      } catch(_) {}
-      // Fallback: try to get username from users/{uid}
-      try {
-        const usnap = await window._fbGetDoc(
-          // We'll use the globally exposed db
-          (await (async()=>{ return (await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')).doc(window._db, 'users', cu.uid); }))()
-        );
-        if (usnap.exists()) {
-          document.getElementById('user-pill-name').textContent = usnap.data().username || '';
-          userPill.style.display = '';
-        }
-      } catch(_) {}
-    })();
+    // Visiting while logged in — show their username from localStorage
+    const visitorUN = window._currentUsername || localStorage.getItem('gp-username') || '';
+    if (visitorUN) {
+      document.getElementById('user-pill-name').textContent = visitorUN;
+      userPill.style.display = '';
+    }
+    soBtn.style.display = '';
   } else if (!cu) {
     userPill.style.display = 'none';
     soBtn.style.display    = 'none';
