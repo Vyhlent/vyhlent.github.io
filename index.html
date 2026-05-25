@@ -686,18 +686,28 @@ function toggleSelect(id, e) {
   cR=false; rR=false; nR=false; chR=false;
   renderGrid();
   updateSelCount();
+  // If charts page is currently active, re-render companions immediately
+  if (document.getElementById('page-charts').classList.contains('on')) {
+    renderAllCharts(); renderCompanions(); chR=true; cR=true;
+  }
 }
 function selectAllPlants() {
   PLANTS.forEach(p => selectedPlants.add(p.data.id));
   saveSelectedPlants();
   cR=false; rR=false; nR=false; chR=false;
   renderGrid(); updateSelCount();
+  if (document.getElementById('page-charts').classList.contains('on')) {
+    renderAllCharts(); renderCompanions(); chR=true; cR=true;
+  }
 }
 function unselectAllPlants() {
   selectedPlants.clear();
   saveSelectedPlants();
   cR=false; rR=false; nR=false; chR=false;
   renderGrid(); updateSelCount();
+  if (document.getElementById('page-charts').classList.contains('on')) {
+    renderAllCharts(); renderCompanions(); chR=true; cR=true;
+  }
 }
 function updateSelCount() {
   const el = document.getElementById('sel-count');
@@ -818,7 +828,7 @@ function gotoPage(p) {
   document.querySelector(`#nav-tabs .nbtn[onclick="gotoPage('${p}')"]`).classList.add('on');
   if (p === 'rotation'   && !rR) { renderRotation();      rR = true; }
   if (p === 'nutrition') { renderNutritionPage(); nR = true; }
-  if (p === 'charts')    { renderAllCharts();    chR = true; cR = false; }
+  if (p === 'charts')    { renderAllCharts(); renderCompanions(); chR = true; cR = true; }
 }
 
 function showChartSection(sec) {

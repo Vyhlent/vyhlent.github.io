@@ -195,11 +195,31 @@ input{font-family:inherit}
   width:70px;height:70px;border:1px solid var(--b1);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   font-size:26px;background:var(--p);position:relative;user-select:none;
+  transition:box-shadow .15s, outline .15s;
 }
 .gcell.editable{cursor:crosshair}
 .gcell.editable:hover{background:var(--gnb)}
 .gcell.eh.editable:hover{background:var(--rb)}
 .gcell-label{font-size:9px;color:var(--tt);text-align:center;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:100%;padding:0 3px;pointer-events:none}
+/* Companion overlay highlights */
+.gcell.comp-focus{outline:3px solid var(--gn);outline-offset:-3px;background:var(--gnb);z-index:2}
+.gcell.comp-good{outline:3px solid var(--gn);outline-offset:-3px;background:color-mix(in srgb,var(--gnb) 60%,transparent)}
+.gcell.comp-bad{outline:3px solid var(--rbr);outline-offset:-3px;background:color-mix(in srgb,var(--rb) 60%,transparent)}
+.gcell.comp-neutral{opacity:.45}
+/* Companion tooltip */
+.comp-tooltip{
+  position:fixed;z-index:200;
+  background:var(--p);border:1px solid var(--b2);border-radius:10px;
+  padding:9px 13px;font-size:12px;color:var(--tp);max-width:220px;line-height:1.5;
+  box-shadow:0 4px 16px rgba(0,0,0,.15);pointer-events:none;
+  transition:opacity .12s;opacity:0;
+}
+.comp-tooltip.visible{opacity:1}
+.comp-tooltip .ct-status{font-weight:600;margin-bottom:4px}
+.comp-tooltip .ct-status.good{color:var(--gn)}
+.comp-tooltip .ct-status.bad{color:var(--rt)}
+/* Companion mode toolbar button */
+.tbtn.companion.active{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
 
 .legend{padding:7px 14px;background:var(--s);border-top:1px solid var(--b1);font-size:12px;color:var(--tt);display:flex;gap:18px;flex-wrap:wrap;align-items:center;flex-shrink:0}
 
@@ -290,6 +310,7 @@ input{font-family:inherit}
 </div>
 
 <div id="statusbar"></div>
+<div class="comp-tooltip" id="comp-tooltip"></div>
 
 <div id="app" style="display:none;height:100vh;flex-direction:column">
 
@@ -302,6 +323,10 @@ input{font-family:inherit}
     </button>
     <button class="tbtn erase owner-only" id="tool-erase" onclick="setTool('erase')" style="display:none">
       <i class="fa-solid fa-eraser"></i> Erase
+    </button>
+    <!-- Companion overlay — visible to everyone when garden has crops -->
+    <button class="tbtn companion" id="tool-companion" onclick="toggleCompanionMode()" title="Click a crop cell to highlight companions">
+      <i class="fa-solid fa-handshake-simple"></i> Companions
     </button>
 
     <!-- Grid resize — shown only to owner -->
@@ -428,6 +453,10 @@ let painting     = false;
 let isOwner      = false;      // set after auth resolves
 let ownerUid     = null;       // uid of the garden owner
 
+// ── Companion overlay ─────────────────────────────────────
+let companionMode  = false;    // is companion mode active?
+let focusCellKey   = null;     // currently focused cell key ("r,c")
+
 // Apply dark mode immediately
 try { if (localStorage.getItem('gp-dark') === '1') { isDark = true; document.body.classList.add('dark'); document.getElementById('loading-overlay').classList.add('dark'); } } catch(e) {}
 try { const z=parseInt(localStorage.getItem('gp-zone')); if(z>=3&&z<=9){activeZone=z;} } catch(e) {}
@@ -494,9 +523,9 @@ function applyOwnerUI() {
   // Update legend
   const legendText = document.getElementById('legend-text');
   if (isOwner) {
-    legendText.textContent = 'Draw: pick a crop then click or drag cells  ·  Erase: click or drag to clear  ·  Resize with the number inputs above';
+    legendText.textContent = 'Draw: pick a crop then click or drag cells  ·  Erase: click or drag to clear  ·  Companions: click a cell to highlight relationships  ·  Resize with the number inputs above';
   } else {
-    legendText.textContent = `Viewing ${TARGET_USERNAME}'s garden — sign in to edit your own`;
+    legendText.textContent = `Viewing ${TARGET_USERNAME}'s garden — Companions: click a cell to highlight relationships  ·  Sign in to edit your own`;
   }
 }
 
@@ -558,6 +587,12 @@ function renderSidebar() {
 }
 function selectCrop(emoji, name) {
   if (!isOwner) return;
+  // Exit companion mode when selecting a crop to draw
+  if (companionMode) {
+    companionMode = false;
+    document.getElementById('tool-companion').classList.remove('active');
+    clearCompanionHighlights();
+  }
   selectedCrop = { emoji, name };
   setTool('draw');
   document.getElementById('selected-label').textContent = emoji + ' ' + name;
@@ -573,6 +608,111 @@ function setTool(t) {
   document.querySelectorAll('.gcell').forEach(c => c.classList.toggle('eh', t==='erase'));
 }
 
+// ── Companion overlay mode ────────────────────────────────
+function toggleCompanionMode() {
+  companionMode = !companionMode;
+  const btn = document.getElementById('tool-companion');
+  btn.classList.toggle('active', companionMode);
+  if (!companionMode) {
+    focusCellKey = null;
+    clearCompanionHighlights();
+  } else {
+    // Exit draw/erase painting when companion mode is on
+    painting = false;
+    toast('info', 'Click any crop cell to highlight its companions', 3000);
+  }
+}
+
+/** Fuzzy-match a companion name against a crop name */
+function companionMatches(companionName, cropName) {
+  const cn = (companionName || '').toLowerCase().trim();
+  const nm = (cropName     || '').toLowerCase().trim();
+  if (!cn || !nm) return false;
+  return cn === nm || cn.includes(nm) || nm.includes(cn);
+}
+
+/** Get companion relationship between focusCrop and another crop.
+ *  Returns: 'good' | 'bad' | 'neutral' */
+function getCompanionRelation(focusCropData, otherCropData) {
+  const fn = focusCropData?.name || '';
+  const on = otherCropData?.name || '';
+
+  // Check if focus crop lists other as good/bad companion
+  const focusGood = (focusCropData?.companions?.good || []).some(g => companionMatches(g.name, on));
+  const focusBad  = (focusCropData?.companions?.bad  || []).some(b => companionMatches(b.name, on));
+  // Check reverse: other crop lists focus crop as good/bad
+  const otherGood = (otherCropData?.companions?.good || []).some(g => companionMatches(g.name, fn));
+  const otherBad  = (otherCropData?.companions?.bad  || []).some(b => companionMatches(b.name, fn));
+
+  if (focusBad || otherBad) return 'bad';
+  if (focusGood || otherGood) return 'good';
+  return 'neutral';
+}
+
+/** Get the "why" tooltip text for a companion relationship */
+function getCompanionWhy(focusCropData, otherCropData) {
+  const on = otherCropData?.name || '';
+  const fn = focusCropData?.name || '';
+  // Try focus→other good
+  const g1 = (focusCropData?.companions?.good || []).find(g => companionMatches(g.name, on));
+  if (g1?.why) return g1.why;
+  // Try other→focus good
+  const g2 = (otherCropData?.companions?.good || []).find(g => companionMatches(g.name, fn));
+  if (g2?.why) return g2.why;
+  // Try bad reasons
+  const b1 = (focusCropData?.companions?.bad || []).find(b => companionMatches(b.name, on));
+  if (b1?.why) return b1.why;
+  const b2 = (otherCropData?.companions?.bad || []).find(b => companionMatches(b.name, fn));
+  if (b2?.why) return b2.why;
+  return '';
+}
+
+function clearCompanionHighlights() {
+  document.querySelectorAll('.gcell').forEach(c => {
+    c.classList.remove('comp-focus','comp-good','comp-bad','comp-neutral');
+  });
+  hideCompanionTooltip();
+}
+
+function applyCompanionHighlights(focusKey) {
+  clearCompanionHighlights();
+  focusCellKey = focusKey;
+  const focusCell = gridData[focusKey];
+  if (!focusCell) return;
+
+  const focusPlant = PLANTS.find(p => p.data.name?.toLowerCase() === focusCell.name?.toLowerCase());
+  const focusData  = focusPlant?.data || null;
+
+  document.querySelectorAll('.gcell[data-key]').forEach(el => {
+    const key  = el.dataset.key;
+    const cell = gridData[key];
+    if (!cell) return;
+    if (key === focusKey) { el.classList.add('comp-focus'); return; }
+
+    const otherPlant = PLANTS.find(p => p.data.name?.toLowerCase() === cell.name?.toLowerCase());
+    const rel = getCompanionRelation(focusData, otherPlant?.data || null);
+
+    if (rel === 'good')    el.classList.add('comp-good');
+    else if (rel === 'bad') el.classList.add('comp-bad');
+    else                    el.classList.add('comp-neutral');
+  });
+}
+
+// Companion tooltip
+const _tooltip = () => document.getElementById('comp-tooltip');
+function showCompanionTooltip(e, focusData, otherData, relation) {
+  const tt = _tooltip(); if (!tt) return;
+  const emoji = relation === 'good' ? '✓' : '✗';
+  const why   = getCompanionWhy(focusData, otherData);
+  tt.innerHTML = `<div class="ct-status ${relation}">${emoji} ${relation === 'good' ? 'Good companion' : 'Bad companion'}</div>${why ? `<div>${esc(why)}</div>` : ''}`;
+  tt.style.left = (e.clientX + 14) + 'px';
+  tt.style.top  = (e.clientY - 10) + 'px';
+  tt.classList.add('visible');
+}
+function hideCompanionTooltip() {
+  const tt = _tooltip(); if (tt) tt.classList.remove('visible');
+}
+
 // ── Grid ──────────────────────────────────────────────────
 function renderGrid() {
   const grid = document.getElementById('garden-grid');
@@ -586,18 +726,54 @@ function renderGrid() {
       div.className = 'gcell' + (isOwner ? ' editable' : '') + (isOwner && tool==='erase' ? ' eh' : '');
       div.dataset.key = key;
       if (cell) div.innerHTML = `<span>${esc(cell.emoji)}</span><div class="gcell-label">${esc(cell.name)}</div>`;
+
+      // Owner draw/erase events
       if (isOwner) {
-        div.addEventListener('mousedown', e => { e.preventDefault(); painting=true; applyTool(key, div); });
-        div.addEventListener('mouseenter', () => { if(painting) applyTool(key, div); });
+        div.addEventListener('mousedown', e => {
+          if (companionMode) return; // don't draw in companion mode
+          e.preventDefault(); painting=true; applyTool(key, div);
+        });
+        div.addEventListener('mouseenter', () => { if(painting && !companionMode) applyTool(key, div); });
       }
+
+      // Companion mode click — works for owners AND visitors
+      div.addEventListener('click', e => {
+        if (!companionMode) return;
+        e.stopPropagation();
+        const cellData = gridData[key];
+        if (!cellData) { focusCellKey = null; clearCompanionHighlights(); return; }
+        if (focusCellKey === key) { focusCellKey = null; clearCompanionHighlights(); return; }
+        applyCompanionHighlights(key);
+      });
+
+      // Companion tooltip on hover
+      div.addEventListener('mousemove', e => {
+        if (!companionMode || !focusCellKey || focusCellKey === key) return hideCompanionTooltip();
+        const focusCell = gridData[focusCellKey];
+        const thisCell  = gridData[key];
+        if (!focusCell || !thisCell) return hideCompanionTooltip();
+        const focusPlant = PLANTS.find(p => p.data.name?.toLowerCase() === focusCell.name?.toLowerCase());
+        const otherPlant = PLANTS.find(p => p.data.name?.toLowerCase() === thisCell.name?.toLowerCase());
+        const rel = getCompanionRelation(focusPlant?.data, otherPlant?.data);
+        if (rel !== 'neutral') showCompanionTooltip(e, focusPlant?.data, otherPlant?.data, rel);
+        else hideCompanionTooltip();
+      });
+      div.addEventListener('mouseleave', () => { if (companionMode) hideCompanionTooltip(); });
+
       grid.appendChild(div);
     }
   }
+  // Re-apply highlights if companion mode is active
+  if (companionMode && focusCellKey) applyCompanionHighlights(focusCellKey);
 }
 document.addEventListener('mouseup', () => { painting=false; });
+// Escape key clears companion focus
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && companionMode) { focusCellKey = null; clearCompanionHighlights(); }
+});
 
 function applyTool(key, div) {
-  if (!isOwner) return;
+  if (!isOwner || companionMode) return;
   if (tool==='erase') {
     delete gridData[key];
     div.innerHTML = '';
