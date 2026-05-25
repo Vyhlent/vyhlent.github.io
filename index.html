@@ -416,6 +416,39 @@ a{color:inherit;text-decoration:none}
 .nav-signin-btn:hover{background:var(--s)}
 .nav-mygarden-btn{display:flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;flex-shrink:0;text-decoration:none}
 .nav-mygarden-btn:hover{opacity:.9}
+
+/* ── Plant selection ─────────────────────────────────────── */
+.sel-bar{display:flex;align-items:center;gap:8px;margin-bottom:.75rem;flex-wrap:wrap}
+.sel-count{font-size:13px;color:var(--ts);flex:1}
+.sel-btn{height:32px;padding:0 14px;font-size:13px;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);cursor:pointer;font-family:inherit}
+.sel-btn:hover{background:var(--s)}
+.sel-btn.all{background:var(--gn);color:#EAF3DE;border-color:var(--gn)}
+.pcard{position:relative}
+.pcard-sel{position:absolute;top:10px;left:10px;width:20px;height:20px;border-radius:5px;border:2px solid var(--b2);background:var(--p);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2}
+.pcard-sel.checked{background:var(--gn);border-color:var(--gn);color:#fff}
+.pcard-sel.checked::after{content:'✓';font-size:11px;font-weight:700;color:#fff}
+.pcard.unselected{opacity:.55}
+.pcard.unselected .pcard-sel{border-color:var(--b2)}
+
+/* ── Zone finder modal ───────────────────────────────────── */
+.zone-finder-btn{display:flex;align-items:center;gap:5px;height:42px;padding:0 12px;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:13px;cursor:pointer;font-family:inherit;flex-shrink:0;white-space:nowrap}
+.zone-finder-btn:hover{background:var(--s)}
+.zone-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.zone-modal-overlay.hidden{display:none}
+.zone-modal{background:var(--p);border:1px solid var(--b1);border-radius:14px;padding:1.5rem;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.zone-modal h3{font-size:18px;font-weight:600;color:var(--tp);margin-bottom:.3rem}
+.zone-modal-sub{font-size:13px;color:var(--ts);margin-bottom:1.25rem;line-height:1.5}
+.zone-locate-btn{display:flex;align-items:center;gap:8px;height:42px;padding:0 18px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:1rem}
+.zone-locate-btn:disabled{opacity:.5;cursor:not-allowed}
+.zone-result{padding:12px 16px;border-radius:10px;background:var(--gnb);border:1px solid var(--gn);color:var(--gnt);font-size:14px;margin-bottom:1rem;display:none}
+.zone-result.show{display:block}
+.zone-map-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--b1);margin-bottom:1rem;background:var(--s)}
+.zone-map-wrap img{width:100%;display:block}
+.zone-map-caption{font-size:11px;color:var(--tt);padding:6px 10px;text-align:center}
+.zone-manual-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.zone-manual-row label{font-size:13px;color:var(--ts)}
+.zone-apply-btn{height:36px;padding:0 16px;border:1px solid var(--gn);border-radius:8px;background:var(--gn);color:#EAF3DE;font-size:13px;cursor:pointer;font-family:inherit}
+.zone-close-btn{height:36px;padding:0 16px;border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:13px;cursor:pointer;font-family:inherit}
 </style>
 </head>
 <body>
@@ -442,6 +475,39 @@ a{color:inherit;text-decoration:none}
     <div class="auth-toggle">
       <span id="auth-toggle-text">No account? </span>
       <a onclick="authToggleMode()">Create one</a>
+    </div>
+  </div>
+</div>
+
+<!-- Zone finder modal -->
+<div class="zone-modal-overlay hidden" id="zone-modal">
+  <div class="zone-modal">
+    <h3><i class="fa-solid fa-map-pin" style="color:var(--gn);margin-right:8px"></i>Find Your USDA Zone</h3>
+    <p class="zone-modal-sub">Your USDA Hardiness Zone is based on the average annual minimum winter temperature in your area — zones 3–9 cover most of the continental US.</p>
+    <button class="zone-locate-btn" id="zone-locate-btn" onclick="locateZone()">
+      <i class="fa-solid fa-location-crosshairs"></i> Use my location
+    </button>
+    <div class="zone-result" id="zone-result"></div>
+    <div class="zone-map-wrap">
+      <img src="https://planthardiness.ars.usda.gov/images/maps/phzm_us_map_full.jpg"
+           onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/2023_USDA_Plant_Hardiness_Zone_Map.png/1280px-2023_USDA_Plant_Hardiness_Zone_Map.png'"
+           alt="USDA Plant Hardiness Zone Map" style="width:100%;display:block">
+      <div class="zone-map-caption">2023 USDA Plant Hardiness Zone Map · zones 3–9 are supported in this planner</div>
+    </div>
+    <div style="font-size:13px;color:var(--ts);margin-bottom:.75rem">Or select your zone manually:</div>
+    <div class="zone-manual-row">
+      <label>My zone:</label>
+      <select class="zone-select" id="zone-modal-select" style="height:36px;font-size:14px">
+        <option value="3">Zone 3 (−40 to −34°F)</option>
+        <option value="4">Zone 4 (−34 to −29°F)</option>
+        <option value="5">Zone 5 (−29 to −23°F)</option>
+        <option value="6" selected>Zone 6 (−23 to −18°F)</option>
+        <option value="7">Zone 7 (−18 to −12°F)</option>
+        <option value="8">Zone 8 (−12 to −7°F)</option>
+        <option value="9">Zone 9 (−7 to −1°F)</option>
+      </select>
+      <button class="zone-apply-btn" onclick="applyZoneFromModal()">Apply</button>
+      <button class="zone-close-btn" onclick="closeZoneModal()">Close</button>
     </div>
   </div>
 </div>
@@ -478,6 +544,9 @@ a{color:inherit;text-decoration:none}
           <option value="9">Zone 9</option>
         </select>
       </span>
+      <button class="zone-finder-btn" onclick="openZoneModal()" title="Find my USDA zone">
+        <i class="fa-solid fa-location-crosshairs" style="font-size:13px"></i> Find zone
+      </button>
       <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
         <i class="fa-solid fa-moon" id="dticon"></i>
       </button>
@@ -507,6 +576,11 @@ a{color:inherit;text-decoration:none}
         <button class="greenbtn" onclick="openAdd()">+ Add crop</button>
       </div>
       <div class="cat-row" id="cat-row"></div>
+      <div class="sel-bar" id="sel-bar">
+        <span class="sel-count" id="sel-count"></span>
+        <button class="sel-btn all" onclick="selectAllPlants()">Select all</button>
+        <button class="sel-btn" onclick="unselectAllPlants()">Unselect all</button>
+      </div>
       <div class="pgrid" id="pgrid">
         <div style="padding:3rem;text-align:center;color:var(--ts)">
           <span class="spin"></span> Loading crops from GitHub…
@@ -590,6 +664,48 @@ let editingPlant = null;
 let isNew        = false;
 let cR = false, rR = false, nR = false, chR = false;  // chart render flags
 
+// ─── Plant selection (persisted to localStorage) ──────────
+let selectedPlants = new Set(); // Set of plant ids
+
+function loadSelectedPlants() {
+  try {
+    const raw = localStorage.getItem('gp-selected');
+    if (raw === null) return null; // never set — means "all"
+    return new Set(JSON.parse(raw));
+  } catch(e) { return null; }
+}
+function saveSelectedPlants() {
+  try { localStorage.setItem('gp-selected', JSON.stringify([...selectedPlants])); } catch(e) {}
+}
+function isSelected(id) { return selectedPlants.has(id); }
+function toggleSelect(id, e) {
+  if (e) e.stopPropagation();
+  if (selectedPlants.has(id)) selectedPlants.delete(id);
+  else selectedPlants.add(id);
+  saveSelectedPlants();
+  cR=false; rR=false; nR=false; chR=false;
+  renderGrid();
+  updateSelCount();
+}
+function selectAllPlants() {
+  PLANTS.forEach(p => selectedPlants.add(p.data.id));
+  saveSelectedPlants();
+  cR=false; rR=false; nR=false; chR=false;
+  renderGrid(); updateSelCount();
+}
+function unselectAllPlants() {
+  selectedPlants.clear();
+  saveSelectedPlants();
+  cR=false; rR=false; nR=false; chR=false;
+  renderGrid(); updateSelCount();
+}
+function updateSelCount() {
+  const el = document.getElementById('sel-count');
+  if (!el) return;
+  const n = selectedPlants.size, t = PLANTS.length;
+  el.textContent = n === t ? `All ${t} plants selected` : `${n} of ${t} plants selected for charts`;
+}
+
 // ─── Daily value reference (FDA 2020, adults) ─────────────
 const DV = {
   calories:2000, fat:78, saturated:20, carbs:275, fiber:28, sugars:50, protein:50,
@@ -614,6 +730,16 @@ async function loadAllCrops() {
   PLANTS = await window._fbLoadCrops();
   PLANTS.sort((a,b) => a.data.name?.localeCompare(b.data.name));
   if (!PLANTS.length) throw new Error('No crops found in Firestore. Run the migration tool first.');
+  // Initialize selection: restore from localStorage, or default to all selected
+  const stored = loadSelectedPlants();
+  if (stored === null) {
+    // First visit — select all
+    selectedPlants = new Set(PLANTS.map(p => p.data.id));
+  } else {
+    // Keep only ids that still exist
+    selectedPlants = new Set([...stored].filter(id => PLANTS.some(p => p.data.id === id)));
+  }
+  saveSelectedPlants();
 }
 
 // ─── Dark mode ────────────────────────────────────────────
@@ -691,8 +817,8 @@ function gotoPage(p) {
   document.getElementById('page-' + p).classList.add('on');
   document.querySelector(`#nav-tabs .nbtn[onclick="gotoPage('${p}')"]`).classList.add('on');
   if (p === 'rotation'   && !rR) { renderRotation();      rR = true; }
-  if (p === 'nutrition'  && !nR) { renderNutritionPage(); nR = true; }
-  if (p === 'charts'     && !chR) { renderAllCharts();    chR = true; }
+  if (p === 'nutrition') { renderNutritionPage(); nR = true; }
+  if (p === 'charts')    { renderAllCharts();    chR = true; cR = false; }
 }
 
 function showChartSection(sec) {
@@ -700,7 +826,7 @@ function showChartSection(sec) {
   document.querySelectorAll('.chart-tab').forEach(x => x.classList.remove('on'));
   document.getElementById('chart-' + sec).classList.add('on');
   document.querySelector(`.chart-tab[onclick="showChartSection('${sec}')"]`).classList.add('on');
-  if (sec === 'companions' && !cR) { renderCompanions(); cR = true; }
+  if (sec === 'companions') { renderCompanions(); cR = true; }
 }
 
 function getCats() { return ['All', ...new Set(PLANTS.map(p => p.data.cat))]; }
@@ -715,16 +841,26 @@ function setFilter(cat) { activeFilter = cat; renderCatRow(); renderGrid(); }
 
 function renderGrid() {
   const q  = document.getElementById('search')?.value?.toLowerCase() || '';
-  const fl = PLANTS.filter(p =>
+  let fl = PLANTS.filter(p =>
     (activeFilter === 'All' || p.data.cat === activeFilter) &&
     (!q || p.data.name?.toLowerCase().includes(q) || p.data.cat?.toLowerCase().includes(q))
   );
+  // Sort: selected first, then alphabetical within each group
+  fl = [...fl].sort((a, b) => {
+    const aS = isSelected(a.data.id) ? 0 : 1;
+    const bS = isSelected(b.data.id) ? 0 : 1;
+    if (aS !== bS) return aS - bS;
+    return (a.data.name || '').localeCompare(b.data.name || '');
+  });
   const g = document.getElementById('pgrid'); if (!g) return;
   if (!fl.length) { g.innerHTML = '<div class="no-res">No plants found</div>'; return; }
-  g.innerHTML = fl.map(p => `
-    <div class="pcard">
+  g.innerHTML = fl.map(p => {
+    const sel = isSelected(p.data.id);
+    return `
+    <div class="pcard${sel ? '' : ' unselected'}">
+      <div class="pcard-sel${sel ? ' checked' : ''}" onclick="toggleSelect('${esc(p.data.id)}', event)" title="${sel ? 'Remove from charts' : 'Add to charts'}"></div>
       <span class="cbadge">${esc(p.data.cat)}</span>
-      <div style="font-size:22px;margin-bottom:6px">${esc(p.data.emoji)}</div>
+      <div style="font-size:22px;margin-bottom:6px;margin-top:4px">${esc(p.data.emoji)}</div>
       <div class="pcard-name">${esc(p.data.name)}</div>
       <div class="pcard-tags">
         <span class="tag ts_">${esc((p.data.planting?.sun||'').split(' ').slice(0,2).join(' '))}</span>
@@ -735,7 +871,9 @@ function renderGrid() {
         <button onclick="openEdit('${esc(p.data.id)}')">Edit</button>
         <button class="del-btn" onclick="deletePlant('${esc(p.data.id)}')">Delete</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  updateSelCount();
 }
 
 // ─── Detail view ──────────────────────────────────────────
@@ -1206,23 +1344,35 @@ function matchPlantIndex(companionName) {
 }
 
 function renderCompanions() {
-  const n=PLANTS.length;
+  const selPlants = getSelectedPlants();
+  const n=selPlants.length;
   const g=Array.from({length:n},()=>Array(n).fill(0));
   const b=Array.from({length:n},()=>Array(n).fill(0));
-  PLANTS.forEach((p,i)=>{
-    (p.data.companions?.good||[]).forEach(x=>{const j=matchPlantIndex(x.name);if(j>=0&&j!==i)g[i][j]=1;});
-    (p.data.companions?.bad||[]).forEach(x=>{const j=matchPlantIndex(x.name);if(j>=0&&j!==i)b[i][j]=1;});
+  // matchPlantIndex still searches full PLANTS but we display only selected
+  function matchSelIndex(companionName) {
+    const cn = (companionName || '').toLowerCase();
+    if (!cn) return -1;
+    let j = selPlants.findIndex(q => q.data.name?.toLowerCase() === cn);
+    if (j >= 0) return j;
+    j = selPlants.findIndex(q => cn.includes(q.data.name?.toLowerCase()));
+    if (j >= 0) return j;
+    j = selPlants.findIndex(q => q.data.name?.toLowerCase().includes(cn));
+    return j;
+  }
+  selPlants.forEach((p,i)=>{
+    (p.data.companions?.good||[]).forEach(x=>{const j=matchSelIndex(x.name);if(j>=0&&j!==i)g[i][j]=1;});
+    (p.data.companions?.bad||[]).forEach(x=>{const j=matchSelIndex(x.name);if(j>=0&&j!==i)b[i][j]=1;});
   });
   document.getElementById('comp-matrix').innerHTML=`<div class="matrix-wrap"><table class="matrix-table">
-<tr><th></th>${PLANTS.map(p=>`<th style="writing-mode:vertical-rl;height:90px;vertical-align:bottom;padding-bottom:5px" title="${esc(p.data.name)}">${esc(p.data.emoji)}</th>`).join('')}</tr>
-${PLANTS.map((p,i)=>`<tr><th style="text-align:right;padding-right:8px;white-space:nowrap;font-size:12px;color:var(--ts)">${esc(p.data.emoji)} ${esc(p.data.name.split(' ')[0])}</th>${PLANTS.map((_,j)=>{
+<tr><th></th>${selPlants.map(p=>`<th style="writing-mode:vertical-rl;height:90px;vertical-align:bottom;padding-bottom:5px" title="${esc(p.data.name)}">${esc(p.data.emoji)}</th>`).join('')}</tr>
+${selPlants.map((p,i)=>`<tr><th style="text-align:right;padding-right:8px;white-space:nowrap;font-size:12px;color:var(--ts)">${esc(p.data.emoji)} ${esc(p.data.name.split(' ')[0])}</th>${selPlants.map((_,j)=>{
   if(i===j)return`<td class="cs">·</td>`;
   const goodI=g[i][j], goodJ=g[j][i], badI=b[i][j], badJ=b[j][i];
   const anyGood=goodI||goodJ, anyBad=badI||badJ;
-  if(anyGood&&anyBad)return`<td class="cy" title="Conflict: one says good, other says bad — ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">⚡</td>`;
-  if(goodI&&goodJ)return`<td class="cg" title="Both compatible: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
-  if(anyGood)return`<td class="cg-one" title="One-sided good: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✓</td>`;
-  if(anyBad)return`<td class="cb_" title="Incompatible: ${esc(p.data.name)}+${esc(PLANTS[j].data.name)}">✗</td>`;
+  if(anyGood&&anyBad)return`<td class="cy" title="Conflict: one says good, other says bad — ${esc(p.data.name)}+${esc(selPlants[j].data.name)}">⚡</td>`;
+  if(goodI&&goodJ)return`<td class="cg" title="Both compatible: ${esc(p.data.name)}+${esc(selPlants[j].data.name)}">✓</td>`;
+  if(anyGood)return`<td class="cg-one" title="One-sided good: ${esc(p.data.name)}+${esc(selPlants[j].data.name)}">✓</td>`;
+  if(anyBad)return`<td class="cb_" title="Incompatible: ${esc(p.data.name)}+${esc(selPlants[j].data.name)}">✗</td>`;
   return`<td class="cn"></td>`;
 }).join('')}</tr>`).join('')}
 </table></div>`;
@@ -1230,7 +1380,7 @@ ${PLANTS.map((p,i)=>`<tr><th style="text-align:right;padding-right:8px;white-spa
   const FC=['#EAF3DE','#E6F1FB','#FAEEDA','#FCEBEB','#E1F5EE','#EEEDFE','#FBEAF0','#F1EFE8'];
   const FT=['#27500A','#0C447C','#633806','#791F1F','#085041','#3C3489','#72243E','#444441'];
   const fams={};
-  PLANTS.forEach(p=>{const f=(p.data.rotation?.family||'Unknown').split('(')[0].trim();if(!fams[f])fams[f]=[];fams[f].push(p);});
+  getSelectedPlants().forEach(p=>{const f=(p.data.rotation?.family||'Unknown').split('(')[0].trim();if(!fams[f])fams[f]=[];fams[f].push(p);});
   document.getElementById('fam-groups').innerHTML=Object.entries(fams).map(([fam,crops],fi)=>`
     <div class="fam-group">
       <div class="fam-title">${esc(fam)}</div>
@@ -1259,6 +1409,11 @@ function renderRotation() {
 }
 
 // ─── Garden charts (seasons, sun, water, fertilizer) ──────
+/** Returns only the plants the user has selected for charts */
+function getSelectedPlants() {
+  return PLANTS.filter(p => isSelected(p.data.id));
+}
+
 function renderAllCharts() {
   renderSeasonsChart();
   renderSunChart();
@@ -1400,7 +1555,7 @@ function renderSeasonsChart() {
 
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let html = '';
-  PLANTS.forEach(p => {
+  getSelectedPlants().forEach(p => {
     const w = getWindowForZone(p.data);
     if (!w) return;
     const [ps, pe, gs, ge, hs, he] = w;
@@ -1473,7 +1628,7 @@ function renderSunChart() {
     return { pct: 50, color: '#888', label: raw };
   }
 
-  const sorted = [...PLANTS].sort((a, b) => {
+  const sorted = [...getSelectedPlants()].sort((a, b) => {
     const aP = parseSun(a.data.planting?.sun).pct;
     const bP = parseSun(b.data.planting?.sun).pct;
     return bP - aP;
@@ -1503,7 +1658,7 @@ function renderSunChart() {
 }
 
 function renderWaterChart() {
-  const sorted = [...PLANTS].sort((a,b)=>{
+  const sorted = [...getSelectedPlants()].sort((a,b)=>{
     return (parseFloat(b.data.water?.in)||0)-(parseFloat(a.data.water?.in)||0);
   });
   const maxW = Math.max(...sorted.map(p=>parseFloat(p.data.water?.in)||0), 2);
@@ -1645,7 +1800,7 @@ function renderFertilizerChart() {
     return null;
   }
   const groups = {};
-  PLANTS.forEach(p => {
+  getSelectedPlants().forEach(p => {
     const ft = p.data.fertilizer?.type || '';
     const rule = classifyFert(ft);
     const key = rule ? rule.key : 'unspecified';
@@ -1671,8 +1826,9 @@ function renderFertilizerChart() {
 
 
 function renderNutritionPage() {
-  const food = PLANTS.filter(p => p.data.nutrition?.calories > 0);
-  const herb = PLANTS.filter(p => !p.data.nutrition?.calories && p.data.nutrition?.notes);
+  const selPlants = getSelectedPlants();
+  const food = selPlants.filter(p => p.data.nutrition?.calories > 0);
+  const herb = selPlants.filter(p => !p.data.nutrition?.calories && p.data.nutrition?.notes);
 
   const NUTRIENTS = [
     {key:'calories',  label:'Calories',       unit:'kcal', color:'#639922', group:'macro'},
@@ -1803,6 +1959,96 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 // Close modals on overlay click
 document.getElementById('edit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('edit-modal'))cancelEdit();});
 
+// ─── Zone finder ──────────────────────────────────────────
+function openZoneModal() {
+  const modal = document.getElementById('zone-modal');
+  modal.classList.remove('hidden');
+  // Sync modal select to current zone
+  const sel = document.getElementById('zone-modal-select');
+  if (sel) sel.value = String(activeZone);
+}
+function closeZoneModal() {
+  document.getElementById('zone-modal').classList.add('hidden');
+}
+function applyZoneFromModal() {
+  const z = parseInt(document.getElementById('zone-modal-select').value);
+  if (z >= 3 && z <= 9) {
+    setZone(z);
+    applyZone();
+    // Re-render any open charts
+    if (chR) { renderAllCharts(); }
+    const sel = document.getElementById('zone-select');
+    if (sel) sel.value = String(z);
+    const res = document.getElementById('zone-result');
+    res.innerHTML = `<i class="fa-solid fa-check" style="margin-right:6px"></i> Zone ${z} applied to all planting guides.`;
+    res.classList.add('show');
+    setTimeout(() => closeZoneModal(), 1200);
+  }
+}
+
+/** Latitude → approximate USDA zone (zones 3–9 continental US/Canada) */
+function latLngToZone(lat, lng) {
+  // Very rough lookup — last-resort fallback if API fails
+  // Based on approximate zone boundaries for the continental US
+  if (lat > 49) return 3;
+  if (lat > 47) return 4;
+  if (lat > 44) return 5;
+  if (lat > 40) return 6;
+  if (lat > 36) return 7;
+  if (lat > 32) return 8;
+  return 9;
+}
+
+async function locateZone() {
+  const btn = document.getElementById('zone-locate-btn');
+  const res = document.getElementById('zone-result');
+  res.classList.remove('show');
+  if (!navigator.geolocation) {
+    res.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="margin-right:6px"></i> Geolocation not supported by your browser.';
+    res.style.background = 'var(--rb)'; res.style.borderColor = 'var(--rbr)'; res.style.color = 'var(--rt)';
+    res.classList.add('show'); return;
+  }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span> Locating…';
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
+    );
+    const { latitude: lat, longitude: lng } = pos.coords;
+    // Try USDA API first
+    let zone = null;
+    try {
+      const resp = await fetch(`https://phzmapi.org/${lat}/${lng}.json`);
+      if (resp.ok) {
+        const data = await resp.json();
+        const zStr = (data.zone || '').replace(/[^0-9]/g, '');
+        const z = parseInt(zStr);
+        if (z >= 3 && z <= 9) zone = z;
+      }
+    } catch(e) {}
+    // Fallback to lat-based estimate
+    if (!zone) zone = latLngToZone(lat, lng);
+    // Apply
+    const sel = document.getElementById('zone-modal-select');
+    if (sel) sel.value = String(zone);
+    res.style.background = ''; res.style.borderColor = ''; res.style.color = '';
+    res.innerHTML = `<i class="fa-solid fa-location-dot" style="margin-right:6px"></i> Detected <strong>Zone ${zone}</strong> near your location (${lat.toFixed(2)}°, ${lng.toFixed(2)}°). Click Apply to use it.`;
+    res.classList.add('show');
+  } catch(e) {
+    res.style.background = 'var(--ab)'; res.style.borderColor = 'var(--abr)'; res.style.color = 'var(--at)';
+    res.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="margin-right:6px"></i> ${e.code === 1 ? 'Location access denied — use the map or select manually.' : 'Could not detect location. Please select manually.'}`;
+    res.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i> Use my location';
+  }
+}
+
+// Close zone modal on overlay click
+document.getElementById('zone-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('zone-modal')) closeZoneModal();
+});
+
 // ─── Auth modal state ─────────────────────────────────────
 let authMode = 'signin'; // 'signin' | 'signup'
 
@@ -1932,6 +2178,7 @@ window.addEventListener('auth-changed', e => updateNavAuth(e.detail));
     await loadAllCrops();
     renderCatRow();
     renderGrid();
+    updateSelCount();
     toast('ok', `✓ Loaded ${PLANTS.length} crops`);
   } catch(e) {
     document.getElementById('pgrid').innerHTML=

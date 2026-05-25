@@ -247,6 +247,39 @@ input{font-family:inherit}
 }
 .find-btn:hover{background:var(--s)}
 .find-btn.open{background:var(--lb);color:var(--lt);border-color:var(--lbr)}
+
+/* Next season recommendations panel */
+.recs-panel{
+  position:fixed;top:62px;right:0;bottom:0;width:320px;
+  background:var(--p);border-left:1px solid var(--b1);
+  display:flex;flex-direction:column;z-index:40;
+  transform:translateX(100%);transition:transform .25s ease;
+}
+.recs-panel.open{transform:translateX(0)}
+.recs-panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px;border-bottom:1px solid var(--b1);flex-shrink:0;
+}
+.recs-panel-title{font-size:14px;font-weight:600;color:var(--tp)}
+.recs-close-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;border:1px solid var(--b2);border-radius:6px;background:var(--p);color:var(--ts);font-size:14px;cursor:pointer}
+.recs-close-btn:hover{background:var(--s)}
+.recs-body{overflow-y:auto;flex:1;padding:12px}
+.recs-section{margin-bottom:14px}
+.recs-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--tt);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--b1)}
+.rec-card{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:8px;border:1px solid var(--b1);margin-bottom:7px;background:var(--s)}
+.rec-card.good{border-color:var(--gn);background:var(--gnb)}
+.rec-card.warn{border-color:var(--abr);background:var(--ab)}
+.rec-card.info{border-color:var(--lbr);background:var(--lb)}
+.rec-emoji{font-size:22px;flex-shrink:0;margin-top:1px}
+.rec-name{font-size:13px;font-weight:600;color:var(--tp);margin-bottom:2px}
+.rec-why{font-size:12px;color:var(--ts);line-height:1.5}
+.rec-tag{display:inline-block;font-size:10px;padding:1px 7px;border-radius:8px;background:var(--gnb);color:var(--gnt);font-weight:600;margin-top:3px}
+.recs-btn{
+  display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;
+  border:1px solid var(--b2);border-radius:8px;background:var(--p);color:var(--ts);font-size:14px;
+}
+.recs-btn:hover{background:var(--s)}
+.recs-btn.open{background:var(--gnb);color:var(--gnt);border-color:var(--gn)}
 </style>
 </head>
 <body>
@@ -309,6 +342,10 @@ input{font-family:inherit}
     <button class="find-btn" id="find-btn" onclick="toggleFindPanel()" title="Find another garden">
       <i class="fa-solid fa-magnifying-glass"></i> Find Garden
     </button>
+    <!-- Next season recommendations — owner only -->
+    <button class="recs-btn owner-only" id="recs-btn" onclick="toggleRecsPanel()" style="display:none" title="Next season recommendations">
+      <i class="fa-solid fa-lightbulb"></i> Suggestions
+    </button>
     <button class="ibtn" onclick="toggleDark()" title="Toggle dark mode">
       <i class="fa-solid fa-moon" id="dticon"></i>
     </button>
@@ -356,6 +393,17 @@ input{font-family:inherit}
     </div>
     <div class="find-results" id="find-results">
       <div class="find-empty">Search for a username to visit their garden.</div>
+    </div>
+  </div>
+
+  <!-- Next season recommendations panel -->
+  <div class="recs-panel" id="recs-panel">
+    <div class="recs-panel-head">
+      <span class="recs-panel-title"><i class="fa-solid fa-seedling" style="color:var(--gn);margin-right:6px"></i>Next Season Suggestions</span>
+      <button class="recs-close-btn" onclick="toggleRecsPanel()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="recs-body" id="recs-body">
+      <div style="padding:2rem 1rem;text-align:center;color:var(--tt);font-size:13px">Loading…</div>
     </div>
   </div>
 
@@ -574,12 +622,176 @@ function resizeGrid() {
   renderGrid();
 }
 
+// ── Next season recommendations ───────────────────────────
+function toggleRecsPanel() {
+  const panel = document.getElementById('recs-panel');
+  const btn   = document.getElementById('recs-btn');
+  const open  = panel.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  // Close find panel if open
+  document.getElementById('find-panel').classList.remove('open');
+  document.getElementById('find-btn').classList.remove('open');
+  if (open) buildRecommendations();
+}
+
+function buildRecommendations() {
+  const body = document.getElementById('recs-body');
+  if (!body) return;
+
+  const currentMonth = new Date().getMonth() + 1; // 1-based
+  const nextMonth    = (currentMonth % 12) + 1;
+  const month2       = (nextMonth   % 12) + 1;
+  const MONTH_NAMES  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // What crops are already in the garden?
+  const plantedNames = new Set(
+    Object.values(gridData).map(c => (c.name||'').toLowerCase())
+  );
+
+  // Rotation family of planted crops
+  const plantedFamilies = new Set();
+  Object.values(gridData).forEach(c => {
+    const plant = PLANTS.find(p => p.data.name?.toLowerCase() === c.name?.toLowerCase());
+    if (plant?.data.rotation?.family) {
+      plantedFamilies.add(plant.data.rotation.family.split('(')[0].trim().toLowerCase());
+    }
+  });
+
+  // ── Score each unplanted crop ──────────────────────────────
+  const scored = [];
+  PLANTS.forEach(p => {
+    const d = p.data;
+    const already = plantedNames.has((d.name||'').toLowerCase());
+
+    // Check planting window for active zone
+    let windowStatus = 'unknown'; // 'now' | 'soon' | 'upcoming' | 'closed' | 'unknown'
+    const z = String(activeZone);
+    const zoneEntry = d.zones?.[z] || d.zones?.['zone' + z];
+    if (zoneEntry && zoneEntry.plantingStart && zoneEntry.plantingEnd) {
+      const { plantingStart: ps, plantingEnd: pe } = zoneEntry;
+      function inWin(m, s, e) { return s<=e ? m>=s&&m<=e : m>=s||m<=e; }
+      if (inWin(currentMonth, ps, pe))                windowStatus = 'now';
+      else if (inWin(nextMonth, ps, pe) || inWin(month2, ps, pe)) windowStatus = 'soon';
+      else if (ps > currentMonth && ps <= currentMonth + 3) windowStatus = 'upcoming';
+      else windowStatus = 'closed';
+    }
+
+    // Companion benefits: how many planted crops like this one?
+    let companionScore = 0;
+    Object.values(gridData).forEach(c => {
+      const sourcePlant = PLANTS.find(pp => pp.data.name?.toLowerCase() === c.name?.toLowerCase());
+      if (!sourcePlant) return;
+      if ((sourcePlant.data.companions?.good||[]).some(g => (g.name||'').toLowerCase().includes((d.name||'').toLowerCase()) || (d.name||'').toLowerCase().includes((g.name||'').toLowerCase()))) {
+        companionScore++;
+      }
+    });
+
+    // Rotation benefit: different family from most planted crops
+    const family = (d.rotation?.family||'').split('(')[0].trim().toLowerCase();
+    const rotBenefit = family && !plantedFamilies.has(family) && plantedFamilies.size > 0;
+
+    // Conflict: is it a bad companion to something planted?
+    let hasConflict = false;
+    Object.values(gridData).forEach(c => {
+      const sourcePlant = PLANTS.find(pp => pp.data.name?.toLowerCase() === c.name?.toLowerCase());
+      if (!sourcePlant) return;
+      if ((sourcePlant.data.companions?.bad||[]).some(b => (b.name||'').toLowerCase().includes((d.name||'').toLowerCase()) || (d.name||'').toLowerCase().includes((b.name||'').toLowerCase()))) {
+        hasConflict = true;
+      }
+    });
+
+    scored.push({ p, already, windowStatus, companionScore, rotBenefit, hasConflict });
+  });
+
+  // ── Plant now: in window, not planted, no conflict ─────────
+  const plantNow = scored
+    .filter(s => s.windowStatus === 'now' && !s.already && !s.hasConflict)
+    .sort((a, b) => b.companionScore - a.companionScore)
+    .slice(0, 6);
+
+  // ── Plant soon (next 4–8 weeks) ────────────────────────────
+  const plantSoon = scored
+    .filter(s => s.windowStatus === 'soon' && !s.already && !s.hasConflict)
+    .sort((a, b) => b.companionScore - a.companionScore)
+    .slice(0, 5);
+
+  // ── Good companions for your current garden ────────────────
+  const goodCompanions = scored
+    .filter(s => s.companionScore > 0 && !s.already && !s.hasConflict && s.windowStatus !== 'closed')
+    .sort((a, b) => b.companionScore - a.companionScore)
+    .slice(0, 5);
+
+  // ── Rotation suggestions ───────────────────────────────────
+  const rotationPicks = scored
+    .filter(s => s.rotBenefit && !s.already && !s.hasConflict)
+    .sort((a, b) => (b.windowStatus==='now'?1:0) - (a.windowStatus==='now'?1:0))
+    .slice(0, 4);
+
+  // ── Avoid these (conflict) ─────────────────────────────────
+  const conflicts = scored
+    .filter(s => s.hasConflict && s.already)
+    .slice(0, 3);
+
+  function recCard(s, type) {
+    const d = s.p.data;
+    const winLabel = s.windowStatus==='now' ? `🟢 Plant now (${MONTH_NAMES[currentMonth-1]})` :
+                     s.windowStatus==='soon' ? `🟡 Ready in ~4–8 weeks` :
+                     s.windowStatus==='upcoming' ? `🔵 Coming up this season` : '';
+    const compLabel = s.companionScore > 0 ? `✓ Good with ${s.companionScore} of your crops` : '';
+    const rotLabel  = s.rotBenefit ? '♻ Different family — good rotation' : '';
+    const reasons   = [winLabel, compLabel, rotLabel].filter(Boolean);
+    const cardClass = type==='good' ? 'good' : type==='warn' ? 'warn' : 'info';
+    return `<div class="rec-card ${cardClass}">
+      <span class="rec-emoji">${esc(d.emoji)}</span>
+      <div>
+        <div class="rec-name">${esc(d.name)}</div>
+        <div class="rec-why">${reasons.map(r=>`<div>${esc(r)}</div>`).join('')||'<div style="color:var(--tt)">'+esc(d.cat)+'</div>'}</div>
+      </div>
+    </div>`;
+  }
+
+  let html = '';
+
+  if (plantNow.length) {
+    html += `<div class="recs-section"><div class="recs-section-title">🟢 Plant this month (${MONTH_NAMES[currentMonth-1]})</div>${plantNow.map(s=>recCard(s,'good')).join('')}</div>`;
+  }
+  if (plantSoon.length) {
+    html += `<div class="recs-section"><div class="recs-section-title">🟡 Coming up — ${MONTH_NAMES[nextMonth-1]}/${MONTH_NAMES[month2-1]}</div>${plantSoon.map(s=>recCard(s,'info')).join('')}</div>`;
+  }
+  if (goodCompanions.length && !plantNow.length && !plantSoon.length) {
+    html += `<div class="recs-section"><div class="recs-section-title">🤝 Good companions for your garden</div>${goodCompanions.map(s=>recCard(s,'good')).join('')}</div>`;
+  }
+  if (rotationPicks.length) {
+    html += `<div class="recs-section"><div class="recs-section-title">♻ Rotation — different family</div>${rotationPicks.map(s=>recCard(s,'info')).join('')}</div>`;
+  }
+  if (conflicts.length) {
+    html += `<div class="recs-section"><div class="recs-section-title">⚠️ Watch out — poor companions</div>${conflicts.map(s=>`<div class="rec-card warn"><span class="rec-emoji">${esc(s.p.data.emoji)}</span><div><div class="rec-name">${esc(s.p.data.name)}</div><div class="rec-why">May conflict with other crops in your garden</div></div></div>`).join('')}</div>`;
+  }
+
+  if (!html) {
+    const isEmpty = Object.keys(gridData).length === 0;
+    html = `<div style="padding:2rem 1rem;text-align:center;color:var(--tt);font-size:13px;line-height:1.8">
+      ${isEmpty
+        ? '🌱<br>Add some crops to your garden<br>to get personalised suggestions!'
+        : '✓ Your garden is looking great!<br><br>No specific suggestions for this season — all looks well.'}
+    </div>`;
+  }
+
+  // Footer: current zone + month context
+  html += `<div style="font-size:11px;color:var(--tt);text-align:center;padding:8px 0;margin-top:4px;border-top:1px solid var(--b1)">Based on Zone ${activeZone} · ${MONTH_NAMES[currentMonth-1]} ${new Date().getFullYear()}</div>`;
+
+  body.innerHTML = html;
+}
+
 // ── Find a Garden panel ───────────────────────────────────
 function toggleFindPanel() {
   const panel = document.getElementById('find-panel');
   const btn   = document.getElementById('find-btn');
   const open  = panel.classList.toggle('open');
   btn.classList.toggle('open', open);
+  // Close recs panel if open
+  document.getElementById('recs-panel')?.classList.remove('open');
+  document.getElementById('recs-btn')?.classList.remove('open');
   if (open) setTimeout(() => document.getElementById('find-input').focus(), 260);
 }
 
