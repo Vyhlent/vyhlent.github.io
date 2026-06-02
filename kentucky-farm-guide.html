@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kentucky Small Farm Planning Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --soil: #3d2b1f;
+    --bark: #5c3d2a;
+    --leaf: #2d5016;
+    --sage: #4a6741;
+    --meadow: #6b8f3e;
+    --hay: #c8a84b;
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --fog: #e8e0d0;
+    --ink: #1a1510;
+    --muted: #6b5d4f;
+    --accent: #8b3a1a;
+    --gold: #b8892a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--soil);
+    border-bottom: 3px solid var(--hay);
+    padding: 0 2rem;
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--hay);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 14px 0;
+    margin-right: 2rem;
+    flex-shrink: 0;
+  }
+  nav a {
+    color: rgba(245,240,232,0.7);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    padding: 16px 12px;
+    white-space: nowrap;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  nav a:hover { color: var(--hay); }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--soil);
+    color: var(--cream);
+    padding: 80px 2rem 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 39px,
+      rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px
+    );
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hay);
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--hay);
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: rgba(245,240,232,0.72);
+    max-width: 560px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    flex-wrap: wrap;
+  }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--hay);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 12px;
+    color: rgba(245,240,232,0.55);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── LAYOUT ── */
+  .wrapper { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+  section {
+    padding: 72px 2rem;
+    border-bottom: 1px solid var(--fog);
+  }
+  section:last-of-type { border-bottom: none; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--meadow);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--soil);
+  }
+  .section-intro {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── STRATEGY CARDS ── */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .strategy-card {
+    background: white;
+    border: 1px solid var(--fog);
+    border-radius: 4px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--meadow);
+  }
+  .strategy-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--soil);
+  }
+  .strategy-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+  .strategy-card .card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--hay);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ── CROPS TABLE ── */
+  .crops-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .crop-card {
+    background: white;
+    border: 1px solid var(--fog);
+    border-radius: 4px;
+    padding: 12px 14px;
+  }
+  .crop-rank {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--hay);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .crop-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .crop-rev {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .badge-beginner { background: #e8f5e0; color: #2d5016; }
+  .badge-intermediate { background: #fdf3d8; color: #7a5a10; }
+  .badge-advanced { background: #fbeaea; color: #7a1a1a; }
+  .badge-indoor { background: #e6f1fb; color: #0c447c; }
+
+  .crop-section-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--muted);
+    margin: 1.5rem 0 0.75rem;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--fog);
+  }
+
+  /* ── FOOD FOREST LAYERS ── */
+  .layer {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--fog);
+    align-items: flex-start;
+  }
+  .layer:last-child { border-bottom: none; }
+  .layer-accent {
+    width: 5px;
+    border-radius: 3px;
+    align-self: stretch;
+    min-height: 44px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .layer-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--hay);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+  .layer-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+  .layer-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 4px;
+  }
+  .layer-income {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--meadow);
+  }
+
+  /* ── SPACE BREAKDOWN ── */
+  .space-bar {
+    height: 32px;
+    border-radius: 3px;
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .space-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .space-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    margin-bottom: 2rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .space-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .space-table th {
+    text-align: left;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-bottom: 2px solid var(--fog);
+  }
+  .space-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--fog);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .space-table tr:last-child td { border-bottom: none; }
+  .space-table .total td {
+    font-weight: 600;
+    background: var(--parchment);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+  }
+  .space-table .highlight td {
+    background: #edf6e5;
+    color: var(--leaf);
+    font-weight: 500;
+  }
+  .space-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    margin-right: 7px;
+    vertical-align: middle;
+  }
+
+  /* ── RESOURCES ── */
+  .resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+  }
+  .resource-card {
+    background: var(--soil);
+    color: var(--cream);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+  }
+  .resource-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--hay);
+    margin-bottom: 0.4rem;
+  }
+  .resource-card p {
+    font-size: 13px;
+    color: rgba(245,240,232,0.65);
+    line-height: 1.6;
+  }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--leaf);
+    color: var(--cream);
+    border-radius: 4px;
+    padding: 1.5rem 1.75rem;
+    margin: 2rem 0;
+  }
+  .callout-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: #d4f0a8;
+  }
+  .callout p {
+    font-size: 14px;
+    color: rgba(245,240,232,0.8);
+    line-height: 1.65;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: var(--fog);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.75rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.85rem;
+    top: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--meadow);
+    border: 2px solid var(--cream);
+    outline: 2px solid var(--meadow);
+  }
+  .timeline-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--hay);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--soil);
+    margin-bottom: 5px;
+  }
+  .timeline-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  /* ── METRIC STRIP ── */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--fog);
+    border: 1px solid var(--fog);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 2rem 0;
+  }
+  .metric {
+    background: white;
+    padding: 1.25rem 1.5rem;
+  }
+  .metric-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--soil);
+    line-height: 1;
+  }
+  .metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--soil);
+    color: rgba(245,240,232,0.45);
+    padding: 2.5rem 2rem;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  footer span { color: var(--hay); }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 640px) {
+    section { padding: 48px 1.25rem; }
+    .hero { padding: 52px 1.25rem 44px; }
+    nav { padding: 0 1.25rem; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">KY Farm Guide</div>
+    <a href="#strategy">Strategy</a>
+    <a href="#crops">Top Crops</a>
+    <a href="#food-forest">Food Forest</a>
+    <a href="#space">Space Plan</a>
+    <a href="#resources">Resources</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">Lexington, Kentucky · Zone 6b · 3–4 Acres</div>
+    <h1>A livable income<br>from <em>small acreage</em><br>in Kentucky</h1>
+    <p class="hero-sub">Everything you need to plan a profitable independent farm on 3–4 acres — crops, food forest layers, space allocation, income targets, and local resources.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">$25K+</div>
+        <div class="hero-stat-label">Target annual income</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">4 ac</div>
+        <div class="hero-stat-label">Total land</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">~3 ac</div>
+        <div class="hero-stat-label">Available for income</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">20</div>
+        <div class="hero-stat-label">High-value crops</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<section id="strategy">
+  <div class="section-inner">
+    <div class="section-label">Core approach</div>
+    <h2 class="section-title">The small farm strategy</h2>
+    <p class="section-intro">The biggest mistake small landowners make is planting commodity crops like corn or soybeans. You can't compete at scale. The leverage is going high-value and selling direct-to-consumer, which typically pays 2–3× more than wholesale.</p>
+
+    <div class="strategy-grid fade-in">
+      <div class="strategy-card">
+        <div class="card-num">01 — Market</div>
+        <h3>Direct sales first</h3>
+        <p>Farmers markets, CSA subscriptions, and restaurant relationships pay dramatically more than wholesale. Secure buyers before you scale production — the fastest way to lose money is growing without a market.</p>
+      </div>
+      <div class="strategy-card">
+        <div class="card-num">02 — Crops</div>
+        <h3>High-value over volume</h3>
+        <p>One intensively managed acre of garlic, salad greens, or cut flowers can outperform ten acres of soybeans. The most profitable small farms grow 3–5 complementary crops, not one.</p>
+      </div>
+      <div class="strategy-card">
+        <div class="card-num">03 — Soil</div>
+        <h3>Start with a soil test</h3>
+        <p>UK Extension does them for ~$10. Knowing your soil pH and nutrient levels saves you from wasting money on the wrong inputs and dramatically improves your first-year yields.</p>
+      </div>
+      <div class="strategy-card">
+        <div class="card-num">04 — Cash flow</div>
+        <h3>Layer fast and slow crops</h3>
+        <p>Pair quick-return crops like salad greens and flowers (income in weeks) with long-term investments like elderberry and chestnut that pay off for decades. Don't bet everything on one timeline.</p>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top: 2rem;">
+      <div class="callout-title">Kentucky advantage</div>
+      <p>Central Kentucky is one of the best-watered, most fertile farming climates on the continent. You get 40–50 inches of rain per year, zone 6b winters, and long productive summers. The Lexington Farmers Market is well-established and has strong consumer demand for local produce.</p>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--soil);margin:2.5rem 0 1.25rem;">Year 1 roadmap</h3>
+    <div class="timeline fade-in">
+      <div class="timeline-item">
+        <div class="timeline-year">Month 1–2</div>
+        <div class="timeline-title">Observe & test</div>
+        <div class="timeline-desc">Get a soil test from UK Extension. Walk your land in different weather. Identify drainage patterns, sun exposure, and any existing perennials worth keeping. The best food forest planners spend a full year observing before planting trees.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Month 2–3</div>
+        <div class="timeline-title">Find your market first</div>
+        <div class="timeline-desc">Visit the Lexington Farmers Market. Talk to vendors about what sells. Contact local restaurants about direct purchasing. Apply for a vendor spot — waiting lists can be long.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Month 3–4</div>
+        <div class="timeline-title">Apply for funding</div>
+        <div class="timeline-desc">Kentucky State University offers grants up to $5,000 for small farm equipment. The Kentucky Agricultural Development Fund backs organic production, agroforestry, and value-added processing. Apply early — these have deadlines.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Spring, Year 1</div>
+        <div class="timeline-title">Plant your fast crops</div>
+        <div class="timeline-desc">Salad greens, radishes, herbs, and cut flowers can generate income within 6–8 weeks. Start a CSA with 10–15 subscribers at $25–30/week. This covers your operating costs while you build the longer-term income base.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">Fall, Year 1</div>
+        <div class="timeline-title">Plant garlic & elderberry</div>
+        <div class="timeline-desc">Garlic goes in the ground in fall and comes out the following July. Elderberry establishes fast and starts producing in year 2–3. These are your first perennial income investments.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOP CROPS -->
+<section id="crops" style="background: var(--parchment);">
+  <div class="section-inner">
+    <div class="section-label">Income plants</div>
+    <h2 class="section-title">The 20 best crops to sell</h2>
+    <p class="section-intro">Ranked by revenue potential, market demand, and beginner-friendliness. The key principle: high price per pound, strong local demand, and the ability to grow well in limited space.</p>
+
+    <div class="metrics fade-in">
+      <div class="metric"><div class="metric-val">$50K+</div><div class="metric-label">Microgreens / 1,000 sq ft</div></div>
+      <div class="metric"><div class="metric-val">$24K</div><div class="metric-label">Gourmet garlic / acre</div></div>
+      <div class="metric"><div class="metric-val">$50K</div><div class="metric-label">Cut flowers / acre</div></div>
+      <div class="metric"><div class="metric-val">$21K</div><div class="metric-label">Elderberry / acre</div></div>
+    </div>
+
+    <div class="crop-section-header">High-value specialty crops</div>
+    <div class="crops-grid fade-in">
+      <div class="crop-card">
+        <div class="crop-rank">#1 — Specialty</div>
+        <div class="crop-name">Microgreens</div>
+        <div class="crop-rev">$50K–$100K+ per 1,000 sq ft</div>
+        <span class="badge badge-indoor">Indoor/shed</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#2 — Specialty</div>
+        <div class="crop-name">Specialty mushrooms</div>
+        <div class="crop-rev">$20–$30K per 500 sq ft</div>
+        <span class="badge badge-indoor">Indoor/shed</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#3 — Specialty</div>
+        <div class="crop-name">Gourmet garlic</div>
+        <div class="crop-rev">$8–$10 per sq ft (~$24K/acre)</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#4 — Specialty</div>
+        <div class="crop-name">Saffron</div>
+        <div class="crop-rev">$50K–$150K per acre</div>
+        <span class="badge badge-advanced">Advanced</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#5 — Specialty</div>
+        <div class="crop-name">Ginseng</div>
+        <div class="crop-rev">Up to $100K/acre (long-term)</div>
+        <span class="badge badge-advanced">Advanced / slow</span>
+      </div>
+    </div>
+
+    <div class="crop-section-header">Flowers &amp; herbs</div>
+    <div class="crops-grid fade-in">
+      <div class="crop-card">
+        <div class="crop-rank">#6 — Flowers</div>
+        <div class="crop-name">Cut flowers</div>
+        <div class="crop-rev">$25K–$50K per acre</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#7 — Flowers</div>
+        <div class="crop-name">Lavender</div>
+        <div class="crop-rev">$10K–$30K per acre</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#8 — Herbs</div>
+        <div class="crop-name">Culinary herbs</div>
+        <div class="crop-rev">$10K+ per acre</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#9 — Berries</div>
+        <div class="crop-name">Goji berries</div>
+        <div class="crop-rev">$40K–$50K/acre (mature)</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="crop-section-header">Vegetables &amp; salad crops</div>
+    <div class="crops-grid fade-in">
+      <div class="crop-card">
+        <div class="crop-rank">#10 — Vegetables</div>
+        <div class="crop-name">Cherry tomatoes</div>
+        <div class="crop-rev">$3–$5 per pint at market</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#11 — Vegetables</div>
+        <div class="crop-name">Salad greens / lettuce</div>
+        <div class="crop-rev">Fast turnover, multiple cuts</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#12 — Vegetables</div>
+        <div class="crop-name">Spinach</div>
+        <div class="crop-rev">Year-round reliable income</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#13 — Vegetables</div>
+        <div class="crop-name">Sweet potatoes</div>
+        <div class="crop-rev">$1,500+/acre, low input</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#14 — Vegetables</div>
+        <div class="crop-name">Specialty peppers</div>
+        <div class="crop-rev">High farmers market demand</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#15 — Vegetables</div>
+        <div class="crop-name">Beets</div>
+        <div class="crop-rev">Fast-growing, CSA staple</div>
+        <span class="badge badge-beginner">Beginner-friendly</span>
+      </div>
+    </div>
+
+    <div class="crop-section-header">Fruits &amp; berries</div>
+    <div class="crops-grid fade-in">
+      <div class="crop-card">
+        <div class="crop-rank">#16 — Fruit</div>
+        <div class="crop-name">Strawberries</div>
+        <div class="crop-rev">$20K–$30K/acre (u-pick)</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#17 — Fruit</div>
+        <div class="crop-name">Blueberries</div>
+        <div class="crop-rev">$10K–$15K/acre (mature)</div>
+        <span class="badge badge-intermediate">Intermediate / slow</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#18 — Fruit</div>
+        <div class="crop-name">Blackberries / raspberries</div>
+        <div class="crop-rev">Strong local demand</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="crop-section-header">Niche &amp; value-add</div>
+    <div class="crops-grid fade-in">
+      <div class="crop-card">
+        <div class="crop-rank">#19 — Niche</div>
+        <div class="crop-name">Hemp (CBD flower)</div>
+        <div class="crop-rev">Market recovering; niche</div>
+        <span class="badge badge-advanced">Licensed required</span>
+      </div>
+      <div class="crop-card">
+        <div class="crop-rank">#20 — Niche</div>
+        <div class="crop-name">Hops</div>
+        <div class="crop-rev">Craft brewery demand</div>
+        <span class="badge badge-intermediate">Intermediate</span>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:2.5rem;">
+      <div class="callout-title">Beginner stack for Kentucky</div>
+      <p>Start with garlic + cut flowers + salad greens. All three are beginner-friendly, all sell well at Lexington markets, and they cover different seasons so you have income from spring through fall in year one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOD FOREST -->
+<section id="food-forest">
+  <div class="section-inner">
+    <div class="section-label">Permaculture system</div>
+    <h2 class="section-title">One-acre food forest plan</h2>
+    <p class="section-intro">Kentucky zone 6b is ideal for a food forest — one of the most well-watered, fertile climates on the continent. A mature food forest is the lowest-labor income on your property, but it requires patience. Expect partial harvests by year 3, meaningful income by year 6–10.</p>
+
+    <div class="metrics fade-in">
+      <div class="metric"><div class="metric-val">Yrs 1–2</div><div class="metric-label">Establishment, little income</div></div>
+      <div class="metric"><div class="metric-val">$2–6K</div><div class="metric-label">Years 3–5 annual income</div></div>
+      <div class="metric"><div class="metric-val">$8–20K</div><div class="metric-label">Years 6–10+ annual income</div></div>
+      <div class="metric"><div class="metric-val">30–40 yr</div><div class="metric-label">Productive lifespan</div></div>
+    </div>
+
+    <div class="fade-in">
+      <div class="layer">
+        <div class="layer-accent" style="background:#2d5016;"></div>
+        <div>
+          <div class="layer-num">Layer 1 — Canopy (30–50 ft)</div>
+          <div class="layer-title">Chestnut, Black Walnut, Pecan, Persimmon</div>
+          <div class="layer-desc">Chinese/hybrid chestnut is the top pick — disease-resistant, prolific, and in high demand. Black walnut is native to Kentucky and sells for both nuts and timber. One mature chestnut can produce 500 lbs of nuts annually.</div>
+          <div class="layer-income">$4–$8.50/lb conventional · $7–$12.50/lb organic</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#4a6741;"></div>
+        <div>
+          <div class="layer-num">Layer 2 — Sub-canopy (15–30 ft)</div>
+          <div class="layer-title">Pawpaw, Heirloom Apple, Asian Pear, Plum, Peach</div>
+          <div class="layer-desc">Pawpaw is a Kentucky native (KSU hosts the national USDA pawpaw research repository in Frankfort) with explosive demand from chefs, breweries, and specialty markets. Heirloom apples and Asian pears command premium direct-to-consumer prices.</div>
+          <div class="layer-income">Pawpaw: ~$2,200 returns/acre · strong value-added potential (ice cream, beer, syrup)</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#6b8f3e;"></div>
+        <div>
+          <div class="layer-num">Layer 3 — Shrub (5–15 ft)</div>
+          <div class="layer-title">Elderberry, Hazelnut, Goumi, Aronia, Currants</div>
+          <div class="layer-desc">Elderberry is the star for Kentucky — fast-producing, very low maintenance, and in explosive demand for syrups and immune supplements. Established plantings yield 5,000–8,000 lbs/acre. Hazelnuts produce for 30–40 years with minimal inputs.</div>
+          <div class="layer-income">Elderberry: $3–$5.50/lb bulk · dried $20–$31/lb · Hazelnut: $3,000–$4,000/acre/yr</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#c8a84b;"></div>
+        <div>
+          <div class="layer-num">Layer 4 — Herbaceous (1–5 ft)</div>
+          <div class="layer-title">Comfrey, Rhubarb, Walking Onions, Lemon Balm, Echinacea</div>
+          <div class="layer-desc">These fill gaps and serve double duty — comfrey fixes nitrogen and can be sold as a soil amendment, herbs sell at markets, rhubarb is a fast first-year earner before trees establish.</div>
+          <div class="layer-income">Culinary/medicinal herbs: $10K+/acre equivalent in dense planting</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#8b3a1a;"></div>
+        <div>
+          <div class="layer-num">Layer 5 — Ground cover</div>
+          <div class="layer-title">Strawberries, Clover, Creeping Thyme, Mint</div>
+          <div class="layer-desc">Strawberries between rows earn income while trees mature. White clover feeds pollinators and fixes nitrogen. Creeping thyme suppresses weeds and doubles as a harvestable culinary herb.</div>
+          <div class="layer-income">Strawberries direct-to-consumer: $4.66–$6.30/lb (2024 data)</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#3d2b1f;"></div>
+        <div>
+          <div class="layer-num">Layer 6 — Vine (climbing)</div>
+          <div class="layer-title">Grapes, Blackberries, Raspberries, Hops, Hardy Kiwi</div>
+          <div class="layer-desc">Train up fence lines and tree trunks. Grapes and blackberries are the most commercially viable in Kentucky. Hops serve local craft breweries. Hardy kiwi is an under-the-radar high-value crop for niche markets.</div>
+          <div class="layer-income">Blackberries/raspberries: $4–$7/pint at market · strong CSA and restaurant demand</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="layer-accent" style="background:#5c3d2a;"></div>
+        <div>
+          <div class="layer-num">Layer 7 — Root / Fungal</div>
+          <div class="layer-title">Ramps (Wild Leeks), Goldenseal, Shiitake on Logs, Black Cohosh</div>
+          <div class="layer-desc">The highest-value hidden layer. Shade-grown medicinals like goldenseal and black cohosh are native to Kentucky and sell to herbal supplement companies. Shiitake on hardwood logs thrives in forest shade and has very short crop cycles.</div>
+          <div class="layer-income">Goldenseal: $30–$50/lb dried root · Shiitake: ~$12/lb with fast turnaround</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:2rem;">
+      <div class="callout-title">Food forest vs. market garden: how to use both</div>
+      <p>Run the food forest alongside 1–2 acres of market garden crops (garlic, greens, flowers) that pay the bills while trees mature. Think of the food forest as building a long-term asset — by year 10, a well-planted acre in Kentucky could generate mostly passive income with very little annual labor.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPACE PLAN -->
+<section id="space" style="background: var(--parchment);">
+  <div class="section-inner">
+    <div class="section-label">Land allocation</div>
+    <h2 class="section-title">4-acre space breakdown</h2>
+    <p class="section-intro">How much space does each element actually require? The good news: everything you need fits comfortably on 4 acres, leaving roughly 3 full acres for income production.</p>
+
+    <div class="space-bar fade-in">
+      <div class="space-seg" style="width:13%;background:#3B6D11;color:#d4f0a8;">House</div>
+      <div class="space-seg" style="width:3%;background:#639922;color:#d4f0a8;">GH</div>
+      <div class="space-seg" style="width:3%;background:#888780;color:#F1EFE8;">Barn</div>
+      <div class="space-seg" style="width:1%;background:#BA7517;color:#faeeda;">Chx</div>
+      <div class="space-seg" style="width:1%;background:#97C459;color:#27500A;">Gdn</div>
+      <div class="space-seg" style="width:5%;background:#D3D1C7;color:#444441;">Paths</div>
+      <div class="space-seg" style="width:74%;background:#1D9E75;color:#e1f5ee;">Income crops — 2.9 ac</div>
+    </div>
+
+    <div class="space-legend fade-in">
+      <div class="legend-item"><div class="legend-dot" style="background:#3B6D11;"></div>House + yard (0.25 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#639922;"></div>Greenhouse (0.11 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#888780;"></div>Barn (0.03 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#BA7517;"></div>Chickens (0.01 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#97C459;"></div>Family garden (0.02 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#D3D1C7;"></div>Paths/buffers (0.5 ac)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75;"></div>Income crops (2.87 ac)</div>
+    </div>
+
+    <table class="space-table fade-in">
+      <thead>
+        <tr>
+          <th style="width:26%">Use</th>
+          <th style="width:18%">Square feet</th>
+          <th style="width:12%">Acres</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="space-dot" style="background:#3B6D11;"></span>House footprint</td>
+          <td>1,500 sq ft</td>
+          <td>0.03 ac</td>
+          <td>Modest 3–4 bedroom farmhouse footprint</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#3B6D11;"></span>Yard / driveway / septic</td>
+          <td>9,000 sq ft</td>
+          <td>0.21 ac</td>
+          <td>Driveway, lawn around home, septic setback requirements</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#639922;"></span>Greenhouse</td>
+          <td>5,000 sq ft</td>
+          <td>0.11 ac</td>
+          <td>Small commercial 25×200 ft — ideal for year-round income crops or seedlings. A hobby greenhouse (8×10) is only 80 sq ft if you just need seed starting.</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#888780;"></span>Small barn</td>
+          <td>1,200 sq ft</td>
+          <td>0.03 ac</td>
+          <td>Standard 30×40 ft — fits tools, equipment, storage, and a small processing area for value-added products</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#BA7517;"></span>Chicken coop (6 birds)</td>
+          <td>24 sq ft</td>
+          <td>&lt;0.01 ac</td>
+          <td>4 sq ft per bird inside. Scale up for larger breeds (Orpingtons, Brahmas need 5 sq ft).</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#BA7517;"></span>Chicken run</td>
+          <td>600 sq ft</td>
+          <td>0.01 ac</td>
+          <td>10 sq ft per bird minimum. If chickens free-range part of the day, run can be smaller. Ideal free-range is 250–400 sq ft per bird.</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#97C459;"></span>Family vegetable garden</td>
+          <td>1,000 sq ft</td>
+          <td>0.02 ac</td>
+          <td>200 sq ft per person for year-round production for 5 people. Intensive raised-bed methods can reduce this by 30–40% while maintaining yield.</td>
+        </tr>
+        <tr>
+          <td><span class="space-dot" style="background:#D3D1C7;"></span>Paths, buffers, fencing</td>
+          <td>~21,780 sq ft</td>
+          <td>~0.50 ac</td>
+          <td>Between fields, around structures, access lanes — unavoidable overhead on any working farm</td>
+        </tr>
+        <tr class="total">
+          <td>Subtotal — fixed uses</td>
+          <td>~39,104 sq ft</td>
+          <td>~0.90 ac</td>
+          <td></td>
+        </tr>
+        <tr class="highlight">
+          <td><span class="space-dot" style="background:#1D9E75;"></span>Remaining for income</td>
+          <td>~135,136 sq ft</td>
+          <td>~3.10 ac</td>
+          <td>Available for market crops, food forest, CSA production — more than enough to hit $25K</td>
+        </tr>
+        <tr class="total">
+          <td>Total</td>
+          <td>174,240 sq ft</td>
+          <td>4.0 ac</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="margin-top:2rem;">
+      <div class="callout-title">Can you hit $25,000/year on 3.1 income acres?</div>
+      <p>Yes — 1 acre of intensive market garden (salad greens, garlic, tomatoes) can gross $15K–$30K direct-to-consumer. Add elderberry on another acre ($8K–$21K at maturity), and a productive greenhouse alone can generate $10K+ in microgreens or seedlings. The math works even with just 1–2 acres in active production — the remaining land is your food forest investment building long-term value.</p>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--soil);margin:2.5rem 0 1.25rem;">Suggested layout by zone</h3>
+    <div class="strategy-grid fade-in">
+      <div class="strategy-card" style="border-left-color: var(--bark);">
+        <div class="card-num">Zone A — Near house</div>
+        <h3>Home &amp; infrastructure</h3>
+        <p>House, barn, greenhouse, and chicken coop grouped together for ease of daily management. South-facing greenhouse placement maximizes light. Chickens near barn for feed storage convenience.</p>
+      </div>
+      <div class="strategy-card" style="border-left-color: var(--hay);">
+        <div class="card-num">Zone B — ¼–½ acre</div>
+        <h3>Intensive market garden</h3>
+        <p>1 acre of intensively managed beds for salad greens, garlic, tomatoes, cut flowers. Irrigation runs from a central header. This is your primary year 1–5 income generator.</p>
+      </div>
+      <div class="strategy-card" style="border-left-color: var(--meadow);">
+        <div class="card-num">Zone C — ½–1½ acres</div>
+        <h3>Elderberry &amp; perennials</h3>
+        <p>Elderberry rows, lavender, herbs. Lower maintenance than the market garden, begins producing by year 2–3. Sets up your mid-term income as the market garden work intensifies.</p>
+      </div>
+      <div class="strategy-card" style="border-left-color: var(--leaf);">
+        <div class="card-num">Zone D — Outer acre</div>
+        <h3>Food forest</h3>
+        <p>Chestnuts, pawpaws, hazelnuts, with understory of elderberry, currants, and medicinals. Low annual labor once established. The 10–20 year investment that generates passive income.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="section-inner">
+    <div class="section-label">Kentucky-specific</div>
+    <h2 class="section-title">Local resources &amp; funding</h2>
+    <p class="section-intro">These are often underutilized. Kentucky has stronger small-farm infrastructure than most states — take advantage of it before spending your own money.</p>
+
+    <div class="resources-grid fade-in">
+      <div class="resource-card">
+        <h4>KSU Small Scale Farm Grants</h4>
+        <p>Kentucky State University offers grants up to $5,000 for small farm equipment. Contact Joni Nelson at joni.nelson@kysu.edu or 502-597-6831. Apply early — funding is limited.</p>
+      </div>
+      <div class="resource-card">
+        <h4>Kentucky Ag Development Fund</h4>
+        <p>Backs practical upgrades in organic agriculture, agroforestry, aquaculture, beekeeping, value-added processing, and ag technology. Strong match for a food forest operation.</p>
+      </div>
+      <div class="resource-card">
+        <h4>UK Cooperative Extension</h4>
+        <p>Free local advice from farm agents in every county. Offers soil testing (~$10), workshops, crop guides, and one-on-one farm planning sessions. Use this first, before any paid consultant.</p>
+      </div>
+      <div class="resource-card">
+        <h4>Kentucky Proud</h4>
+        <p>State marketing program that connects local farmers to buyers and gives you a recognized brand label. Being "Kentucky Proud" certified can command a premium at markets and with restaurants.</p>
+      </div>
+      <div class="resource-card">
+        <h4>KCARD</h4>
+        <p>Kentucky Center for Agriculture and Rural Development. Helps write grant applications, connect with funding programs, and develop business plans for beginning farmers.</p>
+      </div>
+      <div class="resource-card">
+        <h4>KSU Pawpaw Research</h4>
+        <p>Kentucky State University in Frankfort hosts the USDA National Clonal Germplasm Repository for pawpaw. If you want to grow pawpaws, you're in the right state — contact them for variety recommendations and resources.</p>
+      </div>
+      <div class="resource-card">
+        <h4>Midwest Elderberry Cooperative</h4>
+        <p>Provides market access for elderberry growers who can't sell direct to end buyers. Certified organic American elderberries: $3.50–$5.50/lb. Sustainably grown: $3.00–$4.50/lb (2025 prices).</p>
+      </div>
+      <div class="resource-card">
+        <h4>Lexington Farmers Market</h4>
+        <p>Well-established market with strong consumer demand. Get on the vendor waiting list early. Visit as a customer first — talk to vendors about what sells and what margins look like in person.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>Kentucky Small Farm Planning Guide &nbsp;·&nbsp; Based on <span>Lexington, KY Zone 6b</span> &nbsp;·&nbsp; Prices reflect 2025–2026 market data</div>
+  <div style="margin-top:8px;">Always verify current prices, grant availability, and local regulations before making investment decisions.</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
