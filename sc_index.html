@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SearchScraper</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <style>
-/* ── Reset & Tokens ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#0D1117;--bg-2:#161B22;--bg-3:#1C2128;--bg-hover:#21262D;
@@ -16,24 +15,14 @@
   --green:#3FB950;--red:#F85149;--red-dim:#6e211e;--yellow:#D29922;
   --text-1:#E6EDF3;--text-2:#8B949E;--text-3:#484F58;
   --mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif;
-  --radius:6px;--radius-lg:10px;
-  --sidebar-w:288px;--header-h:52px;--trans:0.15s ease;
+  --radius:6px;--radius-lg:10px;--sidebar-w:296px;--header-h:52px;--trans:0.15s ease;
 }
 html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(--sans);font-size:14px;line-height:1.5}
-
-/* ── Header ── */
-.app-header{
-  position:fixed;top:0;left:0;right:0;height:var(--header-h);
-  background:var(--bg-2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;z-index:100;gap:12px;
-}
+.app-header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--bg-2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;gap:12px}
 .header-left{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .logo-mark{color:var(--blue);font-size:20px;line-height:1}
 .logo-text{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:-0.3px}
 .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-
-/* pulse */
 .pulse-wrap{display:flex;align-items:center;gap:7px;cursor:default}
 .pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);transition:background var(--trans)}
 .pulse-dot.active{background:var(--green);box-shadow:0 0 0 0 rgba(63,185,80,.5);animation:pulse 2s infinite}
@@ -42,8 +31,6 @@ html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(-
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,185,80,.5)}70%{box-shadow:0 0 0 7px rgba(63,185,80,0)}100%{box-shadow:0 0 0 0 rgba(63,185,80,0)}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 .pulse-label{font-family:var(--mono);font-size:11px;color:var(--text-2)}
-
-/* ── Buttons ── */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid transparent;font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;transition:background var(--trans),border-color var(--trans),opacity var(--trans);white-space:nowrap}
 .btn:disabled{opacity:.4;cursor:not-allowed}
 .btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
@@ -56,63 +43,34 @@ html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(-
 .btn-danger:hover:not(:disabled){background:#8b2020}
 .btn-full{width:100%;justify-content:center}
 .btn-sm{padding:4px 10px;font-size:12px}
-
-/* ── Layout ── */
 .app-body{display:flex;margin-top:var(--header-h);min-height:calc(100vh - var(--header-h))}
-
-/* ── Sidebar ── */
-.sidebar{
-  position:fixed;top:var(--header-h);left:0;
-  width:var(--sidebar-w);height:calc(100vh - var(--header-h));
-  background:var(--bg-2);border-right:1px solid var(--border);
-  overflow-y:auto;padding:16px 14px 80px;
-  display:flex;flex-direction:column;gap:4px;
-  transition:transform var(--trans);z-index:50;
-}
+.sidebar{position:fixed;top:var(--header-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--header-h));background:var(--bg-2);border-right:1px solid var(--border);overflow-y:auto;padding:16px 14px 80px;display:flex;flex-direction:column;gap:4px;transition:transform var(--trans);z-index:50}
 .sidebar::-webkit-scrollbar{width:4px}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-.sidebar-toggle{
-  display:none;position:absolute;top:10px;right:-36px;
-  width:30px;height:30px;background:var(--bg-2);
-  border:1px solid var(--border);border-left:none;
-  border-radius:0 var(--radius) var(--radius) 0;
-  color:var(--text-2);font-size:16px;cursor:pointer;
-  align-items:center;justify-content:center;z-index:60;
-}
-
-/* API key banner */
-.api-banner{
-  background:rgba(47,129,247,.08);border:1px solid var(--blue-dim);
-  border-radius:var(--radius);padding:10px 12px;
-  font-size:12px;color:var(--text-2);line-height:1.6;
-}
-.api-banner a{color:var(--blue);text-decoration:none}
-.api-banner a:hover{text-decoration:underline}
-.api-key-row{display:flex;gap:6px;margin-top:6px}
-.api-key-row .filter-input{flex:1;font-family:var(--mono);font-size:12px;letter-spacing:.05em}
-.api-key-row .btn{flex-shrink:0}
-
-.filter-section{padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.sidebar-toggle{display:none;position:absolute;top:10px;right:-36px;width:30px;height:30px;background:var(--bg-2);border:1px solid var(--border);border-left:none;border-radius:0 var(--radius) var(--radius) 0;color:var(--text-2);font-size:16px;cursor:pointer;align-items:center;justify-content:center;z-index:60}
+.filter-section{padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:7px}
 .filter-section:last-of-type{border-bottom:none}
 .filter-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
 .filter-label.inline{text-transform:none;font-size:12px;letter-spacing:0}
-.filter-hint{font-size:11px;color:var(--text-3);margin-top:-2px}
+.filter-hint{font-size:11px;color:var(--text-3);margin-top:-3px;line-height:1.5}
 .required{color:var(--blue)}
-
-.filter-input{
-  width:100%;background:var(--bg-3);border:1px solid var(--border);
-  border-radius:var(--radius);color:var(--text-1);font-family:var(--sans);
-  font-size:13px;padding:7px 10px;transition:border-color var(--trans);
-}
+.filter-input{width:100%;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text-1);font-family:var(--sans);font-size:13px;padding:7px 10px;transition:border-color var(--trans)}
 .filter-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
 .filter-input::placeholder{color:var(--text-3)}
 .filter-input.inline-filter{width:180px}
-
+select.filter-input{cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B949E' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
 .price-row{display:flex;align-items:center;gap:8px}
 .price-input{width:0;flex:1}
 .price-sep{color:var(--text-2);font-size:16px;flex-shrink:0}
-
-/* Tags */
+.loc-row{display:flex;gap:6px}
+.loc-row .filter-input:first-child{flex:1;min-width:0}
+.loc-row select{width:94px;flex-shrink:0}
+.api-banner{background:rgba(47,129,247,.08);border:1px solid var(--blue-dim);border-radius:var(--radius);padding:10px 12px;font-size:12px;color:var(--text-2);line-height:1.6}
+.api-banner a{color:var(--blue);text-decoration:none}
+.api-banner a:hover{text-decoration:underline}
+.api-key-row{display:flex;gap:6px;margin-top:4px}
+.api-key-row .filter-input{flex:1;font-family:var(--mono);font-size:12px;letter-spacing:.05em}
+.api-key-row .btn{flex-shrink:0}
 .tag-input-wrap{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:4px 6px;transition:border-color var(--trans)}
 .tag-input-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
 .tag-input{background:transparent;border:none;outline:none;color:var(--text-1);font-family:var(--sans);font-size:13px;padding:3px 4px;width:100%}
@@ -123,7 +81,18 @@ html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(-
 .tag-exclude{background:rgba(248,81,73,.12);color:var(--red);border:1px solid #4a1c1a}
 .tag-remove{background:none;border:none;color:inherit;opacity:.6;cursor:pointer;font-size:13px;line-height:1;padding:0}
 .tag-remove:hover{opacity:1}
-
+/* Site picker */
+.site-actions{display:flex;gap:6px}
+.site-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.site-chip{display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--text-2);transition:border-color var(--trans),color var(--trans),background var(--trans);user-select:none}
+.site-chip:hover{border-color:var(--border-hi);color:var(--text-1)}
+.site-chip.active{border-color:var(--blue);color:var(--blue);background:rgba(47,129,247,.1)}
+.site-chip-icon{font-size:14px;flex-shrink:0;line-height:1.4}
+.site-chip-label{font-size:11px;font-weight:500;line-height:1.3}
+.site-chip-note{font-size:10px;color:var(--text-3);margin-top:1px}
+.site-chip.active .site-chip-note{color:rgba(47,129,247,.6)}
+.site-custom-row{display:flex;gap:6px}
+.site-custom-row .filter-input{flex:1;font-size:12px}
 /* Toggle */
 .toggle-row{display:flex;align-items:center;gap:10px}
 .toggle-switch{position:relative;display:inline-block;width:34px;height:18px;flex-shrink:0}
@@ -134,16 +103,16 @@ html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(-
 .toggle-switch input:checked+.toggle-slider::before{transform:translateX(16px) translateY(-50%);background:var(--blue)}
 .toggle-desc{font-size:12px;color:var(--text-2)}
 .sidebar-footer{padding-top:16px}
-
-/* ── Main ── */
+/* Main */
 .main-content{margin-left:var(--sidebar-w);flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
-
+.active-query-bar{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;font-size:12px;color:var(--text-3);display:none;word-break:break-all;line-height:1.6}
+.active-query-bar b{color:var(--text-2);font-weight:500}
+.active-query-bar.visible{display:block}
 .table-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .toolbar-left{display:flex;align-items:center;gap:12px}
 .toolbar-right{display:flex;align-items:center;gap:8px}
 .result-count{font-family:var(--mono);font-size:12px;color:var(--text-2)}
 .perm-deleted-note{font-size:11px;color:var(--text-3)}
-
 .table-wrap{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:300px}
 .results-table{width:100%;border-collapse:collapse;font-size:13px}
 .results-table thead{background:var(--bg-3);position:sticky;top:0;z-index:2}
@@ -153,46 +122,49 @@ html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(-
 .results-table th.sort-asc .sort-icon::after{content:' ▲';color:var(--blue)}
 .results-table th.sort-desc .sort-icon::after{content:' ▼';color:var(--blue)}
 .col-check{width:36px;padding-left:14px!important}
+.col-site{width:140px}
 .col-actions{width:120px;text-align:right!important;padding-right:14px!important}
 .results-table tbody tr{border-bottom:1px solid var(--border);transition:background var(--trans);cursor:pointer}
 .results-table tbody tr:last-child{border-bottom:none}
 .results-table tbody tr:hover{background:var(--bg-hover)}
 .results-table tbody tr.selected{background:rgba(47,129,247,.07)}
 .results-table td{padding:10px 14px;vertical-align:top;color:var(--text-1)}
-
-.cell-title{font-weight:500;max-width:340px}
+.cell-title{font-weight:500;max-width:320px}
 .cell-title a{color:var(--blue);text-decoration:none}
 .cell-title a:hover{text-decoration:underline}
 .cell-snippet{font-size:11px;color:var(--text-2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.cell-source{font-family:var(--mono);font-size:11px;color:var(--text-2);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.site-badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:3px;font-family:var(--mono);white-space:nowrap;background:var(--bg-3);border:1px solid var(--border);color:var(--text-2);max-width:130px;overflow:hidden;text-overflow:ellipsis}
 .cell-price{font-family:var(--mono);font-size:13px;color:var(--green);font-weight:600;white-space:nowrap}
 .cell-price.no-price{color:var(--text-3);font-size:11px;font-weight:400}
 .cell-time{font-family:var(--mono);font-size:11px;color:var(--text-2);white-space:nowrap}
-
 .row-actions{display:flex;justify-content:flex-end;gap:4px;opacity:0;transition:opacity var(--trans)}
 tr:hover .row-actions,tr.selected .row-actions{opacity:1}
 .row-btn{background:none;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-2);padding:3px 7px;font-size:11px;cursor:pointer;transition:background var(--trans),color var(--trans),border-color var(--trans);white-space:nowrap}
 .row-btn:hover{background:var(--bg-hover);color:var(--text-1);border-color:var(--border-hi)}
 .row-btn.perm{color:var(--red);border-color:#4a1c1a}
 .row-btn.perm:hover{background:rgba(248,81,73,.12);border-color:var(--red)}
-
-.table-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+/* States */
+.table-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:24px}
 .table-state.hidden{display:none}
 .state-icon{font-size:32px;color:var(--text-3)}
 .error-icon{color:var(--red)}
 .state-title{font-size:15px;font-weight:600;color:var(--text-2)}
-.state-sub{font-size:12px;color:var(--text-3);text-align:center;max-width:320px;line-height:1.6}
-.state-sub a{color:var(--blue)}
+.state-sub{font-size:12px;color:var(--text-3);text-align:center;max-width:400px;line-height:1.7}
+.error-box{background:var(--bg-3);border:1px solid #4a1c1a;border-radius:var(--radius);padding:12px 16px;margin-top:4px;font-size:12px;line-height:1.75;color:var(--text-2);text-align:left;max-width:480px;pointer-events:all;width:100%}
+.error-box strong{color:var(--red);display:block;margin-bottom:6px;font-size:13px}
+.error-box ul{padding-left:18px}
+.error-box li{margin-bottom:4px}
+.error-box a{color:var(--blue)}
+.error-box code{font-family:var(--mono);background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--text-2);word-break:break-all}
+.error-links{margin-top:8px;display:flex;gap:10px;flex-wrap:wrap}
 .spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .bulk-bar{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)}
 .bulk-bar.hidden{display:none}
-
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
 .modal-overlay.hidden{display:none}
-.modal{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;max-width:620px;width:100%;position:relative;max-height:80vh;overflow-y:auto}
+.modal{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;max-width:640px;width:100%;position:relative;max-height:80vh;overflow-y:auto}
 .modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text-2);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:var(--radius);transition:background var(--trans)}
 .modal-close:hover{background:var(--bg-hover);color:var(--text-1)}
 .modal-title{font-size:17px;font-weight:600;margin-bottom:8px;padding-right:40px;line-height:1.4}
@@ -202,37 +174,31 @@ tr:hover .row-actions,tr.selected .row-actions{opacity:1}
 .meta-item{display:flex;flex-direction:column;gap:2px}
 .meta-key{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
 .meta-val{font-family:var(--mono);font-size:12px;color:var(--text-1)}
-
-/* Toasts */
 #toastContainer{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:300}
-.toast{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;font-size:13px;color:var(--text-1);box-shadow:0 4px 16px rgba(0,0,0,.4);animation:slideIn .2s ease;max-width:320px}
+.toast{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;font-size:13px;color:var(--text-1);box-shadow:0 4px 16px rgba(0,0,0,.4);animation:slideIn .2s ease;max-width:340px}
 .toast.success{border-left:3px solid var(--green)}
 .toast.error{border-left:3px solid var(--red)}
 .toast.info{border-left:3px solid var(--blue)}
 @keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
-
-/* Responsive */
 @media(max-width:768px){
   .sidebar{transform:translateX(-100%)}
   .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.5)}
   .sidebar-toggle{display:flex}
   .main-content{margin-left:0;padding:12px}
-  .pulse-label{display:none}
+  .pulse-label,.cell-snippet,.col-site{display:none}
   .filter-input.inline-filter{width:120px}
-  .cell-snippet{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="app-header">
   <div class="header-left">
-    <span class="logo-mark">⬡</span>
+    <span class="logo-mark">&#x2B21;</span>
     <span class="logo-text">SearchScraper</span>
   </div>
   <div class="header-right">
-    <span class="pulse-wrap" title="Last update / next refresh">
+    <span class="pulse-wrap">
       <span class="pulse-dot" id="pulseDot"></span>
       <span class="pulse-label" id="pulseLabel">Never updated</span>
     </span>
@@ -245,509 +211,572 @@ tr:hover .row-actions,tr.selected .row-actions{opacity:1}
 </header>
 
 <div class="app-body">
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
-
-    <!-- API Key -->
-    <section class="filter-section">
-      <label class="filter-label">Brave API Key <span class="required">*</span></label>
-      <div class="api-banner">
-        Free at <a href="https://api.search.brave.com/register" target="_blank" rel="noopener">api.search.brave.com</a> — 2,000 searches/month. Saved in your browser only.
-      </div>
-      <div class="api-key-row">
-        <input type="password" id="inputApiKey" class="filter-input" placeholder="BSA…" autocomplete="off" />
-        <button class="btn btn-outline btn-sm" id="btnSaveKey">Save</button>
-      </div>
-      <p class="filter-hint" id="keyStatus"></p>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Search Query <span class="required">*</span></label>
-      <input type="text" id="inputQuery" class="filter-input" placeholder="e.g. vintage camera" />
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Include Keywords</label>
-      <p class="filter-hint">Results must contain ALL of these</p>
-      <div class="tag-input-wrap">
-        <input type="text" class="tag-input" id="includeInput" placeholder="Type & press Enter" />
-      </div>
-      <div class="tag-list" id="includeTags"></div>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Exclude Keywords</label>
-      <p class="filter-hint">Results must contain NONE of these</p>
-      <div class="tag-input-wrap">
-        <input type="text" class="tag-input" id="excludeInput" placeholder="Type & press Enter" />
-      </div>
-      <div class="tag-list" id="excludeTags"></div>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Geographical Location</label>
-      <input type="text" id="inputLocation" class="filter-input" placeholder="e.g. Chicago, IL" />
-      <p class="filter-hint">Added to query + used to filter results</p>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Price Range (USD)</label>
-      <div class="price-row">
-        <input type="number" id="inputMinPrice" class="filter-input price-input" placeholder="Min $" min="0" step="0.01" />
-        <span class="price-sep">–</span>
-        <input type="number" id="inputMaxPrice" class="filter-input price-input" placeholder="Max $" min="0" step="0.01" />
-      </div>
-      <p class="filter-hint">Filters results where a price is detected</p>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Max Results</label>
-      <input type="number" id="inputMaxResults" class="filter-input" value="20" min="1" max="100" />
-      <p class="filter-hint">Up to 100. Each 20 = 1 API call.</p>
-    </section>
-
-    <section class="filter-section">
-      <label class="filter-label">Auto-Refresh</label>
-      <div class="toggle-row">
-        <label class="toggle-switch">
-          <input type="checkbox" id="toggleAutoRefresh" checked />
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-desc">Every <strong>60 min</strong></span>
-      </div>
-    </section>
-
-    <div class="sidebar-footer">
-      <button class="btn btn-outline btn-full" id="btnResetFilters">Reset Filters</button>
+  <section class="filter-section">
+    <label class="filter-label">Brave API Key <span class="required">*</span></label>
+    <div class="api-banner">Free at <a href="https://api.search.brave.com/register" target="_blank" rel="noopener">api.search.brave.com</a> &mdash; 2,000 searches/month. Stored in your browser only.</div>
+    <div class="api-key-row">
+      <input type="password" id="inputApiKey" class="filter-input" placeholder="BSA&hellip;" autocomplete="off"/>
+      <button class="btn btn-outline btn-sm" id="btnSaveKey">Save</button>
     </div>
-  </aside>
+    <p class="filter-hint" id="keyStatus"></p>
+  </section>
 
-  <!-- MAIN -->
-  <main class="main-content">
-    <div class="table-toolbar">
-      <div class="toolbar-left">
-        <span class="result-count" id="resultCount">0 results</span>
-        <span class="perm-deleted-note" id="permDeletedNote"></span>
-      </div>
-      <div class="toolbar-right">
-        <label class="filter-label inline">Filter:</label>
-        <input type="text" id="tableFilter" class="filter-input inline-filter" placeholder="Search results…" />
-        <button class="btn btn-ghost btn-sm" id="btnExportCSV">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export CSV
-        </button>
-      </div>
+  <section class="filter-section">
+    <label class="filter-label">Search Query <span class="required">*</span></label>
+    <input type="text" id="inputQuery" class="filter-input" placeholder="e.g. used pickup truck"/>
+  </section>
+
+  <section class="filter-section">
+    <label class="filter-label">Include Keywords</label>
+    <p class="filter-hint">Results must contain ALL of these</p>
+    <div class="tag-input-wrap"><input type="text" class="tag-input" id="includeInput" placeholder="Type &amp; press Enter"/></div>
+    <div class="tag-list" id="includeTags"></div>
+  </section>
+
+  <section class="filter-section">
+    <label class="filter-label">Exclude Keywords</label>
+    <p class="filter-hint">Results must contain NONE of these</p>
+    <div class="tag-input-wrap"><input type="text" class="tag-input" id="excludeInput" placeholder="Type &amp; press Enter"/></div>
+    <div class="tag-list" id="excludeTags"></div>
+  </section>
+
+  <section class="filter-section">
+    <label class="filter-label">Location &amp; Search Radius</label>
+    <div class="loc-row">
+      <input type="text" id="inputLocation" class="filter-input" placeholder="City, State or ZIP"/>
+      <select id="inputRadius" class="filter-input">
+        <option value="0">Exact</option>
+        <option value="10">10 mi</option>
+        <option value="25" selected>25 mi</option>
+        <option value="50">50 mi</option>
+        <option value="100">100 mi</option>
+        <option value="200">200 mi</option>
+        <option value="500">500 mi</option>
+      </select>
     </div>
+    <p class="filter-hint">Radius expands location terms in your query</p>
+  </section>
 
-    <div class="table-wrap">
-      <table class="results-table">
-        <thead>
-          <tr>
-            <th class="col-check"><input type="checkbox" id="selectAll" /></th>
-            <th class="sortable" data-col="title">Title <span class="sort-icon">⇅</span></th>
-            <th class="sortable" data-col="source">Source <span class="sort-icon">⇅</span></th>
-            <th class="sortable" data-col="price">Price <span class="sort-icon">⇅</span></th>
-            <th class="sortable" data-col="found_at">Found <span class="sort-icon">⇅</span></th>
-            <th class="col-actions">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="resultsBody"></tbody>
-      </table>
-
-      <div class="table-state" id="stateEmpty">
-        <div class="state-icon">⬡</div>
-        <p class="state-title">No results yet</p>
-        <p class="state-sub">Enter your API key, set up filters, and click <strong>Run Search</strong></p>
-      </div>
-      <div class="table-state hidden" id="stateLoading">
-        <div class="spinner"></div>
-        <p class="state-title">Searching…</p>
-        <p class="state-sub" id="stateLoadingQuery"></p>
-      </div>
-      <div class="table-state hidden" id="stateError">
-        <div class="state-icon error-icon">✕</div>
-        <p class="state-title">Search failed</p>
-        <p class="state-sub" id="stateErrorMsg"></p>
-      </div>
+  <section class="filter-section">
+    <label class="filter-label">Price Range (USD)</label>
+    <div class="price-row">
+      <input type="number" id="inputMinPrice" class="filter-input price-input" placeholder="Min $" min="0" step="1"/>
+      <span class="price-sep">&ndash;</span>
+      <input type="number" id="inputMaxPrice" class="filter-input price-input" placeholder="Max $" min="0" step="1"/>
     </div>
+  </section>
 
-    <div class="bulk-bar hidden" id="bulkBar">
-      <span id="bulkCount">0 selected</span>
-      <button class="btn btn-ghost btn-sm" id="btnBulkDelete">Delete selected</button>
-      <button class="btn btn-danger btn-sm" id="btnBulkPermDelete">Permanently block selected</button>
+  <section class="filter-section">
+    <label class="filter-label">Target Sites</label>
+    <p class="filter-hint">Restrict search to specific platforms</p>
+    <div class="site-actions">
+      <button class="btn btn-ghost btn-sm" id="btnSelectAllSites">All</button>
+      <button class="btn btn-ghost btn-sm" id="btnClearSites">None</button>
     </div>
-  </main>
+    <div class="site-grid" id="siteGrid"></div>
+    <div class="site-custom-row">
+      <input type="text" id="inputCustomSite" class="filter-input" placeholder="add custom domain.com"/>
+      <button class="btn btn-outline btn-sm" id="btnAddCustomSite">Add</button>
+    </div>
+    <p class="filter-hint" id="siteHint"></p>
+  </section>
+
+  <section class="filter-section">
+    <label class="filter-label">Max Results</label>
+    <input type="number" id="inputMaxResults" class="filter-input" value="20" min="1" max="100"/>
+    <p class="filter-hint">Up to 100. Every 20 = 1 API call.</p>
+  </section>
+
+  <section class="filter-section">
+    <label class="filter-label">Auto-Refresh</label>
+    <div class="toggle-row">
+      <label class="toggle-switch"><input type="checkbox" id="toggleAutoRefresh" checked/><span class="toggle-slider"></span></label>
+      <span class="toggle-desc">Every <strong>60 min</strong></span>
+    </div>
+  </section>
+
+  <div class="sidebar-footer">
+    <button class="btn btn-outline btn-full" id="btnResetFilters">Reset Filters</button>
+  </div>
+</aside>
+
+<main class="main-content">
+  <div class="active-query-bar" id="activeQueryBar"><b>Last query sent to Brave: </b><span id="activeQueryText"></span></div>
+
+  <div class="table-toolbar">
+    <div class="toolbar-left">
+      <span class="result-count" id="resultCount">0 results</span>
+      <span class="perm-deleted-note" id="permDeletedNote"></span>
+    </div>
+    <div class="toolbar-right">
+      <label class="filter-label inline">Filter:</label>
+      <input type="text" id="tableFilter" class="filter-input inline-filter" placeholder="Search results&hellip;"/>
+      <button class="btn btn-ghost btn-sm" id="btnExportCSV">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="results-table">
+      <thead><tr>
+        <th class="col-check"><input type="checkbox" id="selectAll"/></th>
+        <th class="sortable" data-col="title">Title <span class="sort-icon">&#8645;</span></th>
+        <th class="sortable col-site" data-col="source">Site <span class="sort-icon">&#8645;</span></th>
+        <th class="sortable" data-col="price">Price <span class="sort-icon">&#8645;</span></th>
+        <th class="sortable" data-col="found_at">Found <span class="sort-icon">&#8645;</span></th>
+        <th class="col-actions">Actions</th>
+      </tr></thead>
+      <tbody id="resultsBody"></tbody>
+    </table>
+
+    <div class="table-state" id="stateEmpty">
+      <div class="state-icon">&#x2B21;</div>
+      <p class="state-title">No results yet</p>
+      <p class="state-sub">Configure filters and click <strong>Run Search</strong>.<br/>Selecting target sites greatly improves relevance.</p>
+    </div>
+    <div class="table-state hidden" id="stateLoading">
+      <div class="spinner"></div>
+      <p class="state-title">Searching&hellip;</p>
+      <p class="state-sub" id="stateLoadingQuery"></p>
+    </div>
+    <div class="table-state hidden" id="stateError">
+      <div class="state-icon error-icon">&#x2715;</div>
+      <p class="state-title" id="stateErrorTitle">Search failed</p>
+      <p class="state-sub" id="stateErrorSub"></p>
+      <div class="error-box" id="errorBox" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="bulk-bar hidden" id="bulkBar">
+    <span id="bulkCount">0 selected</span>
+    <button class="btn btn-ghost btn-sm" id="btnBulkDelete">Delete selected</button>
+    <button class="btn btn-danger btn-sm" id="btnBulkPermDelete">Permanently block selected</button>
+  </div>
+</main>
 </div>
 
-<!-- Detail Modal -->
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal">
-    <button class="modal-close" id="modalClose">✕</button>
+    <button class="modal-close" id="modalClose">&#x2715;</button>
     <h2 class="modal-title" id="modalTitle"></h2>
     <a class="modal-url" id="modalUrl" target="_blank" rel="noopener"></a>
     <p class="modal-snippet" id="modalSnippet"></p>
     <div class="modal-meta" id="modalMeta"></div>
   </div>
 </div>
-
 <div id="toastContainer"></div>
 
 <script>
-// ─────────────────────────────────────────────
-//  CONSTANTS & STORAGE
-// ─────────────────────────────────────────────
-const SK = {
-  apiKey:      'ss_api_key',
-  permDeleted: 'ss_perm_deleted_v2',
-  lastParams:  'ss_last_params_v2',
-};
+// ── Storage keys ─────────────────────────────────────────────────────
+const SK={apiKey:'ss_api_key',perm:'ss_perm_v3',params:'ss_params_v3',sites:'ss_sites_v1'};
+const AUTO_REFRESH_MS=60*60*1000;
 
-const AUTO_REFRESH_MS = 60 * 60 * 1000;
+// ── Site catalog ─────────────────────────────────────────────────────
+const SITES=[
+  {id:'fb_mp',    label:'FB Marketplace',   icon:'📘', domain:'facebook.com/marketplace', note:'Local listings'},
+  {id:'craigslist',label:'Craigslist',      icon:'📋', domain:'craigslist.org',           note:'Classifieds'},
+  {id:'realtor',  label:'Realtor.com',      icon:'🏠', domain:'realtor.com',              note:'Real estate'},
+  {id:'zillow',   label:'Zillow',           icon:'🏡', domain:'zillow.com',               note:'Real estate'},
+  {id:'fordbros', label:'Ford Brothers',    icon:'🔨', domain:'fordbrothersauction.com',  note:'Auctions'},
+  {id:'proxibid', label:'Proxibid',         icon:'🔨', domain:'proxibid.com',             note:'Auctions'},
+  {id:'bidspotter',label:'BidSpotter',      icon:'🔨', domain:'bidspotter.com',           note:'Auctions'},
+  {id:'govplanet',label:'GovPlanet',        icon:'🏛', domain:'govplanet.com',            note:'Gov surplus'},
+  {id:'ironplanet',label:'IronPlanet',      icon:'🏗', domain:'ironplanet.com',           note:'Heavy equip'},
+  {id:'auctiontime',label:'AuctionTime',    icon:'⏱', domain:'auctiontime.com',          note:'Auctions'},
+  {id:'ebay',     label:'eBay',             icon:'🛒', domain:'ebay.com',                 note:'Marketplace'},
+  {id:'offerup',  label:'OfferUp',          icon:'💬', domain:'offerup.com',              note:'Local buy/sell'},
+  {id:'autotrader',label:'AutoTrader',      icon:'🚗', domain:'autotrader.com',           note:'Vehicles'},
+  {id:'cargurus', label:'CarGurus',         icon:'🚙', domain:'cargurus.com',             note:'Vehicles'},
+  {id:'cars',     label:'Cars.com',         icon:'🚘', domain:'cars.com',                 note:'Vehicles'},
+  {id:'truckpaper',label:'TruckPaper',      icon:'🚛', domain:'truckpaper.com',           note:'Trucks/Equip'},
+  {id:'machinio', label:'Machinio',         icon:'⚙', domain:'machinio.com',             note:'Equipment'},
+  {id:'loopnet',  label:'LoopNet',          icon:'🏢', domain:'loopnet.com',              note:'Commercial RE'},
+  {id:'landwatch',label:'LandWatch',        icon:'🌾', domain:'landwatch.com',            note:'Land/farms'},
+  {id:'equipmenttrader',label:'Equip Trader',icon:'🚜',domain:'equipmenttrader.com',     note:'Equipment'},
+];
+let customSites=[];
+let activeSiteIds=new Set(JSON.parse(localStorage.getItem(SK.sites)||'[]'));
 
-// ─────────────────────────────────────────────
-//  HELPERS
-// ─────────────────────────────────────────────
-function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
-
-function toast(msg, type='info', ms=3500){
-  const tc = document.getElementById('toastContainer');
-  const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.textContent = msg;
+// ── Helpers ───────────────────────────────────────────────────────────
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(msg,type='info',ms=3500){
+  const tc=document.getElementById('toastContainer');
+  const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;
   tc.appendChild(el);
-  setTimeout(()=>{ el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, ms);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),300);},ms);
 }
-
-function setPulse(state, label){
-  document.getElementById('pulseDot').className = 'pulse-dot ' + state;
-  document.getElementById('pulseLabel').textContent = label;
+function setPulse(state,label){
+  document.getElementById('pulseDot').className='pulse-dot '+state;
+  document.getElementById('pulseLabel').textContent=label;
 }
-
-function extractPrice(text){
-  if(!text) return null;
-  const m = text.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
-  if(m){ const v=parseFloat(m[1].replace(/,/g,'')); if(!isNaN(v)) return v; }
+function extractPrice(t){
+  if(!t)return null;
+  const m=t.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
+  if(m){const v=parseFloat(m[1].replace(/,/g,''));if(!isNaN(v))return v;}
   return null;
 }
+function fmtPrice(p){return p!=null?'$'+Number(p).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}):null;}
+function fmtTime(ms){if(!ms)return'—';return new Date(ms).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}
 
-function fmtPrice(p){ return p!=null ? '$'+Number(p).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}) : null; }
-function fmtTime(ms){ if(!ms) return '—'; const d=new Date(ms); return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+// ── Error diagnosis ───────────────────────────────────────────────────
+function diagnose(status,body,query){
+  if(!navigator.onLine)return{
+    title:'No internet connection',
+    sub:'Your device appears to be offline.',
+    bullets:['Check your Wi-Fi or mobile data connection.','Try again once connected.'],
+    links:[]
+  };
+  if(status===401)return{
+    title:'Invalid API key (401 Unauthorized)',
+    sub:'Brave rejected the API key.',
+    bullets:[
+      'Double-check you copied the <strong>full</strong> key from the Brave dashboard.',
+      'Keys should start with <code>BSA</code> — verify there are no extra spaces.',
+      'The key may have been revoked; generate a new one.',
+    ],
+    links:[{url:'https://api.search.brave.com/app/keys',label:'Manage API keys'}]
+  };
+  if(status===403)return{
+    title:'Forbidden (403)',
+    sub:'The key exists but access was denied.',
+    bullets:[
+      'Your key may not have the Web Search plan enabled.',
+      'Check your subscription tier on the Brave dashboard.',
+    ],
+    links:[{url:'https://api.search.brave.com/app/subscriptions',label:'Check subscriptions'}]
+  };
+  if(status===429)return{
+    title:'Rate limit exceeded (429)',
+    sub:'Too many requests — you have hit your quota.',
+    bullets:[
+      'Free plan: 1 request/second, 2,000/month.',
+      'Auto-refresh + high result counts consume quota quickly.',
+      'Try reducing Max Results or turning off Auto-Refresh.',
+      'Per-second limits reset within a few seconds — try again shortly.',
+    ],
+    links:[{url:'https://api.search.brave.com/app/subscriptions',label:'View usage'}]
+  };
+  if(status===422)return{
+    title:'Unprocessable query (422)',
+    sub:'Brave could not parse the search query.',
+    bullets:[
+      'Try simplifying your query — remove special characters.',
+      'Long <code>site:</code> chains with many sites can sometimes fail; try deselecting some.',
+      'Query sent: <code>'+esc((query||'').slice(0,150))+'</code>',
+    ],
+    links:[]
+  };
+  if(status>=500)return{
+    title:'Brave server error ('+status+')',
+    sub:"Brave's servers returned an error — this is on their end.",
+    bullets:[
+      'Wait 30–60 seconds and try again.',
+      'Check <a href="https://status.brave.com" target="_blank">status.brave.com</a> for outages.',
+    ],
+    links:[]
+  };
+  if(status===0||String(body).includes('Failed to fetch')||String(body).includes('NetworkError')||String(body).includes('CORS'))return{
+    title:'Network / CORS error',
+    sub:'The request could not reach Brave.',
+    bullets:[
+      'A VPN or corporate firewall may be blocking the request.',
+      'Browser extensions (ad blockers, privacy tools) can interfere — try disabling them.',
+      'If you opened <code>index.html</code> directly from disk (<code>file://</code>), browsers block cross-origin requests. Host via GitHub Pages or a local server instead.',
+    ],
+    links:[]
+  };
+  return{
+    title:'Unexpected error'+(status?' ('+status+')':''),
+    sub:String(body||'An unknown error occurred.').slice(0,200),
+    bullets:['Open browser DevTools (F12 → Console) for the full error.'],
+    links:[]
+  };
+}
 
-// ─────────────────────────────────────────────
-//  TAG INPUT
-// ─────────────────────────────────────────────
-class TagInput {
-  constructor(inputId, listId, type){
-    this.input = document.getElementById(inputId);
-    this.list  = document.getElementById(listId);
-    this.type  = type;
-    this.tags  = [];
-    this.input.addEventListener('keydown', e=>{
-      if(['Enter',',','Tab'].includes(e.key)){ e.preventDefault(); this._add(this.input.value); }
-      if(e.key==='Backspace' && !this.input.value && this.tags.length) this._remove(this.tags[this.tags.length-1]);
+function showError(status,body,query){
+  const d=diagnose(status,body,query);
+  document.getElementById('stateLoading').classList.add('hidden');
+  document.getElementById('stateError').classList.remove('hidden');
+  document.getElementById('stateErrorTitle').textContent=d.title;
+  document.getElementById('stateErrorSub').textContent=d.sub;
+  const box=document.getElementById('errorBox');
+  box.style.display='block';
+  box.innerHTML='<ul>'+d.bullets.map(b=>'<li>'+b+'</li>').join('')+'</ul>'
+    +(d.links.length?'<div class="error-links">'+d.links.map(l=>'<a href="'+l.url+'" target="_blank" rel="noopener">'+esc(l.label)+' &rarr;</a>').join('')+'</div>':'');
+  setPulse('error',d.title.split('(')[0].trim().slice(0,40));
+  toast(d.title,'error',7000);
+}
+function hideErrorState(){
+  document.getElementById('stateError').classList.add('hidden');
+  document.getElementById('errorBox').style.display='none';
+}
+
+// ── Tag Input ─────────────────────────────────────────────────────────
+class TagInput{
+  constructor(inId,listId,type){
+    this.input=document.getElementById(inId);
+    this.list=document.getElementById(listId);
+    this.type=type;this.tags=[];
+    this.input.addEventListener('keydown',e=>{
+      if(['Enter',',','Tab'].includes(e.key)){e.preventDefault();this._add(this.input.value);}
+      if(e.key==='Backspace'&&!this.input.value&&this.tags.length)this._remove(this.tags[this.tags.length-1]);
     });
-    this.input.addEventListener('blur', ()=>{ if(this.input.value.trim()) this._add(this.input.value); });
+    this.input.addEventListener('blur',()=>{if(this.input.value.trim())this._add(this.input.value);});
   }
-  _add(raw){ const v=raw.trim().replace(/,$/,''); if(!v||this.tags.includes(v)){this.input.value='';return;} this.tags.push(v); this.input.value=''; this._render(); }
-  _remove(v){ this.tags=this.tags.filter(t=>t!==v); this._render(); }
+  _add(raw){const v=raw.trim().replace(/,$/,'');if(!v||this.tags.includes(v)){this.input.value='';return;}this.tags.push(v);this.input.value='';this._render();}
+  _remove(v){this.tags=this.tags.filter(t=>t!==v);this._render();}
   _render(){
     this.list.innerHTML='';
     this.tags.forEach(tag=>{
       const p=document.createElement('span');
-      p.className=`tag tag-${this.type}`;
-      p.innerHTML=`${esc(tag)}<button class="tag-remove">×</button>`;
-      p.querySelector('.tag-remove').onclick=e=>{ e.stopPropagation(); this._remove(tag); };
+      p.className='tag tag-'+this.type;
+      p.innerHTML=esc(tag)+'<button class="tag-remove">\xd7</button>';
+      p.querySelector('.tag-remove').onclick=e=>{e.stopPropagation();this._remove(tag);};
       this.list.appendChild(p);
     });
   }
-  get(){ return [...this.tags]; }
-  set(arr){ this.tags=[...arr]; this._render(); }
-  reset(){ this.tags=[]; this._render(); }
+  get(){return[...this.tags];}
+  set(a){this.tags=[...a];this._render();}
+  reset(){this.tags=[];this._render();}
 }
 
-// ─────────────────────────────────────────────
-//  TABLE STATE
-// ─────────────────────────────────────────────
-let allResults  = [];
-let sortCol     = 'found_at';
-let sortDir     = 'desc';
-let filterText  = '';
-let selected    = new Set();
-
-// Permanent block stored as "url:<url>" strings
-let permDeleted = new Set(JSON.parse(localStorage.getItem(SK.permDeleted)||'[]'));
-
-function savePermDeleted(){ localStorage.setItem(SK.permDeleted, JSON.stringify([...permDeleted])); }
-
-function isPermBlocked(r){
-  return permDeleted.has('url:'+r.url) || permDeleted.has(r.id);
+// ── Site picker ───────────────────────────────────────────────────────
+function allSites(){return[...SITES,...customSites];}
+function buildSiteGrid(){
+  const grid=document.getElementById('siteGrid');grid.innerHTML='';
+  allSites().forEach(site=>{
+    const chip=document.createElement('div');
+    chip.className='site-chip'+(activeSiteIds.has(site.id)?' active':'');
+    chip.innerHTML='<span class="site-chip-icon">'+site.icon+'</span><div><div class="site-chip-label">'+esc(site.label)+'</div><div class="site-chip-note">'+esc(site.note||site.domain)+'</div></div>';
+    chip.addEventListener('click',()=>{
+      activeSiteIds[activeSiteIds.has(site.id)?'delete':'add'](site.id);
+      chip.classList.toggle('active',activeSiteIds.has(site.id));
+      saveSites();updateSiteHint();
+    });
+    grid.appendChild(chip);
+  });
+  updateSiteHint();
 }
+function saveSites(){localStorage.setItem(SK.sites,JSON.stringify([...activeSiteIds]));}
+function updateSiteHint(){
+  const n=activeSiteIds.size;
+  document.getElementById('siteHint').textContent=n===0?'Searching all sites (no restriction)':'Searching '+n+' selected site'+(n!==1?'s':'');
+}
+function buildSiteFilter(){
+  if(activeSiteIds.size===0)return'';
+  const domains=allSites().filter(s=>activeSiteIds.has(s.id)).map(s=>s.domain);
+  if(!domains.length)return'';
+  if(domains.length===1)return'site:'+domains[0];
+  return'('+domains.map(d=>'site:'+d).join(' OR ')+')';
+}
+
+// ── Radius → query terms ──────────────────────────────────────────────
+function radiusTerms(loc,mi){
+  if(!loc)return'';
+  if(mi===0)return'"'+loc+'"';
+  if(mi<=10) return'"'+loc+'" OR "near '+loc+'"';
+  if(mi<=25) return'"'+loc+'" OR "near '+loc+'" OR "'+loc+' area"';
+  if(mi<=50) return'"'+loc+'" OR "near '+loc+'" OR "'+loc+' area" OR "'+loc+' region"';
+  if(mi<=100)return'"'+loc+'" OR "near '+loc+'" OR "'+loc+' area" OR "'+loc+' region" OR "within 100 miles of '+loc+'"';
+  return'"'+loc+'" OR "near '+loc+'" OR "'+loc+' area" OR "'+loc+' region" OR "'+loc+' state"';
+}
+
+// ── Table ─────────────────────────────────────────────────────────────
+let allResults=[],sortCol='found_at',sortDir='desc',filterText='',selected=new Set();
+let permDeleted=new Set(JSON.parse(localStorage.getItem(SK.perm)||'[]'));
+function savePerm(){localStorage.setItem(SK.perm,JSON.stringify([...permDeleted]));}
 
 function renderTable(){
-  const body = document.getElementById('resultsBody');
-
-  // Apply text filter
-  const visible = filterText
-    ? allResults.filter(r =>
-        (r.title+r.source+(r.snippet||'')+(r.url||'')).toLowerCase().includes(filterText))
-    : [...allResults];
-
-  // Sort
-  const fn = { title:r=>r.title.toLowerCase(), source:r=>r.source.toLowerCase(), price:r=>r.price??-Infinity, found_at:r=>r.found_at }[sortCol] || (r=>r.found_at);
-  visible.sort((a,b)=>{ const va=fn(a),vb=fn(b); return va<vb?(sortDir==='asc'?-1:1):va>vb?(sortDir==='asc'?1:-1):0; });
-
+  const body=document.getElementById('resultsBody');
+  const vis=filterText?allResults.filter(r=>(r.title+r.siteName+r.source+(r.snippet||'')+(r.url||'')).toLowerCase().includes(filterText)):[...allResults];
+  const fn={title:r=>r.title.toLowerCase(),source:r=>(r.siteName||r.source).toLowerCase(),price:r=>r.price??-Infinity,found_at:r=>r.found_at}[sortCol]||(r=>r.found_at);
+  vis.sort((a,b)=>{const va=fn(a),vb=fn(b);return va<vb?(sortDir==='asc'?-1:1):va>vb?(sortDir==='asc'?1:-1):0;});
   body.innerHTML='';
-  visible.forEach(r => body.appendChild(buildRow(r)));
-
-  // Count
-  document.getElementById('resultCount').textContent =
-    `${visible.length} result${visible.length!==1?'s':''}${filterText?' (filtered)':''}`;
-
-  // Select-all
-  const sa = document.getElementById('selectAll');
-  sa.checked = visible.length>0 && visible.every(r=>selected.has(r.id));
-  sa.indeterminate = !sa.checked && visible.some(r=>selected.has(r.id));
-
-  // Bulk bar
-  const bb = document.getElementById('bulkBar');
-  bb.classList.toggle('hidden', selected.size===0);
-  if(selected.size) document.getElementById('bulkCount').textContent = `${selected.size} selected`;
-
-  // Empty state
-  document.getElementById('stateEmpty').classList.toggle('hidden', allResults.length>0);
-
-  // Perm-deleted note
-  const pc = [...permDeleted].filter(k=>k.startsWith('url:')).length;
-  document.getElementById('permDeletedNote').textContent = pc>0?`(${pc} permanently blocked)`:'';
+  vis.forEach(r=>body.appendChild(buildRow(r)));
+  document.getElementById('resultCount').textContent=vis.length+' result'+(vis.length!==1?'s':'')+(filterText?' (filtered)':'');
+  const sa=document.getElementById('selectAll');
+  sa.checked=vis.length>0&&vis.every(r=>selected.has(r.id));
+  sa.indeterminate=!sa.checked&&vis.some(r=>selected.has(r.id));
+  document.getElementById('bulkBar').classList.toggle('hidden',selected.size===0);
+  if(selected.size)document.getElementById('bulkCount').textContent=selected.size+' selected';
+  document.getElementById('stateEmpty').classList.toggle('hidden',allResults.length>0);
+  const pc=[...permDeleted].filter(k=>k.startsWith('url:')).length;
+  document.getElementById('permDeletedNote').textContent=pc>0?'('+pc+' permanently blocked)':'';
 }
 
 function buildRow(r){
-  const tr = document.createElement('tr');
-  if(selected.has(r.id)) tr.classList.add('selected');
-  const price = fmtPrice(r.price);
-  tr.innerHTML=`
-    <td class="col-check"><input type="checkbox" class="row-check" ${selected.has(r.id)?'checked':''}></td>
-    <td class="cell-title">
-      <a href="${esc(r.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(r.title)}</a>
-      <div class="cell-snippet">${esc(r.snippet||'')}</div>
-    </td>
-    <td class="cell-source" title="${esc(r.source)}">${esc(r.source)}</td>
-    <td class="${price?'cell-price':'cell-price no-price'}">${price||'—'}</td>
-    <td class="cell-time">${fmtTime(r.found_at)}</td>
-    <td class="col-actions">
-      <div class="row-actions">
-        <button class="row-btn" data-action="delete" onclick="event.stopPropagation()">Delete</button>
-        <button class="row-btn perm" data-action="perm" onclick="event.stopPropagation()">Block</button>
-      </div>
-    </td>`;
-
-  // Row click → modal
-  tr.addEventListener('click', e=>{
-    if(['INPUT','BUTTON','A'].includes(e.target.tagName)) return;
-    openModal(r);
+  const tr=document.createElement('tr');
+  if(selected.has(r.id))tr.classList.add('selected');
+  const price=fmtPrice(r.price);
+  tr.innerHTML=
+    '<td class="col-check"><input type="checkbox" class="row-check"'+(selected.has(r.id)?' checked':'')+'></td>'+
+    '<td class="cell-title"><a href="'+esc(r.url)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(r.title)+'</a><div class="cell-snippet">'+esc(r.snippet||'')+'</div></td>'+
+    '<td class="col-site"><span class="site-badge" title="'+esc(r.siteName||r.source)+'">'+esc(r.siteName||r.source)+'</span></td>'+
+    '<td class="'+(price?'cell-price':'cell-price no-price')+'">'+(price||'&mdash;')+'</td>'+
+    '<td class="cell-time">'+fmtTime(r.found_at)+'</td>'+
+    '<td class="col-actions"><div class="row-actions"><button class="row-btn" data-a="del" onclick="event.stopPropagation()">Delete</button><button class="row-btn perm" data-a="perm" onclick="event.stopPropagation()">Block</button></div></td>';
+  tr.addEventListener('click',e=>{if(['INPUT','BUTTON','A'].includes(e.target.tagName))return;openModal(r);});
+  tr.querySelector('.row-check').addEventListener('change',e=>{
+    e.stopPropagation();selected[e.target.checked?'add':'delete'](r.id);tr.classList.toggle('selected',e.target.checked);syncBulkBar();
   });
-  // Checkbox
-  tr.querySelector('.row-check').addEventListener('change', e=>{
+  tr.querySelector('[data-a="del"]').addEventListener('click',e=>{e.stopPropagation();deleteRows([r.id]);});
+  tr.querySelector('[data-a="perm"]').addEventListener('click',e=>{
     e.stopPropagation();
-    selected[e.target.checked?'add':'delete'](r.id);
-    tr.classList.toggle('selected', e.target.checked);
-    syncBulkBar();
-  });
-  // Buttons
-  tr.querySelector('[data-action="delete"]').addEventListener('click', e=>{ e.stopPropagation(); deleteRows([r.id]); });
-  tr.querySelector('[data-action="perm"]').addEventListener('click', e=>{
-    e.stopPropagation();
-    if(confirm('Permanently block this result? It will never appear again, even after refresh.')) permBlock([r]);
+    if(confirm('Permanently block this result? It will never appear again, even after refresh.'))permBlock([r]);
   });
   return tr;
 }
 
 function deleteRows(ids){
-  const s = new Set(ids);
-  allResults = allResults.filter(r=>!s.has(r.id));
-  ids.forEach(id=>selected.delete(id));
-  renderTable();
-  toast(`Removed ${ids.length} result${ids.length!==1?'s':''}.`,'info');
+  const s=new Set(ids);allResults=allResults.filter(r=>!s.has(r.id));ids.forEach(id=>selected.delete(id));
+  renderTable();toast('Removed '+ids.length+' result'+(ids.length!==1?'s':'')+'.','info');
 }
-
 function permBlock(rows){
-  rows.forEach(r=>{ permDeleted.add('url:'+r.url); permDeleted.add(r.id); });
-  savePermDeleted();
-  const ids = rows.map(r=>r.id);
-  const s = new Set(ids);
-  allResults = allResults.filter(r=>!s.has(r.id));
-  ids.forEach(id=>selected.delete(id));
-  renderTable();
-  toast(`Permanently blocked ${rows.length} result${rows.length!==1?'s':''}.`,'info');
+  rows.forEach(r=>{permDeleted.add('url:'+r.url);permDeleted.add(r.id);});savePerm();
+  const s=new Set(rows.map(r=>r.id));allResults=allResults.filter(r=>!s.has(r.id));rows.forEach(r=>selected.delete(r.id));
+  renderTable();toast('Permanently blocked '+rows.length+' result'+(rows.length!==1?'s':'')+'.','info');
 }
-
 function syncBulkBar(){
-  const bb = document.getElementById('bulkBar');
-  bb.classList.toggle('hidden', selected.size===0);
-  if(selected.size) document.getElementById('bulkCount').textContent = `${selected.size} selected`;
+  document.getElementById('bulkBar').classList.toggle('hidden',selected.size===0);
+  if(selected.size)document.getElementById('bulkCount').textContent=selected.size+' selected';
 }
 
-// ─────────────────────────────────────────────
-//  BRAVE SEARCH API
-// ─────────────────────────────────────────────
+// ── Search ────────────────────────────────────────────────────────────
 async function runSearch(){
-  const apiKey = localStorage.getItem(SK.apiKey)||'';
-  if(!apiKey){ toast('Enter and save your Brave API key first.','error'); return; }
+  const apiKey=localStorage.getItem(SK.apiKey)||'';
+  if(!apiKey){toast('Enter and save your Brave API key first.','error');return;}
+  const query=document.getElementById('inputQuery').value.trim();
+  if(!query){toast('Enter a search query.','error');document.getElementById('inputQuery').focus();return;}
 
-  const query = document.getElementById('inputQuery').value.trim();
-  if(!query){ toast('Enter a search query.','error'); document.getElementById('inputQuery').focus(); return; }
+  const include=includeTags.get();
+  const exclude=excludeTags.get();
+  const location=document.getElementById('inputLocation').value.trim();
+  const radius=parseInt(document.getElementById('inputRadius').value)||0;
+  const minPrice=parseFloat(document.getElementById('inputMinPrice').value)||null;
+  const maxPrice=parseFloat(document.getElementById('inputMaxPrice').value)||null;
+  const maxResults=Math.min(parseInt(document.getElementById('inputMaxResults').value)||20,100);
 
-  const include = includeTags.get();
-  const exclude = excludeTags.get();
-  const location = document.getElementById('inputLocation').value.trim();
-  const minPrice = parseFloat(document.getElementById('inputMinPrice').value)||null;
-  const maxPrice = parseFloat(document.getElementById('inputMaxPrice').value)||null;
-  const maxResults = Math.min(parseInt(document.getElementById('inputMaxResults').value)||20, 100);
+  localStorage.setItem(SK.params,JSON.stringify({query,include,exclude,location,radius,minPrice,maxPrice,maxResults}));
 
-  // Save params
-  localStorage.setItem(SK.lastParams, JSON.stringify({ query, include, exclude, location, minPrice, maxPrice, maxResults }));
+  const siteFilter=buildSiteFilter();
+  const locTerms=radiusTerms(location,radius);
+  let q=query;
+  if(include.length)q+=' '+include.join(' ');
+  if(locTerms)q+=' '+locTerms;
+  if(siteFilter)q+=' '+siteFilter;
 
-  // Build query string
-  let q = query;
-  if(location) q += ' ' + location;
-  if(include.length) q += ' ' + include.join(' ');
+  document.getElementById('activeQueryText').textContent=q;
+  document.getElementById('activeQueryBar').classList.add('visible');
 
-  setPulse('loading','Searching…');
+  setPulse('loading','Searching\u2026');
   document.getElementById('stateEmpty').classList.add('hidden');
   document.getElementById('stateLoading').classList.remove('hidden');
-  document.getElementById('stateError').classList.add('hidden');
-  document.getElementById('stateLoadingQuery').textContent = `"${q}"`;
-  document.getElementById('btnSearch').disabled = true;
+  hideErrorState();
+  document.getElementById('stateLoadingQuery').textContent='"'+(q.length>80?q.slice(0,80)+'\u2026':q)+'"';
+  document.getElementById('btnSearch').disabled=true;
 
-  try {
-    const fetched = [];
-    const pages = Math.ceil(maxResults/20);
-
-    for(let page=0; page<pages; page++){
-      const offset = page*20;
-      const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(q)}&count=20&offset=${offset}&search_lang=en`;
-      const res = await fetch(url, {
-        headers: { 'Accept':'application/json', 'Accept-Encoding':'gzip', 'X-Subscription-Token': apiKey }
-      });
-      if(!res.ok){
-        const txt = await res.text().catch(()=>'');
-        if(res.status===401) throw new Error('Invalid API key — check your Brave API key.');
-        if(res.status===429) throw new Error('Rate limit hit — try again in a moment.');
-        throw new Error(`API error ${res.status}: ${txt.slice(0,120)}`);
+  try{
+    const fetched=[];
+    const pages=Math.ceil(maxResults/20);
+    for(let page=0;page<pages;page++){
+      const offset=page*20;
+      const url='https://api.search.brave.com/res/v1/web/search?q='+encodeURIComponent(q)+'&count=20&offset='+offset+'&search_lang=en';
+      let res,rawBody='';
+      try{
+        res=await fetch(url,{headers:{'Accept':'application/json','Accept-Encoding':'gzip','X-Subscription-Token':apiKey}});
+        rawBody=await res.text();
+      }catch(netErr){
+        showError(0,netErr.message,q);return;
       }
-      const data = await res.json();
-      const webResults = data?.web?.results||[];
-      fetched.push(...webResults);
-      if(webResults.length<20) break; // no more pages
+      if(!res.ok){showError(res.status,rawBody,q);return;}
+      let data;
+      try{data=JSON.parse(rawBody);}catch(e){showError(0,'Response was not valid JSON: '+rawBody.slice(0,200),q);return;}
+      const web=data?.web?.results||[];
+      fetched.push(...web);
+      if(web.length<20)break;
     }
 
-    // Map + filter
-    const permBlockedUrls = new Set([...permDeleted].filter(k=>k.startsWith('url:')).map(k=>k.slice(4)));
-    const seen = new Set();
-    const results = [];
+    const blockedUrls=new Set([...permDeleted].filter(k=>k.startsWith('url:')).map(k=>k.slice(4)));
+    const seen=new Set();const results=[];
+    const catalog=allSites();
 
     for(const r of fetched){
-      if(results.length>=maxResults) break;
-      const url = r.url||'';
-      if(seen.has(url)||permBlockedUrls.has(url)) continue;
+      if(results.length>=maxResults)break;
+      const url=r.url||'';
+      if(seen.has(url)||blockedUrls.has(url))continue;
       seen.add(url);
-
-      const text = ((r.title||'')+' '+(r.description||'')).toLowerCase();
-
-      // Include filter
-      if(include.some(kw=>!text.includes(kw.toLowerCase()))) continue;
-      // Exclude filter
-      if(exclude.some(kw=>text.includes(kw.toLowerCase()))) continue;
-      // Location filter
-      if(location && !text.includes(location.toLowerCase())) continue;
-
-      const price = extractPrice((r.title||'')+' '+(r.description||''));
-
-      // Price filter
-      if(minPrice!==null&&(price===null||price<minPrice)) continue;
-      if(maxPrice!==null&&(price===null||price>maxPrice)) continue;
-
-      const source = (()=>{ try{ return new URL(url).hostname.replace(/^www\./,''); }catch(e){ return url; }})();
-
+      const text=((r.title||'')+' '+(r.description||'')).toLowerCase();
+      if(include.some(kw=>!text.includes(kw.toLowerCase())))continue;
+      if(exclude.some(kw=>text.includes(kw.toLowerCase())))continue;
+      if(location&&radius===0&&!text.includes(location.toLowerCase()))continue;
+      const price=extractPrice((r.title||'')+' '+(r.description||''));
+      if(minPrice!==null&&(price===null||price<minPrice))continue;
+      if(maxPrice!==null&&(price===null||price>maxPrice))continue;
+      let hostname='';try{hostname=new URL(url).hostname.replace(/^www\./,'');}catch(e){}
+      const matched=catalog.find(s=>{const d=s.domain.replace(/^www\./,'');return hostname===d||hostname.endsWith('.'+d)||url.includes(s.domain);});
       results.push({
-        id: 'r-'+Math.random().toString(36).slice(2)+'-'+Date.now(),
-        title: r.title||'(no title)',
-        url, source,
-        snippet: r.description||'',
-        price,
-        found_at: Date.now(),
+        id:'r-'+Math.random().toString(36).slice(2)+'-'+Date.now(),
+        title:r.title||'(no title)',url,source:hostname,
+        siteName:matched?matched.label:hostname,
+        snippet:r.description||'',price,found_at:Date.now(),
       });
     }
 
-    allResults = results;
-    selected.clear();
+    allResults=results;selected.clear();
     document.getElementById('stateLoading').classList.add('hidden');
     renderTable();
-
-    const now = new Date();
-    setPulse('active', `Updated ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`);
-    toast(`Found ${results.length} result${results.length!==1?'s':''}.`,'success');
-
-    if(document.getElementById('toggleAutoRefresh').checked) scheduleAutoRefresh();
-
-  } catch(err){
-    document.getElementById('stateLoading').classList.add('hidden');
-    document.getElementById('stateError').classList.remove('hidden');
-    document.getElementById('stateErrorMsg').textContent = err.message;
-    setPulse('error','Search failed');
-    toast(err.message,'error',6000);
-    console.error(err);
-  } finally {
+    const now=new Date();
+    setPulse('active','Updated '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}));
+    if(results.length===0)toast('No results matched your filters. Try broadening the search.','info',5000);
+    else toast('Found '+results.length+' result'+(results.length!==1?'s':'')+'.','success');
+    if(document.getElementById('toggleAutoRefresh').checked)scheduleAutoRefresh();
+  }catch(err){
+    showError(0,err.message,q);console.error(err);
+  }finally{
     document.getElementById('btnSearch').disabled=false;
   }
 }
 
-// ─────────────────────────────────────────────
-//  AUTO-REFRESH
-// ─────────────────────────────────────────────
-let autoTimer=null, countdownInterval=null, nextRefreshAt=null;
-
+// ── Auto-refresh ──────────────────────────────────────────────────────
+let autoTimer=null,cdInterval=null,nextAt=null;
 function scheduleAutoRefresh(){
-  clearAutoRefresh();
-  nextRefreshAt = Date.now()+AUTO_REFRESH_MS;
-  autoTimer = setTimeout(()=>runSearch(), AUTO_REFRESH_MS);
-  countdownInterval = setInterval(()=>{
-    if(!nextRefreshAt) return;
-    const rem = Math.max(0,Math.round((nextRefreshAt-Date.now())/1000));
-    const m=Math.floor(rem/60), s=rem%60;
+  clearAutoRefresh();nextAt=Date.now()+AUTO_REFRESH_MS;
+  autoTimer=setTimeout(()=>runSearch(),AUTO_REFRESH_MS);
+  cdInterval=setInterval(()=>{
+    if(!nextAt)return;
+    const rem=Math.max(0,Math.round((nextAt-Date.now())/1000));
+    const m=Math.floor(rem/60),s=rem%60;
     const dot=document.getElementById('pulseDot');
     if(!dot.classList.contains('loading')&&!dot.classList.contains('error'))
-      document.getElementById('pulseLabel').textContent=`Next refresh in ${m}:${String(s).padStart(2,'0')}`;
-    if(rem===0) clearInterval(countdownInterval);
+      document.getElementById('pulseLabel').textContent='Next refresh in '+m+':'+(s<10?'0':'')+s;
+    if(rem===0)clearInterval(cdInterval);
   },1000);
 }
-function clearAutoRefresh(){ clearTimeout(autoTimer); clearInterval(countdownInterval); autoTimer=null; }
+function clearAutoRefresh(){clearTimeout(autoTimer);clearInterval(cdInterval);autoTimer=null;}
 
-// ─────────────────────────────────────────────
-//  MODAL
-// ─────────────────────────────────────────────
+// ── Modal ─────────────────────────────────────────────────────────────
 function openModal(r){
   document.getElementById('modalTitle').textContent=r.title;
-  const ua=document.getElementById('modalUrl'); ua.textContent=r.url; ua.href=r.url;
+  const ua=document.getElementById('modalUrl');ua.textContent=r.url;ua.href=r.url;
   document.getElementById('modalSnippet').textContent=r.snippet||'No description available.';
   document.getElementById('modalMeta').innerHTML=[
-    {k:'Source',v:r.source||'—'},
-    {k:'Price', v:fmtPrice(r.price)||'—'},
-    {k:'Found', v:r.found_at?new Date(r.found_at).toLocaleString():'—'},
-  ].map(i=>`<div class="meta-item"><span class="meta-key">${i.k}</span><span class="meta-val">${esc(i.v)}</span></div>`).join('');
+    {k:'Site',v:r.siteName||'—'},{k:'Domain',v:r.source||'—'},
+    {k:'Price',v:fmtPrice(r.price)||'—'},{k:'Found',v:r.found_at?new Date(r.found_at).toLocaleString():'—'},
+  ].map(i=>'<div class="meta-item"><span class="meta-key">'+i.k+'</span><span class="meta-val">'+esc(String(i.v))+'</span></div>').join('');
   document.getElementById('modalOverlay').classList.remove('hidden');
 }
-function closeModal(){ document.getElementById('modalOverlay').classList.add('hidden'); }
+function closeModal(){document.getElementById('modalOverlay').classList.add('hidden');}
 
-// ─────────────────────────────────────────────
-//  SORT
-// ─────────────────────────────────────────────
+// ── Sort ──────────────────────────────────────────────────────────────
 document.querySelectorAll('th.sortable').forEach(th=>{
   th.addEventListener('click',()=>{
     const col=th.dataset.col;
-    sortDir = sortCol===col ? (sortDir==='asc'?'desc':'asc') : (col==='found_at'?'desc':'asc');
+    sortDir=sortCol===col?(sortDir==='asc'?'desc':'asc'):(col==='found_at'?'desc':'asc');
     sortCol=col;
     document.querySelectorAll('th.sortable').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
     th.classList.add(sortDir==='asc'?'sort-asc':'sort-desc');
@@ -755,90 +784,99 @@ document.querySelectorAll('th.sortable').forEach(th=>{
   });
 });
 
-// ─────────────────────────────────────────────
-//  CSV EXPORT
-// ─────────────────────────────────────────────
+// ── CSV ───────────────────────────────────────────────────────────────
 function exportCSV(){
-  if(!allResults.length){ toast('No results to export.','info'); return; }
-  const e=v=>`"${String(v??'').replace(/"/g,'""')}"`;
-  const lines=[['Title','URL','Source','Price','Snippet','Found At'].join(','),
-    ...allResults.map(r=>[e(r.title),e(r.url),e(r.source),e(r.price!=null?`$${r.price}`:''),e(r.snippet),e(new Date(r.found_at).toISOString())].join(','))];
+  if(!allResults.length){toast('No results to export.','info');return;}
+  const e=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const lines=[['Title','URL','Site','Domain','Price','Snippet','Found At'].join(','),
+    ...allResults.map(r=>[e(r.title),e(r.url),e(r.siteName),e(r.source),e(r.price!=null?'$'+r.price:''),e(r.snippet),e(new Date(r.found_at).toISOString())].join(','))];
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
-  a.download=`search-results-${Date.now()}.csv`; a.click();
+  a.download='search-results-'+Date.now()+'.csv';a.click();
 }
 
-// ─────────────────────────────────────────────
-//  INIT & EVENT WIRING
-// ─────────────────────────────────────────────
-const includeTags = new TagInput('includeInput','includeTags','include');
-const excludeTags = new TagInput('excludeInput','excludeTags','exclude');
+// ── Init ──────────────────────────────────────────────────────────────
+const includeTags=new TagInput('includeInput','includeTags','include');
+const excludeTags=new TagInput('excludeInput','excludeTags','exclude');
 
 // API key
-const savedKey = localStorage.getItem(SK.apiKey)||'';
-if(savedKey){ document.getElementById('inputApiKey').value=savedKey; document.getElementById('keyStatus').textContent='✓ Key saved'; }
+const sk=localStorage.getItem(SK.apiKey)||'';
+if(sk){document.getElementById('inputApiKey').value=sk;document.getElementById('keyStatus').textContent='Key saved';}
 document.getElementById('btnSaveKey').addEventListener('click',()=>{
   const k=document.getElementById('inputApiKey').value.trim();
-  if(!k){ toast('Enter a key first.','error'); return; }
+  if(!k){toast('Enter a key first.','error');return;}
   localStorage.setItem(SK.apiKey,k);
-  document.getElementById('keyStatus').textContent='✓ Key saved';
+  document.getElementById('keyStatus').textContent='Key saved';
   toast('API key saved.','success');
 });
 
-// Restore last params
+// Restore params
 try{
-  const p=JSON.parse(localStorage.getItem(SK.lastParams)||'null');
+  const p=JSON.parse(localStorage.getItem(SK.params)||'null');
   if(p){
     document.getElementById('inputQuery').value=p.query||'';
     document.getElementById('inputLocation').value=p.location||'';
+    document.getElementById('inputRadius').value=p.radius??25;
     document.getElementById('inputMinPrice').value=p.minPrice||'';
     document.getElementById('inputMaxPrice').value=p.maxPrice||'';
     document.getElementById('inputMaxResults').value=p.maxResults||20;
-    if(p.include?.length) includeTags.set(p.include);
-    if(p.exclude?.length) excludeTags.set(p.exclude);
+    if(p.include?.length)includeTags.set(p.include);
+    if(p.exclude?.length)excludeTags.set(p.exclude);
   }
-}catch(_){}
+}catch(e){}
 
-// Button wiring
-document.getElementById('btnSearch').addEventListener('click', runSearch);
-document.getElementById('inputQuery').addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
-document.getElementById('btnClearAll').addEventListener('click',()=>{ allResults=[]; selected.clear(); renderTable(); toast('Results cleared.','info'); });
+// Sites
+buildSiteGrid();
+document.getElementById('btnSelectAllSites').addEventListener('click',()=>{allSites().forEach(s=>activeSiteIds.add(s.id));saveSites();buildSiteGrid();});
+document.getElementById('btnClearSites').addEventListener('click',()=>{activeSiteIds.clear();saveSites();buildSiteGrid();});
+document.getElementById('btnAddCustomSite').addEventListener('click',()=>{
+  const val=document.getElementById('inputCustomSite').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+  if(!val){toast('Enter a domain.','error');return;}
+  if(customSites.find(s=>s.domain===val)||SITES.find(s=>s.domain===val)){toast('Already in list.','info');return;}
+  const id='custom_'+val.replace(/\W/g,'_');
+  customSites.push({id,label:val,icon:'🔗',domain:val,note:'Custom'});
+  activeSiteIds.add(id);
+  document.getElementById('inputCustomSite').value='';
+  saveSites();buildSiteGrid();
+  toast('Added '+val+'.','success');
+});
+document.getElementById('inputCustomSite').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btnAddCustomSite').click();});
+
+// Buttons
+document.getElementById('btnSearch').addEventListener('click',runSearch);
+document.getElementById('inputQuery').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
+document.getElementById('btnClearAll').addEventListener('click',()=>{allResults=[];selected.clear();renderTable();toast('Results cleared.','info');});
 document.getElementById('btnResetFilters').addEventListener('click',()=>{
   document.getElementById('inputQuery').value='';
   document.getElementById('inputLocation').value='';
+  document.getElementById('inputRadius').value=25;
   document.getElementById('inputMinPrice').value='';
   document.getElementById('inputMaxPrice').value='';
   document.getElementById('inputMaxResults').value=20;
-  includeTags.reset(); excludeTags.reset();
+  includeTags.reset();excludeTags.reset();
   toast('Filters reset.','info');
 });
-document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
-document.getElementById('toggleAutoRefresh').addEventListener('change', e=>{
-  if(e.target.checked){ scheduleAutoRefresh(); toast('Auto-refresh on.','info'); }
-  else{ clearAutoRefresh(); setPulse('active','Auto-refresh off'); toast('Auto-refresh off.','info'); }
+document.getElementById('btnExportCSV').addEventListener('click',exportCSV);
+document.getElementById('toggleAutoRefresh').addEventListener('change',e=>{
+  if(e.target.checked){scheduleAutoRefresh();toast('Auto-refresh on.','info');}
+  else{clearAutoRefresh();setPulse('active','Auto-refresh off');toast('Auto-refresh off.','info');}
 });
-document.getElementById('selectAll').addEventListener('change', e=>{
-  document.querySelectorAll('.row-check').forEach(cb=>{ cb.checked=e.target.checked; selected[e.target.checked?'add':'delete'](cb.closest('tr')?._resultId); });
-  // re-derive from DOM
+document.getElementById('selectAll').addEventListener('change',e=>{
   selected.clear();
-  if(e.target.checked) allResults.forEach(r=>selected.add(r.id));
-  syncBulkBar(); renderTable();
+  if(e.target.checked)allResults.forEach(r=>selected.add(r.id));
+  syncBulkBar();renderTable();
 });
-document.getElementById('btnBulkDelete').addEventListener('click',()=>{ if(selected.size) deleteRows([...selected]); });
+document.getElementById('btnBulkDelete').addEventListener('click',()=>{if(selected.size)deleteRows([...selected]);});
 document.getElementById('btnBulkPermDelete').addEventListener('click',()=>{
-  if(!selected.size) return;
-  if(confirm(`Permanently block ${selected.size} result(s)?`)){
-    const rows=allResults.filter(r=>selected.has(r.id));
-    permBlock(rows);
-  }
+  if(!selected.size)return;
+  if(confirm('Permanently block '+selected.size+' result(s)?')){permBlock(allResults.filter(r=>selected.has(r.id)));}
 });
-document.getElementById('tableFilter').addEventListener('input', e=>{ filterText=e.target.value.toLowerCase(); renderTable(); });
-document.getElementById('modalClose').addEventListener('click', closeModal);
-document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target===document.getElementById('modalOverlay')) closeModal(); });
-document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+document.getElementById('tableFilter').addEventListener('input',e=>{filterText=e.target.value.toLowerCase();renderTable();});
+document.getElementById('modalClose').addEventListener('click',closeModal);
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
 
-// Initial render
 renderTable();
 </script>
 </body>
