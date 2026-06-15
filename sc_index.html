@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SearchScraper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+/* ── Reset & Tokens ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0D1117;--bg-2:#161B22;--bg-3:#1C2128;--bg-hover:#21262D;
+  --border:#30363D;--border-hi:#484F58;
+  --blue:#2F81F7;--blue-dim:#1a4a8a;
+  --green:#3FB950;--red:#F85149;--red-dim:#6e211e;--yellow:#D29922;
+  --text-1:#E6EDF3;--text-2:#8B949E;--text-3:#484F58;
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+  --radius:6px;--radius-lg:10px;
+  --sidebar-w:288px;--header-h:52px;--trans:0.15s ease;
+}
+html,body{height:100%;background:var(--bg);color:var(--text-1);font-family:var(--sans);font-size:14px;line-height:1.5}
+
+/* ── Header ── */
+.app-header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:var(--bg-2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;z-index:100;gap:12px;
+}
+.header-left{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-mark{color:var(--blue);font-size:20px;line-height:1}
+.logo-text{font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:-0.3px}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* pulse */
+.pulse-wrap{display:flex;align-items:center;gap:7px;cursor:default}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--text-3);transition:background var(--trans)}
+.pulse-dot.active{background:var(--green);box-shadow:0 0 0 0 rgba(63,185,80,.5);animation:pulse 2s infinite}
+.pulse-dot.loading{background:var(--yellow);animation:blink .8s infinite}
+.pulse-dot.error{background:var(--red);animation:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,185,80,.5)}70%{box-shadow:0 0 0 7px rgba(63,185,80,0)}100%{box-shadow:0 0 0 0 rgba(63,185,80,0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.pulse-label{font-family:var(--mono);font-size:11px;color:var(--text-2)}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid transparent;font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;transition:background var(--trans),border-color var(--trans),opacity var(--trans);white-space:nowrap}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-primary{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-primary:hover:not(:disabled){background:#388bfd}
+.btn-ghost{background:transparent;color:var(--text-2);border-color:var(--border)}
+.btn-ghost:hover:not(:disabled){background:var(--bg-hover);color:var(--text-1);border-color:var(--border-hi)}
+.btn-outline{background:transparent;color:var(--blue);border-color:var(--blue-dim)}
+.btn-outline:hover:not(:disabled){background:rgba(47,129,247,.1)}
+.btn-danger{background:var(--red-dim);color:var(--red);border-color:var(--red)}
+.btn-danger:hover:not(:disabled){background:#8b2020}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{padding:4px 10px;font-size:12px}
+
+/* ── Layout ── */
+.app-body{display:flex;margin-top:var(--header-h);min-height:calc(100vh - var(--header-h))}
+
+/* ── Sidebar ── */
+.sidebar{
+  position:fixed;top:var(--header-h);left:0;
+  width:var(--sidebar-w);height:calc(100vh - var(--header-h));
+  background:var(--bg-2);border-right:1px solid var(--border);
+  overflow-y:auto;padding:16px 14px 80px;
+  display:flex;flex-direction:column;gap:4px;
+  transition:transform var(--trans);z-index:50;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.sidebar-toggle{
+  display:none;position:absolute;top:10px;right:-36px;
+  width:30px;height:30px;background:var(--bg-2);
+  border:1px solid var(--border);border-left:none;
+  border-radius:0 var(--radius) var(--radius) 0;
+  color:var(--text-2);font-size:16px;cursor:pointer;
+  align-items:center;justify-content:center;z-index:60;
+}
+
+/* API key banner */
+.api-banner{
+  background:rgba(47,129,247,.08);border:1px solid var(--blue-dim);
+  border-radius:var(--radius);padding:10px 12px;
+  font-size:12px;color:var(--text-2);line-height:1.6;
+}
+.api-banner a{color:var(--blue);text-decoration:none}
+.api-banner a:hover{text-decoration:underline}
+.api-key-row{display:flex;gap:6px;margin-top:6px}
+.api-key-row .filter-input{flex:1;font-family:var(--mono);font-size:12px;letter-spacing:.05em}
+.api-key-row .btn{flex-shrink:0}
+
+.filter-section{padding:12px 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.filter-section:last-of-type{border-bottom:none}
+.filter-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+.filter-label.inline{text-transform:none;font-size:12px;letter-spacing:0}
+.filter-hint{font-size:11px;color:var(--text-3);margin-top:-2px}
+.required{color:var(--blue)}
+
+.filter-input{
+  width:100%;background:var(--bg-3);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text-1);font-family:var(--sans);
+  font-size:13px;padding:7px 10px;transition:border-color var(--trans);
+}
+.filter-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
+.filter-input::placeholder{color:var(--text-3)}
+.filter-input.inline-filter{width:180px}
+
+.price-row{display:flex;align-items:center;gap:8px}
+.price-input{width:0;flex:1}
+.price-sep{color:var(--text-2);font-size:16px;flex-shrink:0}
+
+/* Tags */
+.tag-input-wrap{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:4px 6px;transition:border-color var(--trans)}
+.tag-input-wrap:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,129,247,.15)}
+.tag-input{background:transparent;border:none;outline:none;color:var(--text-1);font-family:var(--sans);font-size:13px;padding:3px 4px;width:100%}
+.tag-input::placeholder{color:var(--text-3)}
+.tag-list{display:flex;flex-wrap:wrap;gap:5px;min-height:4px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:20px;font-family:var(--mono);font-size:11px;font-weight:600}
+.tag-include{background:rgba(47,129,247,.15);color:var(--blue);border:1px solid var(--blue-dim)}
+.tag-exclude{background:rgba(248,81,73,.12);color:var(--red);border:1px solid #4a1c1a}
+.tag-remove{background:none;border:none;color:inherit;opacity:.6;cursor:pointer;font-size:13px;line-height:1;padding:0}
+.tag-remove:hover{opacity:1}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;gap:10px}
+.toggle-switch{position:relative;display:inline-block;width:34px;height:18px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--bg-hover);border:1px solid var(--border);border-radius:20px;cursor:pointer;transition:background var(--trans)}
+.toggle-slider::before{content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);width:12px;height:12px;background:var(--text-3);border-radius:50%;transition:transform var(--trans),background var(--trans)}
+.toggle-switch input:checked+.toggle-slider{background:rgba(47,129,247,.25);border-color:var(--blue)}
+.toggle-switch input:checked+.toggle-slider::before{transform:translateX(16px) translateY(-50%);background:var(--blue)}
+.toggle-desc{font-size:12px;color:var(--text-2)}
+.sidebar-footer{padding-top:16px}
+
+/* ── Main ── */
+.main-content{margin-left:var(--sidebar-w);flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+
+.table-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.toolbar-left{display:flex;align-items:center;gap:12px}
+.toolbar-right{display:flex;align-items:center;gap:8px}
+.result-count{font-family:var(--mono);font-size:12px;color:var(--text-2)}
+.perm-deleted-note{font-size:11px;color:var(--text-3)}
+
+.table-wrap{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;position:relative;min-height:300px}
+.results-table{width:100%;border-collapse:collapse;font-size:13px}
+.results-table thead{background:var(--bg-3);position:sticky;top:0;z-index:2}
+.results-table th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2);border-bottom:1px solid var(--border);white-space:nowrap}
+.results-table th.sortable{cursor:pointer;user-select:none}
+.results-table th.sortable:hover{color:var(--text-1)}
+.results-table th.sort-asc .sort-icon::after{content:' ▲';color:var(--blue)}
+.results-table th.sort-desc .sort-icon::after{content:' ▼';color:var(--blue)}
+.col-check{width:36px;padding-left:14px!important}
+.col-actions{width:120px;text-align:right!important;padding-right:14px!important}
+.results-table tbody tr{border-bottom:1px solid var(--border);transition:background var(--trans);cursor:pointer}
+.results-table tbody tr:last-child{border-bottom:none}
+.results-table tbody tr:hover{background:var(--bg-hover)}
+.results-table tbody tr.selected{background:rgba(47,129,247,.07)}
+.results-table td{padding:10px 14px;vertical-align:top;color:var(--text-1)}
+
+.cell-title{font-weight:500;max-width:340px}
+.cell-title a{color:var(--blue);text-decoration:none}
+.cell-title a:hover{text-decoration:underline}
+.cell-snippet{font-size:11px;color:var(--text-2);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cell-source{font-family:var(--mono);font-size:11px;color:var(--text-2);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cell-price{font-family:var(--mono);font-size:13px;color:var(--green);font-weight:600;white-space:nowrap}
+.cell-price.no-price{color:var(--text-3);font-size:11px;font-weight:400}
+.cell-time{font-family:var(--mono);font-size:11px;color:var(--text-2);white-space:nowrap}
+
+.row-actions{display:flex;justify-content:flex-end;gap:4px;opacity:0;transition:opacity var(--trans)}
+tr:hover .row-actions,tr.selected .row-actions{opacity:1}
+.row-btn{background:none;border:1px solid var(--border);border-radius:var(--radius);color:var(--text-2);padding:3px 7px;font-size:11px;cursor:pointer;transition:background var(--trans),color var(--trans),border-color var(--trans);white-space:nowrap}
+.row-btn:hover{background:var(--bg-hover);color:var(--text-1);border-color:var(--border-hi)}
+.row-btn.perm{color:var(--red);border-color:#4a1c1a}
+.row-btn.perm:hover{background:rgba(248,81,73,.12);border-color:var(--red)}
+
+.table-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+.table-state.hidden{display:none}
+.state-icon{font-size:32px;color:var(--text-3)}
+.error-icon{color:var(--red)}
+.state-title{font-size:15px;font-weight:600;color:var(--text-2)}
+.state-sub{font-size:12px;color:var(--text-3);text-align:center;max-width:320px;line-height:1.6}
+.state-sub a{color:var(--blue)}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.bulk-bar{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:8px 14px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--text-2)}
+.bulk-bar.hidden{display:none}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px;max-width:620px;width:100%;position:relative;max-height:80vh;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text-2);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:var(--radius);transition:background var(--trans)}
+.modal-close:hover{background:var(--bg-hover);color:var(--text-1)}
+.modal-title{font-size:17px;font-weight:600;margin-bottom:8px;padding-right:40px;line-height:1.4}
+.modal-url{font-family:var(--mono);font-size:11px;color:var(--blue);word-break:break-all;display:block;margin-bottom:14px}
+.modal-snippet{font-size:13px;color:var(--text-2);line-height:1.65;margin-bottom:16px}
+.modal-meta{display:flex;gap:20px;flex-wrap:wrap}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-key{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3)}
+.meta-val{font-family:var(--mono);font-size:12px;color:var(--text-1)}
+
+/* Toasts */
+#toastContainer{position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:300}
+.toast{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;font-size:13px;color:var(--text-1);box-shadow:0 4px 16px rgba(0,0,0,.4);animation:slideIn .2s ease;max-width:320px}
+.toast.success{border-left:3px solid var(--green)}
+.toast.error{border-left:3px solid var(--red)}
+.toast.info{border-left:3px solid var(--blue)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,.5)}
+  .sidebar-toggle{display:flex}
+  .main-content{margin-left:0;padding:12px}
+  .pulse-label{display:none}
+  .filter-input.inline-filter{width:120px}
+  .cell-snippet{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-left">
+    <span class="logo-mark">⬡</span>
+    <span class="logo-text">SearchScraper</span>
+  </div>
+  <div class="header-right">
+    <span class="pulse-wrap" title="Last update / next refresh">
+      <span class="pulse-dot" id="pulseDot"></span>
+      <span class="pulse-label" id="pulseLabel">Never updated</span>
+    </span>
+    <button class="btn btn-primary" id="btnSearch">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Run Search
+    </button>
+    <button class="btn btn-ghost" id="btnClearAll">Clear All</button>
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebarToggle">&#9776;</button>
+
+    <!-- API Key -->
+    <section class="filter-section">
+      <label class="filter-label">Brave API Key <span class="required">*</span></label>
+      <div class="api-banner">
+        Free at <a href="https://api.search.brave.com/register" target="_blank" rel="noopener">api.search.brave.com</a> — 2,000 searches/month. Saved in your browser only.
+      </div>
+      <div class="api-key-row">
+        <input type="password" id="inputApiKey" class="filter-input" placeholder="BSA…" autocomplete="off" />
+        <button class="btn btn-outline btn-sm" id="btnSaveKey">Save</button>
+      </div>
+      <p class="filter-hint" id="keyStatus"></p>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Search Query <span class="required">*</span></label>
+      <input type="text" id="inputQuery" class="filter-input" placeholder="e.g. vintage camera" />
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Include Keywords</label>
+      <p class="filter-hint">Results must contain ALL of these</p>
+      <div class="tag-input-wrap">
+        <input type="text" class="tag-input" id="includeInput" placeholder="Type & press Enter" />
+      </div>
+      <div class="tag-list" id="includeTags"></div>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Exclude Keywords</label>
+      <p class="filter-hint">Results must contain NONE of these</p>
+      <div class="tag-input-wrap">
+        <input type="text" class="tag-input" id="excludeInput" placeholder="Type & press Enter" />
+      </div>
+      <div class="tag-list" id="excludeTags"></div>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Geographical Location</label>
+      <input type="text" id="inputLocation" class="filter-input" placeholder="e.g. Chicago, IL" />
+      <p class="filter-hint">Added to query + used to filter results</p>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Price Range (USD)</label>
+      <div class="price-row">
+        <input type="number" id="inputMinPrice" class="filter-input price-input" placeholder="Min $" min="0" step="0.01" />
+        <span class="price-sep">–</span>
+        <input type="number" id="inputMaxPrice" class="filter-input price-input" placeholder="Max $" min="0" step="0.01" />
+      </div>
+      <p class="filter-hint">Filters results where a price is detected</p>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Max Results</label>
+      <input type="number" id="inputMaxResults" class="filter-input" value="20" min="1" max="100" />
+      <p class="filter-hint">Up to 100. Each 20 = 1 API call.</p>
+    </section>
+
+    <section class="filter-section">
+      <label class="filter-label">Auto-Refresh</label>
+      <div class="toggle-row">
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleAutoRefresh" checked />
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-desc">Every <strong>60 min</strong></span>
+      </div>
+    </section>
+
+    <div class="sidebar-footer">
+      <button class="btn btn-outline btn-full" id="btnResetFilters">Reset Filters</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="table-toolbar">
+      <div class="toolbar-left">
+        <span class="result-count" id="resultCount">0 results</span>
+        <span class="perm-deleted-note" id="permDeletedNote"></span>
+      </div>
+      <div class="toolbar-right">
+        <label class="filter-label inline">Filter:</label>
+        <input type="text" id="tableFilter" class="filter-input inline-filter" placeholder="Search results…" />
+        <button class="btn btn-ghost btn-sm" id="btnExportCSV">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="selectAll" /></th>
+            <th class="sortable" data-col="title">Title <span class="sort-icon">⇅</span></th>
+            <th class="sortable" data-col="source">Source <span class="sort-icon">⇅</span></th>
+            <th class="sortable" data-col="price">Price <span class="sort-icon">⇅</span></th>
+            <th class="sortable" data-col="found_at">Found <span class="sort-icon">⇅</span></th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+
+      <div class="table-state" id="stateEmpty">
+        <div class="state-icon">⬡</div>
+        <p class="state-title">No results yet</p>
+        <p class="state-sub">Enter your API key, set up filters, and click <strong>Run Search</strong></p>
+      </div>
+      <div class="table-state hidden" id="stateLoading">
+        <div class="spinner"></div>
+        <p class="state-title">Searching…</p>
+        <p class="state-sub" id="stateLoadingQuery"></p>
+      </div>
+      <div class="table-state hidden" id="stateError">
+        <div class="state-icon error-icon">✕</div>
+        <p class="state-title">Search failed</p>
+        <p class="state-sub" id="stateErrorMsg"></p>
+      </div>
+    </div>
+
+    <div class="bulk-bar hidden" id="bulkBar">
+      <span id="bulkCount">0 selected</span>
+      <button class="btn btn-ghost btn-sm" id="btnBulkDelete">Delete selected</button>
+      <button class="btn btn-danger btn-sm" id="btnBulkPermDelete">Permanently block selected</button>
+    </div>
+  </main>
+</div>
+
+<!-- Detail Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <h2 class="modal-title" id="modalTitle"></h2>
+    <a class="modal-url" id="modalUrl" target="_blank" rel="noopener"></a>
+    <p class="modal-snippet" id="modalSnippet"></p>
+    <div class="modal-meta" id="modalMeta"></div>
+  </div>
+</div>
+
+<div id="toastContainer"></div>
+
+<script>
+// ─────────────────────────────────────────────
+//  CONSTANTS & STORAGE
+// ─────────────────────────────────────────────
+const SK = {
+  apiKey:      'ss_api_key',
+  permDeleted: 'ss_perm_deleted_v2',
+  lastParams:  'ss_last_params_v2',
+};
+
+const AUTO_REFRESH_MS = 60 * 60 * 1000;
+
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+
+function toast(msg, type='info', ms=3500){
+  const tc = document.getElementById('toastContainer');
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  tc.appendChild(el);
+  setTimeout(()=>{ el.style.transition='opacity .3s'; el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, ms);
+}
+
+function setPulse(state, label){
+  document.getElementById('pulseDot').className = 'pulse-dot ' + state;
+  document.getElementById('pulseLabel').textContent = label;
+}
+
+function extractPrice(text){
+  if(!text) return null;
+  const m = text.match(/\$\s*([\d,]+(?:\.\d{1,2})?)/);
+  if(m){ const v=parseFloat(m[1].replace(/,/g,'')); if(!isNaN(v)) return v; }
+  return null;
+}
+
+function fmtPrice(p){ return p!=null ? '$'+Number(p).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}) : null; }
+function fmtTime(ms){ if(!ms) return '—'; const d=new Date(ms); return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+// ─────────────────────────────────────────────
+//  TAG INPUT
+// ─────────────────────────────────────────────
+class TagInput {
+  constructor(inputId, listId, type){
+    this.input = document.getElementById(inputId);
+    this.list  = document.getElementById(listId);
+    this.type  = type;
+    this.tags  = [];
+    this.input.addEventListener('keydown', e=>{
+      if(['Enter',',','Tab'].includes(e.key)){ e.preventDefault(); this._add(this.input.value); }
+      if(e.key==='Backspace' && !this.input.value && this.tags.length) this._remove(this.tags[this.tags.length-1]);
+    });
+    this.input.addEventListener('blur', ()=>{ if(this.input.value.trim()) this._add(this.input.value); });
+  }
+  _add(raw){ const v=raw.trim().replace(/,$/,''); if(!v||this.tags.includes(v)){this.input.value='';return;} this.tags.push(v); this.input.value=''; this._render(); }
+  _remove(v){ this.tags=this.tags.filter(t=>t!==v); this._render(); }
+  _render(){
+    this.list.innerHTML='';
+    this.tags.forEach(tag=>{
+      const p=document.createElement('span');
+      p.className=`tag tag-${this.type}`;
+      p.innerHTML=`${esc(tag)}<button class="tag-remove">×</button>`;
+      p.querySelector('.tag-remove').onclick=e=>{ e.stopPropagation(); this._remove(tag); };
+      this.list.appendChild(p);
+    });
+  }
+  get(){ return [...this.tags]; }
+  set(arr){ this.tags=[...arr]; this._render(); }
+  reset(){ this.tags=[]; this._render(); }
+}
+
+// ─────────────────────────────────────────────
+//  TABLE STATE
+// ─────────────────────────────────────────────
+let allResults  = [];
+let sortCol     = 'found_at';
+let sortDir     = 'desc';
+let filterText  = '';
+let selected    = new Set();
+
+// Permanent block stored as "url:<url>" strings
+let permDeleted = new Set(JSON.parse(localStorage.getItem(SK.permDeleted)||'[]'));
+
+function savePermDeleted(){ localStorage.setItem(SK.permDeleted, JSON.stringify([...permDeleted])); }
+
+function isPermBlocked(r){
+  return permDeleted.has('url:'+r.url) || permDeleted.has(r.id);
+}
+
+function renderTable(){
+  const body = document.getElementById('resultsBody');
+
+  // Apply text filter
+  const visible = filterText
+    ? allResults.filter(r =>
+        (r.title+r.source+(r.snippet||'')+(r.url||'')).toLowerCase().includes(filterText))
+    : [...allResults];
+
+  // Sort
+  const fn = { title:r=>r.title.toLowerCase(), source:r=>r.source.toLowerCase(), price:r=>r.price??-Infinity, found_at:r=>r.found_at }[sortCol] || (r=>r.found_at);
+  visible.sort((a,b)=>{ const va=fn(a),vb=fn(b); return va<vb?(sortDir==='asc'?-1:1):va>vb?(sortDir==='asc'?1:-1):0; });
+
+  body.innerHTML='';
+  visible.forEach(r => body.appendChild(buildRow(r)));
+
+  // Count
+  document.getElementById('resultCount').textContent =
+    `${visible.length} result${visible.length!==1?'s':''}${filterText?' (filtered)':''}`;
+
+  // Select-all
+  const sa = document.getElementById('selectAll');
+  sa.checked = visible.length>0 && visible.every(r=>selected.has(r.id));
+  sa.indeterminate = !sa.checked && visible.some(r=>selected.has(r.id));
+
+  // Bulk bar
+  const bb = document.getElementById('bulkBar');
+  bb.classList.toggle('hidden', selected.size===0);
+  if(selected.size) document.getElementById('bulkCount').textContent = `${selected.size} selected`;
+
+  // Empty state
+  document.getElementById('stateEmpty').classList.toggle('hidden', allResults.length>0);
+
+  // Perm-deleted note
+  const pc = [...permDeleted].filter(k=>k.startsWith('url:')).length;
+  document.getElementById('permDeletedNote').textContent = pc>0?`(${pc} permanently blocked)`:'';
+}
+
+function buildRow(r){
+  const tr = document.createElement('tr');
+  if(selected.has(r.id)) tr.classList.add('selected');
+  const price = fmtPrice(r.price);
+  tr.innerHTML=`
+    <td class="col-check"><input type="checkbox" class="row-check" ${selected.has(r.id)?'checked':''}></td>
+    <td class="cell-title">
+      <a href="${esc(r.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${esc(r.title)}</a>
+      <div class="cell-snippet">${esc(r.snippet||'')}</div>
+    </td>
+    <td class="cell-source" title="${esc(r.source)}">${esc(r.source)}</td>
+    <td class="${price?'cell-price':'cell-price no-price'}">${price||'—'}</td>
+    <td class="cell-time">${fmtTime(r.found_at)}</td>
+    <td class="col-actions">
+      <div class="row-actions">
+        <button class="row-btn" data-action="delete" onclick="event.stopPropagation()">Delete</button>
+        <button class="row-btn perm" data-action="perm" onclick="event.stopPropagation()">Block</button>
+      </div>
+    </td>`;
+
+  // Row click → modal
+  tr.addEventListener('click', e=>{
+    if(['INPUT','BUTTON','A'].includes(e.target.tagName)) return;
+    openModal(r);
+  });
+  // Checkbox
+  tr.querySelector('.row-check').addEventListener('change', e=>{
+    e.stopPropagation();
+    selected[e.target.checked?'add':'delete'](r.id);
+    tr.classList.toggle('selected', e.target.checked);
+    syncBulkBar();
+  });
+  // Buttons
+  tr.querySelector('[data-action="delete"]').addEventListener('click', e=>{ e.stopPropagation(); deleteRows([r.id]); });
+  tr.querySelector('[data-action="perm"]').addEventListener('click', e=>{
+    e.stopPropagation();
+    if(confirm('Permanently block this result? It will never appear again, even after refresh.')) permBlock([r]);
+  });
+  return tr;
+}
+
+function deleteRows(ids){
+  const s = new Set(ids);
+  allResults = allResults.filter(r=>!s.has(r.id));
+  ids.forEach(id=>selected.delete(id));
+  renderTable();
+  toast(`Removed ${ids.length} result${ids.length!==1?'s':''}.`,'info');
+}
+
+function permBlock(rows){
+  rows.forEach(r=>{ permDeleted.add('url:'+r.url); permDeleted.add(r.id); });
+  savePermDeleted();
+  const ids = rows.map(r=>r.id);
+  const s = new Set(ids);
+  allResults = allResults.filter(r=>!s.has(r.id));
+  ids.forEach(id=>selected.delete(id));
+  renderTable();
+  toast(`Permanently blocked ${rows.length} result${rows.length!==1?'s':''}.`,'info');
+}
+
+function syncBulkBar(){
+  const bb = document.getElementById('bulkBar');
+  bb.classList.toggle('hidden', selected.size===0);
+  if(selected.size) document.getElementById('bulkCount').textContent = `${selected.size} selected`;
+}
+
+// ─────────────────────────────────────────────
+//  BRAVE SEARCH API
+// ─────────────────────────────────────────────
+async function runSearch(){
+  const apiKey = localStorage.getItem(SK.apiKey)||'';
+  if(!apiKey){ toast('Enter and save your Brave API key first.','error'); return; }
+
+  const query = document.getElementById('inputQuery').value.trim();
+  if(!query){ toast('Enter a search query.','error'); document.getElementById('inputQuery').focus(); return; }
+
+  const include = includeTags.get();
+  const exclude = excludeTags.get();
+  const location = document.getElementById('inputLocation').value.trim();
+  const minPrice = parseFloat(document.getElementById('inputMinPrice').value)||null;
+  const maxPrice = parseFloat(document.getElementById('inputMaxPrice').value)||null;
+  const maxResults = Math.min(parseInt(document.getElementById('inputMaxResults').value)||20, 100);
+
+  // Save params
+  localStorage.setItem(SK.lastParams, JSON.stringify({ query, include, exclude, location, minPrice, maxPrice, maxResults }));
+
+  // Build query string
+  let q = query;
+  if(location) q += ' ' + location;
+  if(include.length) q += ' ' + include.join(' ');
+
+  setPulse('loading','Searching…');
+  document.getElementById('stateEmpty').classList.add('hidden');
+  document.getElementById('stateLoading').classList.remove('hidden');
+  document.getElementById('stateError').classList.add('hidden');
+  document.getElementById('stateLoadingQuery').textContent = `"${q}"`;
+  document.getElementById('btnSearch').disabled = true;
+
+  try {
+    const fetched = [];
+    const pages = Math.ceil(maxResults/20);
+
+    for(let page=0; page<pages; page++){
+      const offset = page*20;
+      const url = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(q)}&count=20&offset=${offset}&search_lang=en`;
+      const res = await fetch(url, {
+        headers: { 'Accept':'application/json', 'Accept-Encoding':'gzip', 'X-Subscription-Token': apiKey }
+      });
+      if(!res.ok){
+        const txt = await res.text().catch(()=>'');
+        if(res.status===401) throw new Error('Invalid API key — check your Brave API key.');
+        if(res.status===429) throw new Error('Rate limit hit — try again in a moment.');
+        throw new Error(`API error ${res.status}: ${txt.slice(0,120)}`);
+      }
+      const data = await res.json();
+      const webResults = data?.web?.results||[];
+      fetched.push(...webResults);
+      if(webResults.length<20) break; // no more pages
+    }
+
+    // Map + filter
+    const permBlockedUrls = new Set([...permDeleted].filter(k=>k.startsWith('url:')).map(k=>k.slice(4)));
+    const seen = new Set();
+    const results = [];
+
+    for(const r of fetched){
+      if(results.length>=maxResults) break;
+      const url = r.url||'';
+      if(seen.has(url)||permBlockedUrls.has(url)) continue;
+      seen.add(url);
+
+      const text = ((r.title||'')+' '+(r.description||'')).toLowerCase();
+
+      // Include filter
+      if(include.some(kw=>!text.includes(kw.toLowerCase()))) continue;
+      // Exclude filter
+      if(exclude.some(kw=>text.includes(kw.toLowerCase()))) continue;
+      // Location filter
+      if(location && !text.includes(location.toLowerCase())) continue;
+
+      const price = extractPrice((r.title||'')+' '+(r.description||''));
+
+      // Price filter
+      if(minPrice!==null&&(price===null||price<minPrice)) continue;
+      if(maxPrice!==null&&(price===null||price>maxPrice)) continue;
+
+      const source = (()=>{ try{ return new URL(url).hostname.replace(/^www\./,''); }catch(e){ return url; }})();
+
+      results.push({
+        id: 'r-'+Math.random().toString(36).slice(2)+'-'+Date.now(),
+        title: r.title||'(no title)',
+        url, source,
+        snippet: r.description||'',
+        price,
+        found_at: Date.now(),
+      });
+    }
+
+    allResults = results;
+    selected.clear();
+    document.getElementById('stateLoading').classList.add('hidden');
+    renderTable();
+
+    const now = new Date();
+    setPulse('active', `Updated ${now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`);
+    toast(`Found ${results.length} result${results.length!==1?'s':''}.`,'success');
+
+    if(document.getElementById('toggleAutoRefresh').checked) scheduleAutoRefresh();
+
+  } catch(err){
+    document.getElementById('stateLoading').classList.add('hidden');
+    document.getElementById('stateError').classList.remove('hidden');
+    document.getElementById('stateErrorMsg').textContent = err.message;
+    setPulse('error','Search failed');
+    toast(err.message,'error',6000);
+    console.error(err);
+  } finally {
+    document.getElementById('btnSearch').disabled=false;
+  }
+}
+
+// ─────────────────────────────────────────────
+//  AUTO-REFRESH
+// ─────────────────────────────────────────────
+let autoTimer=null, countdownInterval=null, nextRefreshAt=null;
+
+function scheduleAutoRefresh(){
+  clearAutoRefresh();
+  nextRefreshAt = Date.now()+AUTO_REFRESH_MS;
+  autoTimer = setTimeout(()=>runSearch(), AUTO_REFRESH_MS);
+  countdownInterval = setInterval(()=>{
+    if(!nextRefreshAt) return;
+    const rem = Math.max(0,Math.round((nextRefreshAt-Date.now())/1000));
+    const m=Math.floor(rem/60), s=rem%60;
+    const dot=document.getElementById('pulseDot');
+    if(!dot.classList.contains('loading')&&!dot.classList.contains('error'))
+      document.getElementById('pulseLabel').textContent=`Next refresh in ${m}:${String(s).padStart(2,'0')}`;
+    if(rem===0) clearInterval(countdownInterval);
+  },1000);
+}
+function clearAutoRefresh(){ clearTimeout(autoTimer); clearInterval(countdownInterval); autoTimer=null; }
+
+// ─────────────────────────────────────────────
+//  MODAL
+// ─────────────────────────────────────────────
+function openModal(r){
+  document.getElementById('modalTitle').textContent=r.title;
+  const ua=document.getElementById('modalUrl'); ua.textContent=r.url; ua.href=r.url;
+  document.getElementById('modalSnippet').textContent=r.snippet||'No description available.';
+  document.getElementById('modalMeta').innerHTML=[
+    {k:'Source',v:r.source||'—'},
+    {k:'Price', v:fmtPrice(r.price)||'—'},
+    {k:'Found', v:r.found_at?new Date(r.found_at).toLocaleString():'—'},
+  ].map(i=>`<div class="meta-item"><span class="meta-key">${i.k}</span><span class="meta-val">${esc(i.v)}</span></div>`).join('');
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.add('hidden'); }
+
+// ─────────────────────────────────────────────
+//  SORT
+// ─────────────────────────────────────────────
+document.querySelectorAll('th.sortable').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const col=th.dataset.col;
+    sortDir = sortCol===col ? (sortDir==='asc'?'desc':'asc') : (col==='found_at'?'desc':'asc');
+    sortCol=col;
+    document.querySelectorAll('th.sortable').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+    th.classList.add(sortDir==='asc'?'sort-asc':'sort-desc');
+    renderTable();
+  });
+});
+
+// ─────────────────────────────────────────────
+//  CSV EXPORT
+// ─────────────────────────────────────────────
+function exportCSV(){
+  if(!allResults.length){ toast('No results to export.','info'); return; }
+  const e=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const lines=[['Title','URL','Source','Price','Snippet','Found At'].join(','),
+    ...allResults.map(r=>[e(r.title),e(r.url),e(r.source),e(r.price!=null?`$${r.price}`:''),e(r.snippet),e(new Date(r.found_at).toISOString())].join(','))];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/csv'}));
+  a.download=`search-results-${Date.now()}.csv`; a.click();
+}
+
+// ─────────────────────────────────────────────
+//  INIT & EVENT WIRING
+// ─────────────────────────────────────────────
+const includeTags = new TagInput('includeInput','includeTags','include');
+const excludeTags = new TagInput('excludeInput','excludeTags','exclude');
+
+// API key
+const savedKey = localStorage.getItem(SK.apiKey)||'';
+if(savedKey){ document.getElementById('inputApiKey').value=savedKey; document.getElementById('keyStatus').textContent='✓ Key saved'; }
+document.getElementById('btnSaveKey').addEventListener('click',()=>{
+  const k=document.getElementById('inputApiKey').value.trim();
+  if(!k){ toast('Enter a key first.','error'); return; }
+  localStorage.setItem(SK.apiKey,k);
+  document.getElementById('keyStatus').textContent='✓ Key saved';
+  toast('API key saved.','success');
+});
+
+// Restore last params
+try{
+  const p=JSON.parse(localStorage.getItem(SK.lastParams)||'null');
+  if(p){
+    document.getElementById('inputQuery').value=p.query||'';
+    document.getElementById('inputLocation').value=p.location||'';
+    document.getElementById('inputMinPrice').value=p.minPrice||'';
+    document.getElementById('inputMaxPrice').value=p.maxPrice||'';
+    document.getElementById('inputMaxResults').value=p.maxResults||20;
+    if(p.include?.length) includeTags.set(p.include);
+    if(p.exclude?.length) excludeTags.set(p.exclude);
+  }
+}catch(_){}
+
+// Button wiring
+document.getElementById('btnSearch').addEventListener('click', runSearch);
+document.getElementById('inputQuery').addEventListener('keydown', e=>{ if(e.key==='Enter') runSearch(); });
+document.getElementById('btnClearAll').addEventListener('click',()=>{ allResults=[]; selected.clear(); renderTable(); toast('Results cleared.','info'); });
+document.getElementById('btnResetFilters').addEventListener('click',()=>{
+  document.getElementById('inputQuery').value='';
+  document.getElementById('inputLocation').value='';
+  document.getElementById('inputMinPrice').value='';
+  document.getElementById('inputMaxPrice').value='';
+  document.getElementById('inputMaxResults').value=20;
+  includeTags.reset(); excludeTags.reset();
+  toast('Filters reset.','info');
+});
+document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
+document.getElementById('toggleAutoRefresh').addEventListener('change', e=>{
+  if(e.target.checked){ scheduleAutoRefresh(); toast('Auto-refresh on.','info'); }
+  else{ clearAutoRefresh(); setPulse('active','Auto-refresh off'); toast('Auto-refresh off.','info'); }
+});
+document.getElementById('selectAll').addEventListener('change', e=>{
+  document.querySelectorAll('.row-check').forEach(cb=>{ cb.checked=e.target.checked; selected[e.target.checked?'add':'delete'](cb.closest('tr')?._resultId); });
+  // re-derive from DOM
+  selected.clear();
+  if(e.target.checked) allResults.forEach(r=>selected.add(r.id));
+  syncBulkBar(); renderTable();
+});
+document.getElementById('btnBulkDelete').addEventListener('click',()=>{ if(selected.size) deleteRows([...selected]); });
+document.getElementById('btnBulkPermDelete').addEventListener('click',()=>{
+  if(!selected.size) return;
+  if(confirm(`Permanently block ${selected.size} result(s)?`)){
+    const rows=allResults.filter(r=>selected.has(r.id));
+    permBlock(rows);
+  }
+});
+document.getElementById('tableFilter').addEventListener('input', e=>{ filterText=e.target.value.toLowerCase(); renderTable(); });
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e=>{ if(e.target===document.getElementById('modalOverlay')) closeModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+document.getElementById('sidebarToggle').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+
+// Initial render
+renderTable();
+</script>
+</body>
+</html>
