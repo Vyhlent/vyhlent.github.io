@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madison County Homestead Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #1a1714;
+    --bg2:       #211e1a;
+    --bg3:       #2a2520;
+    --bg4:       #332e27;
+    --text:      #e8dcc8;
+    --text2:     #b8a890;
+    --text3:     #7a6e60;
+    --terra:     #c4622d;
+    --terra-dim: #8a3d18;
+    --terra-glow:#e07040;
+    --sage:      #7a9e7e;
+    --sage-dim:  #4a6e50;
+    --gold:      #b89a5a;
+    --gold-dim:  #7a6530;
+    --blue:      #6a9eb8;
+    --border:    #3a3228;
+    --border2:   #4a4038;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ─────────────────────────────── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 0;
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ─────────────────────────────── */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 2rem 0 4rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border2) transparent;
+  }
+
+  .sidebar-brand {
+    padding: 0 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebar-brand .eyebrow {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 600;
+    margin-bottom: .4rem;
+  }
+
+  .sidebar-brand h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .nav-section {
+    margin-bottom: .25rem;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-weight: 600;
+    padding: .75rem 1.5rem .35rem;
+    display: block;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .45rem 1.5rem;
+    font-size: 13px;
+    color: var(--text2);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: color .15s, border-color .15s, background .15s;
+    line-height: 1.4;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+    background: var(--bg3);
+    border-left-color: var(--terra-dim);
+  }
+
+  .nav-link.active {
+    color: var(--terra-glow);
+    border-left-color: var(--terra);
+    background: var(--bg3);
+  }
+
+  .nav-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+    opacity: .5;
+  }
+
+  /* ── Main content ─────────────────────────── */
+  .main {
+    padding: 0;
+  }
+
+  /* ── Hero ─────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #1a1714 0%, #2a1e14 50%, #1a1714 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 40% at 70% 50%, rgba(196,98,45,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+  }
+
+  .hero-eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--terra-dim);
+  }
+
+  .hero h1 {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--terra-glow);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--text2);
+    max-width: 580px;
+    line-height: 1.7;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 2rem;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    padding: .3rem .8rem;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+  }
+
+  .tag.terra  { border-color: var(--terra-dim);  color: var(--terra-glow); }
+  .tag.sage   { border-color: var(--sage-dim);   color: var(--sage); }
+  .tag.gold   { border-color: var(--gold-dim);   color: var(--gold); }
+
+  /* ── Content area ─────────────────────────── */
+  .content {
+    padding: 4rem;
+    max-width: 860px;
+  }
+
+  /* ── Section headers ─────────────────────────── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding-top: 3.5rem;
+    scroll-margin-top: 2rem;
+  }
+
+  .section-header:first-child { padding-top: 0; }
+
+  .seal {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--terra-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-top: .1rem;
+    position: relative;
+  }
+
+  .seal::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px dashed var(--terra-dim);
+    opacity: .5;
+  }
+
+  .section-header-text .eyebrow {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 600;
+    margin-bottom: .35rem;
+  }
+
+  .section-header-text h2 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  h3 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 2rem 0 .75rem;
+    padding-bottom: .4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h4 {
+    font-size: .875rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 1.5rem 0 .6rem;
+  }
+
+  p {
+    color: var(--text2);
+    margin-bottom: 1rem;
+    font-size: .9375rem;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: var(--text); font-weight: 600; }
+
+  a { color: var(--terra-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  em { font-style: italic; color: var(--gold); }
+
+  /* ── Dividers ─────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, var(--terra-dim), transparent);
+    margin: 3.5rem 0;
+    border: none;
+  }
+
+  /* ── Cards / callouts ─────────────────────────── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+
+  .card.terra-accent { border-left: 3px solid var(--terra); }
+  .card.sage-accent  { border-left: 3px solid var(--sage); }
+  .card.gold-accent  { border-left: 3px solid var(--gold); }
+  .card.blue-accent  { border-left: 3px solid var(--blue); }
+
+  .callout {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+    font-size: .875rem;
+    color: var(--text2);
+  }
+
+  .callout strong { display: block; margin-bottom: .25rem; color: var(--terra-glow); }
+
+  /* ── Build method cards ─────────────────────────── */
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .method-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .method-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent, var(--terra));
+  }
+
+  .method-card.a { --accent: var(--terra); }
+  .method-card.b { --accent: var(--sage); }
+  .method-card.c { --accent: var(--gold); }
+  .method-card.d { --accent: var(--blue); }
+
+  .method-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .2rem .65rem;
+    border-radius: 20px;
+    margin-bottom: .75rem;
+  }
+
+  .method-card.a .method-badge { background: rgba(196,98,45,.2); color: var(--terra-glow); }
+  .method-card.b .method-badge { background: rgba(122,158,126,.2); color: var(--sage); }
+  .method-card.c .method-badge { background: rgba(184,154,90,.2); color: var(--gold); }
+  .method-card.d .method-badge { background: rgba(106,158,184,.2); color: var(--blue); }
+
+  .method-card h4 {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0 0 .35rem;
+  }
+
+  .method-card .sub {
+    font-size: .8rem;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .bar-group { display: flex; flex-direction: column; gap: 5px; }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .bar-label { min-width: 48px; }
+
+  .bar-track {
+    flex: 1;
+    height: 5px;
+    background: var(--bg4);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill { height: 100%; border-radius: 3px; }
+
+  /* ── Data tables ─────────────────────────────── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .875rem;
+    margin: 1.25rem 0;
+  }
+
+  thead tr { border-bottom: 1px solid var(--terra-dim); }
+
+  th {
+    text-align: left;
+    padding: .6rem .75rem;
+    font-size: .75rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  td {
+    padding: .65rem .75rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tbody tr:hover { background: var(--bg3); }
+
+  td strong { color: var(--text); }
+  td .hi { color: var(--terra-glow); font-weight: 500; }
+  td .good { color: var(--sage); font-weight: 500; }
+  td .note { color: var(--gold); font-weight: 500; }
+
+  /* ── Stat cards ─────────────────────────────── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: .75rem;
+    margin: 1.25rem 0;
+  }
+
+  .stat-card {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+  }
+
+  .stat-num {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .stat-lbl {
+    font-size: .75rem;
+    color: var(--text3);
+    margin-top: .25rem;
+    line-height: 1.3;
+  }
+
+  /* ── Plant grid ─────────────────────────────── */
+  .plant-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: .6rem;
+    margin: 1rem 0;
+  }
+
+  .plant-pill {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .75rem 1rem;
+  }
+
+  .plant-pill strong {
+    display: block;
+    font-size: .8125rem;
+    margin-bottom: .25rem;
+    color: var(--sage);
+  }
+
+  .plant-pill span {
+    font-size: .75rem;
+    color: var(--text3);
+    line-height: 1.35;
+  }
+
+  /* ── Lists ─────────────────────────────── */
+  ul, ol {
+    padding-left: 1.25rem;
+    color: var(--text2);
+    font-size: .9375rem;
+    margin: .75rem 0 1rem;
+  }
+
+  li { margin-bottom: .5rem; line-height: 1.65; }
+
+  li strong { color: var(--text); }
+
+  /* ── Path cards ─────────────────────────────── */
+  .path-grid { display: grid; gap: 1rem; margin: 1.25rem 0; }
+
+  .path-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: .75rem 1rem;
+    align-items: start;
+  }
+
+  .path-letter {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--terra-glow);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .path-card h4 {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--text);
+    text-transform: none;
+    letter-spacing: 0;
+    margin: 0 0 .35rem;
+    padding: 0;
+    border: none;
+  }
+
+  .path-card p {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--text2);
+    grid-column: 2;
+  }
+
+  /* ── Footer ─────────────────────────────── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 4rem;
+    font-size: .8125rem;
+    color: var(--text3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .75rem;
+    max-width: 860px;
+  }
+
+  .footer a { color: var(--terra-glow); }
+
+  /* ── Responsive ─────────────────────────────── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 1.5rem 0 1rem; }
+    .content, .footer { padding: 2rem 1.5rem; }
+    .hero { padding: 3rem 1.5rem; }
+    .method-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar nav ── -->
+  <nav class="sidebar" aria-label="Section navigation">
+    <div class="sidebar-brand">
+      <div class="eyebrow">Madison County, KY</div>
+      <h1>Natural Homestead<br>Building Guide</h1>
+    </div>
+
+    <div class="nav-section">
+      <span class="nav-section-label">Overview</span>
+      <a href="#overview" class="nav-link"><span class="nav-dot"></span>Getting started</a>
+      <a href="#legal" class="nav-link"><span class="nav-dot"></span>Permits & legal framework</a>
+    </div>
+
+    <div class="nav-section">
+      <span class="nav-section-label">Build</span>
+      <a href="#build-options" class="nav-link"><span class="nav-dot"></span>Build options & costs</a>
+      <a href="#building-methods" class="nav-link"><span class="nav-dot"></span>Natural building methods</a>
+      <a href="#roof" class="nav-link"><span class="nav-dot"></span>Clay & terracotta roof</a>
+      <a href="#floor-plan" class="nav-link"><span class="nav-dot"></span>Floor plan & rooms</a>
+    </div>
+
+    <div class="nav-section">
+      <span class="nav-section-label">Systems</span>
+      <a href="#water" class="nav-link"><span class="nav-dot"></span>Water & rainwater harvest</a>
+      <a href="#waste" class="nav-link"><span class="nav-dot"></span>Waste & greywater</a>
+      <a href="#solar" class="nav-link"><span class="nav-dot"></span>Solar power</a>
+      <a href="#heating" class="nav-link"><span class="nav-dot"></span>Heating (wood stove)</a>
+      <a href="#cooling" class="nav-link"><span class="nav-dot"></span>Summer cooling</a>
+      <a href="#floors" class="nav-link"><span class="nav-dot"></span>Warm tile floors</a>
+    </div>
+
+    <div class="nav-section">
+      <span class="nav-section-label">Homestead</span>
+      <a href="#chickens" class="nav-link"><span class="nav-dot"></span>Chickens</a>
+      <a href="#garden" class="nav-link"><span class="nav-dot"></span>Garden & food forest</a>
+      <a href="#bugs" class="nav-link"><span class="nav-dot"></span>Bug & pest deterrents</a>
+      <a href="#paths" class="nav-link"><span class="nav-dot"></span>Recommended paths</a>
+    </div>
+  </nav>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow">Owner-builder reference</div>
+      <h1>Build a <em>natural home</em> in Madison County, Kentucky</h1>
+      <p class="hero-sub">A complete reference covering build methods, water systems, heating, cooling, waste, power, garden, and chickens — compiled from a full design conversation. Everything as eco-friendly and DIY-friendly as possible.</p>
+      <div class="hero-tags">
+        <span class="tag terra">Natural materials</span>
+        <span class="tag sage">Off-grid capable</span>
+        <span class="tag gold">Mediterranean aesthetic</span>
+        <span class="tag">~1,000–1,200 sq ft</span>
+        <span class="tag">2–3 person build team</span>
+        <span class="tag">Expandable design</span>
+      </div>
+    </section>
+
+    <div class="content">
+
+      <!-- ══ OVERVIEW ══ -->
+      <div class="section-header" id="overview">
+        <div class="seal">I</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Starting point</div>
+          <h2>Overview & priorities</h2>
+        </div>
+      </div>
+
+      <p>This guide covers building a <strong>self-sufficient natural homestead</strong> in Madison County, Kentucky — doing as much labor as possible yourself with 1–2 helpers, keeping costs as low as possible, and using the most environmentally responsible materials available. The aesthetic goal is Mediterranean: lime-plaster walls, exposed timber, terracotta tile roof, deep window reveals, and an open, airy interior that is also cozy.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num">~1,100</div>
+          <div class="stat-lbl">Target square footage</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2–3</div>
+          <div class="stat-lbl">People on build team</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">18–36</div>
+          <div class="stat-lbl">Months to completion (natural build)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">6b</div>
+          <div class="stat-lbl">USDA climate zone (Madison Co.)</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <strong>First step before anything else</strong>
+        Call Madison County Planning at 135 W Irvine Street, Richmond, KY, before purchasing materials or starting any work. Tell them your parcel's zoning, the build method you're considering, and your intended use. Regulations are enforced at the county level (excluding Richmond and Berea city limits).
+      </div>
+
+      <hr class="divider">
+
+      <!-- ══ LEGAL ══ -->
+      <div class="section-header" id="legal">
+        <div class="seal">II</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Regulatory framework</div>
+          <h2>Permits & legal framework</h2>
+        </div>
+      </div>
+
+      <p>Kentucky uses the <strong>Kentucky Residential Code</strong> (based on the IRC) enforced at the local level. Madison County's Department of Planning and Development Services enforces these codes for all new construction outside Richmond and Berea city limits.</p>
+
+      <h3>What you can do yourself</h3>
+      <p>As a homeowner building your own primary residence, you can act as your own general contractor and do nearly all labor yourself. Key exceptions where licensed contractors are typically required:</p>
+      <ul>
+        <li><strong>Well drilling</strong> — must be drilled by a licensed Kentucky water well driller</li>
+        <li><strong>Septic installation</strong> — must be designed and installed by a licensed installer; design requires a site evaluation and perc test through the local health department</li>
+        <li><strong>Electrical</strong> — homeowners are exempt from licensing requirements for their own primary residence, but permits and inspections are required</li>
+      </ul>
+
+      <h3>Required permits</h3>
+      <p>You will need at minimum: a general building permit (submit plans including site plan, floor plan, structural details), electrical permit, plumbing permit, and mechanical permit. For a natural building method like straw bale or hempcrete, the building official may request an engineer's stamp on the structural frame — budget $500–$1,500 for this.</p>
+
+      <h3>Chickens & agricultural use</h3>
+      <p>On rural or agricultural-zoned land in unincorporated Madison County, chickens are generally allowed under agricultural exemptions. Kentucky HB276 (passed the House in February 2026, pending Senate) would protect up to 6 hens statewide. On agricultural-zoned land you can keep a larger flock. Verify your specific parcel's zoning with the county. No HOA restrictions apply to most rural parcels.</p>
+
+      <hr class="divider">
+
+      <!-- ══ BUILD OPTIONS ══ -->
+      <div class="section-header" id="build-options">
+        <div class="seal">III</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Structural options</div>
+          <h2>Build options & rough costs</h2>
+        </div>
+      </div>
+
+      <p>These are the main structural paths for your size and goals, ranked from most conventional (easier to permit) to most alternative (more ecological, more labor). All assume you are doing most of the work yourself.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>DIY material cost (1,100 sq ft)</th>
+            <th>Timeline</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Stick frame + slab</strong></td>
+            <td><span class="hi">$40,000–$80,000</span></td>
+            <td>12–18 mo.</td>
+            <td>Easiest to permit; no aesthetic advantage</td>
+          </tr>
+          <tr>
+            <td><strong>Post-frame barndominium</strong></td>
+            <td><span class="hi">$45,000–$85,000</span></td>
+            <td>10–16 mo.</td>
+            <td>Steel kit shell + DIY interior; fast; expandable</td>
+          </tr>
+          <tr>
+            <td><strong>Timber + hemp/cork</strong></td>
+            <td><span class="good">$45,000–$75,000</span></td>
+            <td>10–16 mo.</td>
+            <td>Fastest natural path; fully eco; great aesthetic</td>
+          </tr>
+          <tr>
+            <td><strong>Timber + straw bale</strong></td>
+            <td><span class="good">$35,000–$65,000</span></td>
+            <td>12–18 mo.</td>
+            <td>Best insulation (R-30+); proven in Kentucky</td>
+          </tr>
+          <tr>
+            <td><strong>Compressed earth block</strong></td>
+            <td><span class="good">$20,000–$50,000</span></td>
+            <td>14–24 mo.</td>
+            <td>On-site soil; lowest material cost; best Mediterranean look</td>
+          </tr>
+          <tr>
+            <td><strong>Timber + hempcrete</strong></td>
+            <td><span class="note">$55,000–$90,000</span></td>
+            <td>18–30 mo.</td>
+            <td>Most eco; slowest; use prefab blocks to speed up</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>All costs exclude land, well, septic, and site preparation. Add:</p>
+      <ul>
+        <li><strong>Well drilling:</strong> $5,000–$15,000 (varies significantly by depth and location on your parcel)</li>
+        <li><strong>Septic system:</strong> $5,000–$12,000 basic; reduced with composting toilet</li>
+        <li><strong>Site prep (clearing, grading, slab):</strong> $5,000–$15,000</li>
+        <li><strong>Permits & fees:</strong> $2,000–$5,000</li>
+        <li><strong>Solar system:</strong> $9,000–$18,000 DIY</li>
+      </ul>
+
+      <hr class="divider">
+
+      <!-- ══ BUILDING METHODS ══ -->
+      <div class="section-header" id="building-methods">
+        <div class="seal">IV</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Natural construction</div>
+          <h2>Natural building methods in detail</h2>
+        </div>
+      </div>
+
+      <p>All four methods below produce the same end result: lime-plaster walls with exposed timber, a cozy thick-walled feel, and a Mediterranean aesthetic. The differences are in speed, material cost, ecological impact, and the character of the finished wall surface.</p>
+
+      <div class="method-grid">
+        <div class="method-card a">
+          <div class="method-badge">Fastest to move in</div>
+          <h4>Timber frame + hemp/cork batts</h4>
+          <div class="sub">Structural timber, hemp batt or cork board insulation, lime render exterior</div>
+          <div class="bar-group">
+            <div class="bar-row"><span class="bar-label">Speed</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--sage)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Eco</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--blue)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">DIY ease</span><div class="bar-track"><div class="bar-fill" style="width:92%;background:var(--gold)"></div></div></div>
+          </div>
+        </div>
+        <div class="method-card b">
+          <div class="method-badge">Best insulation</div>
+          <h4>Timber frame + straw bale</h4>
+          <div class="sub">Post &amp; beam frame, bale infill, lime plaster exterior, clay plaster interior</div>
+          <div class="bar-group">
+            <div class="bar-row"><span class="bar-label">Speed</span><div class="bar-track"><div class="bar-fill" style="width:85%;background:var(--sage)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Eco</span><div class="bar-track"><div class="bar-fill" style="width:95%;background:var(--blue)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">DIY ease</span><div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--gold)"></div></div></div>
+          </div>
+        </div>
+        <div class="method-card c">
+          <div class="method-badge">Best Mediterranean look</div>
+          <h4>Compressed earth block</h4>
+          <div class="sub">On-site soil pressed with lime stabilizer, stacked like masonry, lime wash or plaster finish</div>
+          <div class="bar-group">
+            <div class="bar-row"><span class="bar-label">Speed</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--sage)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Eco</span><div class="bar-track"><div class="bar-fill" style="width:90%;background:var(--blue)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">DIY ease</span><div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--gold)"></div></div></div>
+          </div>
+        </div>
+        <div class="method-card d">
+          <div class="method-badge">Most eco</div>
+          <h4>Timber frame + hempcrete</h4>
+          <div class="sub">Hemp hurd + lime binder cast in forms or laid as prefab blocks; carbon-negative</div>
+          <div class="bar-group">
+            <div class="bar-row"><span class="bar-label">Speed</span><div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--sage)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">Eco</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--blue)"></div></div></div>
+            <div class="bar-row"><span class="bar-label">DIY ease</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--gold)"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Timber frame + hemp/cork batts (fastest)</h3>
+      <p>Build a structural timber frame from local hardwood or softwood, fill wall cavities with <strong>hemp batts</strong> (R-3.5/inch) or <strong>cork board</strong> (R-3.6–4/inch), then apply two coats of lime render over mesh on the exterior. No curing wait times. No drying periods between stages. Interior gets clay or lime plaster directly over the framing.</p>
+      <ul>
+        <li><strong>R-value:</strong> 3.5" cavity with hemp = R-12; add 2" cork exterior sheathing = R-19–20 total (meets Kentucky residential code)</li>
+        <li><strong>Eco notes:</strong> Cork harvested from bark without killing trees. Hemp batts are carbon-sequestering and naturally mold-resistant. No fiberglass, no foam, no petroleum.</li>
+        <li><strong>Expansion:</strong> Standard timber framing — new bays attach cleanly to any wall</li>
+        <li><strong>Realistic timeline:</strong> 10–16 months for a 2-person team working regularly</li>
+      </ul>
+
+      <h3>Timber frame + straw bale (best insulation)</h3>
+      <p>A structural timber frame with straw bales packed between posts as wall infill, then finished with lime plaster outside and clay plaster inside. Plastered bale walls test at R-30 or higher. Homeowners report up to 30% lower heating and cooling costs compared with standard construction.</p>
+      <div class="callout">
+        <strong>Kentucky-specific rule: "Big hat and big boots"</strong>
+        Wide roof overhangs (2–3 ft minimum) and a tall stem wall (18–24 inches above finished grade) are mandatory for straw bale in Kentucky's humidity. Exterior finish must be lime plaster — never clay or cement. Build the timber frame and roof first, then fill bales in dry summer/fall weather.
+      </div>
+      <ul>
+        <li><strong>Kentucky proof:</strong> There is a straw bale home under construction near Berea — your neighboring town. Several completed straw bale homes exist in the region.</li>
+        <li><strong>Plaster maintenance:</strong> Kentucky owners report touching up lime plaster every 3–5 years after particularly wet winters</li>
+        <li><strong>Realistic timeline:</strong> 12–18 months with 2–3 people working regularly</li>
+      </ul>
+
+      <h3>Compressed earth block — CEB (best look)</h3>
+      <p>A hydraulic press compresses on-site soil into dense uniform bricks, stabilized with 5–8% lime (not Portland cement — lime keeps it eco-friendly and breathable). Blocks are stacked like masonry with lime mortar and can be left exposed or plastered.</p>
+      <ul>
+        <li><strong>Block production:</strong> A motorized press ($3,000–$8,000) produces 300–600 blocks/day. A manual Cinva Ram ($400–$900) produces 50–150/day. Press blocks over the winter before your build season.</li>
+        <li><strong>Soil test first:</strong> You need roughly 20–35% clay content. A simple jar test takes 5 minutes. Madison County soils vary — test your specific parcel.</li>
+        <li><strong>R-value:</strong> Low (R-1 to R-2/inch) — CEB is thermal mass, not insulation. Pair with interior hemp batts or cork board to meet code.</li>
+        <li><strong>Aesthetic:</strong> The absolute best match for Mediterranean adobe/rammed earth. Deep, warm, earthy, and timeless.</li>
+        <li><strong>Realistic timeline:</strong> 14–24 months including block production period</li>
+      </ul>
+
+      <h3>Timber frame + hempcrete</h3>
+      <p>Hemp hurd (woody inner stalk of the hemp plant) mixed with water and lime binder is cast in forms around a timber frame, then cured and plastered. Hempcrete is genuinely carbon-negative — it sequesters carbon during hemp cultivation and continues absorbing CO₂ as the lime cures for years.</p>
+      <ul>
+        <li><strong>Speed tip:</strong> Use prefab hempcrete blocks (Hempitecture, IsoHemp, Coexist Hemp Blocks) instead of cast-in-place. Blocks arrive pre-cured and lay like masonry — reduces wall construction time by up to 75%.</li>
+        <li><strong>R-value:</strong> R-1.5 to R-2.5/inch. A 12" wall = R-18 to R-30. Supplement with cork exterior board.</li>
+        <li><strong>Realistic timeline:</strong> 18–30 months cast-in-place; substantially faster with prefab blocks</li>
+      </ul>
+
+      <hr class="divider">
+
+      <!-- ══ ROOF ══ -->
+      <div class="section-header" id="roof">
+        <div class="seal">V</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Roofing</div>
+          <h2>Clay & terracotta tile roof</h2>
+        </div>
+      </div>
+
+      <p>You can absolutely use clay/terracotta tiles in Kentucky — but you need to specify the right product for a Zone 6b freeze-thaw climate and design the roof structure for the weight from day one.</p>
+
+      <div class="callout">
+        <strong>Critical structural note</strong>
+        Most standard trusses are engineered for 15 lbs/sq ft dead load. Clay tile roofs require 27 lbs/sq ft. Since you're building from scratch, design your roof framing for tile weight at the start — heavier rafters at closer spacing adds modest cost but is far simpler than retrofitting. Do this before ordering any framing lumber.
+      </div>
+
+      <h3>Option A — Frost-rated clay tile (recommended)</h3>
+      <p>Specify tiles rated to ASTM C1167 Grade 1 (freeze-thaw rated). These are kiln-fired at higher temperatures, denser, and genuinely suitable for Kentucky winters. Brands: <strong>Ludowici</strong> (Ohio-made, premium), <strong>US Tile</strong>. Spanish barrel style or mission style gives the most authentic Mediterranean look.</p>
+      <ul>
+        <li><strong>Cost:</strong> $9–$26/sq ft installed; $4–$13/sq ft materials only</li>
+        <li><strong>Lifespan:</strong> 50–100+ years. The tiles will outlast everything else in your build.</li>
+        <li><strong>DIY installation:</strong> Achievable with careful research and patience. YouTube tutorials from professional tillers are extensive. Saves 40–50% vs. hiring a crew.</li>
+      </ul>
+
+      <h3>Option B — Concrete tile (more budget-friendly)</h3>
+      <p>Concrete tiles shaped like traditional barrel or Spanish clay tiles handle freeze-thaw better and cost less. Visually close to real clay but not identical. Lifespan 30–50 years. Cost: $7–$19/sq ft installed.</p>
+
+      <h3>Option C — Synthetic composite tile (lightest, most climate-proof)</h3>
+      <p>Brands like Brava make recycled-polymer barrel tiles that look nearly identical to terracotta, weigh a fraction as much (257–430 lbs/100 sq ft vs. 800–1,200 lbs for clay), and handle freeze-thaw with no issues. Made from recycled material, 50+ year lifespan, Class 4 impact and Class A fire ratings. Cost: $12,000–$24,000 for an average roof. A good choice if budget or structural weight is the deciding factor.</p>
+
+      <hr class="divider">
+
+      <!-- ══ FLOOR PLAN ══ -->
+      <div class="section-header" id="floor-plan">
+        <div class="seal">VI</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Interior layout</div>
+          <h2>Floor plan & room planning</h2>
+        </div>
+      </div>
+
+      <p>At 1,000–1,200 sq ft, all the rooms you need fit comfortably with a smart open plan. The Mediterranean approach is to minimize corridors and maximize flow between spaces.</p>
+
+      <table>
+        <thead>
+          <tr><th>Space</th><th>Size</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Core open zone</strong> (kitchen + living + dining)</td><td>400–450 sq ft</td><td>Open plan, high ceiling, large south-facing windows, tile floor, exposed timber beams</td></tr>
+          <tr><td><strong>Primary bedroom</strong></td><td>160–180 sq ft</td><td>Attached half bath; quiet, north or west side</td></tr>
+          <tr><td><strong>Second bedroom</strong></td><td>130–150 sq ft</td><td>Can double as office initially</td></tr>
+          <tr><td><strong>Full bathroom</strong></td><td>60–70 sq ft</td><td>Tile floor, radiant heat mat, composting toilet here</td></tr>
+          <tr><td><strong>Half bath / powder room</strong></td><td>25–30 sq ft</td><td>For guests; near main living area</td></tr>
+          <tr><td><strong>Office / gym</strong></td><td>120–140 sq ft</td><td>Dual-purpose: folding desk area + open floor space</td></tr>
+          <tr><td><strong>Reading nook</strong></td><td>Built-in, no floor area</td><td>Deep window seat in a south-facing thick wall — 3 ft deep × 5 ft wide, built-in shelves, cushion. Free, since it's just shaping the wall infill.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Expansion plan — build this in from day one</strong>
+        Plan the east or west end wall of the house as a future attachment point. The timber frame posts at that wall become structural anchors for a future 300–400 sq ft wing (workshop, studio, extra bedroom). Adding it years later won't require touching the existing structure.
+      </div>
+
+      <hr class="divider">
+
+      <!-- ══ WATER ══ -->
+      <div class="section-header" id="water">
+        <div class="seal">VII</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Water supply</div>
+          <h2>Water & rainwater harvesting</h2>
+        </div>
+      </div>
+
+      <h3>Madison County well geology — read this first</h3>
+      <p>The University of Kentucky Geological Survey is unusually candid about Madison County: in upland areas (70% of the county), most drilled wells will not produce enough water for a dependable domestic supply unless drilled along drainage lines. Wells that do produce water are often hard or very hard and may contain hydrogen sulfide, especially below 100 feet. <strong>Find out whether your land is in a creek valley or on upland ground before deciding how to invest in water infrastructure.</strong></p>
+      <ul>
+        <li><strong>Creek valley / lowland:</strong> A well at 80–150 ft is likely productive. Cost: $5,000–$10,000.</li>
+        <li><strong>Upland plateau:</strong> May need 200–400 ft to hit a reliable aquifer. Cost: $10,000–$20,000. Rainwater becomes even more attractive here.</li>
+      </ul>
+      <p>Kentucky requires a licensed well driller — you cannot drill yourself. Average residential well depth in Kentucky is 202 ft, with ranges from 50–500 ft.</p>
+
+      <h3>Rainwater harvesting — unlimited, no restrictions</h3>
+      <p>Kentucky has no restrictions on rainwater collection. With roughly 47 inches of rain per year spread evenly across all 12 months, Madison County is excellent for rainwater harvesting. <strong>Annual collection formula: Gallons = Rainfall (inches) × Roof area (sq ft) × 0.623 × efficiency factor.</strong></p>
+      <p>A 1,100 sq ft metal roof at 95% efficiency collects roughly <strong>30,000–32,000 gallons per year</strong> — comfortably enough for one person at 50 gal/day (18,250 gal/year), and workable for two people at reduced usage.</p>
+
+      <h3>Cistern sizing</h3>
+      <table>
+        <thead><tr><th>Daily use</th><th>Recommended cistern</th><th>60-day dry buffer</th></tr></thead>
+        <tbody>
+          <tr><td>30 gal/day (1 person, very minimal)</td><td>1,500–2,500 gal</td><td>1,800 gal</td></tr>
+          <tr><td>50 gal/day (1–2 people, normal)</td><td>2,500–4,000 gal</td><td>3,000 gal</td></tr>
+          <tr><td>80 gal/day (2 people + homestead use)</td><td>5,000–7,500 gal</td><td>4,800 gal</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Above-ground poly tank:</strong> $800–$2,000 for the tank; simple gravity feed. Needs shade to prevent algae. <strong>Underground poly cistern:</strong> $1,200–$3,500 for the tank; more stable temperature year-round (55°F underground); invisible. Add $500–$1,500 for excavation if you rent a mini-excavator.</p>
+
+      <h3>Potable water treatment — the full filtration train</h3>
+      <ol>
+        <li><strong>Gutter guards + leaf screens</strong> — $50–$150 for whole house</li>
+        <li><strong>First-flush diverter</strong> per downspout — diverts first dirty runoff; $30–$80 each; DIY with PVC</li>
+        <li><strong>Inlet basket filter</strong> on cistern — $20–$60</li>
+        <li><strong>Sediment pre-filter (20–50 micron)</strong> on outlet line — $30–$80/year in replacement filters</li>
+        <li><strong>Activated carbon filter</strong> — removes taste, odor, some organics — $30–$60/year</li>
+        <li><strong>UV sterilizer</strong> — kills 99.99% of bacteria and viruses; no chemicals; $200–$500 installed; ~$50/year for bulb replacement. This is your critical potability step.</li>
+        <li><strong>Pressure pump + pressure tank</strong> — small 12V or 120V pump draws from cistern, delivers 40–60 PSI to fixtures — $300–$700</li>
+      </ol>
+      <p><strong>Total DIY filtration system cost: $500–$1,200. Annual consumables: $100–$200.</strong></p>
+
+      <div class="callout">
+        <strong>Recommended dual-source approach</strong>
+        Use rainwater as your primary supply for all indoor use and garden/chicken water. Drill a well as a backup for drought resilience and peak demand. Size your cistern to handle 30–60 days without the well. On upland ground where well yield is uncertain, a larger 5,000–7,500 gal cistern may make the well optional.
+      </div>
+
+      <hr class="divider">
+
+      <!-- ══ WASTE ══ -->
+      <div class="section-header" id="waste">
+        <div class="seal">VIII</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Waste management</div>
+          <h2>Waste & greywater systems</h2>
+        </div>
+      </div>
+
+      <h3>Greywater (sink & shower runoff)</h3>
+      <p>Kentucky law defines greywater as wastewater from hygiene activities including laundry, lavatory sinks, and showers — explicitly excluding kitchen sinks. Kentucky allows a residential greywater system to be installed with no septic tank required for greywater-only flows, subject to site evaluation.</p>
+      <p>A <strong>branched drain gravity system</strong> diverts sink and shower water directly into garden/orchard beds. Uses PVC piping, no pump, no electricity. Bury drains 4–6 inches under mulch. Total cost: $150–$300 in materials. An easy, free, and legal system.</p>
+      <ul>
+        <li>Use biodegradable, plant-safe soaps (avoid boron/chlorine-based products)</li>
+        <li>Don't use greywater on root vegetables or edible greens — use on fruit trees and woody plants</li>
+        <li>Greywater must stay on your property; no runoff to neighboring land or waterways</li>
+      </ul>
+
+      <h3>Blackwater (toilet waste)</h3>
+      <p>Kentucky allows composting toilets even without NSF certification — one of the few states with this flexibility. A composting toilet (Nature's Head, Sun-Mar, etc.) costs $900–$1,500, requires only a small vent pipe through the roof, and produces fully composted material that can go into non-edible garden beds.</p>
+      <p>Kentucky law also states that properties using approved non-water carriage toilet devices (composting toilets) can reduce the required minimum size of their septic system — meaning your septic installation for kitchen waste only can be significantly smaller and cheaper.</p>
+      <p>You will still need some form of septic infrastructure for kitchen drain waste and to satisfy the building permit inspector. A minimally-sized system permitted alongside a composting toilet can cost as little as $5,000–$7,000.</p>
+
+      <hr class="divider">
+
+      <!-- ══ SOLAR ══ -->
+      <div class="section-header" id="solar">
+        <div class="seal">IX</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Off-grid power</div>
+          <h2>Solar power system</h2>
+        </div>
+      </div>
+
+      <p>For a ~1,100 sq ft home with a mini-split, LED lighting, refrigerator, and modest appliances (no electric water heater — use propane), a realistic off-grid system is <strong>3–5 kW of panels + 10–20 kWh of LiFePO4 battery storage.</strong></p>
+
+      <table>
+        <thead><tr><th>Component</th><th>DIY cost range</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Solar panels (3–5 kW; 10–16 panels)</strong></td><td>$3,000–$6,000</td><td>Monocrystalline; 20–24% efficiency</td></tr>
+          <tr><td><strong>LiFePO4 battery bank (10–20 kWh)</strong></td><td>$4,000–$8,000</td><td>10–15 year lifespan; much safer than lead-acid</td></tr>
+          <tr><td><strong>Inverter/charger (Victron, EG4)</strong></td><td>$1,200–$2,500</td><td>Handles AC/DC conversion and battery charging</td></tr>
+          <tr><td><strong>MPPT charge controller</strong></td><td>$300–$600</td><td>Maximizes panel output</td></tr>
+          <tr><td><strong>Mounting hardware + wiring</strong></td><td>$500–$1,000</td><td>Ground mount preferred for easy cleaning and access</td></tr>
+          <tr><td><strong>Total DIY</strong></td><td class="hi">$9,000–$18,000</td><td>Propane generator ($800–$1,500) as backup recommended</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Tax credit note (2025)</strong>
+        The 30% federal residential solar tax credit (Section 25D) was the last year of the full credit. Systems must be installed and operational by December 31, 2025 to qualify. If you're installing in 2026 or later, this credit is no longer available for residential systems.
+      </div>
+
+      <p>LiFePO4 batteries are the right chemistry for this application — they last 10–15 years vs. 3–7 for lead-acid, are non-toxic, handle deep cycling well, and perform reliably in Kentucky's temperature swings. Size your solar system accounting for the mini-split's power draw from the start — HVAC is your biggest load.</p>
+
+      <hr class="divider">
+
+      <!-- ══ HEATING ══ -->
+      <div class="section-header" id="heating">
+        <div class="seal">X</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Winter warmth</div>
+          <h2>Heating with wood stove</h2>
+        </div>
+      </div>
+
+      <p>Kentucky Zone 6b has roughly 3,500 heating degree days — cold enough to need serious heating, mild enough that a well-insulated natural home (R-30+ walls with straw bale or hemp) stays comfortable without working the stove hard.</p>
+
+      <h3>Annual fuel cost estimate — 1,100 sq ft, well-insulated</h3>
+      <p>For milder climates like Kentucky, plan on <strong>1.5–2.5 cords per season</strong> if you use the wood stove as the primary heat source with a mini-split handling the coldest days.</p>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num">1.5–2.5</div>
+          <div class="stat-lbl">Cords of wood per Kentucky winter</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">$275–$500</div>
+          <div class="stat-lbl">Per cord (purchased)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">$400–$1,250</div>
+          <div class="stat-lbl">Annual fuel cost (buying wood)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">~$0</div>
+          <div class="stat-lbl">Annual fuel cost (harvesting your own)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">$100–$250</div>
+          <div class="stat-lbl">Annual chimney sweep (required)</div>
+        </div>
+      </div>
+
+      <p>Madison County has abundant oak, hickory, and ash. If your land has wooded areas, or you have access to downed trees, fuel cost drops to essentially <strong>$0</strong> plus your labor — a chainsaw ($300–$600) and splitting maul ($30–$60) cover your whole winter.</p>
+
+      <h3>Wood stove installation cost</h3>
+      <p>A quality cast-iron EPA-certified stove (Vermont Castings, Jøtul, Vogelzang): <strong>$800–$2,500</strong>. Installation including flue liner, wall thimble, and hearth pad: <strong>$1,500–$3,500</strong>. Total one-time cost: $2,300–$6,000.</p>
+
+      <h3>Fireplace insert vs. freestanding stove</h3>
+      <p>A masonry fireplace looks more Mediterranean but is far less efficient (10–30% efficiency vs. 70–80% for a modern stove). A <strong>fireplace insert</strong> — a cast-iron stove fitted into a traditional masonry firebox opening — gives you the visual beauty of a hearth with the efficiency of a wood stove. Best of both worlds for your aesthetic goals.</p>
+
+      <h3>Heating + cooling system strategy</h3>
+      <ul>
+        <li><strong>Primary heating:</strong> Wood stove / fireplace insert (solar-independent, low operating cost, aesthetic centerpiece)</li>
+        <li><strong>Backup / shoulder season:</strong> Mini-split heat pump (electric, handles below-freezing nights efficiently down to -13°F with modern cold-climate units)</li>
+        <li><strong>Passive supplement:</strong> South-facing windows + tile thermal mass floors absorb and re-radiate solar gain on sunny winter days — effectively free heat</li>
+      </ul>
+
+      <hr class="divider">
+
+      <!-- ══ COOLING ══ -->
+      <div class="section-header" id="cooling">
+        <div class="seal">XI</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Summer comfort</div>
+          <h2>Passive & active cooling</h2>
+        </div>
+      </div>
+
+      <p>Kentucky summers are genuinely hot and humid (90°F+ days, 70–80% humidity). A well-designed natural home can dramatically reduce how often you need the mini-split running, but you'll still want it for dehumidification on the worst days.</p>
+
+      <h3>Passive strategies (no energy cost)</h3>
+
+      <h4>Cross-ventilation — most effective</h4>
+      <p>Cross-ventilation proved the most efficient natural ventilation strategy in hot, humid climate studies. Place windows on opposite sides of the house to create airflow. Your open floor plan is ideal for this — air moves through freely with no interior walls to block it. Design with operable windows on the north and south walls plus the east and west gable ends.</p>
+
+      <h4>Night purge / thermal flush</h4>
+      <p>Kentucky summer nights drop to 65–72°F — dramatically cooler than daytime highs. Open everything at dusk to flush accumulated heat; close everything by 9–10am to trap cool air behind thick thermal mass walls. A <strong>whole-house fan</strong> ($200–$600 installed in the ceiling) accelerates this dramatically, pulling night air through the house in 20–30 minutes.</p>
+
+      <h4>Roof overhangs</h4>
+      <p>The 2–3 ft overhangs essential for the tile roof aesthetic also shade the walls from the high summer sun. Orient the house long axis east-west: the steep summer sun angle means a 2–3 ft overhang completely shades south-facing windows from May through September — the most critical heat gain control you can build in.</p>
+
+      <h4>Shade trees</h4>
+      <p>Deciduous trees on the east and west sides of the house block morning and afternoon summer sun while dropping their leaves in winter to let sun in. Plant within 10–20 ft of the house. Fast-growing options native to or well-suited to Madison County: tulip poplar, river birch, sycamore, and the native pawpaw (also produces edible fruit).</p>
+
+      <h4>Thermal mass walls</h4>
+      <p>CEB and hempcrete walls absorb heat during the day and release it at night, smoothing temperature swings. Interior temperatures in a well-designed mass home typically run 8–12°F cooler than peak exterior temperatures on hot days.</p>
+
+      <h3>Mini-split: your dehumidifier</h3>
+      <p>In Kentucky summers, even if temperature is manageable, humidity makes conditions uncomfortable. Running the mini-split on <strong>"dry" mode</strong> (dehumidification only, minimal cooling energy) pulls moisture from the air at very low power cost. On many summer days this is all you need. A 18,000–24,000 BTU unit handles the full ~1,100 sq ft. Cost installed: $1,500–$3,500, or $700–$1,500 DIY with a pre-charged unit like Mr. Cool (no refrigerant license required).</p>
+
+      <hr class="divider">
+
+      <!-- ══ FLOORS ══ -->
+      <div class="section-header" id="floors">
+        <div class="seal">XII</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Tile floor comfort</div>
+          <h2>Keeping tile floors warm</h2>
+        </div>
+      </div>
+
+      <p>Tile on a slab is cold without intervention. Plan for one of these solutions before the slab is poured — adding in-slab heating after the fact is extremely expensive.</p>
+
+      <h3>Option 1 — Hydronic radiant in-slab (recommended)</h3>
+      <p>PEX tubing laid in a grid pattern in the concrete slab before pouring, connected to a propane tankless water heater or heat pump water heater. Warm water circulates through the tubes, radiating heat up through the tile floor. Tile is the best possible flooring for radiant heat — thin and conducts heat extremely well.</p>
+      <ul>
+        <li><strong>Cost:</strong> $7–$17/sq ft for the in-slab tubing system (DIY installation during slab pour) — approximately $8,000–$19,000 for a 1,100 sq ft slab</li>
+        <li><strong>Operating cost:</strong> Radiant systems are 20–25% more energy-efficient than forced-air heating because heat rises from floor up</li>
+        <li><strong>Decision point:</strong> You must decide and plan this before the slab is poured. It cannot be added later without demolishing the floor.</li>
+      </ul>
+
+      <h3>Option 2 — Electric radiant mat (under tile, room by room)</h3>
+      <p>Thin electric resistance mats installed directly under tile during installation. Easier and cheaper to install, but more expensive to run long-term — best used in bathrooms and kitchen only rather than whole-house. Cost: $6–$12/sq ft installed. Works well on solar but draws meaningful power.</p>
+
+      <h3>Option 3 — Natural flooring in bedrooms/office</h3>
+      <p>Use tile in wet/common areas (kitchen, bathrooms, living room) and cork flooring or wood in bedrooms and office spaces. Cork is naturally insulating underfoot, warm-feeling, anti-fungal, and completely eco-friendly. This eliminates the cold-floor problem in private spaces at very low cost (~$3–$6/sq ft for cork tiles).</p>
+
+      <hr class="divider">
+
+      <!-- ══ CHICKENS ══ -->
+      <div class="section-header" id="chickens">
+        <div class="seal">XIII</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Livestock</div>
+          <h2>Getting started with chickens</h2>
+        </div>
+      </div>
+
+      <p>On rural or agricultural-zoned land in unincorporated Madison County, chickens fall under general agricultural exemptions. A small starter flock of 6–12 hens requires minimal infrastructure.</p>
+
+      <h3>Starter setup (6–12 hens)</h3>
+      <ul>
+        <li><strong>Coop:</strong> A simple 3-sided pole shelter with a roosting bar and nesting boxes. 4 sq ft per hen indoors. Can be built from scrap lumber and salvaged metal roofing for $150–$400 in materials.</li>
+        <li><strong>Run:</strong> Hardware cloth fencing (not chicken wire — it doesn't stop predators) around a shaded area. 10 sq ft per hen in the run. $100–$300 in materials for 6 hens.</li>
+        <li><strong>Predator-proof:</strong> Bury hardware cloth 12 inches underground around the perimeter to stop digging. Cover the top of the run or use electric poultry netting ($150–$300) for aerial predators (hawks and owls are common in Madison County).</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Chickens as pest patrol</strong>
+        Rotating your chickens around the property in a chicken tractor (moveable coop + run) keeps the insect population around the house and garden noticeably lower. Chickens aggressively hunt flies, ants, beetles, slugs, and ticks. This is one of the most effective pest management tools on a homestead.
+      </div>
+
+      <hr class="divider">
+
+      <!-- ══ GARDEN ══ -->
+      <div class="section-header" id="garden">
+        <div class="seal">XIV</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Food production</div>
+          <h2>Garden & food forest</h2>
+        </div>
+      </div>
+
+      <p>Replacing a grass lawn with a food forest and productive garden system is completely legal on rural land in unincorporated Madison County. It is also lower maintenance long-term than grass once established, and synergistic with chickens (rotate them through sections to eat pests and fertilize).</p>
+
+      <h3>Madison County climate (Zone 6b/7a)</h3>
+      <p>Last frost typically mid-April; first frost mid-October. About 170–180 frost-free days. Ample rainfall. Excellent conditions for a wide range of food crops.</p>
+
+      <h3>Best crops for your zone</h3>
+      <ul>
+        <li><strong>Vegetables:</strong> Tomatoes, peppers, squash, beans, sweet corn, potatoes, sweet potatoes, all greens, garlic, onions</li>
+        <li><strong>Fruit trees:</strong> Apples, pears, persimmons (both American and Asian varieties), figs (mulch in winter), paw paw (native, shade-tolerant, delicious)</li>
+        <li><strong>Small fruits:</strong> Blackberries (very productive in KY), blueberries, raspberries, elderberry</li>
+        <li><strong>Herbs:</strong> Lavender, rosemary, sage, thyme, mint, lemongrass, basil — all productive and valuable as insect deterrents (see next section)</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Plant trees and perennials first</strong>
+        Fruit trees take 3–7 years to reach full production. Plant them this season, regardless of where you are in the build process. They can be growing and establishing while you build the house over the next 1–3 years. This is the single highest-leverage action you can take on your land immediately.
+      </div>
+
+      <h3>Food forest design approach</h3>
+      <p>Plant in layers: tall fruit/nut trees (canopy), smaller fruit trees and large shrubs (mid-story), berry bushes (shrub layer), herbs and perennial vegetables (ground layer), and vines (vertical layer on trellises and fences). Once established, this system is largely self-maintaining and produces food with minimal ongoing labor.</p>
+
+      <hr class="divider">
+
+      <!-- ══ BUGS ══ -->
+      <div class="section-header" id="bugs">
+        <div class="seal">XV</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Natural pest control</div>
+          <h2>Bug & pest deterrents</h2>
+        </div>
+      </div>
+
+      <p>A layered approach — structural screening, strategic plant placement, and habitat for predators — creates a genuine barrier without chemicals. No single method is complete, but combining several makes open windows and doors genuinely livable in Kentucky summers.</p>
+
+      <h3>Structural: screens and a screened loggia</h3>
+      <p>Fine mesh window screens (18×16 standard; 20×20 for no-see-ums) on all openable windows. More impactfully, build a <strong>covered loggia or screened porch</strong> at your main entrance — a traditional feature of Mediterranean homes. This acts as an airlock: bugs can't easily reach the actual door. Screen it with stainless or fiberglass mesh on all sides.</p>
+
+      <h3>Plant layer — place at doors, windows, and seating areas</h3>
+
+      <div class="plant-grid">
+        <div class="plant-pill"><strong>Lavender</strong><span>Mosquitoes, moths, flies, fleas. Perennial. Line the path to your door.</span></div>
+        <div class="plant-pill"><strong>Basil</strong><span>Flies, mosquitoes, aphids. Annual; pot near every door and window.</span></div>
+        <div class="plant-pill"><strong>Mint</strong><span>Ants, flies, mosquitoes, spiders. Grow in containers — spreads aggressively in ground.</span></div>
+        <div class="plant-pill"><strong>Rosemary</strong><span>Mosquitoes, flies, moths, beetles. Perennial in Zone 6b. Woody hedge at foundation.</span></div>
+        <div class="plant-pill"><strong>Lemongrass</strong><span>Mosquitoes (contains citronella oil). Large ornamental clump; pot near seating.</span></div>
+        <div class="plant-pill"><strong>Catnip</strong><span>Mosquitoes — 10× more potent than DEET. Perennial, returns every year.</span></div>
+        <div class="plant-pill"><strong>Marigolds</strong><span>Mosquitoes, aphids, hornworms, nematodes. Excellent companion in vegetable beds.</span></div>
+        <div class="plant-pill"><strong>Chrysanthemums</strong><span>Contain pyrethrin — repels roaches, ants, ticks, beetles.</span></div>
+        <div class="plant-pill"><strong>Sage</strong><span>Cabbage worms, carrot flies, beetles. Dry and burn sage in fire pit to clear outdoor areas.</span></div>
+        <div class="plant-pill"><strong>Beautyberry</strong><span>Native Kentucky shrub. Mosquitoes, ticks. Crush leaves for topical repellent. Grows wild here.</span></div>
+        <div class="plant-pill"><strong>Oregano</strong><span>Cabbage moth. Easy to grow, culinary double use.</span></div>
+        <div class="plant-pill"><strong>Petunias</strong><span>Beetles, aphids. Good in window boxes and containers.</span></div>
+      </div>
+
+      <h3>Habitat for predators</h3>
+      <ul>
+        <li><strong>Bat house</strong> — a single bat eats 600–1,000 mosquitoes per hour. Install a cedar bat house on a pole or south-facing wall, 12–15 ft above ground, in full sun. Cost: $30–$80. Bats are abundant in Madison County and will move in quickly. This is probably the single most effective mosquito intervention you can make.</li>
+        <li><strong>Purple martin house</strong> — colonial birds that eat mosquitoes and other flying insects in large quantities. Erect a martin house on a tall pole in an open area 30–60 ft from the house.</li>
+        <li><strong>Leave brush piles</strong> — habitat for ground beetles, spiders, and toads that eat enormous quantities of pest insects.</li>
+      </ul>
+
+      <h3>Lime walls help too</h3>
+      <p>Lime plaster and lime wash on exterior walls is naturally alkaline and antimicrobial, actively discouraging insects from nesting in your walls. This is a genuine benefit of natural plaster finishes over synthetic coatings.</p>
+
+      <hr class="divider">
+
+      <!-- ══ PATHS ══ -->
+      <div class="section-header" id="paths">
+        <div class="seal">XVI</div>
+        <div class="section-header-text">
+          <div class="eyebrow">Synthesis</div>
+          <h2>Three recommended build paths</h2>
+        </div>
+      </div>
+
+      <p>All three paths produce essentially the same result: lime/clay plaster walls, exposed timber beams, deep window reveals, terracotta tile roof, and a warm open Mediterranean interior. The differences are timeline, cost, and which qualities you prioritize.</p>
+
+      <div class="path-grid">
+        <div class="path-card">
+          <div class="path-letter">A</div>
+          <div>
+            <h4>Fastest to move in</h4>
+            <p>Timber frame + hemp/cork insulation + lime render + frost-rated clay tile roof. Build the frame and roof first, insulate and render through the year. Move-in possible in 10–16 months. Fully expandable. Genuinely eco-friendly with no compromises on the aesthetic. Best choice if timeline is the priority.</p>
+          </div>
+        </div>
+        <div class="path-card">
+          <div class="path-letter">B</div>
+          <div>
+            <h4>Most authentic & earthy</h4>
+            <p>Compressed earth block walls (pressed from your own soil over the first winter) + exposed or lime-washed exterior + interior clay plaster + timber roof with clay tile. The most visually arresting and historically authentic option. Potentially the cheapest wall material cost. Best choice if the deep earth-building aesthetic is the priority.</p>
+          </div>
+        </div>
+        <div class="path-card">
+          <div class="path-letter">C</div>
+          <div>
+            <h4>Best insulation & performance</h4>
+            <p>Timber frame + straw bale infill + lime plaster inside and out + clay tile. Warmest in winter, coolest in summer, lowest long-term energy costs. R-30+ walls mean the wood stove barely has to work. Requires careful moisture management but fully achievable in Kentucky — there are built examples near Berea. Best choice if long-term operating cost and comfort are the priority.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Action sequence (in order)</h3>
+      <ol>
+        <li><strong>Plant fruit trees and perennials immediately</strong> — they take years to mature; this is time-sensitive</li>
+        <li><strong>Attend a natural building workshop</strong> — This Cob House (Tennessee) or Permies.com KY area events build confidence and skills fast</li>
+        <li><strong>Assess your land for well suitability</strong> — determine if your parcel is valley or upland; size water system accordingly</li>
+        <li><strong>Contact Madison County Planning</strong> — discuss your chosen build method and get permit requirements in writing</li>
+        <li><strong>Decide on hydronic floor heat before planning the slab</strong> — this decision locks in before concrete is poured</li>
+        <li><strong>Perk test + septic design</strong> through local health department ($200–$300 fee)</li>
+        <li><strong>Install cistern during construction</strong> — use it for construction water and chickens immediately</li>
+        <li><strong>Build frame and roof before walls</strong> — get weathertight as fast as possible, then do wall infill in dry weather</li>
+        <li><strong>Set up chicken area once the structure is stable</strong> — they'll patrol the build site and start producing eggs</li>
+        <li><strong>Live on-site in a camper or small temporary structure during the build</strong> — dramatically reduces commute time and lets you work more hours per week</li>
+      </ol>
+
+    </div><!-- /content -->
+
+    <footer class="footer">
+      <span>Madison County Natural Homestead Guide — compiled 2025–2026</span>
+      <span>All costs are estimates; verify with local contractors and the Madison County Planning Department</span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // Active nav link on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

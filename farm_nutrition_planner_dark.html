@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farm Nutrition Master Planner</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;color:#e8e8e4;background:#141414;padding:16px}
+h1{font-size:18px;font-weight:600;margin-bottom:4px;color:#f0f0ec}
+.subtitle{font-size:12px;color:#888;margin-bottom:14px}
+.top-bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.top-bar h1{margin:0}
+.unit-toggle{display:flex;background:#252525;border-radius:8px;padding:3px;gap:2px;margin-left:auto;border:1px solid #333}
+.unit-btn{padding:4px 12px;font-size:12px;border:none;cursor:pointer;border-radius:6px;background:none;color:#888;transition:all 0.15s}
+.unit-btn.active{background:#2e2e2e;color:#f0f0ec;font-weight:600;border:1px solid #444}
+.tabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid #2e2e2e;overflow-x:auto}
+.tab{padding:8px 16px;font-size:13px;cursor:pointer;border:none;background:none;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.15s}
+.tab.active{color:#f0f0ec;border-bottom:2px solid #c8a96e;font-weight:600}
+.tab:hover:not(.active){color:#ccc}
+.panel{display:none}.panel.active{display:block}
+.scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:8px;border:1px solid #2a2a2a}
+table{width:100%;border-collapse:collapse;font-size:12px;background:#1c1c1c}
+th{background:#222;padding:8px 10px;text-align:left;font-weight:600;border-bottom:1px solid #2e2e2e;white-space:nowrap;color:#bbb}
+td{padding:7px 10px;border-bottom:1px solid #252525;vertical-align:top;color:#d0d0cc}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#232323}
+.day-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap;margin-top:3px}
+.red-meat{background:#3d1a10;color:#f0956a}
+.chicken{background:#0f2740;color:#6db3f2}
+.salmon{background:#0a2e1e;color:#5dd4a0}
+.bar-wrap{display:flex;align-items:center;gap:6px;min-width:90px}
+.bar-bg{flex:1;height:7px;background:#2a2a2a;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.tag-farm{background:#0d2e1a;color:#5dd4a0;padding:1px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-right:2px;font-weight:600;border:1px solid #1a4a2e}
+.tag-buy{background:#252525;color:#888;padding:1px 6px;border-radius:3px;font-size:10px;display:inline-block;margin-right:2px;border:1px solid #333}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:16px}
+.scard{background:#1c1c1c;border-radius:8px;padding:11px 13px;border:1px solid #2a2a2a}
+.scard-label{font-size:11px;color:#666;margin-bottom:3px}
+.scard-val{font-size:22px;font-weight:700;color:#f0f0ec}
+.scard-sub{font-size:11px;color:#666;margin-top:1px}
+.section-title{font-size:15px;font-weight:600;margin:16px 0 8px;color:#e0e0dc}
+tr.total td{border-top:2px solid #333;font-weight:700;background:#202020;color:#f0f0ec}
+.legend{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+.legend span{font-size:11px;color:#666;display:flex;align-items:center;gap:4px}
+.note{font-size:11px;color:#555;margin-top:10px;line-height:1.6}
+td strong{color:#e0e0dc}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Farm nutrition master planner</h1>
+    <div class="subtitle">130 lb male &nbsp;·&nbsp; 2,500+ kcal/day &nbsp;·&nbsp; 169g protein/day (1.3g/lb)</div>
+  </div>
+  <div class="unit-toggle">
+    <button class="unit-btn active" id="btn-g" onclick="setUnit('g')">g</button>
+    <button class="unit-btn" id="btn-oz" onclick="setUnit('oz')">oz</button>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('chart',event)">Daily chart</button>
+  <button class="tab" onclick="switchTab('costs',event)">Costs</button>
+  <button class="tab" onclick="switchTab('farm',event)">Farm plan</button>
+  <button class="tab" onclick="switchTab('cow',event)">Whole cow</button>
+</div>
+
+<div id="tab-chart" class="panel active">
+  <div class="scroll-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Protein</th>
+          <th>Calories</th>
+          <th>Breakfast</th>
+          <th>Lunch</th>
+          <th>Snack</th>
+          <th>Dinner</th>
+          <th>Daily cost</th>
+        </tr>
+      </thead>
+      <tbody id="chart-body"></tbody>
+    </table>
+  </div>
+  <div class="legend">
+    <span><span class="tag-farm">farm</span> grow or raise yourself</span>
+    <span><span class="tag-buy">buy</span> purchase at store</span>
+  </div>
+</div>
+
+<div id="tab-costs" class="panel">
+  <div class="summary-grid" id="cost-summary"></div>
+  <div class="section-title">Weekly item breakdown</div>
+  <div class="scroll-wrap"><table id="cost-weekly-table"></table></div>
+  <div class="section-title">Monthly &amp; yearly totals</div>
+  <div class="scroll-wrap"><table id="cost-my-table"></table></div>
+  <p class="note">Grocery store prices are US national averages (2025). Farmers market runs ~10–20% higher. "With farm" cost = feed, seed, and supplies only — not your own labor.</p>
+</div>
+
+<div id="tab-farm" class="panel">
+  <div class="summary-grid" id="farm-summary"></div>
+  <div class="section-title">What to grow &amp; raise for a full year's supply</div>
+  <div class="scroll-wrap"><table id="farm-table"></table></div>
+  <p class="note">All quantities sized for one person, year-round supply. Growing your own eliminates ~65–70% of food costs.</p>
+</div>
+
+<div id="tab-cow" class="panel">
+  <div class="summary-grid" id="cow-summary"></div>
+  <div class="section-title">What you get from one beef steer (~1,200 lb live weight)</div>
+  <div class="scroll-wrap"><table id="cow-table"></table></div>
+  <div class="section-title">Cost comparison</div>
+  <div class="scroll-wrap"><table id="cow-compare"></table></div>
+  <p class="note">Processing (slaughter + butcher) typically costs $400–600. A chest freezer (~$300–500 one-time) is required to store 440 lb of meat.</p>
+</div>
+
+<script>
+let unit='g';
+function w(val){return unit==='oz'?parseFloat((val/28.3495).toFixed(1))+'oz':val+'g';}
+function setUnit(u){
+  unit=u;
+  document.getElementById('btn-g').classList.toggle('active',u==='g');
+  document.getElementById('btn-oz').classList.toggle('active',u==='oz');
+  renderChart();
+  renderCosts();
+}
+
+const days=[
+  {day:'Mon',meat:'red',protein:172,cal:2580,cost:18.20,
+   b:[{n:'Eggs (3)',wg:null,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Orange',wg:null,src:'farm'}],
+   l:[{n:'Ground beef',wg:200,src:'farm'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Spinach',wg:80,src:'farm'},{n:'Butter',wg:8,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:30,src:'farm'}],
+   d:[{n:'Ribeye steak',wg:225,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+  {day:'Tue',meat:'chicken',protein:170,cal:2510,cost:15.40,
+   b:[{n:'Eggs (4)',wg:null,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Cranberry juice',wg:null,src:'buy'}],
+   l:[{n:'Chicken breast',wg:250,src:'farm'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Carrots',wg:150,src:'farm'},{n:'Butter',wg:8,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:28,src:'farm'},{n:'Orange',wg:null,src:'farm'}],
+   d:[{n:'Chicken thighs',wg:250,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Spinach',wg:80,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'}]},
+  {day:'Wed',meat:'salmon',protein:175,cal:2540,cost:19.80,
+   b:[{n:'Eggs (3)',wg:null,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Orange',wg:null,src:'farm'}],
+   l:[{n:'Salmon',wg:200,src:'buy'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Spinach',wg:80,src:'farm'},{n:'Butter',wg:8,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:30,src:'farm'}],
+   d:[{n:'Ground beef',wg:225,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Carrots',wg:100,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+  {day:'Thu',meat:'red',protein:171,cal:2570,cost:17.90,
+   b:[{n:'Eggs (4)',wg:null,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Orange',wg:null,src:'farm'}],
+   l:[{n:'Sirloin steak',wg:200,src:'farm'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Spinach',wg:80,src:'farm'},{n:'Butter',wg:8,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:28,src:'farm'},{n:'Cranberry juice',wg:null,src:'buy'}],
+   d:[{n:'Ribeye steak',wg:225,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+  {day:'Fri',meat:'red',protein:174,cal:2560,cost:18.50,
+   b:[{n:'Eggs (3)',wg:null,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Orange',wg:null,src:'farm'}],
+   l:[{n:'Salmon',wg:200,src:'buy'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Carrots',wg:150,src:'farm'},{n:'Butter',wg:8,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:30,src:'farm'}],
+   d:[{n:'Ground beef',wg:225,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Spinach',wg:80,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+  {day:'Sat',meat:'red',protein:181,cal:2680,cost:20.10,
+   b:[{n:'Eggs (4)',wg:null,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Butter',wg:12,src:'buy'},{n:'Cranberry juice',wg:null,src:'buy'}],
+   l:[{n:'Sirloin steak',wg:250,src:'farm'},{n:'White rice (cooked)',wg:250,src:'buy'},{n:'Carrots',wg:150,src:'farm'},{n:'Butter',wg:10,src:'buy'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:30,src:'farm'},{n:'Orange',wg:null,src:'farm'}],
+   d:[{n:'Ribeye steak',wg:250,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Spinach',wg:80,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+  {day:'Sun',meat:'chicken',protein:169,cal:2490,cost:14.80,
+   b:[{n:'Eggs (3)',wg:null,src:'farm'},{n:'Sweet potato',wg:200,src:'farm'},{n:'Butter',wg:10,src:'buy'},{n:'Orange',wg:null,src:'farm'}],
+   l:[{n:'Chicken breast',wg:250,src:'farm'},{n:'White rice (cooked)',wg:200,src:'buy'},{n:'Spinach',wg:80,src:'farm'},{n:'Butter',wg:8,src:'buy'},{n:'Carrots',wg:100,src:'farm'}],
+   s:[{n:'Greek yogurt',wg:200,src:'buy'},{n:'Almonds',wg:30,src:'farm'},{n:'Cranberry juice',wg:null,src:'buy'}],
+   d:[{n:'Chicken thighs',wg:250,src:'farm'},{n:'Potato',wg:200,src:'farm'},{n:'Bell pepper',wg:null,src:'farm'},{n:'Butter',wg:8,src:'buy'}]},
+];
+
+function mealStr(foods){
+  return foods.map(f=>{
+    let n=f.wg?f.n+' ('+w(f.wg)+')':f.n;
+    return '<span class="tag-'+f.src+'">'+f.src+'</span>'+n;
+  }).join('<br>');
+}
+
+function renderChart(){
+  const tb=document.getElementById('chart-body');
+  tb.innerHTML='';
+  days.forEach(d=>{
+    const mc=d.meat==='red'?'red-meat':d.meat==='chicken'?'chicken':'salmon';
+    const ml=d.meat==='red'?'Red meat':d.meat==='chicken'?'Chicken':'Salmon';
+    const pPct=Math.min(100,Math.round(d.protein/185*100));
+    const cPct=Math.min(100,Math.round(d.cal/2800*100));
+    tb.innerHTML+=`<tr>
+      <td><strong style="color:#f0f0ec">${d.day}</strong><br><span class="day-badge ${mc}">${ml}</span></td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pPct}%;background:#3ecf8e"></div></div><span style="color:#ccc">${d.protein}g</span></div></td>
+      <td><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${cPct}%;background:#4a9edd"></div></div><span style="color:#ccc">${d.cal}</span></div></td>
+      <td style="line-height:1.9">${mealStr(d.b)}</td>
+      <td style="line-height:1.9">${mealStr(d.l)}</td>
+      <td style="line-height:1.9">${mealStr(d.s)}</td>
+      <td style="line-height:1.9">${mealStr(d.d)}</td>
+      <td><strong style="color:#c8a96e">$${d.cost.toFixed(2)}</strong></td>
+    </tr>`;
+  });
+}
+
+const costItems=[
+  {name:'Ground beef 90/10',weekly_g:650,unit_price:7.99,per:'lb',g_per_unit:454,farm_cost_per_lb:2.50},
+  {name:'Ribeye steak',weekly_g:700,unit_price:14.99,per:'lb',g_per_unit:454,farm_cost_per_lb:4.00},
+  {name:'Sirloin steak',weekly_g:450,unit_price:10.99,per:'lb',g_per_unit:454,farm_cost_per_lb:3.50},
+  {name:'Chicken breast',weekly_g:500,unit_price:4.49,per:'lb',g_per_unit:454,farm_cost_per_lb:0.80},
+  {name:'Chicken thighs',weekly_g:500,unit_price:2.99,per:'lb',g_per_unit:454,farm_cost_per_lb:0.80},
+  {name:'Salmon',weekly_g:400,unit_price:12.99,per:'lb',g_per_unit:454,farm_cost_per_lb:null},
+  {name:'Eggs (24/wk)',weekly_g:null,unit_price:5.99,per:'dozen',weekly_units:2,farm_cost_per_unit:0.40},
+  {name:'Greek yogurt',weekly_g:1400,unit_price:6.49,per:'32oz tub',g_per_unit:907,farm_cost_per_lb:null},
+  {name:'White rice',weekly_g:1300,unit_price:1.29,per:'lb',g_per_unit:454,farm_cost_per_lb:null},
+  {name:'Sweet potatoes',weekly_g:1200,unit_price:1.49,per:'lb',g_per_unit:454,farm_cost_per_lb:0.15},
+  {name:'Potatoes',weekly_g:1200,unit_price:0.99,per:'lb',g_per_unit:454,farm_cost_per_lb:0.10},
+  {name:'Carrots',weekly_g:750,unit_price:1.29,per:'lb',g_per_unit:454,farm_cost_per_lb:0.08},
+  {name:'Spinach',weekly_g:560,unit_price:3.99,per:'10oz bag',g_per_unit:283,farm_cost_per_lb:0.20},
+  {name:'Bell peppers',weekly_g:null,unit_price:1.29,per:'each',weekly_units:7,farm_cost_per_unit:0.25},
+  {name:'Oranges',weekly_g:null,unit_price:0.99,per:'each',weekly_units:5,farm_cost_per_unit:0.30},
+  {name:'Butter',weekly_g:196,unit_price:5.99,per:'lb',g_per_unit:454,farm_cost_per_lb:null},
+  {name:'Almonds',weekly_g:210,unit_price:9.99,per:'lb',g_per_unit:454,farm_cost_per_lb:1.50},
+  {name:'Cranberry juice',weekly_g:null,unit_price:4.99,per:'bottle',weekly_units:0.5,farm_cost_per_unit:null},
+  {name:'Chicken stock',weekly_g:null,unit_price:2.99,per:'carton',weekly_units:0.5,farm_cost_per_unit:0.50},
+  {name:'Salt & seasoning',weekly_g:null,unit_price:3.00,per:'week',weekly_units:1,farm_cost_per_unit:3.00},
+];
+
+function getWeeklyStore(i){
+  if(i.weekly_units!==undefined) return i.unit_price*i.weekly_units;
+  return (i.weekly_g/i.g_per_unit)*i.unit_price;
+}
+function getWeeklyFarm(i){
+  if(i.farm_cost_per_unit!==undefined&&i.farm_cost_per_unit!==null) return i.farm_cost_per_unit*(i.weekly_units||1);
+  if(i.farm_cost_per_lb!==null&&i.farm_cost_per_lb!==undefined) return (i.weekly_g/454)*i.farm_cost_per_lb;
+  return getWeeklyStore(i);
+}
+
+function renderCosts(){
+  const weekly=costItems.reduce((s,i)=>s+getWeeklyStore(i),0);
+  const monthly=weekly*4.33;
+  const yearly=weekly*52;
+  const farmWeekly=costItems.reduce((s,i)=>s+getWeeklyFarm(i),0);
+  const farmYearly=farmWeekly*52;
+  const savings=yearly-farmYearly;
+
+  document.getElementById('cost-summary').innerHTML=`
+    <div class="scard"><div class="scard-label">Weekly (store)</div><div class="scard-val">$${weekly.toFixed(0)}</div><div class="scard-sub">~$${(weekly/7).toFixed(2)}/day</div></div>
+    <div class="scard"><div class="scard-label">Monthly (store)</div><div class="scard-val">$${monthly.toFixed(0)}</div><div class="scard-sub">4.33 weeks</div></div>
+    <div class="scard"><div class="scard-label">Yearly (store)</div><div class="scard-val">$${yearly.toFixed(0)}</div><div class="scard-sub">52 weeks</div></div>
+    <div class="scard"><div class="scard-label">Yearly (farm)</div><div class="scard-val">$${farmYearly.toFixed(0)}</div><div class="scard-sub">grow what you can</div></div>
+    <div class="scard"><div class="scard-label">Farm savings/yr</div><div class="scard-val" style="color:#3ecf8e">$${savings.toFixed(0)}</div><div class="scard-sub">${Math.round((savings/yearly)*100)}% reduction</div></div>`;
+
+  let wHtml=`<thead><tr><th>Item</th><th>Weekly qty</th><th>Store price</th><th>Weekly store cost</th><th>Weekly farm cost</th></tr></thead><tbody>`;
+  costItems.forEach(i=>{
+    const qty=i.weekly_units!==undefined?(i.weekly_units+' × '+i.per):w(i.weekly_g);
+    const ws=getWeeklyStore(i);
+    const wf=getWeeklyFarm(i);
+    const hasFarm=i.farm_cost_per_lb!==null&&i.farm_cost_per_lb!==undefined||i.farm_cost_per_unit!==null&&i.farm_cost_per_unit!==undefined;
+    wHtml+=`<tr><td>${i.name}</td><td>${qty}</td><td>$${i.unit_price.toFixed(2)} / ${i.per}</td><td>$${ws.toFixed(2)}</td><td>${hasFarm?'<span style="color:#3ecf8e">$'+wf.toFixed(2)+'</span> <span style="font-size:10px;color:#555">(farm)</span>':'—'}</td></tr>`;
+  });
+  wHtml+=`<tr class="total"><td colspan="3"><strong>TOTAL</strong></td><td><strong style="color:#c8a96e">$${weekly.toFixed(2)}</strong></td><td><strong style="color:#3ecf8e">$${farmWeekly.toFixed(2)}</strong></td></tr></tbody>`;
+  document.getElementById('cost-weekly-table').innerHTML=wHtml;
+
+  document.getElementById('cost-my-table').innerHTML=`
+    <thead><tr><th>Period</th><th>Grocery store</th><th>Farmers market (+15%)</th><th>With your farm</th><th>Farm savings</th></tr></thead>
+    <tbody>
+    <tr><td>Weekly</td><td>$${weekly.toFixed(2)}</td><td>$${(weekly*1.15).toFixed(2)}</td><td>$${farmWeekly.toFixed(2)}</td><td style="color:#3ecf8e;font-weight:600">$${(weekly-farmWeekly).toFixed(2)}</td></tr>
+    <tr><td>Monthly</td><td>$${monthly.toFixed(2)}</td><td>$${(monthly*1.15).toFixed(2)}</td><td>$${(farmWeekly*4.33).toFixed(2)}</td><td style="color:#3ecf8e;font-weight:600">$${((weekly-farmWeekly)*4.33).toFixed(2)}</td></tr>
+    <tr class="total"><td>Yearly</td><td>$${yearly.toFixed(2)}</td><td>$${(yearly*1.15).toFixed(2)}</td><td>$${farmYearly.toFixed(2)}</td><td style="color:#3ecf8e;font-weight:600">$${savings.toFixed(2)}</td></tr>
+    </tbody>`;
+}
+
+const farmPlan=[
+  {cat:'Livestock',item:'Beef cattle',qty:'1 steer every 18 months',space:'2–5 acres pasture',cost:'~$800–1,200 to raise',notes:'Covers all your beef for 14+ months. A 1,200lb steer yields ~440lb retail meat. Sell or trade excess cuts.'},
+  {cat:'Livestock',item:'Chickens — layers',qty:'12–15 hens',space:'~50 sq ft coop + run',cost:'~$150–300/yr feed',notes:'12 hens average ~9 eggs/day (63/wk). You need 24/wk — easily covered. Hens produce well for 2–3 years.'},
+  {cat:'Livestock',item:'Chickens — broilers',qty:'20–25 birds/yr (2–3 batches)',space:'Same coop, rotate',cost:'~$5–8/bird to raise',notes:'Raise 8–10 Cornish Cross per batch, harvest at 8 weeks (~5lb each). Covers chicken days all year.'},
+  {cat:'Livestock',item:'Dairy goats (optional)',qty:'2 Nigerian Dwarf or 1 full-size',space:'~200 sq ft pen + pasture',cost:'~$200–400/yr',notes:'1 full-size dairy goat = ~1 gal/day. Use for homemade Greek yogurt and butter — saves ~$400/yr.'},
+  {cat:'Garden — roots',item:'Potatoes',qty:'50–60 plants',space:'~100–120 sq ft',cost:'~$15 seed potatoes',notes:'Each plant yields 2–3 lb. You need ~140 lb/yr. Store in cool dark root cellar through winter.'},
+  {cat:'Garden — roots',item:'Sweet potatoes',qty:'40–50 slips',space:'~100 sq ft',cost:'~$10–20 slips',notes:'Each slip yields 2–4 lb. Needs 90–120 warm days. Cure then store at 55–60°F — keeps 6–12 months.'},
+  {cat:'Garden — roots',item:'Carrots',qty:'250–300 plants, 2 plantings',space:'~35 sq ft',cost:'~$3 seed packets',notes:'Sow early spring and late summer. ~40 lb/yr needed. Leave in ground after first frost; mulch for winter harvest.'},
+  {cat:'Garden — greens',item:'Spinach',qty:'4 succession plantings, ~30 plants each',space:'~50 sq ft',cost:'~$4 seed packets',notes:'~30 kg/yr needed. Bolts in heat — sow early spring, late summer, and under row cover in fall/winter.'},
+  {cat:'Garden — greens',item:'Bell peppers',qty:'10–12 plants',space:'~30 sq ft',cost:'~$8–12 transplants',notes:'Each plant yields 20–30 peppers/season. Grow large summer crop, freeze extras for winter.'},
+  {cat:'Garden — fruit',item:'Orange / citrus trees',qty:'2–3 trees',space:'~150 sq ft or containers',cost:'~$30–60/tree',notes:'Zone 9–11 outdoor; use containers in colder climates and overwinter indoors. 1 navel tree yields 100–300 fruits/yr at maturity.'},
+  {cat:'Garden — nuts',item:'Almond trees',qty:'2 trees (cross-pollination needed)',space:'~400 sq ft (20–25 ft apart)',cost:'~$30–50/tree',notes:'Zones 7–9. Start producing year 3–5, full yield year 10–12. Mature tree: 30–50 lb shelled/yr. You need ~24 lb/yr.'},
+  {cat:'Purchase — bulk',item:'White rice',qty:'~140 lb dry/year',space:'Dry pantry storage',cost:'~$70–100/yr',notes:'Rice paddies require flooding — not practical on most farms. Buy 25–50 lb bags, store airtight (lasts years).'},
+  {cat:'Purchase — bulk',item:'Salmon',qty:'~45 lb/year (2× weekly)',space:'Chest freezer',cost:'~$360–450/yr frozen',notes:'Buy frozen in bulk (~$8–10/lb). Freshwater fish (trout, bass) can substitute if you have a river or pond.'},
+  {cat:'Purchase — bulk',item:'Butter',qty:'~22 lb/year',space:'Freezer or fridge',cost:'~$130/yr store; $0 with dairy',notes:'If you have dairy animals, churn your own. Otherwise buy in bulk and freeze — butter keeps 6–9 months frozen.'},
+  {cat:'Purchase — bulk',item:'Cranberry juice',qty:'~26 bottles/year',space:'Pantry',cost:'~$130/yr',notes:'Cranberries require acidic bogs — not practical to grow. Lowest nutritional priority item on the plan; optional to cut.'},
+];
+
+function renderFarm(){
+  document.getElementById('farm-summary').innerHTML=`
+    <div class="scard"><div class="scard-label">Annual store cost</div><div class="scard-val">$6,448</div><div class="scard-sub">buying everything</div></div>
+    <div class="scard"><div class="scard-label">Annual farm cost</div><div class="scard-val">~$1,400</div><div class="scard-sub">feed, seed, supplies</div></div>
+    <div class="scard"><div class="scard-label">Annual savings</div><div class="scard-val" style="color:#3ecf8e">~$5,000</div><div class="scard-sub">~78% reduction</div></div>
+    <div class="scard"><div class="scard-label">Setup cost (est.)</div><div class="scard-val">~$2,500</div><div class="scard-sub">animals, seeds, fencing</div></div>
+    <div class="scard"><div class="scard-label">Break-even</div><div class="scard-val">~6 months</div><div class="scard-sub">after initial investment</div></div>`;
+
+  let html=`<thead><tr><th>Category</th><th>Item</th><th>How much to grow/raise</th><th>Space needed</th><th>Annual cost</th><th>Notes</th></tr></thead><tbody>`;
+  farmPlan.forEach(r=>{
+    html+=`<tr><td><strong>${r.cat}</strong></td><td>${r.item}</td><td>${r.qty}</td><td>${r.space}</td><td style="color:#c8a96e">${r.cost}</td><td style="font-size:11px;color:#666;max-width:220px">${r.notes}</td></tr>`;
+  });
+  html+=`</tbody>`;
+  document.getElementById('farm-table').innerHTML=html;
+}
+
+function renderCow(){
+  document.getElementById('cow-summary').innerHTML=`
+    <div class="scard"><div class="scard-label">Live weight</div><div class="scard-val">1,200 lb</div><div class="scard-sub">typical beef steer</div></div>
+    <div class="scard"><div class="scard-label">Hanging weight</div><div class="scard-val">~750 lb</div><div class="scard-sub">62% of live weight</div></div>
+    <div class="scard"><div class="scard-label">Retail cuts</div><div class="scard-val">~440 lb</div><div class="scard-sub">~58% of hanging</div></div>
+    <div class="scard"><div class="scard-label">Cost/lb (purchased)</div><div class="scard-val">~$6.80</div><div class="scard-sub">vs $10–15 in store</div></div>
+    <div class="scard"><div class="scard-label">Cost/lb (raise own)</div><div class="scard-val" style="color:#3ecf8e">~$2.30</div><div class="scard-sub">feed + processing only</div></div>
+    <div class="scard"><div class="scard-label">Months of beef covered</div><div class="scard-val">~14 mo</div><div class="scard-sub">at your consumption rate</div></div>`;
+
+  document.getElementById('cow-table').innerHTML=`
+    <thead><tr><th>Cut type</th><th>Yield from 1 steer</th><th>Your weekly use</th><th>Weeks of supply</th><th>Retail store value</th></tr></thead>
+    <tbody>
+    <tr><td>Ribeye &amp; NY strip steaks</td><td>~55 lb</td><td>~1.1 lb</td><td>~50 wks</td><td style="color:#c8a96e">$825–$990</td></tr>
+    <tr><td>Sirloin &amp; round steaks</td><td>~60 lb</td><td>~0.7 lb</td><td>~86 wks</td><td style="color:#c8a96e">$660–$780</td></tr>
+    <tr><td>Ground beef</td><td>~150 lb</td><td>~1.4 lb</td><td>~107 wks</td><td style="color:#c8a96e">$1,200–$1,500</td></tr>
+    <tr><td>Chuck roasts &amp; stew meat</td><td>~65 lb</td><td>~0.5 lb</td><td>~130 wks</td><td style="color:#c8a96e">$520–$650</td></tr>
+    <tr><td>Brisket &amp; short ribs</td><td>~35 lb</td><td>~0.3 lb</td><td>~117 wks</td><td style="color:#c8a96e">$490–$700</td></tr>
+    <tr><td>Misc cuts, bones &amp; offal</td><td>~75 lb</td><td>varies</td><td>—</td><td style="color:#c8a96e">$375–$525</td></tr>
+    <tr class="total"><td><strong>Total</strong></td><td><strong>~440 lb</strong></td><td><strong>~4.0 lb/wk beef</strong></td><td><strong>~110 wks of beef</strong></td><td style="color:#c8a96e"><strong>$4,070–$5,145</strong></td></tr>
+    </tbody>`;
+
+  document.getElementById('cow-compare').innerHTML=`
+    <thead><tr><th>Option</th><th>Total cost</th><th>Cost per lb</th><th>Beef supply</th><th>vs store savings/yr</th></tr></thead>
+    <tbody>
+    <tr><td>Grocery store (avg)</td><td>~$2,500/yr (beef only)</td><td>$10–15/lb</td><td>52 weeks</td><td style="color:#666">baseline</td></tr>
+    <tr><td>Farmers market</td><td>~$2,875/yr (beef only)</td><td>$12–18/lb</td><td>52 weeks</td><td style="color:#e06c6c">−$375 (worse)</td></tr>
+    <tr><td>Buy half a cow</td><td>~$1,400–1,750 (220 lb)</td><td>~$6.40–7.95/lb</td><td>~7 months</td><td style="color:#3ecf8e;font-weight:600">~$750 saved</td></tr>
+    <tr><td>Buy whole cow</td><td>~$3,000–3,500 all-in</td><td>~$6.80–7.95/lb</td><td>~14 months</td><td style="color:#3ecf8e;font-weight:600">~$1,500 saved</td></tr>
+    <tr class="total"><td><strong>Raise your own steer</strong></td><td><strong>~$800–1,200 (feed + processing)</strong></td><td><strong style="color:#3ecf8e">~$1.80–2.70/lb</strong></td><td><strong>~14 months</strong></td><td style="color:#3ecf8e;font-weight:600">~$3,300 saved/yr</td></tr>
+    </tbody>`;
+}
+
+function switchTab(name,ev){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(ev&&ev.target)ev.target.classList.add('active');
+  if(name==='costs')renderCosts();
+  if(name==='farm')renderFarm();
+  if(name==='cow')renderCow();
+}
+
+renderChart();
+renderCosts();
+renderFarm();
+renderCow();
+</script>
+</body>
+</html>
